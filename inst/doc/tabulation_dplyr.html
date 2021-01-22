@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Gabriel Becker and Adrian Waddell" />
+
+<meta name="date" content="2021-01-19" />
+
+<title>Comparison with dplyr Tabulation</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Comparison with dplyr Tabulation</h1>
+<h4 class="author">Gabriel Becker and Adrian Waddell</h4>
+<h4 class="date">2021-01-19</h4>
+
+
+
+<style type="text/css">
+.reveal .r code {
+    white-space: pre;
+}
+</style>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>In this vignette we would like to discuss the similarities and differences between <code>dplyr</code> and <code>rtable</code>.</p>
+<p>Much of the <code>rtables</code> framework focuses on tabulation/summarizing of data and then the visualization of the table. In this vignette we focus on summarizing data using <code>dplyr</code> and contrast it to <code>rtables</code>. We won’t pay attention to the table visualizaion/markup and just derive the cell content.</p>
+<p>Using <code>dplyr</code> to summarize data and <code>gt</code> to visualize the table is a good way if the tabulation is of a certain nature or complexity. However, there are tables such as the table created in the <code>introduction</code> vignette that take some effort to create with <code>dplyr</code>. Part of the effort is due to fact that when using dplyr the table data is stored in <code>data.frame</code>s or <code>tibble</code>s which is not the most natural way to represent a table as we will show in this vignette.</p>
+<p>If you know a more elegant way of deriving the table content with <code>dplyr</code> please let us know and we will update the vignette.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(rtables)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(dplyr)</a></code></pre></div>
+<p>Here is table and data used in the <code>introduction</code> vignette:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">n &lt;-<span class="st"> </span><span class="dv">400</span></a>
+<a class="sourceLine" id="cb2-2" title="2"></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb2-4" title="4"></a>
+<a class="sourceLine" id="cb2-5" title="5">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb2-6" title="6">  <span class="dt">arm =</span> <span class="kw">factor</span>(<span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;Arm A&quot;</span>, <span class="st">&quot;Arm B&quot;</span>), n, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Arm A&quot;</span>, <span class="st">&quot;Arm B&quot;</span>)),</a>
+<a class="sourceLine" id="cb2-7" title="7">  <span class="dt">country =</span> <span class="kw">factor</span>(<span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;CAN&quot;</span>, <span class="st">&quot;USA&quot;</span>), n, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> <span class="kw">c</span>(.<span class="dv">55</span>, <span class="fl">.45</span>)), <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;CAN&quot;</span>, <span class="st">&quot;USA&quot;</span>)),</a>
+<a class="sourceLine" id="cb2-8" title="8">  <span class="dt">gender =</span> <span class="kw">factor</span>(<span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>), n, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>)),</a>
+<a class="sourceLine" id="cb2-9" title="9">  <span class="dt">handed =</span> <span class="kw">factor</span>(<span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;Left&quot;</span>, <span class="st">&quot;Right&quot;</span>), n, <span class="dt">prob =</span> <span class="kw">c</span>(.<span class="dv">6</span>, <span class="fl">.4</span>), <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Left&quot;</span>, <span class="st">&quot;Right&quot;</span>)),</a>
+<a class="sourceLine" id="cb2-10" title="10">  <span class="dt">age =</span> <span class="kw">rchisq</span>(n, <span class="dv">30</span>) <span class="op">+</span><span class="st"> </span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb2-11" title="11">) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb2-12" title="12">  <span class="dt">weight =</span> <span class="dv">35</span> <span class="op">*</span><span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">sd =</span> <span class="fl">.5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ifelse</span>(gender <span class="op">==</span><span class="st"> &quot;Female&quot;</span>, <span class="dv">140</span>, <span class="dv">180</span>)</a>
+<a class="sourceLine" id="cb2-13" title="13">) </a>
+<a class="sourceLine" id="cb2-14" title="14"></a>
+<a class="sourceLine" id="cb2-15" title="15"><span class="kw">basic_table</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-16" title="16"><span class="st">  </span><span class="kw">split_cols_by</span>(<span class="st">&quot;arm&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-17" title="17"><span class="st">  </span><span class="kw">split_cols_by</span>(<span class="st">&quot;gender&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-18" title="18"><span class="st">  </span><span class="kw">add_colcounts</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-19" title="19"><span class="st">  </span><span class="kw">split_rows_by</span>(<span class="st">&quot;country&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-20" title="20"><span class="st">  </span><span class="kw">summarize_row_groups</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-21" title="21"><span class="st">  </span><span class="kw">split_rows_by</span>(<span class="st">&quot;handed&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-22" title="22"><span class="st">  </span><span class="kw">summarize_row_groups</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-23" title="23"><span class="st">  </span><span class="kw">analyze</span>(<span class="st">&quot;age&quot;</span>, <span class="dt">afun =</span> mean, <span class="dt">format =</span> <span class="st">&quot;xx.x&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-24" title="24"><span class="st">  </span><span class="kw">build_table</span>(df)</a></code></pre></div>
+<pre><code>                    Arm A                     Arm B         
+             Female        Male        Female        Male   
+             (N=96)      (N=105)       (N=92)      (N=107)  
+------------------------------------------------------------
+CAN        45 (46.9%)    64 (61%)     46 (50%)    62 (57.9%)
+  Left     32 (33.3%)    42 (40%)    26 (28.3%)   37 (34.6%)
+    mean      38.9         40.4         40.3         37.7   
+  Right    13 (13.5%)    22 (21%)    20 (21.7%)   25 (23.4%)
+    mean      36.6         40.2         40.2         40.6   
+USA        51 (53.1%)    41 (39%)     46 (50%)    45 (42.1%)
+  Left     34 (35.4%)   19 (18.1%)   25 (27.2%)   25 (23.4%)
+    mean      40.4         39.7         39.2         40.1   
+  Right    17 (17.7%)    22 (21%)    21 (22.8%)   20 (18.7%)
+    mean      36.9         39.8         38.5          39    </code></pre>
+</div>
+<div id="getting-started" class="section level2">
+<h2>Getting Started</h2>
+<p>We will start by deriving the first data cell on row 3 (note, row 1 and 2 have content cells, see the <code>introduction</code> vignette). Cell 3,1 contains the mean age for left handed &amp; female Canadians in “Arm A”:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">mean</span>(df<span class="op">$</span>age[df<span class="op">$</span>country <span class="op">==</span><span class="st"> &quot;CAN&quot;</span> <span class="op">&amp;</span><span class="st"> </span>df<span class="op">$</span>arm <span class="op">==</span><span class="st"> &quot;Arm A&quot;</span> <span class="op">&amp;</span><span class="st"> </span>df<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Female&quot;</span> <span class="op">&amp;</span><span class="st"> </span>df<span class="op">$</span>handed <span class="op">==</span><span class="st"> &quot;Left&quot;</span>])</a></code></pre></div>
+<pre><code>[1] 38.86979</code></pre>
+<p>or with <code>dplyr</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="st">  </span><span class="kw">filter</span>(country <span class="op">==</span><span class="st"> &quot;CAN&quot;</span>, arm <span class="op">==</span><span class="st"> &quot;Arm A&quot;</span>, gender <span class="op">==</span><span class="st"> &quot;Female&quot;</span>, handed <span class="op">==</span><span class="st"> &quot;Left&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_age =</span> <span class="kw">mean</span>(age))</a></code></pre></div>
+<pre><code># A tibble: 1 x 1
+  mean_age
+     &lt;dbl&gt;
+1     38.9</code></pre>
+<p>Further, <code>dplyr</code> gives us other verbs to easily get the average age of left handed Canadians for each group defined by the 4 columns:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(arm, gender) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="st">  </span><span class="kw">filter</span>(country <span class="op">==</span><span class="st"> &quot;CAN&quot;</span>, handed <span class="op">==</span><span class="st"> &quot;Left&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_age =</span> <span class="kw">mean</span>(age))</a></code></pre></div>
+<pre><code>`summarise()` regrouping output by &#39;arm&#39; (override with `.groups` argument)</code></pre>
+<pre><code># A tibble: 4 x 3
+# Groups:   arm [2]
+  arm   gender mean_age
+  &lt;fct&gt; &lt;fct&gt;     &lt;dbl&gt;
+1 Arm A Female     38.9
+2 Arm A Male       40.4
+3 Arm B Female     40.3
+4 Arm B Male       37.7</code></pre>
+<p>We can further get to all the average age cell values with:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">average_age &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(arm, gender, country, handed) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_age =</span> <span class="kw">mean</span>(age))</a></code></pre></div>
+<pre><code>`summarise()` regrouping output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39; (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">average_age</a></code></pre></div>
+<pre><code># A tibble: 16 x 5
+# Groups:   arm, gender, country [8]
+   arm   gender country handed mean_age
+   &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;     &lt;dbl&gt;
+ 1 Arm A Female CAN     Left       38.9
+ 2 Arm A Female CAN     Right      36.6
+ 3 Arm A Female USA     Left       40.4
+ 4 Arm A Female USA     Right      36.9
+ 5 Arm A Male   CAN     Left       40.4
+ 6 Arm A Male   CAN     Right      40.2
+ 7 Arm A Male   USA     Left       39.7
+ 8 Arm A Male   USA     Right      39.8
+ 9 Arm B Female CAN     Left       40.3
+10 Arm B Female CAN     Right      40.2
+11 Arm B Female USA     Left       39.2
+12 Arm B Female USA     Right      38.5
+13 Arm B Male   CAN     Left       37.7
+14 Arm B Male   CAN     Right      40.6
+15 Arm B Male   USA     Left       40.1
+16 Arm B Male   USA     Right      39.0</code></pre>
+<p>In <code>rtable</code> syntax we need the following code to get to the same content:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">basic_table</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="st">  </span><span class="kw">split_cols_by</span>(<span class="st">&quot;arm&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="st">  </span><span class="kw">split_cols_by</span>(<span class="st">&quot;gender&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-4" title="4"><span class="st">  </span><span class="kw">split_rows_by</span>(<span class="st">&quot;country&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-5" title="5"><span class="st">  </span><span class="kw">split_rows_by</span>(<span class="st">&quot;handed&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-6" title="6"><span class="st">  </span><span class="kw">analyze</span>(<span class="st">&quot;age&quot;</span>, <span class="dt">afun =</span> mean, <span class="dt">format =</span> <span class="st">&quot;xx.x&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-7" title="7"><span class="st">  </span><span class="kw">build_table</span>(df)</a></code></pre></div>
+<pre><code>               Arm A           Arm B    
+           Female   Male   Female   Male
+----------------------------------------
+CAN                                     
+  Left                                  
+    mean    38.9    40.4    40.3    37.7
+  Right                                 
+    mean    36.6    40.2    40.2    40.6
+USA                                     
+  Left                                  
+    mean    40.4    39.7    39.2    40.1
+  Right                                 
+    mean    36.9    39.8    38.5     39 </code></pre>
+<p>As mentioned in the introduction to this vignette, please ignore the difference in arranging and formatting the data: it’s possible to condense the <code>rtable</code> more and it is possible to make the tibble look more like the reference table using the <code>gt</code> R package.</p>
+<p>In terms of tabulation for this example there was arguably not much added by <code>rtables</code> over <code>dplyr</code>.</p>
+</div>
+<div id="content-information" class="section level2">
+<h2>Content Information</h2>
+<p>We will now focus on the count percentage information for handedness for each country. For that we need to get the correct denominator for the percentages</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb17-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(arm, gender, country, handed) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb17-3" title="3"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(age), <span class="dt">c_h_count =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb17-4" title="4"><span class="st">  </span><span class="co"># now the `handed` grouping has been removed, therefore we can calculate percent now:</span></a>
+<a class="sourceLine" id="cb17-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">c_h_percent =</span> c_h_count <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(c_h_count))</a></code></pre></div>
+<pre><code>`summarise()` regrouping output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39; (override with `.groups` argument)</code></pre>
+<pre><code># A tibble: 16 x 7
+# Groups:   arm, gender, country [8]
+   arm   gender country handed  mean c_h_count c_h_percent
+   &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;  &lt;dbl&gt;     &lt;int&gt;       &lt;dbl&gt;
+ 1 Arm A Female CAN     Left    38.9        32       0.711
+ 2 Arm A Female CAN     Right   36.6        13       0.289
+ 3 Arm A Female USA     Left    40.4        34       0.667
+ 4 Arm A Female USA     Right   36.9        17       0.333
+ 5 Arm A Male   CAN     Left    40.4        42       0.656
+ 6 Arm A Male   CAN     Right   40.2        22       0.344
+ 7 Arm A Male   USA     Left    39.7        19       0.463
+ 8 Arm A Male   USA     Right   39.8        22       0.537
+ 9 Arm B Female CAN     Left    40.3        26       0.565
+10 Arm B Female CAN     Right   40.2        20       0.435
+11 Arm B Female USA     Left    39.2        25       0.543
+12 Arm B Female USA     Right   38.5        21       0.457
+13 Arm B Male   CAN     Left    37.7        37       0.597
+14 Arm B Male   CAN     Right   40.6        25       0.403
+15 Arm B Male   USA     Left    40.1        25       0.556
+16 Arm B Male   USA     Right   39.0        20       0.444</code></pre>
+<p>which has 16 rows (cells) like the <code>average_age</code> data frame defined above. Next, we will derive the group information for countries:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(arm, gender, country, handed) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(age), <span class="dt">c_h_count =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">c_h_percent =</span> c_h_count <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(c_h_count)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">c_count =</span> <span class="kw">sum</span>(c_h_count)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-6" title="6"><span class="st">  </span><span class="kw">ungroup</span>(country) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-7" title="7"><span class="st">  </span><span class="co"># note that we always use the finest level of counts to avoid duplicate counting</span></a>
+<a class="sourceLine" id="cb20-8" title="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">c_percent =</span> c_count <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(c_h_count))</a></code></pre></div>
+<pre><code>`summarise()` regrouping output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39; (override with `.groups` argument)</code></pre>
+<pre><code># A tibble: 16 x 9
+# Groups:   arm, gender [4]
+   arm   gender country handed  mean c_h_count c_h_percent c_count c_percent
+   &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;  &lt;dbl&gt;     &lt;int&gt;       &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
+ 1 Arm A Female CAN     Left    38.9        32       0.711      45     0.469
+ 2 Arm A Female CAN     Right   36.6        13       0.289      45     0.469
+ 3 Arm A Female USA     Left    40.4        34       0.667      51     0.531
+ 4 Arm A Female USA     Right   36.9        17       0.333      51     0.531
+ 5 Arm A Male   CAN     Left    40.4        42       0.656      64     0.610
+ 6 Arm A Male   CAN     Right   40.2        22       0.344      64     0.610
+ 7 Arm A Male   USA     Left    39.7        19       0.463      41     0.390
+ 8 Arm A Male   USA     Right   39.8        22       0.537      41     0.390
+ 9 Arm B Female CAN     Left    40.3        26       0.565      46     0.5  
+10 Arm B Female CAN     Right   40.2        20       0.435      46     0.5  
+11 Arm B Female USA     Left    39.2        25       0.543      46     0.5  
+12 Arm B Female USA     Right   38.5        21       0.457      46     0.5  
+13 Arm B Male   CAN     Left    37.7        37       0.597      62     0.579
+14 Arm B Male   CAN     Right   40.6        25       0.403      62     0.579
+15 Arm B Male   USA     Left    40.1        25       0.556      45     0.421
+16 Arm B Male   USA     Right   39.0        20       0.444      45     0.421</code></pre>
+<p>Note that the information in <code>c_count</code> and <code>c_percent</code> must be repeated, as there are only 8 country group summaries but the rest of the data structure requires 16 rows for the information.</p>
+<p>The <code>rtables</code> call in contrast is:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">basic_table</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="st">  </span><span class="kw">split_cols_by</span>(<span class="st">&quot;arm&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-3" title="3"><span class="st">  </span><span class="kw">split_cols_by</span>(<span class="st">&quot;gender&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-4" title="4"><span class="st">  </span><span class="kw">add_colcounts</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-5" title="5"><span class="st">  </span><span class="kw">split_rows_by</span>(<span class="st">&quot;country&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-6" title="6"><span class="st">  </span><span class="kw">summarize_row_groups</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-7" title="7"><span class="st">  </span><span class="kw">split_rows_by</span>(<span class="st">&quot;handed&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-8" title="8"><span class="st">  </span><span class="kw">summarize_row_groups</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-9" title="9"><span class="st">  </span><span class="kw">analyze</span>(<span class="st">&quot;age&quot;</span>, <span class="dt">afun =</span> mean, <span class="dt">format =</span> <span class="st">&quot;xx.x&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-10" title="10"><span class="st">  </span><span class="kw">build_table</span>(df)</a></code></pre></div>
+<pre><code>                    Arm A                     Arm B         
+             Female        Male        Female        Male   
+             (N=96)      (N=105)       (N=92)      (N=107)  
+------------------------------------------------------------
+CAN        45 (46.9%)    64 (61%)     46 (50%)    62 (57.9%)
+  Left     32 (33.3%)    42 (40%)    26 (28.3%)   37 (34.6%)
+    mean      38.9         40.4         40.3         37.7   
+  Right    13 (13.5%)    22 (21%)    20 (21.7%)   25 (23.4%)
+    mean      36.6         40.2         40.2         40.6   
+USA        51 (53.1%)    41 (39%)     46 (50%)    45 (42.1%)
+  Left     34 (35.4%)   19 (18.1%)   25 (27.2%)   25 (23.4%)
+    mean      40.4         39.7         39.2         40.1   
+  Right    17 (17.7%)    22 (21%)    21 (22.8%)   20 (18.7%)
+    mean      36.9         39.8         38.5          39    </code></pre>
+<p>Further, the <code>rtable</code> syntax has hopefully also become a bit more straightforward to derive the cell values than with <code>dplyr</code> for this particular table.</p>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>In this vignette learned that:</p>
+<ul>
+<li>many tables are quite easily created with <code>dplyr</code> and <code>data.frame</code> or <code>tibble</code> as data structure
+<ul>
+<li><code>dplyr</code> keeps simple things simple</li>
+</ul></li>
+<li>if tables have group summaries then repeating of information is required</li>
+<li><code>rtables</code> streamlines the construction of complex tables</li>
+</ul>
+<p>We recommend that you continue reading the <code>clinical_trials</code> vignette where we create a number of more advanced tables using layouts.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

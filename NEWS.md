@@ -1,0 +1,169 @@
+## rtables 0.3.5.9000
+
+## rtables 0.3.5
+
+Documentation-text only changes to introduction vignette to pass CRAN's URL checks. All package, example, test, and vignette code fully identical to that in tagged github release 0.3.4
+
+## rtables 0.3.4
+
+Minor changes to the 0.3.3 version in order to submit rtables to CRAN.
+
+## rtables 0.3.3
+
+This version completely refactors the `rtables` package. We do provide a backwards compatibility layer with the
+`rtable`, `rcell`, `rrow`, `rheader`, and `rtabulate` family of functions. However the table data structure and main
+tabulation framework have changed. We provide extensive documentation in the manuals `help(package = "rtables")` and
+vignettes `vignette(package = "rtables")` of the package.
+
+The changes to `rtables` have been undertaken to better meet the requirements of creating and analyzing & reporting
+tables in the context of clinical trials.
+
+
+## rtables 0.3.2.17.9046
+
+* `make_afun` now `force()`s all customization arguments immediately, which prevents problems when called within loop/lapply constructs.
+
+## rtables 0.3.2.17.9045
+
+* Tabulation machinery no longer removes NAs mandatorily in some cases, including mutlivar column splits
+* `analyze_colvars`'s `inclNAs` argument now respected.
+
+## rtables 0.3.2.17.9044
+
+* Fix indent modifier propogation during tabulation
+* Fix indent calculation in `make_pagdf`
+* Add significant testing to ensure `make_pagdf` indent calculation remains correct
+
+## rtables 0.3.2.17.9043
+
+* Rework how reference columns are handled so analyses which use `.in_ref_col` and `.ref_group` work correctly when custom splitting is used (including the provided combination-levels mechanism)
+
+## rtables 0.3.2.17.9042
+
+* Fix naming/pathing for columns in multivar case (split itself now has default name "multivars")
+* Fix labelling bug when same variable appears multiple times in MultiVarSplit with different associated levels
+
+
+## rtables 0.3.2.17.9041
+
+* Allow single variable to be used within `split_cols_by_multivar` 
+* Various removal of defunct 
+
+## rtables 0.3.2.17.9040
+
+* Fix regression caused by 0.3.2.17.9039 where column split values were displayed by name rather than label.
+
+## rtables 0.3.2.17.9039
+
+* Fix bug in display of column information when column structure is not symetric, as with recursive cbinds.
+
+## rtables 0.3.2.17.9036
+
+* Fixed bug in row subsetting when table has only content rows.
+* Basic compare_rtables function now works as in previous versions, no awareness of row or column structure.
+
+## rtables 0.3.2.17.9036
+
+* `summarize_row_groups` can now accept a list of functions for the `cfun` argument as `analyze_colvars` does.
+
+## rtables 0.3.2.17.9035
+
+* Fix bug unearthed by change in 0.3.2.17.9034 where cell formats not retained during column subsetting
+
+## rtables 0.3.2.17.9034
+
+* Fix internal `value_formats` accessor so it operates on CellValues rather than the raw contained values (thus always returning NULL)
+* `rrow` constructor no longer interpretes cell formats a row format when they are the same across all cells. Fixes bug in  "correct way" code discussed in #112
+
+## rtables 0.3.2.17.9033
+
+* Interpret .formats in `in_rows` as *cell* formats rather than row formats.
+
+## rtables 0.3.2.17.9031
+
+* cbind_rtables can now take more than 2 tables.
+
+## rtables 0.3.2.17.9029
+
+* Fix issue underlying spurious length-missmatch warning in some cases when using `analyze_colvars`
+
+## rtables 0.3.2.17.9028
+
+* `analyze_colvars` now takes and adheres to `inclNAs` argument
+
+## rtables 0.3.2.17.9027
+
+* issues with no news: 
+
+## rtables 0.1.7
+
+* added format `xx.xx (xx.xx - xx.xx)` and `x.xxxx | (<0.0001)`
+
+## rtables 0.1.6
+
+* Minor changes.
+
+## rtables 0.1.5
+
+* Changed testing approach to fit internal pipelines.
+
+## rtables 0.1.4
+
+* Replaced dots to underscore in class checking functions.
+
+## rtables 0.1.3
+
+* `col_by` in `rtabulate` now accepts matrices:
+  - `col_by_to_matrix`, `col_by_to_factor`, `by_factor_to_matrix`.
+  - `by_add_total`, `by_all`, `by_combine`, `by_quartile`, `by_compare_subset`,  `by_hierarchical`, `by_drop_empty_cols`.
+  
+* New utility functions to deal with variable labels:
+  - `label`, `var_labels<-`, `var_labels`, `var_labels_remove`, `var_relabel`, `with_label`.
+
+* Other new functions:
+  - `cbing_rtables`.
+  - `empty_rtables`, `is_empty_rtable`, `is_non_empty_rtable`, `is_rtable`.
+  - `header_indent`, `header_indent<-`, `header_row.names`, `header_row.names<-`.
+  - `insert_rrow`.
+
+## rtables 0.1.2
+
+* `rbind.rtable` now supports binding rtables with rows, e.g. `rbind(tbl1, rrow(), tbl2)` or `rbind(tbl1, rrow("row name"), tbl2)`.
+* `rbindl_rtables` supports `NULL` objects in the list (except for the first element).
+* Add `indent` function.
+* `header_add_N` deals gracefully with `NULL` objects.
+
+## rtables 0.1.1
+
+* `rtablulate` family of functions do not support the `row_*_data_args` arguments anymore. Instead, the `col_wise_args` argument is introduced.
+* Functions `order_rrows`, `sort_rrows`, `order_rtables`, and `sort_rtables` are introduced.
+* Prevent `rtables` from being unlisted with `unlist.rtables`.
+
+
+## rtables 0.1.0.6
+
+* `Viewer` now also accepts objects of class `shiny.tag` (defined in package `htmltools`).
+* `as.html` accepts `class.table`, `class.tr`, `class.th`, and `class.td` as an argument.
+
+## rtables 0.1.0.5
+
+* Added `sprintf_format` for formatting rcells (thanks to Doug Kelkhoff for the suggestion).
+* Added `"(N=xx)"` and `">999.9"` format labels.
+* `rtabulate` has now an argument `col_N` and the function `col_N()`.
+
+## rtables 0.1.0
+
+* Version `0.1.0` is a major re-design with lots of internal refactoring and the following API changes:
+  - Redesign: `rtable` has now `header` argument instead of `col.names`. A `header` can be created with `rheader` and is a collection of `rrow`s. If `header` is set to `c("A", "B")` then `rtable` will create the `rheader` with a single `rrow`  and by setting `row.name` to `NULL`.
+  - `header` and `header<-` function added.
+  - Renamed `get_rcell_formats` to `list_rcell_format_labels`.
+  - If `rcell` format is `NULL` then the cell content will be converted to a string with `paste(as.character(x), collapse = ', ')`.
+  - Accessor `[i,]` works now to subset a table.
+  - `rbind` method for rtables.
+  - `row.names<-.rtable` method.
+  - `rtabulate` added for creating tables.
+  - `indented_row.names` function added.
+
+## rtables 0.0.1
+
+* Initial public release

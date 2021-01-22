@@ -1,0 +1,75 @@
+---
+title: "Constructing rtables Manually"
+author: "Adrian Waddell"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Constructing rtables Manually}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(comment = "")
+```
+
+```{css, echo=FALSE}
+.reveal .r code {
+    white-space: pre;
+}
+```
+
+## Overview
+
+The main functions currently associated with `rtable`s are
+
+Tables in rtables can be constructed via the layout or `rtabulate` tabulation frameworks or also manually. Currently manual table construction is the only way to define column spans. The main functions for manual table constructions are:
+
+* `rtable`: collection of `rrow` objects, column header and default format
+* `rrow`: collection of `rcell` objects and default format
+* `rcell`: collection of data objects and cell format
+
+## Simple Example
+
+
+```{r, message=FALSE}
+library(rtables)
+```
+```{r}
+tbl <- rtable(
+  header = c("Treatement\nN=100", "Comparison\nN=300"),
+  format = "xx (xx.xx%)",
+  rrow("A", c(104, .2), c(100, .4)),
+  rrow("B", c(23, .4), c(43, .5)),
+  rrow(),
+  rrow("this is a very long section header"),
+  rrow("estimate", rcell(55.23, "xx.xx", colspan = 2)),
+  rrow("95% CI", indent = 1, rcell(c(44.8, 67.4), format = "(xx.x, xx.x)", colspan = 2))
+)
+```
+
+
+Before we go into explaining the individual components used to create this table
+we continue with the html conversion of the `rtable` object:
+
+
+```{r}
+as_html(tbl, width = "80%")
+```
+
+Next, the `[` operator lets you access the cell content.
+
+```{r}
+tbl[1, 1]
+```
+
+and to format that cell run `format_rcell(tbl[1,1])`=`r #format_rcell(tbl[1,1])`.
+
+Note that `tbl[6, 1]` and `tbl[6, 2]` display both the same `rcell` because of
+the colspan.
+
+
+
