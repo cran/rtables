@@ -367,6 +367,10 @@ setMethod("spl_payload<-", "Split", function(obj, value) {
 setGeneric("spl_label_var", function(obj) standardGeneric("spl_label_var"))
 #' @rdname int_methods
 setMethod("spl_label_var", "VarLevelSplit", function(obj) obj@value_label_var)
+## TODO revisit. do we want to do this? used in vars_in_layout, but only
+## for convenience.
+#' @rdname int_methods
+setMethod("spl_label_var", "Split", function(obj) NULL)
 
 ### name related things
 #' Label and Name accessors
@@ -473,7 +477,7 @@ setMethod("obj_label<-", "VTableTree",
     lr = tt_labelrow(obj)
     obj_label(lr) = value
     if( !is.na(value) && nzchar(value))
-        labelrow_visible(lr) = TRUE
+        labelrow_visible(lr) = "visible" ## TRUE
 
     tt_labelrow(obj) = lr
     obj
@@ -508,7 +512,7 @@ setMethod("labelrow_visible", "LabelRow",
           function(obj) obj@visible)
 #' @rdname int_methods
 setMethod("labelrow_visible", "VAnalyzeSplit",
-          function(obj) obj@var_label_visible)
+          function(obj) .labelkids_helper(obj@var_label_position))
 
 #' @rdname int_methods
 setGeneric("labelrow_visible<-", function(obj, value) standardGeneric("labelrow_visible<-"))
@@ -531,7 +535,7 @@ setMethod("labelrow_visible<-", "LabelRow",
 #' @rdname int_methods
 setMethod("labelrow_visible<-", "VAnalyzeSplit",
           function(obj, value) {
-    obj@var_label_visible = value
+    obj@var_label_position = value
     obj
 })
 
@@ -559,17 +563,45 @@ setMethod("label_kids<-", c("Split", "logical"), function(spl, value) {
 #' @rdname int_methods
 setGeneric("vis_label", function(spl) standardGeneric("vis_label"))
 #' @rdname int_methods
-setMethod("vis_label", "Split", function(spl) spl@split_label_visible)
+setMethod("vis_label", "Split", function(spl) {
+    .labelkids_helper(label_position(spl))
+})
 
 #' @rdname int_methods
 setGeneric("vis_label<-", function(spl, value) standardGeneric("vis_label<-"))
 #' @rdname int_methods
 setMethod("vis_label<-", "Split", function(spl, value) {
+    stop("defunct")
     if(is.na(value))
         stop("split label visibility must be TRUE or FALSE, got NA")
-    spl@split_label_visible <- value
+#    spl@split_label_visible <- value
     spl
 })
+
+
+
+#' @rdname int_methods
+setGeneric("label_position", function(spl) standardGeneric("label_position"))
+#' @rdname int_methods
+setMethod("label_position", "Split", function(spl) spl@split_label_position)
+
+#' @rdname int_methods
+setMethod("label_position", "VAnalyzeSplit", function(spl) spl@var_label_position) ##split_label_position)
+
+
+#' @rdname int_methods
+setGeneric("label_position<-", function(spl, value) standardGeneric("label_position<-"))
+#' @rdname int_methods
+setMethod("label_position<-", "Split", function(spl, value) {
+    value <- match.arg(value, valid_lbl_pos)
+    spl@split_label_position <- value
+    spl
+})
+
+
+
+
+
 
 
 ### Function acessors (summary, tabulation and split)
@@ -1894,3 +1926,278 @@ setMethod("top_left<-", "PreDataTableLayouts", function(obj, value) {
     obj@top_left <- value
     obj
 })
+
+
+vil_collapse <- function(x) {
+    x <- unlist(x)
+    x <- x[!is.na(x)]
+    x <- unique(x)
+    x[nzchar(x)]
+}
+
+#' List Variables required by a pre-data table layout
+#'
+#' @param lyt The Layout (or a component thereof)
+#'
+#' @details This will walk the  layout declaration and return a vector
+#'     of the  names of the unique  variables that are used  in any of
+#'     the following ways:
+#'
+#' \itemize{
+#' \item{Variable being split on (directly or via cuts)}
+#' \item{Element of a Multi-variable column split}
+#' \item{Content variable}
+#' \item{Value-label variable}
+#' }
+#'
+#' @note This function will not detect dependencies implicit in
+#' analysis or summary functions which accept \code{df} and then
+#' rely on the existence of particular variables not being split on/
+#' analyzed.
+#'
+#' @note The order these variable names appear within the return vector
+#' is undefined and should not be relied upon.
+#'
+#' @return A character vector containing the unique variables explicitly used in the layout (see Notes).
+#'
+#' @examples
+#' lyt <- basic_table() %>%
+#'     split_cols_by("ARM") %>%
+#'     split_cols_by("SEX") %>%
+#'     summarize_row_groups(label_fstr = "Overall (N)") %>%
+#'     split_rows_by("RACE", split_label = "Ethnicity", labels_var = "ethn_lab",
+#'                   split_fun = drop_split_levels) %>%
+#'     summarize_row_groups("RACE", label_fstr = "%s (n)") %>%
+#'     analyze("AGE", var_labels = "Age", afun = mean, format = "xx.xx")
+#'
+#' vars_in_layout(lyt)
+#'
+#' @export
+#' @rdname vil
+setGeneric("vars_in_layout", function(lyt) standardGeneric("vars_in_layout"))
+
+#' @rdname vil
+setMethod("vars_in_layout", "PreDataTableLayouts",
+          function(lyt) {
+    vil_collapse(c(vars_in_layout(clayout(lyt)),
+             vars_in_layout(rlayout(lyt))))
+})
+
+#' @rdname vil
+setMethod("vars_in_layout", "PreDataAxisLayout",
+          function(lyt) {
+    vil_collapse(lapply(lyt, vars_in_layout))
+})
+
+#' @rdname vil
+setMethod("vars_in_layout", "SplitVector",
+          function(lyt) {
+    vil_collapse(lapply(lyt, vars_in_layout))
+})
+
+#' @rdname vil
+setMethod("vars_in_layout", "Split",
+          function(lyt) vil_collapse(c(spl_payload(lyt),
+                                       ## for an AllSplit/RootSplit
+                                       ## doesn't have to be same as payload
+                                       content_var(lyt),
+                                       spl_label_var(lyt))))
+
+#' @rdname vil
+setMethod("vars_in_layout", "CompoundSplit",
+          function(lyt) vil_collapse(lapply(spl_payload(lyt), vars_in_layout)))
+
+#' @rdname vil
+setMethod("vars_in_layout", "ManualSplit",
+          function(lyt) character())
+
+
+
+
+
+## Titles and footers
+
+setGeneric("main_title", function(obj) standardGeneric("main_title"))
+setMethod("main_title", "VTitleFooter",
+          function(obj) obj@main_title)
+
+setGeneric("main_title<-", function(obj, value) standardGeneric("main_title<-"))
+setMethod("main_title<-", "VTitleFooter",
+          function(obj, value) {
+    stopifnot(length(value) == 1)
+    obj@main_title <- value
+    obj
+})
+
+
+setGeneric("subtitles", function(obj) standardGeneric("subtitles"))
+setMethod("subtitles", "VTitleFooter",
+          function(obj) obj@subtitles)
+
+
+setGeneric("subtitles<-", function(obj, value) standardGeneric("subtitles<-"))
+setMethod("subtitles<-", "VTitleFooter",
+          function(obj, value) {
+    obj@subtitles <- value
+    obj
+})
+
+all_titles <- function(obj) c(main_title(obj), subtitles(obj))
+
+
+setGeneric("main_footer", function(obj) standardGeneric("main_footer"))
+setMethod("main_footer", "VTitleFooter",
+          function(obj) obj@main_footer)
+
+
+setGeneric("main_footer<-", function(obj, value) standardGeneric("main_footer<-"))
+setMethod("main_footer<-", "VTitleFooter",
+          function(obj, value) {
+    obj@main_footer <- value
+    obj
+})
+
+
+
+setGeneric("prov_footer", function(obj) standardGeneric("prov_footer"))
+setMethod("prov_footer", "VTitleFooter",
+          function(obj) obj@provenance_footer)
+
+
+setGeneric("prov_footer<-", function(obj, value) standardGeneric("prov_footer<-"))
+setMethod("prov_footer<-", "VTitleFooter",
+          function(obj, value) {
+    obj@provenance_footer <- value
+    obj
+})
+
+all_footers <- function(obj) c(main_footer(obj), prov_footer(obj))
+
+
+#' Referential Footnote Accessors
+#'
+#' Get and set referential footnotes on aspects of a built table
+#'
+#' @inheritParams gen_args
+#' @export
+#' @rdname ref_fnotes
+
+setGeneric("row_footnotes", function(obj) standardGeneric("row_footnotes"))
+#' @export
+#' @rdname ref_fnotes
+setMethod("row_footnotes", "TableRow",
+          function(obj) obj@row_footnotes)
+#' @export
+#' @rdname ref_fnotes
+setMethod("row_footnotes", "RowsVerticalSection",
+          function(obj) attr(obj, "row_footnotes") %||% list())
+
+#' @export
+#' @rdname ref_fnotes
+setGeneric("row_footnotes<-", function(obj, value) standardGeneric("row_footnotes<-"))
+#' @export
+#' @rdname ref_fnotes
+setMethod("row_footnotes<-", "TableRow",
+          function(obj, value) {
+    obj@row_footnotes <- value
+    obj
+})
+
+#' @export
+#' @rdname ref_fnotes
+setMethod("row_footnotes", "ElementaryTable",
+          function(obj) {
+    rws <- collect_leaves(obj, TRUE, TRUE)
+    cells <- lapply(rws, row_footnotes)
+    cells
+})
+
+#' @export
+#' @rdname ref_fnotes
+setGeneric("cell_footnotes", function(obj) standardGeneric("cell_footnotes"))
+#' @export
+#' @rdname ref_fnotes
+setMethod("cell_footnotes", "CellValue",
+          function(obj) attr(obj, "footnotes") %||% list())
+#' @export
+#' @rdname ref_fnotes
+setMethod("cell_footnotes", "TableRow",
+          function(obj) {
+    ret <- lapply(row_cells(obj), cell_footnotes)
+    if(length(ret) != ncol(obj)) {
+        ret <- rep(ret, row_cspans(obj))
+    }
+    ret
+})
+
+#' @export
+#' @rdname ref_fnotes
+setMethod("cell_footnotes", "LabelRow",
+          function(obj) {
+    rep(list(list()), ncol(obj))
+})
+
+#' @export
+#' @rdname ref_fnotes
+setMethod("cell_footnotes", "ElementaryTable",
+          function(obj) {
+    rws <- collect_leaves(obj, TRUE, TRUE)
+    cells <- lapply(rws, cell_footnotes)
+    do.call(rbind, cells)
+})
+
+
+#' @export
+#' @rdname ref_fnotes
+setGeneric("cell_footnotes<-", function(obj, value) standardGeneric("cell_footnotes<-"))
+#' @export
+#' @rdname ref_fnotes
+setMethod("cell_footnotes<-", "CellValue",
+          function(obj, value) {
+    if(is(value, "RefFootnote"))
+        value <- list(value)
+    else if (!is.list(value))
+        value <- lapply(value, RefFootnote)
+    attr(obj, "footnotes") <- value
+    obj
+})
+#' @export
+#' @rdname ref_fnotes
+setMethod("cell_footnotes<-", "DataRow",
+          function(obj, value) {
+    if(length(value) != ncol(obj))
+        stop("Did not get the right number of footnote ref values for cell_footnotes<- on a full row.")
+
+    row_cells(obj) <- mapply(function(cell, fns) {
+        if(is.list(fns))
+            cell_footnotes(cell) <- lapply(fns, RefFootnote)
+        else
+            cell_footnotes(cell) <- list(RefFootnote(fns))
+        cell
+    },
+    cell = row_cells(obj),
+    fns = value, SIMPLIFY=FALSE)
+    obj
+})
+
+
+
+#' @export
+#' @rdname ref_fnotes
+setGeneric("ref_index", function(obj) standardGeneric("ref_index"))
+#' @export
+#' @rdname ref_fnotes
+setMethod("ref_index", "RefFootnote",
+          function(obj) obj@index)
+
+#' @export
+#' @rdname ref_fnotes
+setGeneric("ref_index<-", function(obj, value) standardGeneric("ref_index<-"))
+#' @export
+#' @rdname ref_fnotes
+setMethod("ref_index<-", "RefFootnote",
+          function(obj, value) {
+    obj@index <- value
+    obj
+})
+

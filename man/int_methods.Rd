@@ -106,6 +106,7 @@
 \alias{spl_payload<-,Split-method}
 \alias{spl_label_var}
 \alias{spl_label_var,VarLevelSplit-method}
+\alias{spl_label_var,Split-method}
 \alias{tt_labelrow}
 \alias{tt_labelrow,VTableTree-method}
 \alias{tt_labelrow<-}
@@ -127,6 +128,11 @@
 \alias{vis_label,Split-method}
 \alias{vis_label<-}
 \alias{vis_label<-,Split-method}
+\alias{label_position}
+\alias{label_position,Split-method}
+\alias{label_position,VAnalyzeSplit-method}
+\alias{label_position<-}
+\alias{label_position<-,Split-method}
 \alias{content_fun}
 \alias{content_fun,Split-method}
 \alias{content_fun<-}
@@ -558,6 +564,8 @@ spl_label_var(obj)
 
 \S4method{spl_label_var}{VarLevelSplit}(obj)
 
+\S4method{spl_label_var}{Split}(obj)
+
 tt_labelrow(obj)
 
 \S4method{tt_labelrow}{VTableTree}(obj)
@@ -599,6 +607,16 @@ vis_label(spl)
 vis_label(spl) <- value
 
 \S4method{vis_label}{Split}(spl) <- value
+
+label_position(spl)
+
+\S4method{label_position}{Split}(spl)
+
+\S4method{label_position}{VAnalyzeSplit}(spl)
+
+label_position(spl) <- value
+
+\S4method{label_position}{Split}(spl) <- value
 
 content_fun(obj)
 

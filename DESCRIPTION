@@ -1,7 +1,7 @@
 Package: rtables
 Title: Reporting Tables
-Date: 2020-12-21
-Version: 0.3.6
+Date: 2021-07-07
+Version: 0.3.8
 Authors@R: c(
   person("Gabriel", "Becker", email = "gabembecker@gmail.com", role = c("aut", "cre")),
   person("Adrian", "Waddell", email = "adrian.waddell@roche.com", role = "aut"),
@@ -33,13 +33,14 @@ Collate: '00tabletrees.R' 'Viewer.R' 'argument_conventions.R'
         'tt_compare_tables.R' 'tt_compatibility.R' 'tt_deprecated.R'
         'tt_dotabulation.R' 'tt_paginate.R' 'tt_pos_and_access.R'
         'tt_showmethods.R' 'tt_sort.R' 'tt_test_afuns.R'
-        'tt_toString.R' 'labels.R' 'zzz_constants.R'
+        'tt_toString.R' 'tt_export.R' 'labels.R' 'index_footnotes.R'
+        'tt_from_df.R' 'zzz_constants.R'
 NeedsCompilation: no
-Packaged: 2021-01-19 20:33:45 UTC; gabrielbecker
+Packaged: 2021-07-13 20:21:16 UTC; gabrielbecker
 Author: Gabriel Becker [aut, cre],
   Adrian Waddell [aut],
   Daniel Sabanés Bové [ctb],
   Maximilian Mordig [ctb]
 Maintainer: Gabriel Becker <gabembecker@gmail.com>
 Repository: CRAN
-Date/Publication: 2021-01-22 08:40:02 UTC
+Date/Publication: 2021-07-13 20:50:02 UTC

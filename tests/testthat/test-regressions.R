@@ -153,6 +153,8 @@ test_that("cell-level formats are retained when column subsetting", {
     rrow("estimate", rcell(55.23, "xx.xx", colspan = 2)),
     rrow("95% CI", indent = 1, rcell(c(44.8, 67.4), format = "(xx.x, xx.x)", colspan = 2)))
 
+  ## this tests for no warnings, because testthat is terribly designed
+  expect_warning(toString(tbl), regexp = NA)
   subset <- tbl[,1]
   expect_identical(matrix_form(subset)$strings,
                    matrix_form(tbl)$strings[,-3])
@@ -277,4 +279,146 @@ test_that("inclNAs with empty factor levels behaves", {
         analyze("COUNTRY", function(x) in_rows(nobs = length(x)), inclNAs = FALSE) %>%
         build_table(dfdm)
     expect_identical(tbl,tbl2)
+})
+
+
+## #173
+test_that("column labeling works correctly when value label var is a factor", {
+
+    ex_adsl$ARMLAB <- factor(ex_adsl$ARM,
+                             labels = c("Drug X", "Placebo", "Combination"))
+    lyt_orig <- basic_table() %>%
+        split_cols_by("ARM") %>%
+        analyze(c("AGE", "BMRKR2"))
+    tbl_orig <- build_table(lyt_orig, ex_adsl)
+
+    lyt_lab <- basic_table() %>%
+        split_cols_by("ARM", labels_var = "ARMLAB") %>%
+        analyze(c("AGE", "BMRKR2"))
+    tbl_lab <- build_table(lyt_lab, ex_adsl)
+
+    tbl_orig
+    tbl_lab # wrong labeling here
+    expect_identical(names(tbl_lab),
+                     names(tbl_orig))
+    str <- matrix_form(tbl_lab)$strings
+    expect_identical(as.vector(str[1,]),
+                     c("", "Drug X", "Placebo", "Combination"))
+})
+
+
+## pathing regression tests
+test_that("pathing works", {
+    ## issue https://github.com/Roche/rtables/issues/172
+    result_overall <- basic_table() %>%
+        split_cols_by("ARM") %>%
+        add_colcounts() %>%
+        add_overall_col("overall") %>%
+        analyze(c("AGE", "SEX")) %>%
+        build_table(ex_adsl)
+
+    va <- value_at(result_overall, c("AGE", "Mean"), c("ARM", "C: Combination"))
+    expect_identical(va, result_overall[2, 3, drop=TRUE])
+
+    ## issue https://github.com/Roche/rtables/issues/178
+    t2 <- basic_table() %>%
+        split_cols_by("ARMCD") %>%
+        split_rows_by("COUNTRY", split_fun = keep_split_levels("CHN")) %>%
+        analyze("SEX") %>%
+        analyze("AGE", nested = FALSE) %>%
+        analyze("BMRKR1") %>%
+        build_table(ex_adsl)
+
+    ## this may get changed, but for now enforce it
+    expect_error(cell_values(t2, "AGE"))
+    expect_identical(cell_values(t2, c("ma_AGE_BMRKR1", "AGE")),
+                     cell_values(t2, c("ma_AGE_BMRKR1", "AGE", "Mean")))
+    expect_identical(cell_values(t2, c("ma_AGE_BMRKR1", "AGE")),
+                     lapply(split(ex_adsl$AGE, ex_adsl$ARMCD), mean))
+})
+
+## issue https://github.com/Roche/rtables/issues/175
+test_that("pagination works on tables with only 1 row", {
+    tt <- rtable(header = " ", rrow("", "NUll report"))
+    expect_identical(nrow(tt), 1L)
+    expect_identical(pag_tt_indices(tt), list(1L))
+})
+
+
+test_that("in_rows doesn't clobber cell format when only 1 row", {
+    afun <- function(x) {in_rows("name" = rcell(123.31241231, format= "xx.xx"))}
+    lyt <- basic_table() %>%
+        analyze("AGE", afun = afun)
+    tbl <- build_table(lyt, DM)
+    mf <- matrix_form(tbl)
+    expect_identical(mf$strings[2,2, drop = TRUE], "123.31")
+})
+
+
+## newlabels works in reorder_split_levels (https://github.com/Roche/rtables/issues/191)
+
+test_that("newlabels works in reorder_split_levels", {
+
+    lyt <- basic_table() %>%
+        split_cols_by("ARM") %>%
+        split_rows_by(
+            "COUNTRY",
+            split_fun = reorder_split_levels(
+                neworder = c("CAN", "PAK", "BRA"),
+                newlabels = c(CAN = "Canada", PAK = "Pakistan", BRA = "Brazil")
+            )
+        ) %>%
+        analyze("AGE")
+    tab <- build_table(lyt, ex_adsl)
+    expect_identical(c("Canada", "Mean", "Pakistan", "Mean", "Brazil", "Mean"),
+                     row.names(tab))
+
+})
+
+
+
+## https://github.com/Roche/rtables/issues/198
+test_that("no extraneous footnote attribute", {
+
+    library(rtables)
+    r1 <- in_rows(
+        .list = list(
+            ncols = rcell(5L, "xx", label = "ncol")
+        )
+    )
+    expect_false("footnote" %in% names(attributes(r1$ncols)))
+
+    r2 <- in_rows(
+        .list = list(
+            ncols = rcell(5L, "xx", label = "ncol"),
+            nrows = rcell(10L, "xx", label = "nrow")
+        )
+    )
+    expect_false("footnote" %in% names(attributes(r2$ncols)))
+
+})
+
+
+## https://github.com/Roche/rtables/issues/200
+test_that("no max is -Inf warnings from make_row_df when content rows exist in places that don't have any child rows in the subsequent split", {
+
+    dat2 <- data.frame(
+        l1 = factor(c("A", "B")),
+        l2 = factor(c("aa1", "bb1")),
+        l3 = c("aaa1", "bbb1"),
+        stringsAsFactors = FALSE
+    )
+
+    lyt <- basic_table() %>%
+        split_rows_by("l1") %>%
+        summarize_row_groups() %>%
+        split_rows_by("l2") %>%
+        summarize_row_groups() %>%
+        split_rows_by("l3") %>%
+        summarize_row_groups()
+    tbl <- build_table(lyt, dat2)
+    ## again, regexp of NA tests for ***no warnings***
+    ## I know, I know, but I didn't design testthat!
+    expect_warning(make_row_df(tbl), regexp = NA)
+
 })
