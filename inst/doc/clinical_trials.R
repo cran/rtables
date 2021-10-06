@@ -201,7 +201,7 @@ basic_table() %>%
   build_table(filter(ADSL_NA, SEX %in% c("M", "F"))) 
 
 ## -----------------------------------------------------------------------------
-lyt <- NULL %>% 
+lyt <- basic_table() %>% 
   split_cols_by("ARM") %>%
   add_colcounts() %>%
   analyze(c("AGE", "SEX"), afun = s_summary)

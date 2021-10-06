@@ -115,8 +115,7 @@ in_rows <- function(..., .list = NULL, .names = NULL,
         stopifnot(!anyNA(.names))
     }
 
-    if(is.null(.formats))
-        .formats <- list(NULL)
+
     if(length(l) == 0) {
         if(length(.labels) >0 ||
            length(.formats) > 0 ||
@@ -125,6 +124,8 @@ in_rows <- function(..., .list = NULL, .names = NULL,
             stop("in_rows got 0 rows but length >0 of at leats one of .labels, .formats, .names, .indent_mods. Does your analysis/summary function handle the 0 row df/length 0 x case?")
         l2 <- list()
     } else {
+        if(is.null(.formats))
+            .formats <- list(NULL)
         stopifnot(is.list(.cell_footnotes))
         if(length(.cell_footnotes) != length(l)) {
             .cell_footnotes <- c(.cell_footnotes, setNames(rep(list(character()),
@@ -289,7 +290,8 @@ in_rows <- function(..., .list = NULL, .names = NULL,
 #' a_ref <- make_afun(s_ref, .labels = c( mean_diff = "Mean Difference from Ref"))
 #' a_ref(iris$Sepal.Length, .in_ref_col = TRUE, 1:10)
 #' a_ref(iris$Sepal.Length, .in_ref_col = FALSE, 1:10)
-
+#'
+#'
 make_afun <- function(fun,
                       .stats = NULL,
                       .formats = NULL,
@@ -323,7 +325,7 @@ make_afun <- function(fun,
         ## We define it in here so that the scoping hackery works correctly
         .if_in_formals <- function(nm, ifnot = list(), named_lwrap = TRUE) {
             val <- if(nm %in% fun_fnames) get(nm) else ifnot
-            if(named_lwrap && length(val) > 0)
+            if(named_lwrap && !identical(val, ifnot))
                 setNames(list(val), nm)
             else
                 val
@@ -347,7 +349,8 @@ make_afun <- function(fun,
             in_rc_argl,
             .if_in_formals(".df_row"),
             .if_in_formals(".var"),
-            .if_in_formals(".ref_full"))
+            .if_in_formals(".ref_full")
+        )
 
         allvars <- setdiff(fun_fnames, c("...", names(sfunargs)))
         ## values int he actual call to this function override customization
@@ -466,3 +469,6 @@ insert_replace <- function(x, nm, newvals = x[[nm]]) {
 parser_helper <- function(text, envir = parent.frame(2)) {
     parse(text = text, keep.source = FALSE)
 }
+
+
+length_w_name <- function(x, .parent_splval) in_rows(length(x), .names = value_labels(.parent_splval))

@@ -477,8 +477,9 @@ setMethod("obj_label<-", "VTableTree",
     lr = tt_labelrow(obj)
     obj_label(lr) = value
     if( !is.na(value) && nzchar(value))
-        labelrow_visible(lr) = "visible" ## TRUE
-
+        labelrow_visible(lr) = TRUE
+    else if(is.na(value))
+        labelrow_visible(lr) = FALSE
     tt_labelrow(obj) = lr
     obj
 })
@@ -569,14 +570,14 @@ setMethod("vis_label", "Split", function(spl) {
 
 #' @rdname int_methods
 setGeneric("vis_label<-", function(spl, value) standardGeneric("vis_label<-"))
-#' @rdname int_methods
-setMethod("vis_label<-", "Split", function(spl, value) {
-    stop("defunct")
-    if(is.na(value))
-        stop("split label visibility must be TRUE or FALSE, got NA")
-#    spl@split_label_visible <- value
-    spl
-})
+## #' @rdname int_methods
+## setMethod("vis_label<-", "Split", function(spl, value) {
+##     stop("defunct")
+##     if(is.na(value))
+##         stop("split label visibility must be TRUE or FALSE, got NA")
+## #    spl@split_label_visible <- value
+##     spl
+## })
 
 
 
@@ -624,6 +625,25 @@ setGeneric("analysis_fun", function(obj) standardGeneric("analysis_fun"))
 setMethod("analysis_fun", "AnalyzeVarSplit", function(obj) obj@analysis_fun)
 #' @rdname int_methods
 setMethod("analysis_fun", "AnalyzeColVarSplit", function(obj) obj@analysis_fun)
+
+#' @rdname int_methods
+setGeneric("analysis_fun<-", function(object, value) standardGeneric("analysis_fun<-"))
+
+#' @rdname int_methods
+setMethod("analysis_fun<-", "AnalyzeVarSplit", function(object, value) {
+    object@analysis_fun <- value
+    object
+})
+#' @rdname int_methods
+setMethod("analysis_fun<-", "AnalyzeColVarSplit", function(object, value) {
+    if(is(value, "function"))
+        value <- list(value)
+    object@analysis_fun <- value
+    object
+})
+
+
+
 
 #' @rdname int_methods
 setGeneric("split_fun", function(obj) standardGeneric("split_fun"))
@@ -951,34 +971,54 @@ setMethod("content_format<-", "Split", function(obj, value) {
 ## this one tiny utility function is NOT worth a dependency.
 ## modified it so any length 0 x grabs y
 `%||%` = function(L, R) if(length(L) == 0) R else L
-#' @rdname int_methods
+#' Value Formats
+#'
+#' Returns a matrix of formats for the cells in a table
+#' @param obj A table or row object.
 #' @param default FormatSpec.
+#' @export
+#' @return Matrix (storage mode list) containing the effective format for each
+#' cell position in the table (including 'virtual' cells implied by label rows,
+#' whose formats are always `NULL`)
+#' @examples
+#'
+#' lyt <- basic_table() %>%
+#' split_rows_by("RACE", split_fun = keep_split_levels(c("ASIAN", "WHITE"))) %>%
+#' analyze("AGE")
+#'
+#' tbl <- build_table(lyt, DM)
+#' value_formats(tbl)
+
 setGeneric("value_formats", function(obj, default = obj_format(obj)) standardGeneric("value_formats"))
-#' @rdname int_methods
+#' @rdname value_formats
 setMethod("value_formats", "ANY",
           function(obj, default) {
     attr(obj, "format") %||% default
 })
 
-#' @rdname int_methods
+#' @rdname value_formats
 setMethod("value_formats", "TableRow",
           function(obj, default) {
+    if(!is.null(obj_format(obj)))
+        default <- obj_format(obj)
     formats = lapply(row_cells(obj), function(x)
         value_formats(x) %||% default)
     formats
 })
-#' @rdname int_methods
+#' @rdname value_formats
 setMethod("value_formats", "LabelRow",
           function(obj, default) {
     rep(list(NULL), ncol(obj))
 })
-#' @rdname int_methods
+#' @rdname value_formats
 setMethod("value_formats", "VTableTree",
           function(obj, default) {
+    if(!is.null(obj_format(obj)))
+        default <- obj_format(obj)
     rws = collect_leaves(obj, TRUE, TRUE)
-    formatrws = lapply(rws, value_formats)
+    formatrws = lapply(rws, value_formats, default = default)
     mat = do.call(rbind, formatrws)
-    row.names(mat) = NULL
+    row.names(mat) = row.names(obj)
     mat
 })
 
@@ -1205,6 +1245,7 @@ setMethod("content_indent_mod<-", "VTableNodeInfo",
 
 ## TODO export these?
 #' @rdname int_methods
+#' @export
 setGeneric("rawvalues", function(obj) standardGeneric("rawvalues"))
 #' @rdname int_methods
 setMethod("rawvalues", "ValueWrapper",  function(obj) obj@value)
@@ -1219,9 +1260,11 @@ setMethod("rawvalues", "CellValue", function(obj) obj[[1]])
 #' @rdname int_methods
 setMethod("rawvalues", "TreePos",
           function(obj) rawvalues(pos_splvals(obj)))
+#' @rdname int_methods
 setMethod("rawvalues", "RowsVerticalSection",  function(obj) unlist(obj, recursive = FALSE))
 
 #' @rdname int_methods
+#' @export
 setGeneric("value_names", function(obj) standardGeneric("value_names"))
 #' @rdname int_methods
 setMethod("value_names", "ANY", function(obj) as.character(rawvalues(obj)))
@@ -1267,7 +1310,18 @@ setMethod("value_labels", "LevelComboSplitValue",  function(obj) obj_label(obj))
 setMethod("value_labels", "MultiVarSplit", function(obj) obj@var_labels)
 
 
+#' @rdname int_methods
+setGeneric("spl_varlabels", function(obj) standardGeneric("spl_varlabels"))
+#' @rdname int_methods
+setMethod("spl_varlabels", "MultiVarSplit", function(obj) obj@var_labels)
 
+#' @rdname int_methods
+setGeneric("spl_varlabels<-", function(object, value) standardGeneric("spl_varlabels<-"))
+#' @rdname int_methods
+setMethod("spl_varlabels<-", "MultiVarSplit", function(object, value) {
+    object@var_labels <- value
+    object
+})
 
 
 
@@ -1503,6 +1557,21 @@ setMethod("coltree", "VTableTree",
 setMethod("coltree", "TableRow",
           function(obj, df, rtpos) coltree(col_info(obj)))
 
+setGeneric("coltree<-", function(obj, value) standardGeneric("coltree<-"))
+setMethod("coltree<-", c("InstantiatedColumnInfo", "LayoutColTree"),
+          function(obj, value) {
+    obj@tree_layout <- value
+    obj
+})
+
+setMethod("coltree<-", c("VTableTree", "LayoutColTree"),
+          function(obj, value) {
+    cinfo <- col_info(obj)
+    coltree(cinfo) <- value
+    col_info(obj) <- cinfo
+    obj
+})
+
 
 #' @rdname col_accessors
 #' @export
@@ -1517,9 +1586,10 @@ setMethod("col_exprs", "PreDataTableLayouts",
 #' @export col_exprs
 setMethod("col_exprs", "PreDataColLayout",
           function(obj, df = NULL) {
-    unlist(recursive = FALSE,
-           lapply(obj, build_splits_expr,
-                  df = df))
+    if(is.null(df))
+        stop("can't determine col_exprs without data")
+    ct <- coltree(obj, df = df)
+    make_col_subsets(ct, df = df)
 })
 
 #' @rdname col_accessors
@@ -1879,6 +1949,16 @@ setGeneric("spl_varnames",
 setMethod("spl_varnames", "MultiVarSplit",
           function(obj) obj@var_names)
 
+#' @rdname int_methods
+setGeneric("spl_varnames<-",
+           function(object, value) standardGeneric("spl_varnames<-"))
+#' @rdname int_methods
+setMethod("spl_varnames<-", "MultiVarSplit",
+          function(object, value) {
+    object@var_names <- value
+    object
+})
+
 
 #' Top Left Material (Experimental)
 #' @inheritParams gen_args
@@ -2074,6 +2154,15 @@ setMethod("prov_footer<-", "VTitleFooter",
 all_footers <- function(obj) c(main_footer(obj), prov_footer(obj))
 
 
+make_ref_value <-  function(value) {
+    if(is(value, "RefFootnote"))
+        value <- list(value)
+    else if (!is.list(value) || any(!sapply(value, is, "RefFootnote")))
+        value <- lapply(value, RefFootnote)
+    value
+}
+
+
 #' Referential Footnote Accessors
 #'
 #' Get and set referential footnotes on aspects of a built table
@@ -2099,7 +2188,7 @@ setGeneric("row_footnotes<-", function(obj, value) standardGeneric("row_footnote
 #' @rdname ref_fnotes
 setMethod("row_footnotes<-", "TableRow",
           function(obj, value) {
-    obj@row_footnotes <- value
+    obj@row_footnotes <- make_ref_value(value)
     obj
 })
 
@@ -2154,17 +2243,11 @@ setGeneric("cell_footnotes<-", function(obj, value) standardGeneric("cell_footno
 #' @rdname ref_fnotes
 setMethod("cell_footnotes<-", "CellValue",
           function(obj, value) {
-    if(is(value, "RefFootnote"))
-        value <- list(value)
-    else if (!is.list(value))
-        value <- lapply(value, RefFootnote)
-    attr(obj, "footnotes") <- value
+    attr(obj, "footnotes") <- make_ref_value(value)
     obj
 })
-#' @export
-#' @rdname ref_fnotes
-setMethod("cell_footnotes<-", "DataRow",
-          function(obj, value) {
+
+.cfn_set_helper <- function(obj, value) {
     if(length(value) != ncol(obj))
         stop("Did not get the right number of footnote ref values for cell_footnotes<- on a full row.")
 
@@ -2178,8 +2261,44 @@ setMethod("cell_footnotes<-", "DataRow",
     cell = row_cells(obj),
     fns = value, SIMPLIFY=FALSE)
     obj
+}
+
+#' @export
+#' @rdname ref_fnotes
+setMethod("cell_footnotes<-", "DataRow",
+          definition = .cfn_set_helper)
+
+#' @export
+#' @rdname ref_fnotes
+setMethod("cell_footnotes<-", "ContentRow",
+          definition = .cfn_set_helper)
+
+#' @export
+#' @rdname ref_fnotes
+setGeneric("col_fnotes_here", function(obj) standardGeneric("col_fnotes_here"))
+#' @export
+#' @rdname ref_fnotes
+setMethod("col_fnotes_here", c("LayoutColTree"), function(obj) obj@col_footnotes)
+#' @export
+#' @rdname ref_fnotes
+setMethod("col_fnotes_here", c("LayoutColLeaf"), function(obj) obj@col_footnotes)
+
+#' @export
+#' @rdname ref_fnotes
+setGeneric("col_fnotes_here<-", function(obj, value) standardGeneric("col_fnotes_here<-"))
+#' @export
+#' @rdname ref_fnotes
+setMethod("col_fnotes_here<-", "LayoutColTree", function(obj, value) {
+    obj@col_footnotes <- make_ref_value(value)
+    obj
 })
 
+#' @export
+#' @rdname ref_fnotes
+setMethod("col_fnotes_here<-", "LayoutColLeaf", function(obj, value) {
+    obj@col_footnotes <- make_ref_value(value)
+    obj
+})
 
 
 #' @export
@@ -2201,3 +2320,87 @@ setMethod("ref_index<-", "RefFootnote",
     obj
 })
 
+
+
+setGeneric(".fnote_set_inner<-", function(ttrp, colpath, value) standardGeneric(".fnote_set_inner<-"))
+
+setMethod(".fnote_set_inner<-", c("TableRow", "NULL"),
+          function(ttrp, colpath, value) {
+    row_footnotes(ttrp) <- value
+    ttrp
+})
+
+setMethod(".fnote_set_inner<-", c("TableRow", "character"),
+          function(ttrp, colpath, value) {
+    ind <- .path_to_pos(path = colpath, tt = ttrp, cols = TRUE)
+    cfns <- cell_footnotes(ttrp)
+    cfns[[ind]] <- value
+    cell_footnotes(ttrp) <- cfns
+    ttrp
+})
+
+setMethod(".fnote_set_inner<-", c("InstantiatedColumnInfo", "character"),
+          function(ttrp, colpath, value) {
+    ctree <- col_fnotes_at_path(coltree(ttrp), colpath, fnotes = value)
+    coltree(ttrp) <- ctree
+    ttrp
+})
+
+
+setMethod(".fnote_set_inner<-", c("VTableTree", "ANY"),
+          function(ttrp, colpath, value) {
+      if(labelrow_visible(ttrp) && !is.null(value)) {
+          lblrw <- tt_labelrow(ttrp)
+          row_footnotes(lblrw) <- value
+          tt_labelrow(ttrp) <- lblrw
+      } else if(NROW(content_table(ttrp)) == 1L) {
+          ctbl <- content_table(ttrp)
+          pth <- make_row_df(ctbl)$path[[1]]
+          fnotes_at_path(ctbl, pth, colpath) <- value
+          content_table(ttrp) <- ctbl
+      } else {
+          stop("an error occured. this shouldn't happen. please contact the maintainer")
+      }
+      ttrp
+})
+
+
+
+#' @param rowpath character or NULL. Path within row structure. \code{NULL} indicates the footnote should go on the column rather than cell.
+#' @param colpath character or NULL. Path within column structure. \code{NULL} indicates footnote should go on the row rather than cell
+#' @param reset_idx logical(1). Should the numbering for referential footnotes be immediately recalculated. Defaults to TRUE.
+#' @export
+#' @rdname ref_fnotes
+setGeneric("fnotes_at_path<-", function(obj, rowpath = NULL, colpath = NULL, reset_idx = TRUE, value) standardGeneric("fnotes_at_path<-"))
+
+## non-null rowpath, null or non-null colpath
+#' @export
+#' @rdname ref_fnotes
+setMethod("fnotes_at_path<-", c("VTableTree", "character"),
+          function(obj, rowpath = NULL, colpath = NULL, reset_idx = TRUE, value) {
+    rw <- tt_at_path(obj, rowpath)
+    .fnote_set_inner(rw, colpath) <- value
+    tt_at_path(obj, rowpath) <- rw
+    if(reset_idx)
+        obj <- update_ref_indexing(obj)
+    obj
+})
+
+#' @export
+#' @rdname ref_fnotes
+setMethod("fnotes_at_path<-", c("VTableTree", "NULL"),
+          function(obj, rowpath = NULL, colpath = NULL, reset_idx = TRUE, value) {
+    cinfo <- col_info(obj)
+    .fnote_set_inner(cinfo, colpath) <- value
+    col_info(obj) <- cinfo
+    if(reset_idx)
+        obj <- update_ref_indexing(obj)
+    obj
+
+
+})
+
+`col_footnotes_here<-` <- function(obj, value) {
+    obj@col_footnotes <- make_ref_value(value)
+    obj
+}

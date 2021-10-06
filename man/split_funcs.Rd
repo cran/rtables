@@ -7,7 +7,6 @@
 \alias{drop_and_remove_levels}
 \alias{reorder_split_levels}
 \alias{trim_levels_in_group}
-\alias{trim_levels_by_map}
 \title{Split functions}
 \usage{
 remove_split_levels(excl)
@@ -20,9 +19,7 @@ drop_and_remove_levels(excl)
 
 reorder_split_levels(neworder, newlabels = neworder, drlevels = TRUE)
 
-trim_levels_in_group(innervar)
-
-trim_levels_by_map(innervar, outervar, map = NULL)
+trim_levels_in_group(innervar, drop_outlevs = TRUE)
 }
 \arguments{
 \item{excl}{character. Levels to be excluded (they will not be reflected in the resulting table structure regardless
@@ -50,9 +47,8 @@ of presence in the data).}
 
 \item{innervar}{character(1). Variable whose factor levels should be trimmed (e.g., empty levels dropped) \emph{separately within each grouping defined at this point in the structure}}
 
-\item{outervar}{character(1). Parent split variable to trim \code{innervar} levels within. Must appear in map}
-
-\item{map}{data.frame. Data frame mapping \code{outervar} values  to allowable \code{innervar} values. If no map exists a-priori, use}
+\item{drop_outlevs}{logical(1). Should empty levels in the variable being split on (ie the 'outer' variable, not \code{innervar})
+be dropped? Defaults to \code{TRUE}}
 }
 \value{
 a closure suitable for use as a splitting function (\code{splfun}) when creating a table layout
@@ -60,6 +56,38 @@ a closure suitable for use as a splitting function (\code{splfun}) when creating
 \description{
 Split functions
 }
+\section{Custom Splitting Function Details}{
+
+
+User-defined custom split functions can perform any type of computation
+on the incoming data provided that they meed the contract for generating
+'splits' of the incoming data 'based on' the split object.
+
+Split functions are functions that accept:
+\describe{
+\item{df}{data.frame of incoming data to be split}
+\item{spl}{a Split object. this is largely an internal detail custom functions will not need to worry about,
+but  \code{obj_name(spl)}, for example, will give the name of the split as it will appear in paths in the resulting table}
+\item{vals}{Any pre-calculated values. If given non-null values, the values returned should match these. Should be NULL in most cases and can likely be ignored}
+\item{labels}{Any pre-calculated value labels. Same as above for \code{values}}
+\item{trim}{If \code{TRUE}, resulting splits that are empty should be removed}
+\item{(Optional) .spl_context}{a data.frame describing previously performed splits which collectively arrived at \code{df}}
+}
+
+The function must then output a \code{named list} with the following elements:
+
+\describe{
+\item{values}{The vector of all values corresponding to the splits of \code{df}}
+\item{datasplit}{a list of data.frames representing the groupings of the actual observations from \code{df}.}
+\item{labels}{a character vector giving a string label for each value listed in the \code{values} element above}
+\item{(Optional) extras}{If present, extra arguments to be passed to summary and analysis functions
+whenever they are executed on the corresponding element of \code{datasplit} or a subset thereof}
+}
+
+One way to generate custom splitting functions is to wrap existing split functions and modify either
+the incoming data before they are called, or their outputs.
+}
+
 \examples{
 l <- basic_table() \%>\%
   split_cols_by("ARM") \%>\%

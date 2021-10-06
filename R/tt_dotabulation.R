@@ -1,7 +1,10 @@
 
-match_extra_args = function(f, .N_col, .N_total, .var, .ref_group = NULL, .ref_full = NULL, .in_ref_col = NULL, .parent_splval = NULL, .N_row, .df_row, extras) {
+match_extra_args = function(f, .N_col, .N_total, .var, .ref_group = NULL, .ref_full = NULL, .in_ref_col = NULL, .spl_context = NULL, .N_row, .df_row, extras) {
     possargs = c(list(.N_col = .N_col, .N_total = .N_total, .N_row = .N_row, .df_row = .df_row),
                  extras)
+    formargs = formals(f)
+    formnms = names(formargs)
+
     ## specialized arguments that must be named in formals, cannot go anonymously into ...
     if(!is.null(.var) && nzchar(.var))
         possargs = c(possargs, list(.var = .var))
@@ -11,12 +14,12 @@ match_extra_args = function(f, .N_col, .N_total, .var, .ref_group = NULL, .ref_f
         possargs = c(possargs, list(.ref_full = .ref_full))
     if(!is.null(.in_ref_col))
         possargs = c(possargs, list(.in_ref_col = .in_ref_col))
-    if(!is.null(.parent_splval))
-        possargs = c(possargs, list(.parent_splval= .parent_splval))
+    if(!is.null(.spl_context) && !(".spl_context" %in% names(possargs)))
+        possargs = c(possargs, list(.spl_context= .spl_context))
+    else
+        possargs$.spl_context <- NULL
 
 
-    formargs = formals(f)
-    formnms = names(formargs)
     exnms = names(extras)
     if(is.null(formargs))
         return(NULL)
@@ -37,8 +40,11 @@ gen_onerv = function(csub, col, count, cextr, dfpart, func, totcount, splextra,
                      takesdf = .takes_df(func),
                      baselinedf,
                      inclNAs,
-                     last_splval) {
+                     col_parent_inds,
+                     spl_context) {
 
+    spl_context$cur_col_subset <- col_parent_inds
+    spl_context$cur_col_n <- vapply(col_parent_inds, sum, 1L)
     ## workaround for https://github.com/Roche/rtables/issues/159
     if(NROW(dfpart) > 0) {
         inds = eval(csub, envir = dfpart)
@@ -67,9 +73,7 @@ gen_onerv = function(csub, col, count, cextr, dfpart, func, totcount, splextra,
     }
     args = list(dat)
 
-
-    args = c(args,
-             match_extra_args(func,
+    exargs <-    match_extra_args(func,
                               .N_col = count,
                               .N_total = totcount,
                               .var = col,
@@ -78,9 +82,12 @@ gen_onerv = function(csub, col, count, cextr, dfpart, func, totcount, splextra,
                                   .in_ref_col = inrefcol,
                               .N_row = NROW(dfpart),
                               .df_row = dfpart,
-                              .parent_splval = last_splval,
+                              .spl_context = spl_context,
                               extras = c(cextr,
-                                         splextra)))
+                                         splextra))
+
+    args = c(args, exargs)
+
 
     val = do.call(func, args)
     if(!is(val, "RowsVerticalSection")) {
@@ -109,14 +116,13 @@ gen_rowvalues = function(dfpart,
                          takesdf = NULL,
                          baselines,
                          inclNAs,
-                         last_splval = last_splval) {
+                         spl_context = spl_context) {
     colexprs = col_exprs(cinfo)
     colcounts = col_counts(cinfo)
     colextras = col_extra_args(cinfo, NULL)
-    splextra = c(splextra, list(last_splval))
-    ## XXX this is an assumption that could???? be
-    ## wrong in certain really weird corner cases?
-    totcount = col_total(cinfo) ##sum(colcounts)
+    ## XXX I don't think this is used anywhere???
+    ##splextra = c(splextra, list(.spl_context = spl_context))
+    totcount = col_total(cinfo)
 
     colleaves =  collect_leaves(cinfo@tree_layout)
 
@@ -187,6 +193,7 @@ gen_rowvalues = function(dfpart,
 
     ## length(exargs) <- length(func)
     ## exargs <- rep(exargs, length.out = length(colexprs))
+
     allfuncs <- rep(func, length.out = length(colexprs))
 
 
@@ -201,12 +208,14 @@ gen_rowvalues = function(dfpart,
                      baselinedf = baselines,
                      func = allfuncs,
                      takesdf = takesdf,
+                     col_parent_inds = spl_context[,names(colexprs), drop = FALSE],
                      splextra = exargs,
                      MoreArgs = list(dfpart = dfpart,
                                      totcount = totcount,
 #                                     splextra= splextra,
                                      inclNAs = inclNAs,
-                                     last_splval = last_splval),
+                                     spl_context = spl_context),
+                                   ##  spl_context = spl_context[,1:3]), ## parent value full_parent_df
                      SIMPLIFY= FALSE)
 
 
@@ -236,7 +245,7 @@ gen_rowvalues = function(dfpart,
                            baselines = replicate( length(col_exprs(cinfo)),
                                                  list(dfpart[0,])),
                            inclNAs,
-                           last_splval) {
+                           spl_context = context_df_row(cinfo = cinfo)) {
     if(is.null(datcol) && !is.na(rvlab))
         stop("NULL datcol but non-na rowvar label")
     if(!is.null(datcol) && !is.na(datcol)) {
@@ -256,7 +265,7 @@ gen_rowvalues = function(dfpart,
                             takesdf = takesdf,
                             baselines = baselines,
                             inclNAs = inclNAs,
-                            last_splval = last_splval)
+                            spl_context = spl_context)
 
     ## if(is.null(rvtypes))
     ##     rvtypes = rep(NA_character_, length(rawvals))
@@ -283,6 +292,8 @@ gen_rowvalues = function(dfpart,
 
 
     ncrows = max(unqlens)
+    if(ncrows == 0)
+        return(list())
     stopifnot(ncrows > 0)
 
 
@@ -435,7 +446,8 @@ gen_rowvalues = function(dfpart,
                       indent_mod = 0L,
                       cvar = NULL,
                       inclNAs,
-                      extra_args) {
+                      extra_args,
+                      spl_context = context_df_row(cinfo = cinfo)) {
 
     if(length(cvar) == 0 || is.na(cvar) || identical(nchar(cvar), 0L))
         cvar = NULL
@@ -452,7 +464,7 @@ gen_rowvalues = function(dfpart,
                                                  length.out = ncol(cinfo)),
                                    inclNAs = FALSE,
                                    splextra = extra_args,
-                                   last_splval = "")
+                                   spl_context = spl_context)
     } else {
         contkids = list()
     }
@@ -475,7 +487,7 @@ gen_rowvalues = function(dfpart,
                               dolab = TRUE,
                               lvl,
                               baselines,
-                              last_splval) {
+                              spl_context) {
     stopifnot(is(spl, "VAnalyzeSplit"))
     check_validsplit(spl, df)
     defrlabel = spl@default_rowlabel
@@ -494,7 +506,7 @@ gen_rowvalues = function(dfpart,
                            splextra = split_exargs(spl),
                            baselines = baselines,
                            inclNAs = avar_inclNAs(spl),
-                           last_splval = last_splval)
+                           spl_context = spl_context)
     lab = obj_label(spl)
     ret = TableTree(kids = kids,
               name = obj_name(spl),
@@ -527,7 +539,7 @@ setMethod(".make_split_kids", "VAnalyzeSplit",
                    name,
                    cinfo,
                    baselines,
-                   last_splval,
+                   spl_context,
                    nsibs = 0
                    ) {
     spvis = labelrow_visible(spl)
@@ -541,7 +553,7 @@ setMethod(".make_split_kids", "VAnalyzeSplit",
                              dolab = spvis,
                              partlabel = obj_label(spl),
                              baselines = baselines,
-                             last_splval = last_splval)
+                             spl_context = spl_context)
     indent_mod(ret) <- indent_mod(spl)
 
     kids = list(ret)
@@ -613,10 +625,10 @@ setMethod(".make_split_kids", "Split",
                    lvl,  ## used to calculate innerlev
                    cinfo, ## used for sanity check
                    baselines, ## used to calc new baselines
-                   last_splval) {
+                   spl_context) {
 
     ## do the core splitting of data into children for this split
-    rawpart = do_split(spl, df)
+    rawpart = do_split(spl, df, spl_context = spl_context)
     dataspl = rawpart[["datasplit"]]
     ## these are SplitValue objects
     splvals = rawpart[["values"]]
@@ -643,7 +655,7 @@ setMethod(".make_split_kids", "Split",
         if(is.null(dat))
             return(NULL)
         ## apply the same splitting on the
-                bldataspl = do_split(spl, dat)[["datasplit"]]
+                bldataspl = do_split(spl, dat, spl_context = spl_context)[["datasplit"]]
         ## we only keep the ones correspnoding with actual data splits
         res =lapply(names(dataspl),
                     function(nm) {
@@ -674,6 +686,13 @@ setMethod(".make_split_kids", "Split",
 
     ## do full recursive_applysplit on each part of the split defined by spl
     inner = unlist(mapply(function(dfpart,  nm, label, baselines, splval) {
+
+        rsplval <- context_df_row(split = obj_name(spl), value = value_names(splval),
+                                  full_parent_df = list(dfpart),
+                                  cinfo = cinfo)
+
+        ## if(length(rsplval) > 0)
+        ##     rsplval <- setNames(rsplval, obj_name(spl))
         recursive_applysplit(df = dfpart,
                              name = nm,
                              lvl = innerlev,
@@ -687,7 +706,8 @@ setMethod(".make_split_kids", "Split",
                              cvar = content_var(spl),
                              baselines = baselines,
                              cextra_args = content_extra_args(spl),
-                             last_splval = splval)
+                             ##splval should still be retaining its name
+                             spl_context = rbind(spl_context, rsplval))
     }, dfpart = dataspl,
     label = partlabels,
     nm = nms,
@@ -709,6 +729,32 @@ setMethod(".make_split_kids", "Split",
     kids
 })
 
+context_df_row <- function(split = character(), value = character(), full_parent_df = list(),
+                           cinfo = NULL) {
+    ret <- data.frame(split = split, value = value, full_parent_df = I(full_parent_df),
+                                        #     parent_cold_inds = I(parent_col_inds),
+                      stringsAsFactors = FALSE)
+    if(nrow(ret) > 0)
+        ret$all_cols_n <- nrow(full_parent_df[[1]])
+    else
+        ret$all_cols_n <- integer() ## should this be numeric???
+
+    if(!is.null(cinfo)) {
+        if(nrow(ret) > 0)
+            colcols <- as.data.frame(lapply(col_exprs(cinfo), function(e) {
+                vals <- eval(e, envir = full_parent_df[[1]])
+                if(identical(vals, TRUE))
+                    vals <- rep(vals, length.out = nrow(full_parent_df[[1]]))
+                I(list(vals))
+            }))
+        else
+            colcols <- as.data.frame(rep(list(logical()), ncol(cinfo)))
+        names(colcols) <- names(col_exprs(cinfo))
+        ret <- cbind(ret, colcols)
+    }
+    ret
+}
+
 recursive_applysplit = function( df,
                                 lvl = 0L,
                                 splvec,
@@ -724,7 +770,7 @@ recursive_applysplit = function( df,
                                 cvar = NULL,
                                 baselines = lapply(col_extra_args(cinfo),
                                                    function(x) x$.ref_full),
-                                last_splval = "") {
+                                spl_context = context_df_row(cinfo = cinfo)) {
     ## pre-existing table was added to the layout
     if(length(splvec) == 1L && is(splvec[[1]], "VTableNodeInfo"))
         return(splvec[[1]])
@@ -742,7 +788,8 @@ recursive_applysplit = function( df,
                       format = cformat,
                       indent_mod = cindent_mod,
                       cvar = cvar,
-                      extra_args = cextra_args)
+                      extra_args = cextra_args,
+                      spl_context = spl_context)
 
 
     nonroot = lvl != 0L
@@ -768,7 +815,7 @@ recursive_applysplit = function( df,
                                 name = name, make_lrow = make_lrow, partlabel = partlabel,
                                 cinfo = cinfo, parent_cfun = parent_cfun, cformat = cformat,
                                 cindent_mod = cindent_mod, cextra_args = cextra_args, cvar =cvar,
-                                baselines = baselines, last_splval = last_splval,
+                                baselines = baselines, spl_context = spl_context,
                                 have_controws = nrow(ctab) > 0)
         ## if(make_lrow && indent_mod(spl) != 0 ) {
         ##     kids = lapply(kids, `indent_mod<-`, value = 0L)
@@ -965,7 +1012,7 @@ build_table = function(lyt, df,
                              cformat = content_format(firstspl),
                              cvar = content_var(firstspl),
                              cextra_args = content_extra_args(firstspl),
-                             last_splval = NULL)
+                             spl_context = context_df_row(cinfo = cinfo))
     })
     kids = kids[!sapply(kids, is.null)]
     if(length(kids) > 0)
@@ -1120,7 +1167,7 @@ setMethod("set_def_child_ord", "VarLevWBaselineSplit",
 
     if(!is.null(split_fun(lyt))) {
         ## expensive but sadly necessary, I think
-        pinfo = do_split(lyt, df)
+        pinfo = do_split(lyt, df, spl_context = context_df_row())
         vals = sort(unlist(value_names(pinfo$values)))
     } else {
         vec = df[[spl_payload(lyt)]]
@@ -1137,10 +1184,26 @@ setMethod("set_def_child_ord", "VarLevWBaselineSplit",
     lyt
 })
 
+## Note this is similar to pos_to_path but those paths
+## have seperate vector elements for split names and split values
+## because they're for indexing. this is NOT for that, here
+## we give a named character vector where the names are the spl names
+## and the values are the spl values
+pos_to_prevsplvals <- function(pos) {
+    if(is.null(pos) || identical(pos, TreePos()))
+        return(context_df_row())
+
+    vals <- unlist(value_names(pos_splvals(pos)),
+                   recursive = FALSE)
+
+    nms <- vapply(pos_splits(pos), obj_name, "")
+    context_df_row(split = nms, value = vals)
+}
 
 
 splitvec_to_coltree = function(df, splvec, pos = NULL,
-                               lvl = 1L, label = "") {
+                               lvl = 1L, label = "",
+                               spl_context = context_df_row(cinfo = NULL)) {
     stopifnot(lvl <= length(splvec) + 1L,
               is(splvec, "SplitVector"))
 
@@ -1156,14 +1219,19 @@ splitvec_to_coltree = function(df, splvec, pos = NULL,
     } else {
         spl = splvec[[lvl]]
         nm = if(is.null(pos)) obj_name(spl) else unlist(tail(value_names(pos), 1))
-        rawpart = do_split(spl,df, trim =FALSE )
+        rawpart = do_split(spl,df, trim =FALSE ,
+                           spl_context = spl_context) ##rbind(prev_splval, context_df_row(split = nm,  pos_to_prevsplvals(pos))
         datparts = rawpart[["datasplit"]]
         vals = rawpart[["values"]]
         labs = rawpart[["labels"]]
+
+
         kids = mapply(function(dfpart, value, partlab) {
+            newprev <- context_df_row(split = obj_name(spl), value = value_names(value), full_parent_df = list(dfpart), cinfo = NULL)
             newpos = make_child_pos(pos, spl, value, partlab)
             splitvec_to_coltree(dfpart, splvec, newpos,
-                                lvl + 1L, partlab)
+                                lvl + 1L, partlab,
+                                spl_context = rbind(spl_context, newprev))
         }, dfpart = datparts, value = vals,
         partlab = labs, SIMPLIFY=FALSE)
         names(kids) = value_names(vals)
@@ -1220,68 +1288,4 @@ setMethod("fix_analyze_vis", "SplitVector",
     lyt
 })
 
-
-setGeneric("build_splits_expr", function(lyt, df, curexpr) standardGeneric("build_splits_expr"))
-
-
-setGeneric("expr_stubs", function(spl, df) standardGeneric("expr_stubs"))
-
-setMethod("expr_stubs", "VarLevelSplit",
-          function(spl, df) {
-    sdat = do_split(spl, df)
-    values = sdat$values
-    ## var = spl_payload(spl)
-    ## values = unique(df[[var]])
-    lapply(values, function(val) make_subset_expr(spl, val))
-})
-
-setMethod("expr_stubs", "MultiVarSplit",
-          function(spl, df) {
-    vars = spl_payload(spl)
-    lapply(vars, function(val) make_subset_expr(spl, val))
-})
-
-
-
-setMethod("expr_stubs", "AllSplit",
-          function(spl, df) expression(TRUE))
-
-setMethod("expr_stubs", "NULLSplit",
-          function(spl, df) expression(FALSE))
-
-setMethod("expr_stubs", "SplitVector",
-          function(spl, df) lapply(spl, expr_stubs, df = df))
-
-
-
-
-
-
-setMethod("build_splits_expr", "SplitVector",
-          function(lyt, df) {
-    stubs = expr_stubs(lyt, df)
-    curexpr = NULL
-    ret = vector("list", prod(sapply(stubs, length)))
-    blocksize = 1
-    for(pos in rev(seq_along(lyt))) {
-        curstubs = stubs[[pos]]
-        nstubs = length(curstubs)
-        vecothangs = rep(rep(curstubs,
-                             times = rep(blocksize, times = nstubs)),
-                         times = length(ret) / (blocksize * nstubs))
-        blocksize = blocksize * nstubs
-        if(is.null(ret[[1]]))
-            ret = vecothangs
-        else
-            ret = mapply(.combine_subset_exprs,
-                     ex2 = ret,
-                     ex1 = vecothangs, SIMPLIFY = FALSE)
-    }
-    ret
-})
-
-
-
-## XXX do I really need two generics, make_col_subsets
-## AND build_splits_expr???
 

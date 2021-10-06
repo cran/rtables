@@ -46,7 +46,16 @@ recursive_replace = function(tab, path, incontent = FALSE, rows = NULL, cols = N
             }
         }
         return(newkid)
-    } else { ## length(path) > 1, more recursing to do
+    } else if( path[[1]] == "@content") {
+        ctb <- content_table(tab)
+        ctb <- recursive_replace(ctb,
+                                 path = path[-1],
+                                 rows = rows,
+                                 cols = cols,
+                                 value = value)
+        content_table(tab) <- ctb
+        tab
+    } else {## length(path) > 1, more recursing to do
         kidel = path[[1]]
         ## broken up for debugabiliity, could be a single complex
         ## expression
@@ -70,9 +79,151 @@ recursive_replace = function(tab, path, incontent = FALSE, rows = NULL, cols = N
         tree_children(tab)[[kidel]] = newkid
         tab
     }
-
-
 }
+
+coltree_split <- function(ctree) ctree@split
+
+col_fnotes_at_path <- function(ctree, path, fnotes) {
+    if(length(path) == 0) {
+        col_fnotes_here(ctree) <- fnotes
+        return(ctree)
+    }
+
+    if(identical(path[1], obj_name(coltree_split(ctree))))
+        path <- path[-1]
+    else
+        stop(paste("Path appears invalid at step:", path[1]))
+
+    kids <- tree_children(ctree)
+    kidel <- path[[1]]
+    knms <- names(kids)
+    stopifnot(kidel %in% knms)
+    newkid <- col_fnotes_at_path(kids[[kidel]],
+                       path[-1],
+                       fnotes = fnotes)
+    kids[[kidel]] <- newkid
+    tree_children(ctree) <- kids
+    ctree
+}
+
+
+#' Insert Row at Path
+#'
+#' Insert a row into an existing table directly before or directly after an existing
+#' data (i.e., non-content and non-label) row, specified by its path.
+#'
+#' @inheritParams gen_args
+#' @param after logical(1). Should `value` be added as a row directly before (`FALSE`,
+#' the default) or after (`TRUE`) the row specified by `path`.
+#'
+#'@export
+#'@examples
+#'
+#' lyt <- basic_table() %>%
+#'   split_rows_by("COUNTRY", split_fun = keep_split_levels(c("CHN", "USA"))) %>%
+#'   analyze("AGE")
+#'
+#' tab <- build_table(lyt, DM)
+#'
+#' tab2 <- insert_row_at_path(tab, c("COUNTRY", "CHN", "AGE", "Mean"),
+#'                           rrow("new row", 555))
+#' tab2
+#' tab2 <- insert_row_at_path(tab2, c("COUNTRY", "CHN", "AGE", "Mean"),
+#'                           rrow("new row redux", 888),
+#'                           after = TRUE)
+#' tab2
+#' @seealso DataRow rrow
+
+setGeneric("insert_row_at_path",signature = c("tt", "value"),  function(tt, path, value, after = FALSE) standardGeneric("insert_row_at_path"))
+#' @rdname insert_row_at_path
+setMethod("insert_row_at_path", c("VTableTree", "DataRow"),
+          function(tt, path, value, after = FALSE) {
+    if(no_colinfo(value))
+        col_info(value) <- col_info(tt)
+    else
+        chk_compat_cinfos(tt, value)
+
+    origpath <- path
+    idx_row <- tt_at_path(tt, path)
+    if(!is(idx_row, "DataRow"))
+        stop("path must resolve fully to a non-content data row. Insertion of rows elsewhere in the tree is not currently supported.")
+
+    posnm <- tail(path, 1)
+
+    path <- head(path, -1)
+
+    subtt <- tt_at_path(tt, path)
+    kids <- tree_children(subtt)
+    ind <- which(names(kids) == posnm)
+    if(length(ind) != 1L)
+        stop("table children do not appear to be named correctly at this path. This should not happen, please contact the maintainer of rtables.")
+    if(after)
+        ind <- ind + 1
+
+    sq <- seq_along(kids)
+    tree_children(subtt) <- c(kids[sq < ind],
+                              setNames(list(value), obj_name(value)),
+                              kids[sq >= ind])
+    tt_at_path(tt, path) <- subtt
+    tt
+})
+#' @rdname insert_row_at_path
+setMethod("insert_row_at_path", c("VTableTree", "ANY"),
+          function(tt, path, value)
+    stop("Currently only insertion of DataRow objects is supported. Got object of class ", class(value), ". Please use rrow() or DataRow() to construct your row before insertion."))
+
+
+#' Label at Path
+#'
+#' Gets or sets the label at a path
+#' @inheritParams gen_args
+#' @details
+#'
+#' If `path` resolves to a single row, the label for that row
+#' is retrieved or set. If, instead, `path` resolves to a subtable,
+#' the text for the row-label associated with that path is retrieved
+#' or set. In the subtable case, if the label text is set to a non-NA
+#' value, the labelrow will be set to visible, even if it was not before.
+#' Similarly, if the label row text for a subtable is set to NA,
+#' the label row will bet set to non-visible, so the row will not
+#' appear at all when the table is printed.
+#'
+#' @note When changing the row labels for content rows, it is important to
+#' path all the way to the \emph{row}. Paths ending in `"@content"` will
+#' not exhibit the behavior you want, and are thus an error. See
+#' \code{\link{row_paths}} for help determining the full paths to content
+#' rows.
+#'
+#' @examples
+#'
+#' lyt <- basic_table() %>%
+#'   split_rows_by("COUNTRY", split_fun = keep_split_levels(c("CHN", "USA"))) %>%
+#'   analyze("AGE")
+#'
+#' tab <- build_table(lyt, DM)
+#'
+#' label_at_path(tab, c("COUNTRY", "CHN"))
+#'
+#' label_at_path(tab, c("COUNTRY", "USA")) <- "United States"
+#' tab
+#' @export
+label_at_path <- function(tt, path) {
+    obj_label(tt_at_path(tt, path))
+}
+#' @export
+#' @rdname label_at_path
+`label_at_path<-` <- function(tt, path, value) {
+    if(!is(tt, "VTableTree"))
+        stop("tt must be a TableTree or ElementaryTable object")
+    if(is.null(value) || is.na(value))
+        value <- NA_character_
+    subt <- tt_at_path(tt, path)
+    obj_label(subt) <- value
+    tt_at_path(tt, path) <- subt
+    tt
+}
+
+
 
 #' Get or set table elements at specified path
 #' @inheritParams gen_args
@@ -240,6 +391,13 @@ setMethod("replace_rows", c(value = "ElementaryTable"),
 #' tbl[2, ] <- list(rrow("FFF", 888, 666, 777))
 #' tbl[3, ] <- list(-111, -222, -333)
 #' tbl
+#' @aliases [,VTableTree,logical,logical,ANY-method
+#' [,VTableTree,logical,ANY,ANY-method
+#' [,VTableTree,logical,missing,ANY-method
+#' [,VTableTree,ANY,logical,ANY-method
+#' [,VTableTree,ANY,missing,ANY-method
+#' [,VTableTree,ANY,character,ANY-method
+#' [,VTableTree,character,ANY,ANY-method
 setMethod("[<-", c("VTableTree", value = "list"),
           function(x, i, j, ...,  value) {
 
@@ -421,30 +579,30 @@ setMethod("subset_cols", c("ElementaryTable", "numeric"),
 }
 
 
-.colpath_to_j <- function(path, tt) {
-    if(length(path) == 0)
-        stop("got length 0 path")
+## .colpath_to_j <- function(path, tt) {
+##     if(length(path) == 0)
+##         stop("got length 0 path")
 
-    if(length(path) >=1 && identical(path[[1]], "root"))
-        path <- path[-1]
+##     if(length(path) >=1 && identical(path[[1]], "root"))
+##         path <- path[-1]
 
-    paths <- col_paths(tt)
-    ret <- rep(TRUE, ncol(tt))
-    for(i in seq_len(length(path))) {
-        pi <- path[i]
-        if(!identical(pi, "*"))
-            stepi <- vapply(paths,
-                            function(cpath) {
-                length(cpath) < i ||
-                    identical(cpath[i], pi)
-            }, TRUE)
-        ret <- ret & stepi
-        if(!any(ret))
-            stop("Column path ", path, " appears to be invalid at step ", pi)
-    }
-    j <- which(ret)
-    j
-}
+##     paths <- col_paths(tt)
+##     ret <- rep(TRUE, ncol(tt))
+##     for(i in seq_len(length(path))) {
+##         pi <- path[i]
+##         if(!identical(pi, "*"))
+##             stepi <- vapply(paths,
+##                             function(cpath) {
+##                 length(cpath) < i ||
+##                     identical(cpath[i], pi)
+##             }, TRUE)
+##         ret <- ret & stepi
+##         if(!any(ret))
+##             stop("Column path ", path, " appears to be invalid at step ", pi)
+##     }
+##     j <- which(ret)
+##     j
+## }
 #' @noRd
 #' @param spanfunc is the thing that gets the counts after subsetting
 ## should be n_leaves for a column tree structure and NROW for
@@ -778,7 +936,7 @@ subset_by_rownum = function(tt, i, keep_topleft = NA, keep_titles = TRUE, ... ) 
 
 #' @exportMethod [
 #' @rdname brackets
-
+#' @aliases [,VTableTree,logical,logical-method
 setMethod("[", c("VTableTree", "logical", "logical"),
           function(x, i, j, ..., drop = FALSE) {
     i = .j_to_posj(i, nrow(x))
@@ -788,7 +946,7 @@ setMethod("[", c("VTableTree", "logical", "logical"),
 
 #' @exportMethod [
 #' @rdname brackets
-
+#' @aliases [,VTableTree,logical,ANY-method
 setMethod("[", c("VTableTree", "logical", "ANY"),
           function(x, i, j, ..., drop = FALSE) {
     i = .j_to_posj(i, nrow(x))
@@ -797,7 +955,7 @@ setMethod("[", c("VTableTree", "logical", "ANY"),
 
 #' @exportMethod [
 #' @rdname brackets
-
+#' @aliases [,VTableTree,logical,missing-method
 setMethod("[", c("VTableTree", "logical", "missing"),
           function(x, i, j, ..., drop = FALSE) {
     j = seq_len(ncol(x))
@@ -807,7 +965,7 @@ setMethod("[", c("VTableTree", "logical", "missing"),
 
 #' @exportMethod [
 #' @rdname brackets
-
+#' @aliases [,VTableTree,ANY,logical-method
 setMethod("[", c("VTableTree", "ANY", "logical"),
           function(x, i, j, ..., drop = FALSE) {
     j = .j_to_posj(j, ncol(x))
@@ -816,7 +974,7 @@ setMethod("[", c("VTableTree", "ANY", "logical"),
 
 #' @exportMethod [
 #' @rdname brackets
-
+#' @aliases [,VTableTree,ANY,missing-method
 setMethod("[", c("VTableTree", "ANY", "missing"),
           function(x, i, j, ..., drop = FALSE) {
     j = seq_len(ncol(x))
@@ -825,6 +983,7 @@ setMethod("[", c("VTableTree", "ANY", "missing"),
 
 #' @exportMethod [
 #' @rdname brackets
+#' @aliases [,VTableTree,missing,ANY-method
 
 setMethod("[", c("VTableTree", "missing", "ANY"),
           function(x, i, j, ..., drop = FALSE) {
@@ -836,7 +995,7 @@ setMethod("[", c("VTableTree", "missing", "ANY"),
 
 #' @exportMethod [
 #' @rdname brackets
-
+#' @aliases [,VTableTree,ANY,character-method
 setMethod("[", c("VTableTree", "ANY", "character"),
           function(x, i, j, ..., drop = FALSE) {
     ##j <- .colpath_to_j(j, coltree(x))
@@ -846,6 +1005,7 @@ setMethod("[", c("VTableTree", "ANY", "character"),
 
 #' @exportMethod [
 #' @rdname brackets
+#' @aliases [,VTableTree,character,ANY-method
 setMethod("[", c("VTableTree", "character", "ANY"),
           function(x, i, j, ..., drop = FALSE) {
     ##i <- .path_to_pos(i, seq_len(nrow(x)), x, NROW)
@@ -856,6 +1016,7 @@ setMethod("[", c("VTableTree", "character", "ANY"),
 ## to avoid dispatch ambiguity. Not necessary, possibly not a good idea at all
 #' @exportMethod [
 #' @rdname brackets
+#' @aliases [,VTableTree,character,character-method
 setMethod("[", c("VTableTree", "character", "character"),
           function(x, i, j, ..., drop = FALSE) {
     ##i <- .path_to_pos(i, seq_len(nrow(x)), x, NROW)
@@ -868,7 +1029,7 @@ setMethod("[", c("VTableTree", "character", "character"),
 
 #' @exportMethod [
 #' @rdname brackets
-
+#' @aliases [,VTableTree,missing,numeric-method
 setMethod("[", c("VTableTree", "missing", "numeric"),
           function(x, i, j, ..., drop = FALSE) {
     i = seq_len(nrow(x))
@@ -878,7 +1039,7 @@ setMethod("[", c("VTableTree", "missing", "numeric"),
 
 #' @exportMethod [
 #' @rdname brackets
-
+#' @aliases [,VTableTree,numeric,numeric-method
 setMethod("[", c("VTableTree", "numeric", "numeric"),
           function(x, i, j, ..., drop = FALSE) {
     ## have to do it this way because we can't add an argument since we don't
@@ -1054,15 +1215,50 @@ setMethod("cell_values", "VTableTree",
 })
 
 #'@rdname cell_values
+#' @exportMethod cell_values
+setMethod("cell_values", "TableRow",
+          function(tt, rowpath, colpath = NULL, omit_labrows = TRUE){
+    if(!is.null(rowpath))
+       stop("cell_values on TableRow objects must have NULL rowpath")
+    .inner_cell_value(tt, rowpath = rowpath, colpath = colpath, omit_labrows = omit_labrows, value_at = FALSE)
+})
+
+#'@rdname cell_values
+#' @exportMethod cell_values
+setMethod("cell_values", "LabelRow",
+          function(tt, rowpath, colpath = NULL, omit_labrows = TRUE){
+    stop("calling cell_values on LabelRow is not meaningful")
+})
+
+
+
+#'@rdname cell_values
 #' @export
 setGeneric("value_at", function(tt, rowpath = NULL, colpath = NULL)
     standardGeneric("value_at"))
 #'@rdname cell_values
-#' @exportMethod cell_values
+#' @exportMethod value_at
 setMethod("value_at", "VTableTree",
           function(tt, rowpath, colpath = NULL){
     .inner_cell_value(tt, rowpath = rowpath, colpath = colpath, omit_labrows = FALSE, value_at = TRUE)
 })
+
+#'@rdname cell_values
+#' @exportMethod value_at
+setMethod("value_at", "TableRow",
+          function(tt, rowpath, colpath = NULL){
+    .inner_cell_value(tt, rowpath = rowpath, colpath = colpath, omit_labrows = FALSE, value_at = TRUE)
+})
+
+
+#'@rdname cell_values
+#' @exportMethod value_at
+setMethod("value_at", "LabelRow",
+          function(tt, rowpath, colpath = NULL){
+    stop("calling value_at for LabelRow objects is not meaningful")
+})
+
+
 
 .inner_cell_value <- function(tt, rowpath, colpath = NULL, omit_labrows = TRUE, value_at = FALSE){
     if(is.null(rowpath))

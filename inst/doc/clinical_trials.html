@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2021-07-13" />
+<meta name="date" content="2021-10-06" />
 
 <title>Example Clinical Trials Tables</title>
 
@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Example Clinical Trials Tables</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2021-07-13</h4>
+<h4 class="date">2021-10-06</h4>
 
 
 
@@ -653,7 +653,7 @@ BEP01FL
 <li>layouts can be reused</li>
 </ul>
 <p>Here is an example that demonstrates the reusability of layouts:</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="cn">NULL</span> <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_colcounts</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;SEX&quot;</span>), <span class="at">afun =</span> s_summary)</span>

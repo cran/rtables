@@ -12,7 +12,7 @@
 
 <meta name="author" content="Adrian Waddell" />
 
-<meta name="date" content="2021-07-13" />
+<meta name="date" content="2021-10-06" />
 
 <title>Constructing rtables Manually</title>
 
@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Constructing rtables Manually</h1>
 <h4 class="author">Adrian Waddell</h4>
-<h4 class="date">2021-07-13</h4>
+<h4 class="date">2021-10-06</h4>
 
 
 
@@ -175,6 +175,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>Before we go into explaining the individual components used to create this table we continue with the html conversion of the <code>rtable</code> object:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as_html</span>(tbl, <span class="at">width =</span> <span class="st">&quot;80%&quot;</span>)</span></code></pre></div>
+<div class="rtables-all-parts-block rtables-container">
 <table class="table table-condensed table-hover">
 <tr class>
 <th class style="white-space:pre;"></th>
@@ -210,7 +211,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <td class=" text-left" colspan="1">estimate</td>
 <td class=" text-center" colspan="2">55.23</td>
 </tr>
+<caption style="caption-side:top;"><div class="rtables-titles-block rtables-container">
+<div class="rtables-main-titles-block rtables-container">
+<p class="rtables-main-title"></p>
+</div>
+<div class="rtables-subtitles-block rtables-container"></div>
+</div>
+</caption>
 </table>
+<div class="rtables-footers-block rtables-container"></div>
+</div>
 <p>Next, the <code>[</code> operator lets you access the cell content.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">1</span>, <span class="dv">1</span>]</span></code></pre></div>
 <pre><code>    Treatement

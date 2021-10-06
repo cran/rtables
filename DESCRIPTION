@@ -1,7 +1,7 @@
 Package: rtables
 Title: Reporting Tables
-Date: 2021-07-07
-Version: 0.3.8
+Date: 2021-10-06
+Version: 0.4.0
 Authors@R: c(
   person("Gabriel", "Becker", email = "gabembecker@gmail.com", role = c("aut", "cre")),
   person("Adrian", "Waddell", email = "adrian.waddell@roche.com", role = "aut"),
@@ -16,8 +16,9 @@ Description: Reporting tables often have structure that goes beyond simple recta
   and the concept of contextual summary computations. A convenient pipe-able interface is provided
   for declaring table layouts and the corresponding computations, and then applying them to data.
 Depends: methods, magrittr, R (>= 2.10)
-Imports: stats, htmltools
-Suggests: dplyr, tibble, tidyr, testthat, xml2, knitr, rmarkdown
+Imports: stats, htmltools, grid
+Suggests: dplyr, tibble, tidyr, testthat, xml2, knitr, rmarkdown,
+        flextable, officer
 License: Apache License 2.0 | file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -36,11 +37,11 @@ Collate: '00tabletrees.R' 'Viewer.R' 'argument_conventions.R'
         'tt_toString.R' 'tt_export.R' 'labels.R' 'index_footnotes.R'
         'tt_from_df.R' 'zzz_constants.R'
 NeedsCompilation: no
-Packaged: 2021-07-13 20:21:16 UTC; gabrielbecker
+Packaged: 2021-10-06 21:19:52 UTC; gabrielbecker
 Author: Gabriel Becker [aut, cre],
   Adrian Waddell [aut],
   Daniel Sabanés Bové [ctb],
   Maximilian Mordig [ctb]
 Maintainer: Gabriel Becker <gabembecker@gmail.com>
 Repository: CRAN
-Date/Publication: 2021-07-13 20:50:02 UTC
+Date/Publication: 2021-10-06 21:50:02 UTC

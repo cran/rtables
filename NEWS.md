@@ -1,3 +1,27 @@
+## rtables 0.4.0
+ * Initializing layouts with `NULL` is now deprecated
+ * insert_rrow is deprecated in favor of new `insert_row_at_path` and `label_at_path<-` functions
+ * split and analysis/content functions can now depend on values of splits they are nested inside by accepting and using the new `.spl_context` optional argument
+ * new `trim_levels_to_map` split function  for dictating exact combinations of values which should appear across splits
+ * `value_formats` function now exported which returns/displays the effective formats of all cells in a table
+ * `compare_rtables` is now *much* faster for tables with many cells
+ * `compare_rtables` now accepts `structure` argument which adds comparison of structure (by way of row- and column-path positions)
+ * new `tt_to_flextable` coercion function
+ * new `export_as_pdf` exporter function
+ * `value_at` and `cell_values` functions now have methods for `TableRow` objects making them usable in sorting/pruning functions
+ 
+## rtables 0.3.8.9001
+ * new `trim_levels_to_map` split function based on wwojtek's work in #203
+ * support for column referential footnotes
+ * support for adding footnotes to existint table via `fnotes_at_path<-` function
+ * `trim_levels_in_group` now trims empty levels of outer (split) variable by default
+ * `value_at` and `cell_values` now work for tablerow objects
+ * Fixed `as_html` bug in multvar split columns case 
+ * Fixed pagination off-by-one error
+
+
+## rtables 0.3.8.9000
+
 ## rtables 0.3.8
  * Add experimental support for newlines in column names, row labels, and cell values (not supported in top-left annotations)
  * `as_html` refactored to support newlines while respecting table structure
