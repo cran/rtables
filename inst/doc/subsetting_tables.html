@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2021-10-06" />
+<meta name="date" content="2022-03-31" />
 
 <title>Subsetting Tables</title>
 
@@ -26,6 +26,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -141,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Subsetting Tables</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2021-10-06</h4>
+<h4 class="date">2022-03-31</h4>
 
 
 
@@ -166,10 +167,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>tbl</span></code></pre></div>
 <pre><code>            A: Drug X   B: Placebo   C: Combination
----------------------------------------------------
+———————————————————————————————————————————————————
 F                                                  
   AGE                                              
-    Mean      32.76       34.12           35.2     
+    Mean      32.76       34.12          35.20     
   STRATA1                                          
     A          21           24             18      
     B          25           27             21      
@@ -184,12 +185,12 @@ M
 <p>The <code>[</code> accessor function always returns an <code>TableTree</code> object if <code>drop=TRUE</code> is not set. The first argument are the row indices and the second argument the column indices. Alternatively logical subsetting can be used. The indices are based on visible rows and not on the tree structure. So:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">1</span>, <span class="dv">1</span>]</span></code></pre></div>
 <pre><code>    A: Drug X
--------------
+—————————————
 F            </code></pre>
 <p>is a table with an empty cell because the first row is a label row. We need to access a cell with actual cell data:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">3</span>, <span class="dv">1</span>]</span></code></pre></div>
 <pre><code>       A: Drug X
-----------------
+————————————————
 Mean     32.76  </code></pre>
 <p>which is another <code>TableTree</code> and not an <code>rcell</code>. If we wanted the <code>rcell</code> we need to use the <code>drop</code> argument:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">3</span>, <span class="dv">1</span>, drop <span class="ot">=</span> <span class="cn">TRUE</span>]</span></code></pre></div>
@@ -197,16 +198,16 @@ Mean     32.76  </code></pre>
 <p>One can access multiple rows and columns:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span></code></pre></div>
 <pre><code>           A: Drug X   B: Placebo
----------------------------------
+—————————————————————————————————
 F                                
   AGE                            
     Mean     32.76       34.12   </code></pre>
 <p>Note that we do not repeat label rows for descending children, e.g.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>, ]</span></code></pre></div>
 <pre><code>          A: Drug X   B: Placebo   C: Combination
--------------------------------------------------
+—————————————————————————————————————————————————
 AGE                                              
-  Mean      32.76       34.12           35.2     
+  Mean      32.76       34.12          35.20     
 STRATA1                                          </code></pre>
 <p>does not show that the first row is derived from <code>AGE</code>. In order to repeat content/label information one should use the pagination feature. Please read the related vignette.</p>
 </div>
@@ -222,9 +223,9 @@ STRATA1                                          </code></pre>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>tbl2</span></code></pre></div>
 <pre><code>            A: Drug X      B: Placebo      C: Combination  
             F       M       F       M        F         M   
------------------------------------------------------------
+———————————————————————————————————————————————————————————
 AGE                                                        
-  Mean    32.76   35.57   34.12   37.44    35.2      35.38 
+  Mean    32.76   35.57   34.12   37.44    35.20     35.38 
 STRATA1                                                    
   A        21      16      24      19       18        20   
   B        25      21      27      17       21        21   
@@ -232,7 +233,7 @@ STRATA1
 <p>So the column paths are as follows:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">col_paths_summary</span>(tbl2)</span></code></pre></div>
 <pre><code>label             path                       
----------------------------------------------
+—————————————————————————————————————————————
 A: Drug X         ARM, A: Drug X             
   F               ARM, A: Drug X, SEX, F     
   M               ARM, A: Drug X, SEX, M     
@@ -245,7 +246,7 @@ C: Combination    ARM, C: Combination
 <p>and the row paths are as follows:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">row_paths_summary</span>(tbl2)</span></code></pre></div>
 <pre><code>rowname    node_class    path                      
----------------------------------------------------
+———————————————————————————————————————————————————
 AGE        LabelRow      ma_AGE_STRATA1, AGE       
   Mean     DataRow       ma_AGE_STRATA1, AGE, Mean 
 STRATA1    LabelRow      ma_AGE_STRATA1, STRATA1   

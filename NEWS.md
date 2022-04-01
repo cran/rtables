@@ -1,6 +1,20 @@
+## rtables 0.5.0
+ * `formatable` dependency renamed to `formatters` for suitability of release to CRAN
+ * Update versioned dependency of `formatters` (previously `formatable`) to `>=0.2.0` 
+ 
+## rtables 0.4.1.0004
+ * Fix bug when function format combined with NULL cfun caused error (#307)
+ * Fix bug in `path_enriched_df` (which powers tsv export), related to (#308)
+ 
+## rtables 0.4.1.0002
+ * added `table_shell` to display shell of table with formats
+
+## rtables 0.4.1.0001
+ * added `linesep` argument to `toString` to specify a character to create the line separator. Previously we used the en dash as the line separator character, now we changed the default to the em dash reducing the gap between the dash line elements.
+
 ## rtables 0.4.0
  * Initializing layouts with `NULL` is now deprecated
- * insert_rrow is deprecated in favor of new `insert_row_at_path` and `label_at_path<-` functions
+ * `insert_rrow` is deprecated in favor of new `insert_row_at_path` and `label_at_path<-` functions
  * split and analysis/content functions can now depend on values of splits they are nested inside by accepting and using the new `.spl_context` optional argument
  * new `trim_levels_to_map` split function  for dictating exact combinations of values which should appear across splits
  * `value_formats` function now exported which returns/displays the effective formats of all cells in a table
@@ -13,7 +27,7 @@
 ## rtables 0.3.8.9001
  * new `trim_levels_to_map` split function based on wwojtek's work in #203
  * support for column referential footnotes
- * support for adding footnotes to existint table via `fnotes_at_path<-` function
+ * support for adding footnotes to existing table via `fnotes_at_path<-` function
  * `trim_levels_in_group` now trims empty levels of outer (split) variable by default
  * `value_at` and `cell_values` now work for tablerow objects
  * Fixed `as_html` bug in multvar split columns case 

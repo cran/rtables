@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2021-10-06" />
+<meta name="date" content="2022-03-31" />
 
 <title>Pruning and Sorting Tables</title>
 
@@ -26,6 +26,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -141,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Pruning and Sorting Tables</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2021-10-06</h4>
+<h4 class="date">2022-03-31</h4>
 
 
 
@@ -172,65 +173,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">build_table</span>(DM)</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>rawtable</span></code></pre></div>
-<pre><code>                                                                  A: Drug X                                             B: Placebo                                           C: Combination                    
-                                                F            M           U       UNDIFFERENTIATED       F           M          U       UNDIFFERENTIATED       F            M           U       UNDIFFERENTIATED
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-ASIAN                                       44 (62.9%)   35 (68.6%)   0 (NaN%)       0 (NaN%)       37 (66.1%)   31 (62%)   0 (NaN%)       0 (NaN%)       40 (65.6%)   44 (64.7%)   0 (NaN%)       0 (NaN%)    
-  A                                         15 (21.4%)   12 (23.5%)   0 (NaN%)       0 (NaN%)        14 (25%)    6 (12%)    0 (NaN%)       0 (NaN%)       15 (24.6%)   16 (23.5%)   0 (NaN%)       0 (NaN%)    
-    Mean                                       30.4        34.42        NaN            NaN            35.43       30.33       NaN            NaN             37.4        36.25        NaN            NaN       
-  B                                         16 (22.9%)   8 (15.7%)    0 (NaN%)       0 (NaN%)       13 (23.2%)   16 (32%)   0 (NaN%)       0 (NaN%)       10 (16.4%)   12 (17.6%)   0 (NaN%)       0 (NaN%)    
-    Mean                                      33.75        34.88        NaN            NaN            32.46       30.94       NaN            NaN             33.3        35.92        NaN            NaN       
-  C                                         13 (18.6%)   15 (29.4%)   0 (NaN%)       0 (NaN%)       10 (17.9%)   9 (18%)    0 (NaN%)       0 (NaN%)       15 (24.6%)   16 (23.5%)   0 (NaN%)       0 (NaN%)    
-    Mean                                      36.92         35.6        NaN            NaN              34        31.89       NaN            NaN            33.47        31.38        NaN            NaN       
-BLACK OR AFRICAN AMERICAN                   18 (25.7%)   10 (19.6%)   0 (NaN%)       0 (NaN%)       12 (21.4%)   12 (24%)   0 (NaN%)       0 (NaN%)       13 (21.3%)   14 (20.6%)   0 (NaN%)       0 (NaN%)    
-  A                                          5 (7.1%)      1 (2%)     0 (NaN%)       0 (NaN%)        5 (8.9%)     2 (4%)    0 (NaN%)       0 (NaN%)        4 (6.6%)     4 (5.9%)    0 (NaN%)       0 (NaN%)    
-    Mean                                       31.2          33         NaN            NaN              28          30        NaN            NaN            30.75         36.5        NaN            NaN       
-  B                                          7 (10%)      3 (5.9%)    0 (NaN%)       0 (NaN%)        3 (5.4%)     3 (6%)    0 (NaN%)       0 (NaN%)        6 (9.8%)     6 (8.8%)    0 (NaN%)       0 (NaN%)    
-    Mean                                      36.14        34.33        NaN            NaN            29.67         32        NaN            NaN            36.33          31         NaN            NaN       
-  C                                          6 (8.6%)    6 (11.8%)    0 (NaN%)       0 (NaN%)        4 (7.1%)    7 (14%)    0 (NaN%)       0 (NaN%)        3 (4.9%)     4 (5.9%)    0 (NaN%)       0 (NaN%)    
-    Mean                                      31.33        39.67        NaN            NaN             34.5         34        NaN            NaN              33          36.5        NaN            NaN       
-WHITE                                       8 (11.4%)    6 (11.8%)    0 (NaN%)       0 (NaN%)       7 (12.5%)    7 (14%)    0 (NaN%)       0 (NaN%)       8 (13.1%)    10 (14.7%)   0 (NaN%)       0 (NaN%)    
-  A                                          2 (2.9%)      1 (2%)     0 (NaN%)       0 (NaN%)        3 (5.4%)     3 (6%)    0 (NaN%)       0 (NaN%)        1 (1.6%)     5 (7.4%)    0 (NaN%)       0 (NaN%)    
-    Mean                                        34           45         NaN            NaN            29.33       33.33       NaN            NaN              35          32.8        NaN            NaN       
-  B                                          4 (5.7%)     3 (5.9%)    0 (NaN%)       0 (NaN%)        1 (1.8%)     4 (8%)    0 (NaN%)       0 (NaN%)        3 (4.9%)     1 (1.5%)    0 (NaN%)       0 (NaN%)    
-    Mean                                        37         43.67        NaN            NaN              48        36.75       NaN            NaN            34.33          36         NaN            NaN       
-  C                                          2 (2.9%)     2 (3.9%)    0 (NaN%)       0 (NaN%)        3 (5.4%)     0 (0%)    0 (NaN%)       0 (NaN%)        4 (6.6%)     4 (5.9%)    0 (NaN%)       0 (NaN%)    
-    Mean                                       35.5          44         NaN            NaN            44.67        NaN        NaN            NaN             38.5          35         NaN            NaN       
-AMERICAN INDIAN OR ALASKA NATIVE              0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-  A                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-  B                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-  C                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-MULTIPLE                                      0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-  A                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-  B                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-  C                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER     0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-  A                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-  B                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-  C                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-OTHER                                         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-  A                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-  B                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-  C                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-UNKNOWN                                       0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-  A                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-  B                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       
-  C                                           0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)         0 (0%)      0 (0%)    0 (NaN%)       0 (NaN%)         0 (0%)       0 (0%)     0 (NaN%)       0 (NaN%)    
-    Mean                                       NaN          NaN         NaN            NaN             NaN         NaN        NaN            NaN             NaN          NaN         NaN            NaN       </code></pre>
+<pre><code>                                                                 A: Drug X                                              B: Placebo                                           C: Combination                   
+                                                F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+ASIAN                                       44 (62.9%)   35 (68.6%)   0 (NA%)       0 (NA%)        37 (66.1%)   31 (62.0%)   0 (NA%)       0 (NA%)        40 (65.6%)   44 (64.7%)   0 (NA%)       0 (NA%)     
+  A                                         15 (21.4%)   12 (23.5%)   0 (NA%)       0 (NA%)        14 (25.0%)   6 (12.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
+    Mean                                      30.40        34.42        NA             NA            35.43        30.33        NA             NA            37.40        36.25        NA             NA       
+  B                                         16 (22.9%)   8 (15.7%)    0 (NA%)       0 (NA%)        13 (23.2%)   16 (32.0%)   0 (NA%)       0 (NA%)        10 (16.4%)   12 (17.6%)   0 (NA%)       0 (NA%)     
+    Mean                                      33.75        34.88        NA             NA            32.46        30.94        NA             NA            33.30        35.92        NA             NA       
+  C                                         13 (18.6%)   15 (29.4%)   0 (NA%)       0 (NA%)        10 (17.9%)   9 (18.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
+    Mean                                      36.92        35.60        NA             NA            34.00        31.89        NA             NA            33.47        31.38        NA             NA       
+BLACK OR AFRICAN AMERICAN                   18 (25.7%)   10 (19.6%)   0 (NA%)       0 (NA%)        12 (21.4%)   12 (24.0%)   0 (NA%)       0 (NA%)        13 (21.3%)   14 (20.6%)   0 (NA%)       0 (NA%)     
+  A                                          5 (7.1%)     1 (2.0%)    0 (NA%)       0 (NA%)         5 (8.9%)     2 (4.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+    Mean                                      31.20        33.00        NA             NA            28.00        30.00        NA             NA            30.75        36.50        NA             NA       
+  B                                         7 (10.0%)     3 (5.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         6 (9.8%)     6 (8.8%)    0 (NA%)       0 (NA%)     
+    Mean                                      36.14        34.33        NA             NA            29.67        32.00        NA             NA            36.33        31.00        NA             NA       
+  C                                          6 (8.6%)    6 (11.8%)    0 (NA%)       0 (NA%)         4 (7.1%)    7 (14.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+    Mean                                      31.33        39.67        NA             NA            34.50        34.00        NA             NA            33.00        36.50        NA             NA       
+WHITE                                       8 (11.4%)    6 (11.8%)    0 (NA%)       0 (NA%)        7 (12.5%)    7 (14.0%)    0 (NA%)       0 (NA%)        8 (13.1%)    10 (14.7%)   0 (NA%)       0 (NA%)     
+  A                                          2 (2.9%)     1 (2.0%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         1 (1.6%)     5 (7.4%)    0 (NA%)       0 (NA%)     
+    Mean                                      34.00        45.00        NA             NA            29.33        33.33        NA             NA            35.00        32.80        NA             NA       
+  B                                          4 (5.7%)     3 (5.9%)    0 (NA%)       0 (NA%)         1 (1.8%)     4 (8.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     1 (1.5%)    0 (NA%)       0 (NA%)     
+    Mean                                      37.00        43.67        NA             NA            48.00        36.75        NA             NA            34.33        36.00        NA             NA       
+  C                                          2 (2.9%)     2 (3.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     0 (0.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+    Mean                                      35.50        44.00        NA             NA            44.67          NA         NA             NA            38.50        35.00        NA             NA       
+AMERICAN INDIAN OR ALASKA NATIVE             0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+  A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+  B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+  C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+MULTIPLE                                     0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+  A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+  B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+  C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER    0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+  A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+  B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+  C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+OTHER                                        0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+  A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+  B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+  C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+UNKNOWN                                      0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+  A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+  B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+  C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       </code></pre>
 </div>
 <div id="trimming" class="section level2">
 <h2>Trimming</h2>
@@ -242,30 +243,30 @@ UNKNOWN                                       0 (0%)       0 (0%)     0 (NaN%)  
 <p>A <em>trimming function</em> accepts a <code>TableRow</code> object and returns <code>TRUE</code> if the row should be removed.</p>
 <p>The default trimming function removes rows that have no values in them that have all <code>NA</code> values or all <code>0</code> values (but not if there is a mix)</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trim_rows</span>(rawtable)</span></code></pre></div>
-<pre><code>                                                  A: Drug X                                             B: Placebo                                           C: Combination                    
-                                F            M           U       UNDIFFERENTIATED       F           M          U       UNDIFFERENTIATED       F            M           U       UNDIFFERENTIATED
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-ASIAN                       44 (62.9%)   35 (68.6%)   0 (NaN%)       0 (NaN%)       37 (66.1%)   31 (62%)   0 (NaN%)       0 (NaN%)       40 (65.6%)   44 (64.7%)   0 (NaN%)       0 (NaN%)    
-  A                         15 (21.4%)   12 (23.5%)   0 (NaN%)       0 (NaN%)        14 (25%)    6 (12%)    0 (NaN%)       0 (NaN%)       15 (24.6%)   16 (23.5%)   0 (NaN%)       0 (NaN%)    
-    Mean                       30.4        34.42        NaN            NaN            35.43       30.33       NaN            NaN             37.4        36.25        NaN            NaN       
-  B                         16 (22.9%)   8 (15.7%)    0 (NaN%)       0 (NaN%)       13 (23.2%)   16 (32%)   0 (NaN%)       0 (NaN%)       10 (16.4%)   12 (17.6%)   0 (NaN%)       0 (NaN%)    
-    Mean                      33.75        34.88        NaN            NaN            32.46       30.94       NaN            NaN             33.3        35.92        NaN            NaN       
-  C                         13 (18.6%)   15 (29.4%)   0 (NaN%)       0 (NaN%)       10 (17.9%)   9 (18%)    0 (NaN%)       0 (NaN%)       15 (24.6%)   16 (23.5%)   0 (NaN%)       0 (NaN%)    
-    Mean                      36.92         35.6        NaN            NaN              34        31.89       NaN            NaN            33.47        31.38        NaN            NaN       
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   0 (NaN%)       0 (NaN%)       12 (21.4%)   12 (24%)   0 (NaN%)       0 (NaN%)       13 (21.3%)   14 (20.6%)   0 (NaN%)       0 (NaN%)    
-  A                          5 (7.1%)      1 (2%)     0 (NaN%)       0 (NaN%)        5 (8.9%)     2 (4%)    0 (NaN%)       0 (NaN%)        4 (6.6%)     4 (5.9%)    0 (NaN%)       0 (NaN%)    
-    Mean                       31.2          33         NaN            NaN              28          30        NaN            NaN            30.75         36.5        NaN            NaN       
-  B                          7 (10%)      3 (5.9%)    0 (NaN%)       0 (NaN%)        3 (5.4%)     3 (6%)    0 (NaN%)       0 (NaN%)        6 (9.8%)     6 (8.8%)    0 (NaN%)       0 (NaN%)    
-    Mean                      36.14        34.33        NaN            NaN            29.67         32        NaN            NaN            36.33          31         NaN            NaN       
-  C                          6 (8.6%)    6 (11.8%)    0 (NaN%)       0 (NaN%)        4 (7.1%)    7 (14%)    0 (NaN%)       0 (NaN%)        3 (4.9%)     4 (5.9%)    0 (NaN%)       0 (NaN%)    
-    Mean                      31.33        39.67        NaN            NaN             34.5         34        NaN            NaN              33          36.5        NaN            NaN       
-WHITE                       8 (11.4%)    6 (11.8%)    0 (NaN%)       0 (NaN%)       7 (12.5%)    7 (14%)    0 (NaN%)       0 (NaN%)       8 (13.1%)    10 (14.7%)   0 (NaN%)       0 (NaN%)    
-  A                          2 (2.9%)      1 (2%)     0 (NaN%)       0 (NaN%)        3 (5.4%)     3 (6%)    0 (NaN%)       0 (NaN%)        1 (1.6%)     5 (7.4%)    0 (NaN%)       0 (NaN%)    
-    Mean                        34           45         NaN            NaN            29.33       33.33       NaN            NaN              35          32.8        NaN            NaN       
-  B                          4 (5.7%)     3 (5.9%)    0 (NaN%)       0 (NaN%)        1 (1.8%)     4 (8%)    0 (NaN%)       0 (NaN%)        3 (4.9%)     1 (1.5%)    0 (NaN%)       0 (NaN%)    
-    Mean                        37         43.67        NaN            NaN              48        36.75       NaN            NaN            34.33          36         NaN            NaN       
-  C                          2 (2.9%)     2 (3.9%)    0 (NaN%)       0 (NaN%)        3 (5.4%)     0 (0%)    0 (NaN%)       0 (NaN%)        4 (6.6%)     4 (5.9%)    0 (NaN%)       0 (NaN%)    
-    Mean                       35.5          44         NaN            NaN            44.67        NaN        NaN            NaN             38.5          35         NaN            NaN       </code></pre>
+<pre><code>                                                 A: Drug X                                              B: Placebo                                           C: Combination                   
+                                F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+ASIAN                       44 (62.9%)   35 (68.6%)   0 (NA%)       0 (NA%)        37 (66.1%)   31 (62.0%)   0 (NA%)       0 (NA%)        40 (65.6%)   44 (64.7%)   0 (NA%)       0 (NA%)     
+  A                         15 (21.4%)   12 (23.5%)   0 (NA%)       0 (NA%)        14 (25.0%)   6 (12.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
+    Mean                      30.40        34.42        NA             NA            35.43        30.33        NA             NA            37.40        36.25        NA             NA       
+  B                         16 (22.9%)   8 (15.7%)    0 (NA%)       0 (NA%)        13 (23.2%)   16 (32.0%)   0 (NA%)       0 (NA%)        10 (16.4%)   12 (17.6%)   0 (NA%)       0 (NA%)     
+    Mean                      33.75        34.88        NA             NA            32.46        30.94        NA             NA            33.30        35.92        NA             NA       
+  C                         13 (18.6%)   15 (29.4%)   0 (NA%)       0 (NA%)        10 (17.9%)   9 (18.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
+    Mean                      36.92        35.60        NA             NA            34.00        31.89        NA             NA            33.47        31.38        NA             NA       
+BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   0 (NA%)       0 (NA%)        12 (21.4%)   12 (24.0%)   0 (NA%)       0 (NA%)        13 (21.3%)   14 (20.6%)   0 (NA%)       0 (NA%)     
+  A                          5 (7.1%)     1 (2.0%)    0 (NA%)       0 (NA%)         5 (8.9%)     2 (4.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+    Mean                      31.20        33.00        NA             NA            28.00        30.00        NA             NA            30.75        36.50        NA             NA       
+  B                         7 (10.0%)     3 (5.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         6 (9.8%)     6 (8.8%)    0 (NA%)       0 (NA%)     
+    Mean                      36.14        34.33        NA             NA            29.67        32.00        NA             NA            36.33        31.00        NA             NA       
+  C                          6 (8.6%)    6 (11.8%)    0 (NA%)       0 (NA%)         4 (7.1%)    7 (14.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+    Mean                      31.33        39.67        NA             NA            34.50        34.00        NA             NA            33.00        36.50        NA             NA       
+WHITE                       8 (11.4%)    6 (11.8%)    0 (NA%)       0 (NA%)        7 (12.5%)    7 (14.0%)    0 (NA%)       0 (NA%)        8 (13.1%)    10 (14.7%)   0 (NA%)       0 (NA%)     
+  A                          2 (2.9%)     1 (2.0%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         1 (1.6%)     5 (7.4%)    0 (NA%)       0 (NA%)     
+    Mean                      34.00        45.00        NA             NA            29.33        33.33        NA             NA            35.00        32.80        NA             NA       
+  B                          4 (5.7%)     3 (5.9%)    0 (NA%)       0 (NA%)         1 (1.8%)     4 (8.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     1 (1.5%)    0 (NA%)       0 (NA%)     
+    Mean                      37.00        43.67        NA             NA            48.00        36.75        NA             NA            34.33        36.00        NA             NA       
+  C                          2 (2.9%)     2 (3.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     0 (0.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+    Mean                      35.50        44.00        NA             NA            44.67          NA         NA             NA            38.50        35.00        NA             NA       </code></pre>
 </div>
 <div id="trimming-columns" class="section level3">
 <h3>Trimming Columns</h3>
@@ -275,15 +276,15 @@ WHITE                       8 (11.4%)    6 (11.8%)    0 (NaN%)       0 (NaN%)   
  target signature &#39;TableTree#missing#logical&#39;.
  &quot;VTableTree#ANY#logical&quot; would also be valid</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(coltrimmed)</span></code></pre></div>
-<pre><code>                  A: Drug X               B: Placebo             C: Combination     
-               F            M            F           M           F            M     
-------------------------------------------------------------------------------------
-ASIAN      44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62%)   40 (65.6%)   44 (64.7%)
-  A        15 (21.4%)   12 (23.5%)    14 (25%)    6 (12%)    15 (24.6%)   16 (23.5%)
-    Mean      30.4        34.42        35.43       30.33        37.4        36.25   
-  B        16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32%)   10 (16.4%)   12 (17.6%)
-    Mean     33.75        34.88        32.46       30.94        33.3        35.92   
-  C        13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18%)    15 (24.6%)   16 (23.5%)</code></pre>
+<pre><code>                  A: Drug X                B: Placebo              C: Combination     
+               F            M            F            M            F            M     
+——————————————————————————————————————————————————————————————————————————————————————
+ASIAN      44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+  A        15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+    Mean     30.40        34.42        35.43        30.33        37.40        36.25   
+  B        16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+    Mean     33.75        34.88        32.46        30.94        33.30        35.92   
+  C        13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)</code></pre>
 </div>
 </div>
 <div id="pruning" class="section level2">
@@ -298,93 +299,93 @@ ASIAN      44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62%)   40 (65.6%)   44 (64
 </ol>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pruned <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>pruned</span></code></pre></div>
-<pre><code>                                   A: Drug X               B: Placebo             C: Combination     
-                                F            M            F           M           F            M     
------------------------------------------------------------------------------------------------------
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)    14 (25%)    6 (12%)    15 (24.6%)   16 (23.5%)
-    Mean                       30.4        34.42        35.43       30.33        37.4        36.25   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46       30.94        33.3        35.92   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92         35.6          34        31.89       33.47        31.38   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)      1 (2%)      5 (8.9%)     2 (4%)     4 (6.6%)     4 (5.9%) 
-    Mean                       31.2          33           28          30        30.75         36.5   
-  B                          7 (10%)      3 (5.9%)     3 (5.4%)     3 (6%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67         32        36.33          31    
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67         34.5         34          33          36.5   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)      1 (2%)      3 (5.4%)     3 (6%)     1 (1.6%)     5 (7.4%) 
-    Mean                        34           45         29.33       33.33         35          32.8   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8%)     3 (4.9%)     1 (1.5%) 
-    Mean                        37         43.67          48        36.75       34.33          36    
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0%)     4 (6.6%)     4 (5.9%) 
-    Mean                       35.5          44         44.67        NaN         38.5          35    </code></pre>
+<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
+                                F            M            F            M            F            M     
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      35.50        44.00        44.67          NA         38.50        35.00   </code></pre>
 <p>We can also use the <code>low_obs_pruner</code> pruning function constructor to create a pruning function which removes subtrees with content summaries whose first entries for each column sum or average to below a specified number. (In the default summaries the first entry per column is the count).</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pruned2 <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed, <span class="fu">low_obs_pruner</span>(<span class="dv">10</span>, <span class="st">&quot;mean&quot;</span>))</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pruned2</span></code></pre></div>
-<pre><code>                  A: Drug X               B: Placebo             C: Combination     
-               F            M            F           M           F            M     
-------------------------------------------------------------------------------------
-ASIAN      44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62%)   40 (65.6%)   44 (64.7%)
-  A        15 (21.4%)   12 (23.5%)    14 (25%)    6 (12%)    15 (24.6%)   16 (23.5%)
-    Mean      30.4        34.42        35.43       30.33        37.4        36.25   
-  B        16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32%)   10 (16.4%)   12 (17.6%)
-    Mean     33.75        34.88        32.46       30.94        33.3        35.92   
-  C        13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18%)    15 (24.6%)   16 (23.5%)
-    Mean     36.92         35.6          34        31.89       33.47        31.38   </code></pre>
+<pre><code>                  A: Drug X                B: Placebo              C: Combination     
+               F            M            F            M            F            M     
+——————————————————————————————————————————————————————————————————————————————————————
+ASIAN      44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+  A        15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+    Mean     30.40        34.42        35.43        30.33        37.40        36.25   
+  B        16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+    Mean     33.75        34.88        32.46        30.94        33.30        35.92   
+  C        13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+    Mean     36.92        35.60        34.00        31.89        33.47        31.38   </code></pre>
 <p>Note that because the pruning is being applied recursively, only the <code>ASIAN</code> subtree remains because even though the full <code>BLACK OR AFRICAN AMERICAN</code> subtree encompassed enough observations, the strata within it did not. We can take care of this by setting the <code>stop_depth</code> for pruning to <code>1</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pruned3 <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed, <span class="fu">low_obs_pruner</span>(<span class="dv">10</span>, <span class="st">&quot;sum&quot;</span>), <span class="at">stop_depth =</span> <span class="dv">1</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pruned3</span></code></pre></div>
-<pre><code>                                   A: Drug X               B: Placebo             C: Combination     
-                                F            M            F           M           F            M     
------------------------------------------------------------------------------------------------------
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)    14 (25%)    6 (12%)    15 (24.6%)   16 (23.5%)
-    Mean                       30.4        34.42        35.43       30.33        37.4        36.25   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46       30.94        33.3        35.92   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92         35.6          34        31.89       33.47        31.38   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)      1 (2%)      5 (8.9%)     2 (4%)     4 (6.6%)     4 (5.9%) 
-    Mean                       31.2          33           28          30        30.75         36.5   
-  B                          7 (10%)      3 (5.9%)     3 (5.4%)     3 (6%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67         32        36.33          31    
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67         34.5         34          33          36.5   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)      1 (2%)      3 (5.4%)     3 (6%)     1 (1.6%)     5 (7.4%) 
-    Mean                        34           45         29.33       33.33         35          32.8   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8%)     3 (4.9%)     1 (1.5%) 
-    Mean                        37         43.67          48        36.75       34.33          36    
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0%)     4 (6.6%)     4 (5.9%) 
-    Mean                       35.5          44         44.67        NaN         38.5          35    </code></pre>
+<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
+                                F            M            F            M            F            M     
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      35.50        44.00        44.67          NA         38.50        35.00   </code></pre>
 <p>We can also see that pruning to a lower number of observations, say, to a total of <code>16</code>, with no <code>stop_depth</code> removes some but not all of the strata from our third race (<code>WHITE</code>)</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pruned4 <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed, <span class="fu">low_obs_pruner</span>(<span class="dv">16</span>, <span class="st">&quot;sum&quot;</span>))</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pruned4</span></code></pre></div>
-<pre><code>                                   A: Drug X               B: Placebo             C: Combination     
-                                F            M            F           M           F            M     
------------------------------------------------------------------------------------------------------
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)    14 (25%)    6 (12%)    15 (24.6%)   16 (23.5%)
-    Mean                       30.4        34.42        35.43       30.33        37.4        36.25   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46       30.94        33.3        35.92   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92         35.6          34        31.89       33.47        31.38   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)      1 (2%)      5 (8.9%)     2 (4%)     4 (6.6%)     4 (5.9%) 
-    Mean                       31.2          33           28          30        30.75         36.5   
-  B                          7 (10%)      3 (5.9%)     3 (5.4%)     3 (6%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67         32        36.33          31    
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67         34.5         34          33          36.5   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 (13.1%)    10 (14.7%)
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8%)     3 (4.9%)     1 (1.5%) 
-    Mean                        37         43.67          48        36.75       34.33          36    </code></pre>
+<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
+                                F            M            F            M            F            M     
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   </code></pre>
 </div>
 <div id="sorting" class="section level2">
 <h2>Sorting</h2>
@@ -393,83 +394,83 @@ WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 
 <p>Another difference between pruning and sorting is that sorting occurs at particular places in the table, as defined by a path. The path can contain &quot;*&quot; to indicate that at that portion of the structure sorting should occur <strong>separately</strong> within branch of the path.</p>
 <p>Sort the strata by observation counts within just the <code>ASIAN</code> subtable:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols)</span></code></pre></div>
-<pre><code>                                   A: Drug X               B: Placebo             C: Combination     
-                                F            M            F           M           F            M     
------------------------------------------------------------------------------------------------------
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)    14 (25%)    6 (12%)    15 (24.6%)   16 (23.5%)
-    Mean                       30.4        34.42        35.43       30.33        37.4        36.25   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92         35.6          34        31.89       33.47        31.38   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46       30.94        33.3        35.92   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)      1 (2%)      5 (8.9%)     2 (4%)     4 (6.6%)     4 (5.9%) 
-    Mean                       31.2          33           28          30        30.75         36.5   
-  B                          7 (10%)      3 (5.9%)     3 (5.4%)     3 (6%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67         32        36.33          31    
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67         34.5         34          33          36.5   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)      1 (2%)      3 (5.4%)     3 (6%)     1 (1.6%)     5 (7.4%) 
-    Mean                        34           45         29.33       33.33         35          32.8   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8%)     3 (4.9%)     1 (1.5%) 
-    Mean                        37         43.67          48        36.75       34.33          36    
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0%)     4 (6.6%)     4 (5.9%) 
-    Mean                       35.5          44         44.67        NaN         38.5          35    </code></pre>
+<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
+                                F            M            F            M            F            M     
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      35.50        44.00        44.67          NA         38.50        35.00   </code></pre>
 <p>Sort the ethnicities by observations, increasing</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ethsort <span class="ot">&lt;-</span> <span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols, <span class="at">decreasing =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>ethsort</span></code></pre></div>
-<pre><code>                                   A: Drug X               B: Placebo             C: Combination     
-                                F            M            F           M           F            M     
------------------------------------------------------------------------------------------------------
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)      1 (2%)      3 (5.4%)     3 (6%)     1 (1.6%)     5 (7.4%) 
-    Mean                        34           45         29.33       33.33         35          32.8   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8%)     3 (4.9%)     1 (1.5%) 
-    Mean                        37         43.67          48        36.75       34.33          36    
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0%)     4 (6.6%)     4 (5.9%) 
-    Mean                       35.5          44         44.67        NaN         38.5          35    
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)      1 (2%)      5 (8.9%)     2 (4%)     4 (6.6%)     4 (5.9%) 
-    Mean                       31.2          33           28          30        30.75         36.5   
-  B                          7 (10%)      3 (5.9%)     3 (5.4%)     3 (6%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67         32        36.33          31    
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67         34.5         34          33          36.5   
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)    14 (25%)    6 (12%)    15 (24.6%)   16 (23.5%)
-    Mean                       30.4        34.42        35.43       30.33        37.4        36.25   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46       30.94        33.3        35.92   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92         35.6          34        31.89       33.47        31.38   </code></pre>
+<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
+                                F            M            F            M            F            M     
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      35.50        44.00        44.67          NA         38.50        35.00   
+BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   </code></pre>
 <p>Within each ethnicity separately, sort the strata by number of females in arm c (ie column position <code>5</code>)</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="fu">cont_n_onecol</span>(<span class="dv">5</span>))</span></code></pre></div>
-<pre><code>                                   A: Drug X               B: Placebo             C: Combination     
-                                F            M            F           M           F            M     
------------------------------------------------------------------------------------------------------
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)    14 (25%)    6 (12%)    15 (24.6%)   16 (23.5%)
-    Mean                       30.4        34.42        35.43       30.33        37.4        36.25   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92         35.6          34        31.89       33.47        31.38   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46       30.94        33.3        35.92   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24%)   13 (21.3%)   14 (20.6%)
-  B                          7 (10%)      3 (5.9%)     3 (5.4%)     3 (6%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67         32        36.33          31    
-  A                          5 (7.1%)      1 (2%)      5 (8.9%)     2 (4%)     4 (6.6%)     4 (5.9%) 
-    Mean                       31.2          33           28          30        30.75         36.5   
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67         34.5         34          33          36.5   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 (13.1%)    10 (14.7%)
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0%)     4 (6.6%)     4 (5.9%) 
-    Mean                       35.5          44         44.67        NaN         38.5          35    
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8%)     3 (4.9%)     1 (1.5%) 
-    Mean                        37         43.67          48        36.75       34.33          36    
-  A                          2 (2.9%)      1 (2%)      3 (5.4%)     3 (6%)     1 (1.6%)     5 (7.4%) 
-    Mean                        34           45         29.33       33.33         35          32.8   </code></pre>
+<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
+                                F            M            F            M            F            M     
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      35.50        44.00        44.67          NA         38.50        35.00   
+  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   </code></pre>
 <div id="sorting-within-an-analysis-subtable" class="section level3">
 <h3>Sorting Within an Analysis Subtable</h3>
 <p>When sorting within an analysis subtable (e.g., the subtable generated when your analysis function generates more than one row per group of data), the name of that subtable (generally the name of the variable being analyzed) must appear in the path, <em><strong>even if the variable label is not displayed when the table is printed</strong></em></p>
@@ -487,7 +488,7 @@ WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 
 <pre><code>Split var [cyl] was not character or factor. Converting to factor</code></pre>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>sillytbl</span></code></pre></div>
 <pre><code>      all obs
--------------
+—————————————
 6            
   a      2   
   b      3   
@@ -504,7 +505,7 @@ WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>scorefun <span class="ot">&lt;-</span> <span class="cf">function</span>(tt) { <span class="fu">mean</span>(<span class="fu">unlist</span>(<span class="fu">row_values</span>(tt)))}</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(sillytbl, <span class="fu">c</span>(<span class="st">&quot;cyl&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;mpg&quot;</span>), scorefun)</span></code></pre></div>
 <pre><code>      all obs
--------------
+—————————————
 6            
   b      3   
   a      2   
@@ -547,30 +548,30 @@ WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 
 <pre><code>[1] &quot;WHITE&quot;
 [1] &quot;BLACK OR AFRICAN AMERICAN&quot;
 [1] &quot;ASIAN&quot;</code></pre>
-<pre><code>                                   A: Drug X               B: Placebo             C: Combination     
-                                F            M            F           M           F            M     
------------------------------------------------------------------------------------------------------
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)    14 (25%)    6 (12%)    15 (24.6%)   16 (23.5%)
-    Mean                       30.4        34.42        35.43       30.33        37.4        36.25   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46       30.94        33.3        35.92   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92         35.6          34        31.89       33.47        31.38   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)      1 (2%)      5 (8.9%)     2 (4%)     4 (6.6%)     4 (5.9%) 
-    Mean                       31.2          33           28          30        30.75         36.5   
-  B                          7 (10%)      3 (5.9%)     3 (5.4%)     3 (6%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67         32        36.33          31    
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67         34.5         34          33          36.5   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)      1 (2%)      3 (5.4%)     3 (6%)     1 (1.6%)     5 (7.4%) 
-    Mean                        34           45         29.33       33.33         35          32.8   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8%)     3 (4.9%)     1 (1.5%) 
-    Mean                        37         43.67          48        36.75       34.33          36    
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0%)     4 (6.6%)     4 (5.9%) 
-    Mean                       35.5          44         44.67        NaN         38.5          35    </code></pre>
+<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
+                                F            M            F            M            F            M     
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      35.50        44.00        44.67          NA         38.50        35.00   </code></pre>
 <p><strong>NOTE</strong> generally this would be more appropriately done using the reorder_split_levels function within the layout rather than as a sort postprocessing step, but other character scorers may or may not not map as easily to layouting directives.</p>
 </div>
 <div id="sort-by-the-percent-difference-in-counts-between-genders-in-arm-c" class="section level3">
@@ -588,30 +589,30 @@ WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 
 <span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), silly_gender_diffcount)</span></code></pre></div>
-<pre><code>                                   A: Drug X               B: Placebo             C: Combination     
-                                F            M            F           M           F            M     
------------------------------------------------------------------------------------------------------
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62%)   40 (65.6%)   44 (64.7%)
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46       30.94        33.3        35.92   
-  A                         15 (21.4%)   12 (23.5%)    14 (25%)    6 (12%)    15 (24.6%)   16 (23.5%)
-    Mean                       30.4        34.42        35.43       30.33        37.4        36.25   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92         35.6          34        31.89       33.47        31.38   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24%)   13 (21.3%)   14 (20.6%)
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67         34.5         34          33          36.5   
-  A                          5 (7.1%)      1 (2%)      5 (8.9%)     2 (4%)     4 (6.6%)     4 (5.9%) 
-    Mean                       31.2          33           28          30        30.75         36.5   
-  B                          7 (10%)      3 (5.9%)     3 (5.4%)     3 (6%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67         32        36.33          31    
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)      1 (2%)      3 (5.4%)     3 (6%)     1 (1.6%)     5 (7.4%) 
-    Mean                        34           45         29.33       33.33         35          32.8   
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0%)     4 (6.6%)     4 (5.9%) 
-    Mean                       35.5          44         44.67        NaN         38.5          35    
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8%)     3 (4.9%)     1 (1.5%) 
-    Mean                        37         43.67          48        36.75       34.33          36    </code></pre>
+<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
+                                F            M            F            M            F            M     
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+    Mean                      35.50        44.00        44.67          NA         38.50        35.00   
+  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   </code></pre>
 </div>
 </div>
 </div>

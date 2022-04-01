@@ -27,6 +27,7 @@
     </style>
 
 
+
 <style type="text/css">
   code {
     white-space: pre;
@@ -215,14 +216,14 @@ zoo_label        zoo(df_A)  zoo(df_B)  zoo(df_C)</code></pre>
 Non-unique sibling analysis table names. Using Labels instead. Use the
 table_names argument to analyze to avoid this when analyzing the same variable
 multiple times.</code></pre>
-<pre><code>               A      B      C  
---------------------------------
-foo label                       
-  foo label    0      0      0  
-bar label                       
-  bar label   1.87   4.37   4.64
-zoo label                       
-  zoo label   0.05   0.13   0.18</code></pre>
+<pre><code>               A       B       C  
+——————————————————————————————————
+foo label                         
+  foo label   0.00   -0.00   -0.00
+bar label                         
+  bar label   1.87   4.37    4.64 
+zoo label                         
+  zoo label   0.05   0.13    0.18 </code></pre>
 <p>of if we wanted the <code>x</code> variable instead of the data frame:</p>
 <pre><code>                     A         B         C
 ------------------------------------------------
@@ -244,14 +245,14 @@ zoo_label        zoo(x_A)  zoo(x_B)  zoo(x_C)</code></pre>
 Non-unique sibling analysis table names. Using Labels instead. Use the
 table_names argument to analyze to avoid this when analyzing the same variable
 multiple times.</code></pre>
-<pre><code>             A      B      C  
-------------------------------
-foo label                     
-  foo        0      0      0  
-bar label                     
-  bar       1.87   4.37   4.64
-zoo label                     
-  zoo       0.05   0.13   0.18</code></pre>
+<pre><code>             A       B       C  
+————————————————————————————————
+foo label                       
+  foo       0.00   -0.00   -0.00
+bar label                       
+  bar       1.87   4.37    4.64 
+zoo label                       
+  zoo       0.05   0.13    0.18 </code></pre>
 <p>Note that it is also possible that a function returns multiple rows with <code>in_rows</code></p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -272,14 +273,14 @@ zoo label
 Non-unique sibling analysis table names. Using Labels instead. Use the
 table_names argument to analyze to avoid this when analyzing the same variable
 multiple times.</code></pre>
-<pre><code>                       A       B      C  
------------------------------------------
-foo label                                
-  row 1              0.05    0.13    0.18
-  row 2              0.985   0.815   0.89
-bar label                                
-  more rows 1          0      0.2    0.3 
-  even more rows 1    1.2    1.15    1.16</code></pre>
+<pre><code>                       A       B       C  
+——————————————————————————————————————————
+foo label                                 
+  row 1              0.05    0.13    0.18 
+  row 2              0.985   0.815   0.890
+bar label                                 
+  more rows 1        -0.0     0.2     0.3 
+  even more rows 1   1.20    1.15    1.16 </code></pre>
 <p>which is how we recommend to specify the row names explicitly.</p>
 </div>
 <div id="tabulation-with-row-structure" class="section level2">
@@ -350,7 +351,7 @@ W        foo(df_WA)  foo(df_WB)  foo(df_WC)</code></pre>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, foo) <span class="sc">%&gt;%</span></span>
 <span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(df)</span></code></pre></div>
 <pre><code>          A        B        C   
---------------------------------
+————————————————————————————————
 U                               
   foo   17 x 6   13 x 6   10 x 6
 V                               
@@ -364,7 +365,7 @@ W
 <span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> foo, <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(df)</span></code></pre></div>
 <pre><code>     A        B        C   
----------------------------
+———————————————————————————
    17 x 6   13 x 6   10 x 6
    9 x 6    15 x 6   5 x 6 
    14 x 6   6 x 6    11 x 6</code></pre>
@@ -379,7 +380,7 @@ W
 <span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> foo) <span class="sc">%&gt;%</span></span>
 <span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(df)</span></code></pre></div>
 <pre><code>      A        B        C   
-----------------------------
+————————————————————————————
 U   17 x 6   13 x 6   10 x 6
 V   9 x 6    15 x 6   5 x 6 
 W   14 x 6   6 x 6    11 x 6</code></pre>
@@ -395,11 +396,11 @@ W   14 x 6   6 x 6    11 x 6</code></pre>
 <span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> foo) <span class="sc">%&gt;%</span></span>
 <span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(df)</span></code></pre></div>
-<pre><code>    A    B    C 
-----------------
-U   -1   1    3 
-V   -4   -2   0 
-W   -7   -5   -3</code></pre>
+<pre><code>      A       B       C  
+—————————————————————————
+U   -1.00   1.00    3.00 
+V   -4.00   -2.00   0.00 
+W   -7.00   -5.00   -3.00</code></pre>
 <p>Note that <code>foo</code> has the variable information hard encoded in the function body. Let’s try some alternatives returning to <code>analyze</code>:</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -407,7 +408,7 @@ W   -7   -5   -3</code></pre>
 <span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;y&quot;</span>, <span class="at">afun =</span> mean) <span class="sc">%&gt;%</span></span>
 <span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(df)</span></code></pre></div>
 <pre><code>         A    B    C 
----------------------
+—————————————————————
 U                    
   mean   -1   1    3 
 V                    
@@ -421,7 +422,7 @@ W
 <span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;y&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(df) <span class="fu">mean</span>(df<span class="sc">$</span>y)) <span class="sc">%&gt;%</span></span>
 <span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(df)</span></code></pre></div>
 <pre><code>      A    B    C 
-------------------
+——————————————————
 U                 
   y   -1   1    3 
 V                 
@@ -435,7 +436,7 @@ W
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;y&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(x) <span class="fu">mean</span>(x)) <span class="sc">%&gt;%</span></span>
 <span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(df)</span></code></pre></div>
 <pre><code>      A    B    C 
-------------------
+——————————————————
 U                 
   y   -1   1    3 
 V                 
@@ -479,19 +480,19 @@ W
 <span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span> </span>
 <span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(df)</span></code></pre></div>
 <pre><code>                    A       B       C  
----------------------------------------
+———————————————————————————————————————
 U                                      
   mean x for u3   -0.04   0.36    -0.25
-  mean x for u1   0.86    0.32     NaN 
+  mean x for u1   0.86    0.32     NA  
   mean x for u2   -0.28   0.38    0.08 
 V                                      
-  mean x for v2   0.01    0.55     0.6 
-  mean x for v3   -0.03   -0.3    1.06 
+  mean x for v2   0.01    0.55    0.60 
+  mean x for v3   -0.03   -0.30   1.06 
   mean x for v1   0.56    -0.27   -0.54
 W                                      
   mean x for w1   -0.58   0.42    0.67 
   mean x for w3   0.56    0.69    -0.39
-  mean x for w2   -1.99   -0.1    0.53 </code></pre>
+  mean x for w2   -1.99   -0.10   0.53 </code></pre>
 <p>or, if we wanted to calculate two summaries per row split:</p>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>s_mean_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">in_rows</span>(<span class="st">&quot;mean (sd)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>))</span>
@@ -554,26 +555,26 @@ Non-unique sibling analysis table names. Using Labels instead. Use the
 table_names argument to analyze to avoid this when analyzing the same variable
 multiple times.</code></pre>
 <pre><code>                      A              B              C      
------------------------------------------------------------
+———————————————————————————————————————————————————————————
 U                                                          
   u3                                                       
     mean (sd)   -0.04 (1.18)    0.36 (1.41)    -0.25 (0.72)
-    range        -1.8 - 1.47    -1.28 - 2.4    -0.82 - 0.56
+    range       -1.80 - 1.47    -1.28 - 2.40   -0.82 - 0.56
   u1                                                       
-    mean (sd)    0.86 (0.38)    0.32 (0.51)      NaN (NA)  
+    mean (sd)    0.86 (0.38)    0.32 (0.51)      NA (NA)   
     range        0.59 - 1.12    -0.48 - 0.94    Inf - -Inf 
   u2                                                       
     mean (sd)   -0.28 (0.96)    0.38 (0.67)    0.08 (0.91) 
     range       -1.52 - 1.43    -0.39 - 0.82   -0.93 - 1.51
 V                                                          
   v2                                                       
-    mean (sd)    0.01 (0.25)    0.55 (1.14)     0.6 (0.03) 
-    range       -0.16 - 0.18    -0.84 - 1.6    0.58 - 0.62 
+    mean (sd)    0.01 (0.25)    0.55 (1.14)    0.60 (0.03) 
+    range       -0.16 - 0.18    -0.84 - 1.60   0.58 - 0.62 
   v3                                                       
-    mean (sd)   -0.03 (0.37)    -0.3 (0.36)     1.06 (NA)  
+    mean (sd)   -0.03 (0.37)    -0.30 (0.36)    1.06 (NA)  
     range       -0.41 - 0.33    -0.62 - 0.03   1.06 - 1.06 
   v1                                                       
-    mean (sd)    0.56 (1.1)     -0.27 (0.73)   -0.54 (1.18)
+    mean (sd)    0.56 (1.10)    -0.27 (0.73)   -0.54 (1.18)
     range       -0.16 - 2.17    -1.22 - 0.59   -1.38 - 0.29
 W                                                          
   w1                                                       
@@ -581,10 +582,10 @@ W
     range       -1.25 - 0.61    0.42 - 0.42    0.37 - 1.21 
   w3                                                       
     mean (sd)    0.56 (0.85)     0.69 (NA)     -0.39 (1.68)
-    range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.1 
+    range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.10
   w2                                                       
-    mean (sd)    -1.99 (NA)     -0.1 (0.47)     0.53 (0.6) 
-    range       -1.99 - -1.99   -0.61 - 0.39   -0.1 - 1.16 </code></pre>
+    mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) 
+    range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</code></pre>
 <p>Which has the following structure:</p>
 <pre><code>                   A              B              C
 ---------------------------------------------------------
@@ -719,26 +720,26 @@ Non-unique sibling analysis table names. Using Labels instead. Use the
 table_names argument to analyze to avoid this when analyzing the same variable
 multiple times.</code></pre>
 <pre><code>                      A              B              C      
------------------------------------------------------------
+———————————————————————————————————————————————————————————
 U                                                          
   u3 (n)              6              5              3      
     mean (sd)   -0.04 (1.18)    0.36 (1.41)    -0.25 (0.72)
-    range        -1.8 - 1.47    -1.28 - 2.4    -0.82 - 0.56
+    range       -1.80 - 1.47    -1.28 - 2.40   -0.82 - 0.56
   u1 (n)              2              5              0      
-    mean (sd)    0.86 (0.38)    0.32 (0.51)      NaN (NA)  
+    mean (sd)    0.86 (0.38)    0.32 (0.51)      NA (NA)   
     range        0.59 - 1.12    -0.48 - 0.94    Inf - -Inf 
   u2 (n)              9              3              7      
     mean (sd)   -0.28 (0.96)    0.38 (0.67)    0.08 (0.91) 
     range       -1.52 - 1.43    -0.39 - 0.82   -0.93 - 1.51
 V                                                          
   v2 (n)              2              4              2      
-    mean (sd)    0.01 (0.25)    0.55 (1.14)     0.6 (0.03) 
-    range       -0.16 - 0.18    -0.84 - 1.6    0.58 - 0.62 
+    mean (sd)    0.01 (0.25)    0.55 (1.14)    0.60 (0.03) 
+    range       -0.16 - 0.18    -0.84 - 1.60   0.58 - 0.62 
   v3 (n)              3              4              1      
-    mean (sd)   -0.03 (0.37)    -0.3 (0.36)     1.06 (NA)  
+    mean (sd)   -0.03 (0.37)    -0.30 (0.36)    1.06 (NA)  
     range       -0.41 - 0.33    -0.62 - 0.03   1.06 - 1.06 
   v1 (n)              4              7              2      
-    mean (sd)    0.56 (1.1)     -0.27 (0.73)   -0.54 (1.18)
+    mean (sd)    0.56 (1.10)    -0.27 (0.73)   -0.54 (1.18)
     range       -0.16 - 2.17    -1.22 - 0.59   -1.38 - 0.29
 W                                                          
   w1 (n)              4              1              4      
@@ -746,10 +747,10 @@ W
     range       -1.25 - 0.61    0.42 - 0.42    0.37 - 1.21 
   w3 (n)              9              1              3      
     mean (sd)    0.56 (0.85)     0.69 (NA)     -0.39 (1.68)
-    range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.1 
+    range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.10
   w2 (n)              1              4              4      
-    mean (sd)    -1.99 (NA)     -0.1 (0.47)     0.53 (0.6) 
-    range       -1.99 - -1.99   -0.61 - 0.39   -0.1 - 1.16 </code></pre>
+    mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) 
+    range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</code></pre>
 <p>In the same manner, if we wanted content rows for <code>r1</code> split we can do it at as follows:</p>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -806,26 +807,26 @@ Non-unique sibling analysis table names. Using Labels instead. Use the
 table_names argument to analyze to avoid this when analyzing the same variable
 multiple times.</code></pre>
 <pre><code>                      A              B              C      
------------------------------------------------------------
+———————————————————————————————————————————————————————————
 U (n)                17              13             10     
   u3 (n)              6              5              3      
     mean (sd)   -0.04 (1.18)    0.36 (1.41)    -0.25 (0.72)
-    range        -1.8 - 1.47    -1.28 - 2.4    -0.82 - 0.56
+    range       -1.80 - 1.47    -1.28 - 2.40   -0.82 - 0.56
   u1 (n)              2              5              0      
-    mean (sd)    0.86 (0.38)    0.32 (0.51)      NaN (NA)  
+    mean (sd)    0.86 (0.38)    0.32 (0.51)      NA (NA)   
     range        0.59 - 1.12    -0.48 - 0.94    Inf - -Inf 
   u2 (n)              9              3              7      
     mean (sd)   -0.28 (0.96)    0.38 (0.67)    0.08 (0.91) 
     range       -1.52 - 1.43    -0.39 - 0.82   -0.93 - 1.51
 V (n)                 9              15             5      
   v2 (n)              2              4              2      
-    mean (sd)    0.01 (0.25)    0.55 (1.14)     0.6 (0.03) 
-    range       -0.16 - 0.18    -0.84 - 1.6    0.58 - 0.62 
+    mean (sd)    0.01 (0.25)    0.55 (1.14)    0.60 (0.03) 
+    range       -0.16 - 0.18    -0.84 - 1.60   0.58 - 0.62 
   v3 (n)              3              4              1      
-    mean (sd)   -0.03 (0.37)    -0.3 (0.36)     1.06 (NA)  
+    mean (sd)   -0.03 (0.37)    -0.30 (0.36)    1.06 (NA)  
     range       -0.41 - 0.33    -0.62 - 0.03   1.06 - 1.06 
   v1 (n)              4              7              2      
-    mean (sd)    0.56 (1.1)     -0.27 (0.73)   -0.54 (1.18)
+    mean (sd)    0.56 (1.10)    -0.27 (0.73)   -0.54 (1.18)
     range       -0.16 - 2.17    -1.22 - 0.59   -1.38 - 0.29
 W (n)                14              6              11     
   w1 (n)              4              1              4      
@@ -833,10 +834,10 @@ W (n)                14              6              11
     range       -1.25 - 0.61    0.42 - 0.42    0.37 - 1.21 
   w3 (n)              9              1              3      
     mean (sd)    0.56 (0.85)     0.69 (NA)     -0.39 (1.68)
-    range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.1 
+    range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.10
   w2 (n)              1              4              4      
-    mean (sd)    -1.99 (NA)     -0.1 (0.47)     0.53 (0.6) 
-    range       -1.99 - -1.99   -0.61 - 0.39   -0.1 - 1.16 </code></pre>
+    mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) 
+    range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</code></pre>
 <p>In pagination content rows and label rows get repeated if a page is split in a descendant of a content row. So for example, if we were to split the following table at <code>***</code> then :</p>
 <pre><code>                   A              B              C
 ---------------------------------------------------------

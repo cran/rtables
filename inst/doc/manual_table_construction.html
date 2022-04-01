@@ -12,7 +12,7 @@
 
 <meta name="author" content="Adrian Waddell" />
 
-<meta name="date" content="2021-10-06" />
+<meta name="date" content="2022-03-31" />
 
 <title>Constructing rtables Manually</title>
 
@@ -26,6 +26,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -141,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Constructing rtables Manually</h1>
 <h4 class="author">Adrian Waddell</h4>
-<h4 class="date">2021-10-06</h4>
+<h4 class="date">2022-03-31</h4>
 
 
 
@@ -177,39 +178,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as_html</span>(tbl, <span class="at">width =</span> <span class="st">&quot;80%&quot;</span>)</span></code></pre></div>
 <div class="rtables-all-parts-block rtables-container">
 <table class="table table-condensed table-hover">
-<tr class>
-<th class style="white-space:pre;"></th>
-<th class=" text-center" colspan="1">Treatement</th>
-<th class=" text-center" colspan="1">Comparison</th>
+<tr>
+<th style="white-space:pre;"></th>
+<th class="text-center">Treatement</th>
+<th class="text-center">Comparison</th>
 </tr>
-<tr class>
-<th class style="white-space:pre;"></th>
-<th class=" text-center" colspan="1">N=100</th>
-<th class=" text-center" colspan="1">N=300</th>
+<tr>
+<th style="white-space:pre;"></th>
+<th class="text-center">N=100</th>
+<th class="text-center">N=300</th>
 </tr>
-<tr class>
-<td class=" text-left" colspan="1">A</td>
-<td class=" text-center" colspan="1">104 (20%)</td>
-<td class=" text-center" colspan="1">100 (40%)</td>
+<tr>
+<td class="text-left">A</td>
+<td class="text-center">104 (20.00%)</td>
+<td class="text-center">100 (40.00%)</td>
 </tr>
-<tr class>
-<td class=" text-left" colspan="1">B</td>
-<td class=" text-center" colspan="1">23 (40%)</td>
-<td class=" text-center" colspan="1">43 (50%)</td>
+<tr>
+<td class="text-left">B</td>
+<td class="text-center">23 (40.00%)</td>
+<td class="text-center">43 (50.00%)</td>
 </tr>
-<tr class></tr>
-<tr class>
-<td class=" text-left" colspan="1"></td>
-<td class=" text-center" colspan="1"></td>
-<td class=" text-center" colspan="1"></td>
+<tr>
+<td class="text-left"></td>
+<td class="text-center"></td>
+<td class="text-center"></td>
 </tr>
-<tr class>
-<td class=" text-left" colspan="1">this is a very long section header</td>
-<td class=" text-center" colspan="1"></td>
+<tr>
+<td class="text-left">this is a very long section header</td>
+<td class="text-center"></td>
+<td class="text-center"></td>
 </tr>
-<tr class>
-<td class=" text-left" colspan="1">estimate</td>
-<td class=" text-center" colspan="2">55.23</td>
+<tr>
+<td class="text-left">estimate</td>
+<td class="text-center" colspan="2">55.23</td>
+</tr>
+<tr>
+<td class="text-left">95% CI</td>
+<td class="text-center" colspan="2">(44.8, 67.4)</td>
 </tr>
 <caption style="caption-side:top;"><div class="rtables-titles-block rtables-container">
 <div class="rtables-main-titles-block rtables-container">
@@ -223,10 +228,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>Next, the <code>[</code> operator lets you access the cell content.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">1</span>, <span class="dv">1</span>]</span></code></pre></div>
-<pre><code>    Treatement
-      N=100   
---------------
-A   104 (20%) </code></pre>
+<pre><code>     Treatement 
+       N=100    
+————————————————
+A   104 (20.00%)</code></pre>
 <p>and to format that cell run <code>format_rcell(tbl[1,1])</code>=.</p>
 <p>Note that <code>tbl[6, 1]</code> and <code>tbl[6, 2]</code> display both the same <code>rcell</code> because of the colspan.</p>
 </div>

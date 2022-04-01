@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2021-10-06" />
+<meta name="date" content="2022-03-31" />
 
 <title>Introduction to rtables</title>
 
@@ -26,6 +26,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -141,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Introduction to rtables</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2021-10-06</h4>
+<h4 class="date">2022-03-31</h4>
 
 
 
@@ -203,17 +204,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>                    Arm A                     Arm B         
              Female        Male        Female        Male   
              (N=96)      (N=105)       (N=92)      (N=107)  
-------------------------------------------------------------
-CAN        45 (46.9%)    64 (61%)     46 (50%)    62 (57.9%)
-  Left     32 (33.3%)    42 (40%)    26 (28.3%)   37 (34.6%)
+————————————————————————————————————————————————————————————
+CAN        45 (46.9%)   64 (61.0%)   46 (50.0%)   62 (57.9%)
+  Left     32 (33.3%)   42 (40.0%)   26 (28.3%)   37 (34.6%)
     mean      38.9         40.4         40.3         37.7   
-  Right    13 (13.5%)    22 (21%)    20 (21.7%)   25 (23.4%)
+  Right    13 (13.5%)   22 (21.0%)   20 (21.7%)   25 (23.4%)
     mean      36.6         40.2         40.2         40.6   
-USA        51 (53.1%)    41 (39%)     46 (50%)    45 (42.1%)
+USA        51 (53.1%)   41 (39.0%)   46 (50.0%)   45 (42.1%)
   Left     34 (35.4%)   19 (18.1%)   25 (27.2%)   25 (23.4%)
     mean      40.4         39.7         39.2         40.1   
-  Right    17 (17.7%)    22 (21%)    21 (22.8%)   20 (18.7%)
-    mean      36.9         39.8         38.5          39    </code></pre>
+  Right    17 (17.7%)   22 (21.0%)   21 (22.8%)   20 (18.7%)
+    mean      36.9         39.8         38.5         39.0   </code></pre>
 </div>
 <div id="starting-simple" class="section level2">
 <h2>Starting Simple</h2>
@@ -223,7 +224,7 @@ USA        51 (53.1%)    41 (39%)     46 (50%)    45 (42.1%)
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(l, df)</span></code></pre></div>
 <pre><code>       all obs
---------------
+——————————————
 mean    39.4  </code></pre>
 <div id="layout-instructions" class="section level3">
 <h3>Layout Instructions</h3>
@@ -233,7 +234,7 @@ mean    39.4  </code></pre>
 <pre><code>A Pre-data Table Layout
 
 Column-Split Structure:
-( () -&gt;  () -&gt; ) () 
+ () 
 
 Row-Split Structure:
 age (** analysis **) </code></pre>
@@ -259,7 +260,7 @@ age (** analysis **) </code></pre>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(l, df)</span></code></pre></div>
 <pre><code>       Arm A   Arm B
---------------------
+————————————————————
 mean   39.5    39.4 </code></pre>
 <p>The resulting table has one column per factor level of <code>arm</code>. So the data represented by the first column is <code>df[df$arm == &quot;ARM A&quot;, ]</code>. Hence, the <code>split_cols_by</code> partitions the data among the columns by default.</p>
 <p>Column splitting can be done in a recursive/nested manner by adding sequential <code>split_cols_by</code> layout instruction. It’s also possible to add a non-nested split. Here we splitting each arm further by the gender:</p>
@@ -271,7 +272,7 @@ mean   39.5    39.4 </code></pre>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(l, df)</span></code></pre></div>
 <pre><code>           Arm A           Arm B    
        Female   Male   Female   Male
-------------------------------------
+————————————————————————————————————
 mean    38.8    40.1    39.6    39.2</code></pre>
 <p>The first column represents the data in <code>df</code> where <code>df$arm == &quot;A&quot; &amp; df$gender == &quot;Female&quot;</code> and the second column the data in <code>df</code> where <code>df$arm == &quot;A&quot; &amp; df$gender == &quot;Male&quot;</code>, and so on.</p>
 </div>
@@ -287,7 +288,7 @@ mean    38.8    40.1    39.6    39.2</code></pre>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(l, df)</span></code></pre></div>
 <pre><code>             Arm A           Arm B    
          Female   Male   Female   Male
---------------------------------------
+——————————————————————————————————————
 CAN                                   
   mean    38.2    40.3    40.3    38.9
 USA                                   
@@ -307,13 +308,13 @@ USA
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;age&quot;</span>, <span class="at">afun =</span> mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(l, df)</span></code></pre></div>
-<pre><code>                 Arm A                   Arm B        
-           Female       Male      Female       Male   
-------------------------------------------------------
-CAN      45 (46.9%)   64 (61%)   46 (50%)   62 (57.9%)
-  mean      38.2        40.3       40.3        38.9   
-USA      51 (53.1%)   41 (39%)   46 (50%)   45 (42.1%)
-  mean      39.2        39.7       38.9        39.6   </code></pre>
+<pre><code>                  Arm A                     Arm B         
+           Female        Male        Female        Male   
+——————————————————————————————————————————————————————————
+CAN      45 (46.9%)   64 (61.0%)   46 (50.0%)   62 (57.9%)
+  mean      38.2         40.3         40.3         38.9   
+USA      51 (53.1%)   41 (39.0%)   46 (50.0%)   45 (42.1%)
+  mean      39.2         39.7         38.9         39.6   </code></pre>
 <p>The relative percentage for average age of female Canadians is calculated as follows:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_cell <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df_col_1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, df<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>)</span>
@@ -332,19 +333,19 @@ USA      51 (53.1%)   41 (39%)   46 (50%)   45 (42.1%)
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;age&quot;</span>, <span class="at">afun =</span> mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(l, df)</span></code></pre></div>
-<pre><code>                   Arm A                   Arm B        
-             Female       Male      Female       Male   
---------------------------------------------------------
-CAN        45 (46.9%)   64 (61%)   46 (50%)   62 (57.9%)
-  Left                                                  
-    mean      38.9        40.4       40.3        37.7   
-  Right                                                 
-    mean      36.6        40.2       40.2        40.6   
-USA        51 (53.1%)   41 (39%)   46 (50%)   45 (42.1%)
-  Left                                                  
-    mean      40.4        39.7       39.2        40.1   
-  Right                                                 
-    mean      36.9        39.8       38.5         39    </code></pre>
+<pre><code>                    Arm A                     Arm B         
+             Female        Male        Female        Male   
+————————————————————————————————————————————————————————————
+CAN        45 (46.9%)   64 (61.0%)   46 (50.0%)   62 (57.9%)
+  Left                                                      
+    mean      38.9         40.4         40.3         37.7   
+  Right                                                     
+    mean      36.6         40.2         40.2         40.6   
+USA        51 (53.1%)   41 (39.0%)   46 (50.0%)   45 (42.1%)
+  Left                                                      
+    mean      40.4         39.7         39.2         40.1   
+  Right                                                     
+    mean      36.9         39.8         38.5         39.0   </code></pre>
 <p>Next, we further add a count and percentage summary for handedness within each country:</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;arm&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -358,17 +359,17 @@ USA        51 (53.1%)   41 (39%)   46 (50%)   45 (42.1%)
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(l, df)</span></code></pre></div>
 <pre><code>                    Arm A                     Arm B         
              Female        Male        Female        Male   
-------------------------------------------------------------
-CAN        45 (46.9%)    64 (61%)     46 (50%)    62 (57.9%)
-  Left     32 (33.3%)    42 (40%)    26 (28.3%)   37 (34.6%)
+————————————————————————————————————————————————————————————
+CAN        45 (46.9%)   64 (61.0%)   46 (50.0%)   62 (57.9%)
+  Left     32 (33.3%)   42 (40.0%)   26 (28.3%)   37 (34.6%)
     mean      38.9         40.4         40.3         37.7   
-  Right    13 (13.5%)    22 (21%)    20 (21.7%)   25 (23.4%)
+  Right    13 (13.5%)   22 (21.0%)   20 (21.7%)   25 (23.4%)
     mean      36.6         40.2         40.2         40.6   
-USA        51 (53.1%)    41 (39%)     46 (50%)    45 (42.1%)
+USA        51 (53.1%)   41 (39.0%)   46 (50.0%)   45 (42.1%)
   Left     34 (35.4%)   19 (18.1%)   25 (27.2%)   25 (23.4%)
     mean      40.4         39.7         39.2         40.1   
-  Right    17 (17.7%)    22 (21%)    21 (22.8%)   20 (18.7%)
-    mean      36.9         39.8         38.5          39    </code></pre>
+  Right    17 (17.7%)   22 (21.0%)   21 (22.8%)   20 (18.7%)
+    mean      36.9         39.8         38.5         39.0   </code></pre>
 </div>
 </div>
 <div id="summary" class="section level2">

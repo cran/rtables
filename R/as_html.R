@@ -59,9 +59,9 @@ div_helper <- function(lst, class) {
 as_html <- function(x,
                     width = NULL,
                     class_table = "table table-condensed table-hover",
-                    class_tr = "",
-                    class_td = "",
-                    class_th = "",
+                    class_tr = NULL,
+                    class_td = NULL,
+                    class_th = NULL,
                     link_label = NULL) {
 
   if (is.null(x)) {
@@ -91,8 +91,12 @@ as_html <- function(x,
       tagfun <- if(inhdr) tags$th else tags$td
       algn <- unique(curaligns)
       stopifnot(length(algn) == 1)
-      args <- list(class = paste(if(inhdr) class_th else class_tr, if(j > 1 || i > nrh) paste0("text-", algn), collapse = " "), colspan = curspn)
-      cells[i, j][[1]] <- do.call(tagfun, c(insert_brs(curstrs), args))
+      cells[i, j][[1]] <- tagfun(
+        class = if (inhdr) class_th else class_tr,
+        class = if(j > 1 || i > nrh) paste0("text-", algn),
+        colspan = if (curspn != 1) curspn,
+        insert_brs(curstrs)
+      )
     }
   }
 
@@ -118,7 +122,10 @@ as_html <- function(x,
   cells[!mat$display] <- NA_integer_
 
   rows <- apply(cells, 1, function(row) {
-    do.call(tags$tr, c(Filter(function(x) !identical(x, NA_integer_), row), list(class = class_tr)))
+    tags$tr(
+      class = class_tr,
+      Filter(function(x) !identical(x, NA_integer_), row)
+    )
   })
 
     hdrtag <- div_helper( class = "rtables-titles-block",

@@ -8,9 +8,9 @@ as_html(
   x,
   width = NULL,
   class_table = "table table-condensed table-hover",
-  class_tr = "",
-  class_td = "",
-  class_th = "",
+  class_tr = NULL,
+  class_td = NULL,
+  class_th = NULL,
   link_label = NULL
 )
 }

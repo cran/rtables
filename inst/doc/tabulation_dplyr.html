@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2021-10-06" />
+<meta name="date" content="2022-03-31" />
 
 <title>Comparison with dplyr Tabulation</title>
 
@@ -26,6 +26,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -141,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Comparison with dplyr Tabulation</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2021-10-06</h4>
+<h4 class="date">2022-03-31</h4>
 
 
 
@@ -186,17 +187,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>                    Arm A                     Arm B         
              Female        Male        Female        Male   
              (N=96)      (N=105)       (N=92)      (N=107)  
-------------------------------------------------------------
-CAN        45 (46.9%)    64 (61%)     46 (50%)    62 (57.9%)
-  Left     32 (33.3%)    42 (40%)    26 (28.3%)   37 (34.6%)
+————————————————————————————————————————————————————————————
+CAN        45 (46.9%)   64 (61.0%)   46 (50.0%)   62 (57.9%)
+  Left     32 (33.3%)   42 (40.0%)   26 (28.3%)   37 (34.6%)
     mean      38.9         40.4         40.3         37.7   
-  Right    13 (13.5%)    22 (21%)    20 (21.7%)   25 (23.4%)
+  Right    13 (13.5%)   22 (21.0%)   20 (21.7%)   25 (23.4%)
     mean      36.6         40.2         40.2         40.6   
-USA        51 (53.1%)    41 (39%)     46 (50%)    45 (42.1%)
+USA        51 (53.1%)   41 (39.0%)   46 (50.0%)   45 (42.1%)
   Left     34 (35.4%)   19 (18.1%)   25 (27.2%)   25 (23.4%)
     mean      40.4         39.7         39.2         40.1   
-  Right    17 (17.7%)    22 (21%)    21 (22.8%)   20 (18.7%)
-    mean      36.9         39.8         38.5          39    </code></pre>
+  Right    17 (17.7%)   22 (21.0%)   21 (22.8%)   20 (18.7%)
+    mean      36.9         39.8         38.5         39.0   </code></pre>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
@@ -216,7 +217,8 @@ USA        51 (53.1%)    41 (39%)     46 (50%)    45 (42.1%)
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender) <span class="sc">%&gt;%</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span>, handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
-<pre><code>`summarise()` has grouped output by &#39;arm&#39;. You can override using the `.groups` argument.</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;arm&#39;. You can override using the `.groups`
+argument.</code></pre>
 <pre><code># A tibble: 4 x 3
 # Groups:   arm [2]
   arm   gender mean_age
@@ -229,7 +231,8 @@ USA        51 (53.1%)    41 (39%)     46 (50%)    45 (42.1%)
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>average_age <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender, country, handed) <span class="sc">%&gt;%</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
-<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can override using the `.groups` argument.</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can override
+using the `.groups` argument.</code></pre>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>average_age</span></code></pre></div>
 <pre><code># A tibble: 16 x 5
 # Groups:   arm, gender, country [8]
@@ -261,7 +264,7 @@ USA        51 (53.1%)    41 (39%)     46 (50%)    45 (42.1%)
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(df)</span></code></pre></div>
 <pre><code>               Arm A           Arm B    
            Female   Male   Female   Male
-----------------------------------------
+————————————————————————————————————————
 CAN                                     
   Left                                  
     mean    38.9    40.4    40.3    37.7
@@ -271,7 +274,7 @@ USA
   Left                                  
     mean    40.4    39.7    39.2    40.1
   Right                                 
-    mean    36.9    39.8    38.5     39 </code></pre>
+    mean    36.9    39.8    38.5    39.0</code></pre>
 <p>As mentioned in the introduction to this vignette, please ignore the difference in arranging and formatting the data: it’s possible to condense the <code>rtable</code> more and it is possible to make the tibble look more like the reference table using the <code>gt</code> R package.</p>
 <p>In terms of tabulation for this example there was arguably not much added by <code>rtables</code> over <code>dplyr</code>.</p>
 </div>
@@ -283,7 +286,8 @@ USA
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(age), <span class="at">c_h_count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># now the `handed` grouping has been removed, therefore we can calculate percent now:</span></span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_h_percent =</span> c_h_count <span class="sc">/</span> <span class="fu">sum</span>(c_h_count))</span></code></pre></div>
-<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can override using the `.groups` argument.</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can override
+using the `.groups` argument.</code></pre>
 <pre><code># A tibble: 16 x 7
 # Groups:   arm, gender, country [8]
    arm   gender country handed  mean c_h_count c_h_percent
@@ -313,7 +317,8 @@ USA
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>(country) <span class="sc">%&gt;%</span></span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># note that we always use the finest level of counts to avoid duplicate counting</span></span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_percent =</span> c_count <span class="sc">/</span> <span class="fu">sum</span>(c_h_count))</span></code></pre></div>
-<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can override using the `.groups` argument.</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can override
+using the `.groups` argument.</code></pre>
 <pre><code># A tibble: 16 x 9
 # Groups:   arm, gender [4]
    arm   gender country handed  mean c_h_count c_h_percent c_count c_percent
@@ -349,17 +354,17 @@ USA
 <pre><code>                    Arm A                     Arm B         
              Female        Male        Female        Male   
              (N=96)      (N=105)       (N=92)      (N=107)  
-------------------------------------------------------------
-CAN        45 (46.9%)    64 (61%)     46 (50%)    62 (57.9%)
-  Left     32 (33.3%)    42 (40%)    26 (28.3%)   37 (34.6%)
+————————————————————————————————————————————————————————————
+CAN        45 (46.9%)   64 (61.0%)   46 (50.0%)   62 (57.9%)
+  Left     32 (33.3%)   42 (40.0%)   26 (28.3%)   37 (34.6%)
     mean      38.9         40.4         40.3         37.7   
-  Right    13 (13.5%)    22 (21%)    20 (21.7%)   25 (23.4%)
+  Right    13 (13.5%)   22 (21.0%)   20 (21.7%)   25 (23.4%)
     mean      36.6         40.2         40.2         40.6   
-USA        51 (53.1%)    41 (39%)     46 (50%)    45 (42.1%)
+USA        51 (53.1%)   41 (39.0%)   46 (50.0%)   45 (42.1%)
   Left     34 (35.4%)   19 (18.1%)   25 (27.2%)   25 (23.4%)
     mean      40.4         39.7         39.2         40.1   
-  Right    17 (17.7%)    22 (21%)    21 (22.8%)   20 (18.7%)
-    mean      36.9         39.8         38.5          39    </code></pre>
+  Right    17 (17.7%)   22 (21.0%)   21 (22.8%)   20 (18.7%)
+    mean      36.9         39.8         38.5         39.0   </code></pre>
 <p>Further, the <code>rtable</code> syntax has hopefully also become a bit more straightforward to derive the cell values than with <code>dplyr</code> for this particular table.</p>
 </div>
 <div id="summary" class="section level2">

@@ -236,6 +236,8 @@ test_that("keeping non-existent levels doesn't break internal machinery", {
 
   ## because its a factor and "ABC" isn't a real level
   expect_error(build_table(lyt, DM))
+
+  expect_error( cbind_rtables(result[-1, ], result[-3,]), "Mismatching, non-empty row names")
 })
 
 test_that("add_overall_col with no col splits works", {
@@ -380,7 +382,6 @@ test_that("newlabels works in reorder_split_levels", {
 ## https://github.com/Roche/rtables/issues/198
 test_that("no extraneous footnote attribute", {
 
-    library(rtables)
     r1 <- in_rows(
         .list = list(
             ncols = rcell(5L, "xx", label = "ncol")
@@ -421,4 +422,22 @@ test_that("no max is -Inf warnings from make_row_df when content rows exist in p
     ## I know, I know, but I didn't design testthat!
     expect_warning(make_row_df(tbl), regexp = NA)
 
+})
+
+## discovered while preparing response for https://github.com/Roche/rtables/issues/307
+test_that("specifying function format with no cfun in summarize_row_groups works", {
+
+    formfun <- function(x, output) if(x[1] == 0) "0" else format_value(x, "xx (xx.x%)", output = output)
+
+    lyt <- basic_table() %>%
+        split_cols_by("SEX", split_fun = keep_split_levels(c("F", "M"))) %>%
+        split_rows_by("RACE", split_label = "Ethnicity", #5
+                      label_pos = "topleft",
+                      split_fun = keep_split_levels(c("ASIAN", "WHITE"))) %>%
+        summarize_row_groups(format = formfun) %>%                       #4
+        analyze("AGE", afun = mean, format = "xx.x")
+
+    tbl <- build_table(lyt, DM[1:15,]) # WHITE-F is 0  in the first 15 rows...
+    mat <- matrix_form(tbl)
+    expect_identical(mat$strings[4, 2, drop = TRUE], "0")
 })
