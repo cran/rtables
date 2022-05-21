@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2022-03-31" />
+<meta name="date" content="2022-05-20" />
 
 <title>Comparison with dplyr Tabulation</title>
 
@@ -142,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Comparison with dplyr Tabulation</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2022-03-31</h4>
+<h4 class="date">2022-05-20</h4>
 
 
 
@@ -208,7 +208,7 @@ USA        51 (53.1%)   41 (39.0%)   46 (50.0%)   45 (42.1%)
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span>, arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span>, gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>, handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
-<pre><code># A tibble: 1 x 1
+<pre><code># A tibble: 1 × 1
   mean_age
      &lt;dbl&gt;
 1     38.9</code></pre>
@@ -219,7 +219,7 @@ USA        51 (53.1%)   41 (39.0%)   46 (50.0%)   45 (42.1%)
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
 <pre><code>`summarise()` has grouped output by &#39;arm&#39;. You can override using the `.groups`
 argument.</code></pre>
-<pre><code># A tibble: 4 x 3
+<pre><code># A tibble: 4 × 3
 # Groups:   arm [2]
   arm   gender mean_age
   &lt;fct&gt; &lt;fct&gt;     &lt;dbl&gt;
@@ -231,10 +231,10 @@ argument.</code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>average_age <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender, country, handed) <span class="sc">%&gt;%</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
-<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can override
-using the `.groups` argument.</code></pre>
+<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can
+override using the `.groups` argument.</code></pre>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>average_age</span></code></pre></div>
-<pre><code># A tibble: 16 x 5
+<pre><code># A tibble: 16 × 5
 # Groups:   arm, gender, country [8]
    arm   gender country handed mean_age
    &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;     &lt;dbl&gt;
@@ -286,9 +286,9 @@ USA
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(age), <span class="at">c_h_count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># now the `handed` grouping has been removed, therefore we can calculate percent now:</span></span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_h_percent =</span> c_h_count <span class="sc">/</span> <span class="fu">sum</span>(c_h_count))</span></code></pre></div>
-<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can override
-using the `.groups` argument.</code></pre>
-<pre><code># A tibble: 16 x 7
+<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can
+override using the `.groups` argument.</code></pre>
+<pre><code># A tibble: 16 × 7
 # Groups:   arm, gender, country [8]
    arm   gender country handed  mean c_h_count c_h_percent
    &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;  &lt;dbl&gt;     &lt;int&gt;       &lt;dbl&gt;
@@ -317,9 +317,9 @@ using the `.groups` argument.</code></pre>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>(country) <span class="sc">%&gt;%</span></span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># note that we always use the finest level of counts to avoid duplicate counting</span></span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_percent =</span> c_count <span class="sc">/</span> <span class="fu">sum</span>(c_h_count))</span></code></pre></div>
-<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can override
-using the `.groups` argument.</code></pre>
-<pre><code># A tibble: 16 x 9
+<pre><code>`summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can
+override using the `.groups` argument.</code></pre>
+<pre><code># A tibble: 16 × 9
 # Groups:   arm, gender [4]
    arm   gender country handed  mean c_h_count c_h_percent c_count c_percent
    &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;  &lt;dbl&gt;     &lt;int&gt;       &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;

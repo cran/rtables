@@ -1,149 +1,502 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="test-col_by" timestamp="2020-09-18T20:41:19Z" hostname="Gabriels-MacBook-Pro.local" tests="0" skipped="0" failures="0" errors="0" time="0"/>
-  <testsuite name="tabulation framework" timestamp="2020-09-18T20:41:19Z" hostname="Gabriels-MacBook-Pro.local" tests="25" skipped="1" failures="0" errors="0" time="1.037">
-    <testcase time="0.150000000000091" classname="tabulation_framework" name="complex_layout_works"/>
-    <testcase time="0.000999999999976353" classname="tabulation_framework" name="complex_layout_works"/>
-    <testcase time="0.0760000000000218" classname="tabulation_framework" name="existing_table_in_layout_works"/>
-    <testcase time="0.0660000000000309" classname="tabulation_framework" name="labelkids_parameter_works"/>
-    <testcase time="0.0619999999998981" classname="tabulation_framework" name="labelkids_parameter_works"/>
-    <testcase time="0.0610000000001492" classname="tabulation_framework" name="labelkids_parameter_works"/>
-    <testcase time="0.0619999999998981" classname="tabulation_framework" name="labelkids_parameter_works"/>
-    <testcase time="0.0679999999999836" classname="tabulation_framework" name="labelkids_parameter_works"/>
-    <testcase time="0.0730000000000928" classname="tabulation_framework" name="labelkids_parameter_works"/>
-    <testcase time="0.0229999999999109" classname="tabulation_framework" name="ref_group_comparisons_work"/>
-    <testcase time="0.00299999999992906" classname="tabulation_framework" name="ref_group_comparisons_work"/>
-    <testcase time="0.00600000000008549" classname="tabulation_framework" name="ref_group_comparisons_work"/>
-    <testcase time="0.117999999999938" classname="tabulation_framework" name="ref_group_comparisons_work"/>
-    <testcase time="0.0309999999999491" classname="tabulation_framework" name="ref_group_comparisons_work"/>
-    <testcase time="0.02800000000002" classname="tabulation_framework" name="ref_group_comparisons_work"/>
-    <testcase time="0.0170000000000528" classname="tabulation_framework" name="missing_vars_caught"/>
-    <testcase time="0.0150000000001" classname="tabulation_framework" name="missing_vars_caught"/>
-    <testcase time="0.0139999999998963" classname="tabulation_framework" name="missing_vars_caught"/>
-    <testcase time="0.0230000000001382" classname="tabulation_framework" name="cfun_args">
-      <skipped/>
-    </testcase>
-    <testcase time="0.0279999999997926" classname="tabulation_framework" name="split_under_analyze"/>
-    <testcase time="0.02800000000002" classname="tabulation_framework" name="label_var_works_as_expected"/>
-    <testcase time="0.0230000000001382" classname="tabulation_framework" name="label_var_works_as_expected"/>
-    <testcase time="0.0080000000000382" classname="tabulation_framework" name="label_var_works_as_expected"/>
-    <testcase time="0.0349999999998545" classname="tabulation_framework" name="factors_with_unobserved_levels_work_as_expected"/>
-    <testcase time="0.0180000000000291" classname="tabulation_framework" name="factors_with_unobserved_levels_work_as_expected"/>
-  </testsuite>
-  <testsuite name="regression tests" timestamp="2020-09-18T20:41:20Z" hostname="Gabriels-MacBook-Pro.local" tests="3" skipped="1" failures="0" errors="0" time="0.028">
-    <testcase time="0.0170000000000528" classname="regression_tests" name="unlisting_rtables_has_no_effect_on_them"/>
-    <testcase time="0.00199999999995271" classname="regression_tests" name="manually_created_label_l_rows_are_always_visible"/>
-    <testcase time="0.00900000000001455" classname="regression_tests" name="printing_table_with_0_rows_works">
-      <skipped/>
-    </testcase>
-  </testsuite>
-  <testsuite name="rtables" timestamp="2020-09-18T20:41:20Z" hostname="Gabriels-MacBook-Pro.local" tests="27" skipped="0" failures="8" errors="0" time="0.105">
-    <testcase time="0.0190000000000055" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.000999999999976353" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.000999999999976353" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.00199999999995271" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.00200000000018008" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.015999999999849" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.000999999999976353" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.000999999999976353" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.00300000000015643" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.00599999999985812" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.00300000000015643" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.00299999999992906" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.00400000000013279" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.00299999999992906" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.00299999999992906" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.00400000000013279" classname="rtables" name="rtable_design_decisions"/>
-    <testcase time="0.0179999999998017" classname="rtables" name="multi_header_tables_work"/>
-    <testcase time="0.00100000000020373" classname="rtables" name="multi_header_tables_work"/>
-    <testcase time="0.000999999999976353" classname="rtables" name="multi_header_tables_work"/>
-    <testcase time="0.000999999999976353" classname="rtables" name="test_sprintf_based_format">
-      <failure type="failure" message="format_rcell(rcell(12.213743534, sprintf_format(&quot;%.3f&quot;))) not equal to &quot;12.214&quot;. (@test-rtables.R#110)">format_rcell(rcell(12.213743534, sprintf_format("%.3f"))) not equal to "12.214".
-1/1 mismatches
-x[1]: "12.213743534"
-y[1]: "12.214"</failure>
-    </testcase>
-    <testcase time="0.00199999999995271" classname="rtables" name="test_sprintf_based_format">
-      <failure type="failure" message="format_rcell(rcell(12.2134543534, sprintf_format(&quot;%.3f&quot;))) not equal to &quot;12.213&quot;. (@test-rtables.R#111)">format_rcell(rcell(12.2134543534, sprintf_format("%.3f"))) not equal to "12.213".
-1/1 mismatches
-x[1]: "12.2134543534"
-y[1]: "12.213"</failure>
-    </testcase>
-    <testcase time="0.000999999999976353" classname="rtables" name="test_sprintf_based_format">
-      <failure type="failure" message="format_rcell(rcell(c(12.21, 7.321), sprintf_format(&quot;%.1f and %.2f&quot;))) not equal to &quot;12.2 and 7.32&quot;. (@test-rtables.R#113)">format_rcell(rcell(c(12.21, 7.321), sprintf_format("%.1f and %.2f"))) not equal to "12.2 and 7.32".
-1/1 mismatches
-x[1]: "12.21, 7.321"
-y[1]: "12.2 and 7.32"</failure>
-    </testcase>
-    <testcase time="0.00199999999995271" classname="rtables" name="test_p_value_format">
-      <failure type="failure" message="format_rcell(rcell(0.02, &quot;x.xxxx | (&lt;0.0001)&quot;)) not equal to &quot;0.0200&quot;. (@test-rtables.R#119)">format_rcell(rcell(0.02, "x.xxxx | (&lt;0.0001)")) not equal to "0.0200".
-1/1 mismatches
-x[1]: "0.02"
-y[1]: "0.0200"</failure>
-    </testcase>
-    <testcase time="0.00200000000018008" classname="rtables" name="test_p_value_format">
-      <failure type="failure" message="format_rcell(rcell(0.0234934, &quot;x.xxxx | (&lt;0.0001)&quot;)) not equal to &quot;0.0235&quot;. (@test-rtables.R#120)">format_rcell(rcell(0.0234934, "x.xxxx | (&lt;0.0001)")) not equal to "0.0235".
-1/1 mismatches
-x[1]: "0.0234934"
-y[1]: "0.0235"</failure>
-    </testcase>
-    <testcase time="0.000999999999976353" classname="rtables" name="test_p_value_format">
-      <failure type="failure" message="format_rcell(rcell(1e-08, &quot;x.xxxx | (&lt;0.0001)&quot;)) not equal to &quot;&lt;0.0001&quot;. (@test-rtables.R#121)">format_rcell(rcell(1e-08, "x.xxxx | (&lt;0.0001)")) not equal to "&lt;0.0001".
-1/1 mismatches
-x[1]: "1e-08"
-y[1]: "&lt;0.0001"</failure>
-    </testcase>
-    <testcase time="0.00199999999995271" classname="rtables" name="test_3d_format_estimate_and_CI_">
-      <failure type="failure" message="format_rcell(rcell(c(0.02, -0.05, 0.0434235), &quot;xx.xx (xx.xx - xx.xx)&quot;)) not equal to &quot;0.02 (-0.05 - 0.04)&quot;. (@test-rtables.R#127)">format_rcell(rcell(c(0.02, -0.05, 0.0434235), "xx.xx (xx.xx - xx.xx)")) not equal to "0.02 (-0.05 - 0.04)".
-1/1 mismatches
-x[1]: "0.02, -0.05, 0.0434235"
-y[1]: "0.02 (-0.05 - 0.04)"</failure>
-    </testcase>
-    <testcase time="0.00199999999995271" classname="rtables" name="test_3d_format_estimate_and_CI_">
-      <failure type="failure" message="format_rcell(rcell(c(12.3459, 3.2359, 324.2492), &quot;xx.xx (xx.xx - xx.xx)&quot;)) not equal to &quot;12.35 (3.24 - 324.25)&quot;. (@test-rtables.R#128)">format_rcell(rcell(c(12.3459, 3.2359, 324.2492), "xx.xx (xx.xx - xx.xx)")) not equal to "12.35 (3.24 - 324.25)".
-1/1 mismatches
-x[1]: "12.3459, 3.2359, 324.2492"
-y[1]: "12.35 (3.24 - 324.25)"</failure>
+  <testsuite name="Accessor tests" timestamp="2022-05-19T20:33:12Z" hostname="Gabriels-MacBook-Pro.local" tests="30" skipped="0" failures="0" errors="1" time="0.621">
+    <testcase time="0.164000000000001" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.0159999999999982" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.0130000000000052" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.000999999999997669" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.00500000000000256" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.000999999999997669" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.000999999999997669" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.00100000000000477" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.000999999999997669" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.000999999999997669" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.100999999999999" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.00100000000000477" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.000999999999997669" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.00200000000000244" classname="Accessor_tests" name="various_accessors_work_at_the_layout_table_level"/>
+    <testcase time="0.00300000000000011" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.000999999999997669" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.000999999999997669" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.00100000000000477" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.00200000000000244" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.00799999999999557" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.00100000000000477" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.00399999999999778" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.00200000000000244" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.000999999999997669" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.000999999999997669" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.00200000000000244" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.00200000000000244" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.000999999999997669" classname="Accessor_tests" name="Accessors_for_Split_objects_work"/>
+    <testcase time="0.281999999999996" classname="Accessor_tests" name="header_sep_setting_works">
+      <error type="error" message="Error in `header_sep(tab)`: could not find function &quot;header_sep&quot; (test-accessors.R:173:5)">Error in `header_sep(tab)`: could not find function "header_sep"
+Backtrace:
+ 1. rtables hsep_test(tbl, dflt)
+      at test-accessors.R:173:4
+ 2. testthat::expect_identical(header_sep(tab), exp)
+      at test-accessors.R:163:8
+ 3. testthat::quasi_label(enquo(object), label, arg = "object")
+ 4. rlang::eval_bare(expr, quo_get_env(quo))</error>
     </testcase>
   </testsuite>
-  <testsuite name="rtabulate" timestamp="2020-09-18T20:41:20Z" hostname="Gabriels-MacBook-Pro.local" tests="29" skipped="0" failures="0" errors="0" time="0.312">
-    <testcase time="0.0209999999999582" classname="rtabulate" name="rtabulate_length_tests"/>
-    <testcase time="0.0140000000001237" classname="rtabulate" name="rtabulate_length_tests"/>
-    <testcase time="0.01299999999992" classname="rtabulate" name="rtabulate_length_tests"/>
-    <testcase time="0.0170000000000528" classname="rtabulate" name="rtabulate_length_tests"/>
-    <testcase time="0.0149999999998727" classname="rtabulate" name="rtabulate_length_tests"/>
-    <testcase time="0.0130000000001473" classname="rtabulate" name="rtabulate_length_tests"/>
-    <testcase time="0.0139999999998963" classname="rtabulate" name="rtabulate_length_tests"/>
-    <testcase time="0.0180000000000291" classname="rtabulate" name="rtabulate_length_tests"/>
-    <testcase time="0.0150000000001" classname="rtabulate" name="rtabulate_length_tests"/>
-    <testcase time="0.0139999999998963" classname="rtabulate" name="rtabulate_length_tests"/>
-    <testcase time="0.0180000000000291" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.000999999999976353" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.0160000000000764" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.000999999999976353" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.0170000000000528" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.000999999999976353" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.000999999999976353" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.000999999999976353" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.000999999999976353" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.000999999999976353" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.0309999999999491" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.000999999999976353" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.00200000000018008" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.000999999999976353" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.00199999999995271" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.000999999999976353" classname="rtabulate" name="rtabulate_col_wise_args_argument"/>
-    <testcase time="0.0190000000000055" classname="rtabulate" name="rtabulate_by_quartile_works"/>
-    <testcase time="0.0260000000000673" classname="rtabulate" name="rtabulate_by_quartile_works"/>
-    <testcase time="0.0169999999998254" classname="rtabulate" name="rtabulate_..._passed_on_correctly"/>
+  <testsuite name="binding" timestamp="2022-05-19T20:33:13Z" hostname="Gabriels-MacBook-Pro.local" tests="23" skipped="0" failures="0" errors="0" time="0.222">
+    <testcase time="0.0380000000000038" classname="binding" name="cbind_rtables_works"/>
+    <testcase time="0.000999999999997669" classname="binding" name="cbind_rtables_works"/>
+    <testcase time="0.000999999999997669" classname="binding" name="cbind_rtables_works"/>
+    <testcase time="0.0160000000000053" classname="binding" name="cbind_rtables_works_with_3_tables"/>
+    <testcase time="0.000999999999997669" classname="binding" name="cbind_rtables_works_with_3_tables"/>
+    <testcase time="0.0120000000000005" classname="binding" name="cell_formats_not_dropped_when_cbinding"/>
+    <testcase time="0.00399999999999778" classname="binding" name="chk_cbindable_many_works"/>
+    <testcase time="0.00500000000000256" classname="binding" name="chk_cbindable_many_works"/>
+    <testcase time="0.00900000000000034" classname="binding" name="chk_cbindable_many_works"/>
+    <testcase time="0.00399999999999778" classname="binding" name="chk_cbindable_many_works"/>
+    <testcase time="0.00400000000000489" classname="binding" name="chk_cbindable_many_works"/>
+    <testcase time="0.0169999999999959" classname="binding" name="chk_cbindable_many_works"/>
+    <testcase time="0.00500000000000256" classname="binding" name="chk_cbindable_many_works"/>
+    <testcase time="0.0120000000000005" classname="binding" name="chk_cbindable_many_works"/>
+    <testcase time="0.0229999999999961" classname="binding" name="c_rbind_and_top_left_behave"/>
+    <testcase time="0.00500000000000256" classname="binding" name="c_rbind_and_top_left_behave"/>
+    <testcase time="0.00499999999999545" classname="binding" name="c_rbind_and_top_left_behave"/>
+    <testcase time="0.00600000000000023" classname="binding" name="c_rbind_and_top_left_behave"/>
+    <testcase time="0.00200000000000244" classname="binding" name="c_rbind_and_top_left_behave"/>
+    <testcase time="0.00200000000000244" classname="binding" name="c_rbind_and_top_left_behave"/>
+    <testcase time="0.00999999999999801" classname="binding" name="c_rbind_and_top_left_behave"/>
+    <testcase time="0.0350000000000037" classname="binding" name="insert_rrow_works"/>
+    <testcase time="0.00499999999999545" classname="binding" name="insert_rrow_works"/>
   </testsuite>
-  <testsuite name="sorting and pruning" timestamp="2020-09-18T20:41:20Z" hostname="Gabriels-MacBook-Pro.local" tests="7" skipped="0" failures="0" errors="0" time="0.531">
-    <testcase time="0.447000000000116" classname="sorting_and_pruning" name="provided_pruning_functions_work"/>
-    <testcase time="0.000999999999976353" classname="sorting_and_pruning" name="provided_pruning_functions_work"/>
-    <testcase time="0.00199999999995271" classname="sorting_and_pruning" name="provided_pruning_functions_work"/>
-    <testcase time="0.0350000000000819" classname="sorting_and_pruning" name="pruning_and_trimming_work"/>
-    <testcase time="0.00299999999992906" classname="sorting_and_pruning" name="pruning_and_trimming_work"/>
-    <testcase time="0.0410000000001673" classname="sorting_and_pruning" name="provided_score_functions_work"/>
-    <testcase time="0.00199999999995271" classname="sorting_and_pruning" name="provided_score_functions_work"/>
+  <testsuite name="compare_rtables" timestamp="2022-05-19T20:33:13Z" hostname="Gabriels-MacBook-Pro.local" tests="13" skipped="0" failures="0" errors="0" time="1.579">
+    <testcase time="0.314999999999998" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.235000000000007" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.00199999999999534" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.262999999999998" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.00300000000000011" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.00200000000000244" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.228999999999999" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.00300000000000011" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.00200000000000244" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.281999999999996" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.00300000000000011" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.00200000000000244" classname="compare_rtables" name="compare_rtables"/>
+    <testcase time="0.238" classname="compare_rtables" name="compare_rtables"/>
+  </testsuite>
+  <testsuite name="deprecated functionality" timestamp="2022-05-19T20:33:15Z" hostname="Gabriels-MacBook-Pro.local" tests="13" skipped="0" failures="0" errors="0" time="0.265">
+    <testcase time="0.00800000000000267" classname="deprecated_functionality" name="deprecated_things_are_still_there_and_work_kinda"/>
+    <testcase time="0.00399999999999778" classname="deprecated_functionality" name="deprecated_things_are_still_there_and_work_kinda"/>
+    <testcase time="0.00500000000000256" classname="deprecated_functionality" name="deprecated_things_are_still_there_and_work_kinda"/>
+    <testcase time="0.00399999999999778" classname="deprecated_functionality" name="deprecated_things_are_still_there_and_work_kinda"/>
+    <testcase time="0.0309999999999988" classname="deprecated_functionality" name="deprecated_insert_rrow_still_currently_works"/>
+    <testcase time="0.00900000000000034" classname="deprecated_functionality" name="deprecated_insert_rrow_still_currently_works"/>
+    <testcase time="0.0110000000000028" classname="deprecated_functionality" name="deprecated_insert_rrow_still_currently_works"/>
+    <testcase time="0.0760000000000005" classname="deprecated_functionality" name="deprecated_insert_rrow_still_currently_works"/>
+    <testcase time="0.0189999999999984" classname="deprecated_functionality" name="deprecated_insert_rrow_still_currently_works"/>
+    <testcase time="0.0189999999999984" classname="deprecated_functionality" name="deprecated_insert_rrow_still_currently_works"/>
+    <testcase time="0.0200000000000031" classname="deprecated_functionality" name="deprecated_insert_rrow_still_currently_works"/>
+    <testcase time="0.0189999999999984" classname="deprecated_functionality" name="deprecated_insert_rrow_still_currently_works"/>
+    <testcase time="0.0399999999999991" classname="deprecated_functionality" name="split_rows_by_multivar_works"/>
+  </testsuite>
+  <testsuite name="Exporters" timestamp="2022-05-19T20:33:15Z" hostname="Gabriels-MacBook-Pro.local" tests="12" skipped="0" failures="0" errors="0" time="6.395">
+    <testcase time="0.213999999999999" classname="Exporters" name="export_as_txt_works_with_and_without_pagination"/>
+    <testcase time="0.0970000000000013" classname="Exporters" name="export_as_txt_works_with_and_without_pagination"/>
+    <testcase time="0.940000000000005" classname="Exporters" name="tsv_roundtripping_for_path_enriched_df"/>
+    <testcase time="0.000999999999997669" classname="Exporters" name="tsv_roundtripping_for_path_enriched_df"/>
+    <testcase time="0.539999999999999" classname="Exporters" name="export_as_pdf_works"/>
+    <testcase time="0.00300000000000011" classname="Exporters" name="export_as_pdf_works"/>
+    <testcase time="0.409000000000006" classname="Exporters" name="export_as_pdf_works"/>
+    <testcase time="0.61999999999999" classname="Exporters" name="export_as_pdf_works"/>
+    <testcase time="1.464" classname="Exporters" name="flextable_export_works"/>
+    <testcase time="1.69200000000001" classname="Exporters" name="flextable_export_works"/>
+    <testcase time="0.358999999999995" classname="Exporters" name="as_html_smoke_test"/>
+    <testcase time="0.0559999999999974" classname="Exporters" name="path_enriched_df_works_for_tables_with_a_column_that_has_all_length_1_elements"/>
+  </testsuite>
+  <testsuite name="value formatting" timestamp="2022-05-19T20:33:22Z" hostname="Gabriels-MacBook-Pro.local" tests="3" skipped="0" failures="0" errors="0" time="0.105">
+    <testcase time="0.0400000000000063" classname="value_formatting" name="sprintf_format_works_correctly"/>
+    <testcase time="0.0319999999999965" classname="value_formatting" name="table_shell_works"/>
+    <testcase time="0.0330000000000013" classname="value_formatting" name="table_shell_works"/>
+  </testsuite>
+  <testsuite name="headers and footers" timestamp="2022-05-19T20:33:22Z" hostname="Gabriels-MacBook-Pro.local" tests="13" skipped="0" failures="0" errors="0" time="0.482">
+    <testcase time="0.0390000000000015" classname="headers_and_footers" name="referential_footnotes_work"/>
+    <testcase time="0.00100000000000477" classname="headers_and_footers" name="referential_footnotes_work"/>
+    <testcase time="0.000999999999990564" classname="headers_and_footers" name="referential_footnotes_work"/>
+    <testcase time="0" classname="headers_and_footers" name="referential_footnotes_work"/>
+    <testcase time="0.0380000000000109" classname="headers_and_footers" name="referential_footnotes_work"/>
+    <testcase time="0.000999999999990564" classname="headers_and_footers" name="referential_footnotes_work"/>
+    <testcase time="0.26400000000001" classname="headers_and_footers" name="post_processing_addition_of_referential_footnotes_works"/>
+    <testcase time="0.000999999999990564" classname="headers_and_footers" name="post_processing_addition_of_referential_footnotes_works"/>
+    <testcase time="0.00100000000000477" classname="headers_and_footers" name="post_processing_addition_of_referential_footnotes_works"/>
+    <testcase time="0" classname="headers_and_footers" name="post_processing_addition_of_referential_footnotes_works"/>
+    <testcase time="0.0169999999999959" classname="headers_and_footers" name="post_processing_addition_of_referential_footnotes_works"/>
+    <testcase time="0.00200000000000955" classname="headers_and_footers" name="post_processing_addition_of_referential_footnotes_works"/>
+    <testcase time="0.11699999999999" classname="headers_and_footers" name="post_processing_addition_of_referential_footnotes_works"/>
+  </testsuite>
+  <testsuite name="Indent modifiers" timestamp="2022-05-19T20:33:22Z" hostname="Gabriels-MacBook-Pro.local" tests="19" skipped="0" failures="0" errors="0" time="1.402">
+    <testcase time="0.0349999999999966" classname="Indent_modifiers" name="indent_modifiers_propogated_from_analyze_calls_properly"/>
+    <testcase time="0.00300000000000011" classname="Indent_modifiers" name="indent_modifiers_propogated_from_analyze_calls_properly"/>
+    <testcase time="0.108000000000004" classname="Indent_modifiers" name="indents_are_correct_in_make_row_df"/>
+    <testcase time="0.159000000000006" classname="Indent_modifiers" name="indents_are_correct_in_make_row_df"/>
+    <testcase time="0.111999999999995" classname="Indent_modifiers" name="indents_are_correct_in_make_row_df"/>
+    <testcase time="0.108999999999995" classname="Indent_modifiers" name="indents_are_correct_in_make_row_df"/>
+    <testcase time="0.110000000000014" classname="Indent_modifiers" name="indents_are_correct_in_make_row_df"/>
+    <testcase time="0.119" classname="Indent_modifiers" name="indents_are_correct_in_make_row_df"/>
+    <testcase time="0.114999999999995" classname="Indent_modifiers" name="indents_are_correct_in_make_row_df"/>
+    <testcase time="0.149000000000001" classname="Indent_modifiers" name="getters_and_setters_work"/>
+    <testcase time="0.00100000000000477" classname="Indent_modifiers" name="getters_and_setters_work"/>
+    <testcase time="0.000999999999990564" classname="Indent_modifiers" name="getters_and_setters_work"/>
+    <testcase time="0.00100000000000477" classname="Indent_modifiers" name="getters_and_setters_work"/>
+    <testcase time="0.000999999999990564" classname="Indent_modifiers" name="getters_and_setters_work"/>
+    <testcase time="0.00300000000000011" classname="Indent_modifiers" name="getters_and_setters_work"/>
+    <testcase time="0.00100000000000477" classname="Indent_modifiers" name="getters_and_setters_work"/>
+    <testcase time="0.00100000000000477" classname="Indent_modifiers" name="getters_and_setters_work"/>
+    <testcase time="0.000999999999990564" classname="Indent_modifiers" name="getters_and_setters_work"/>
+    <testcase time="0.373000000000005" classname="Indent_modifiers" name="clear_indent_mods_works_as_desired"/>
+  </testsuite>
+  <testsuite name="tabulation framework" timestamp="2022-05-19T20:33:24Z" hostname="Gabriels-MacBook-Pro.local" tests="77" skipped="0" failures="0" errors="0" time="5.372">
+    <testcase time="0.201000000000008" classname="tabulation_framework" name="summarize_row_groups_works_with_provided_funcs"/>
+    <testcase time="0.297999999999988" classname="tabulation_framework" name="complex_layout_works"/>
+    <testcase time="0.00200000000000955" classname="tabulation_framework" name="complex_layout_works"/>
+    <testcase time="0.213999999999999" classname="tabulation_framework" name="complex_layout_works"/>
+    <testcase time="0.173000000000002" classname="tabulation_framework" name="existing_table_in_layout_works"/>
+    <testcase time="0.106999999999999" classname="tabulation_framework" name="Nested_splits_in_column_space_work"/>
+    <testcase time="0.000999999999990564" classname="tabulation_framework" name="Nested_splits_in_column_space_work"/>
+    <testcase time="0.153000000000006" classname="tabulation_framework" name="labelkids_parameter_works"/>
+    <testcase time="0.132000000000005" classname="tabulation_framework" name="labelkids_parameter_works"/>
+    <testcase time="0.138999999999996" classname="tabulation_framework" name="labelkids_parameter_works"/>
+    <testcase time="0.144999999999996" classname="tabulation_framework" name="labelkids_parameter_works"/>
+    <testcase time="0.14500000000001" classname="tabulation_framework" name="labelkids_parameter_works"/>
+    <testcase time="0.144999999999996" classname="tabulation_framework" name="labelkids_parameter_works"/>
+    <testcase time="0.039999999999992" classname="tabulation_framework" name="ref_group_comparisons_work"/>
+    <testcase time="0.00500000000000966" classname="tabulation_framework" name="ref_group_comparisons_work"/>
+    <testcase time="0.00499999999999545" classname="tabulation_framework" name="ref_group_comparisons_work"/>
+    <testcase time="0.241" classname="tabulation_framework" name="ref_group_comparisons_work"/>
+    <testcase time="0.0120000000000005" classname="tabulation_framework" name="ref_group_comparisons_work"/>
+    <testcase time="0.0130000000000052" classname="tabulation_framework" name="ref_group_comparisons_work"/>
+    <testcase time="0.0480000000000018" classname="tabulation_framework" name="ref_group_comparisons_work"/>
+    <testcase time="0.00100000000000477" classname="tabulation_framework" name="ref_group_comparisons_work"/>
+    <testcase time="0.0139999999999958" classname="tabulation_framework" name="missing_vars_caught"/>
+    <testcase time="0.0130000000000052" classname="tabulation_framework" name="missing_vars_caught"/>
+    <testcase time="0.0120000000000005" classname="tabulation_framework" name="missing_vars_caught"/>
+    <testcase time="0.0289999999999964" classname="tabulation_framework" name="missing_vars_caught"/>
+    <testcase time="0.0550000000000068" classname="tabulation_framework" name="cfun_args"/>
+    <testcase time="0.0669999999999931" classname="tabulation_framework" name="split_under_analyze"/>
+    <testcase time="0.0430000000000064" classname="tabulation_framework" name="label_var_works_as_expected"/>
+    <testcase time="0.0459999999999923" classname="tabulation_framework" name="label_var_works_as_expected"/>
+    <testcase time="0.007000000000005" classname="tabulation_framework" name="label_var_works_as_expected"/>
+    <testcase time="0.0619999999999976" classname="tabulation_framework" name="factors_with_unobserved_levels_work_as_expected"/>
+    <testcase time="0.0310000000000059" classname="tabulation_framework" name="factors_with_unobserved_levels_work_as_expected"/>
+    <testcase time="0.0489999999999924" classname="tabulation_framework" name=".N_row_argument_in_afun_works_correctly"/>
+    <testcase time="0.0799999999999983" classname="tabulation_framework" name="extra_args_works"/>
+    <testcase time="0.00200000000000955" classname="tabulation_framework" name="extra_args_works"/>
+    <testcase time="0.000999999999990564" classname="tabulation_framework" name="extra_args_works"/>
+    <testcase time="0.00100000000000477" classname="tabulation_framework" name="extra_args_works"/>
+    <testcase time="0.0439999999999969" classname="tabulation_framework" name="extra_args_works"/>
+    <testcase time="0.0180000000000007" classname="tabulation_framework" name="extra_args_works"/>
+    <testcase time="0.0180000000000007" classname="tabulation_framework" name="extra_args_works"/>
+    <testcase time="0.0259999999999962" classname="tabulation_framework" name="Colcounts_work_correctly"/>
+    <testcase time="0.0280000000000058" classname="tabulation_framework" name="Colcounts_work_correctly"/>
+    <testcase time="0.0489999999999924" classname="tabulation_framework" name="Colcounts_work_correctly"/>
+    <testcase time="0.007000000000005" classname="tabulation_framework" name="Colcounts_work_correctly"/>
+    <testcase time="0.0120000000000005" classname="tabulation_framework" name="Colcounts_work_correctly"/>
+    <testcase time="0.0360000000000014" classname="tabulation_framework" name="content_extra_args_for_summarize_row_groups_works"/>
+    <testcase time="0.0439999999999969" classname="tabulation_framework" name="content_extra_args_for_summarize_row_groups_works"/>
+    <testcase time="0.0349999999999966" classname="tabulation_framework" name="content_extra_args_for_summarize_row_groups_works"/>
+    <testcase time="0.111000000000004" classname="tabulation_framework" name="content_extra_args_for_summarize_row_groups_works"/>
+    <testcase time="0.0450000000000017" classname="tabulation_framework" name=".df_row_analysis_function_argument_works"/>
+    <testcase time="0.0250000000000057" classname="tabulation_framework" name="analyze_colvars_inclNAs_works"/>
+    <testcase time="0.019999999999996" classname="tabulation_framework" name="analyze_colvars_inclNAs_works"/>
+    <testcase time="0.0969999999999942" classname="tabulation_framework" name="analyze_colvars_works_generally"/>
+    <testcase time="0.00200000000000955" classname="tabulation_framework" name="analyze_colvars_works_generally"/>
+    <testcase time="0.0519999999999925" classname="tabulation_framework" name="analyze_colvars_works_generally"/>
+    <testcase time="0.00100000000000477" classname="tabulation_framework" name="analyze_colvars_works_generally"/>
+    <testcase time="0.155000000000001" classname="tabulation_framework" name="analyze_colvars_works_generally"/>
+    <testcase time="0.000999999999990564" classname="tabulation_framework" name="analyze_colvars_works_generally"/>
+    <testcase time="0.0180000000000007" classname="tabulation_framework" name="analyze_colvars_works_generally"/>
+    <testcase time="0.0870000000000033" classname="tabulation_framework" name="alt_counts_df_works"/>
+    <testcase time="0.0109999999999957" classname="tabulation_framework" name="alt_counts_df_works"/>
+    <testcase time="0.14200000000001" classname="tabulation_framework" name="deeply_nested_column_layouts_work"/>
+    <testcase time="0.193999999999988" classname="tabulation_framework" name="topleft_label_position_works"/>
+    <testcase time="0.00100000000000477" classname="tabulation_framework" name="topleft_label_position_works"/>
+    <testcase time="0.263999999999996" classname="tabulation_framework" name=".spl_context_works_in_content_and_analysis_functions"/>
+    <testcase time="0.00100000000000477" classname="tabulation_framework" name=".spl_context_works_in_content_and_analysis_functions"/>
+    <testcase time="0.00199999999999534" classname="tabulation_framework" name=".spl_context_works_in_content_and_analysis_functions"/>
+    <testcase time="0.124000000000009" classname="tabulation_framework" name="cut_functions_work"/>
+    <testcase time="0.0319999999999965" classname="tabulation_framework" name="cut_functions_work"/>
+    <testcase time="0.117999999999995" classname="tabulation_framework" name="cut_functions_work"/>
+    <testcase time="0.106999999999999" classname="tabulation_framework" name="cut_functions_work"/>
+    <testcase time="0.100999999999999" classname="tabulation_framework" name="cut_functions_work"/>
+    <testcase time="0.188000000000002" classname="tabulation_framework" name="cut_functions_work"/>
+    <testcase time="0.0889999999999986" classname="tabulation_framework" name="cut_functions_work"/>
+    <testcase time="0.199000000000012" classname="tabulation_framework" name="cut_functions_work"/>
+    <testcase time="0.11099999999999" classname="tabulation_framework" name="cut_functions_work"/>
+    <testcase time="0.0250000000000057" classname="tabulation_framework" name="empty_factor_levels_represented_correctly_when_ref_group_is_set"/>
+  </testsuite>
+  <testsuite name="make_afun and related machinery" timestamp="2022-05-19T20:33:29Z" hostname="Gabriels-MacBook-Pro.local" tests="34" skipped="0" failures="0" errors="0" time="0.298">
+    <testcase time="0.00799999999999557" classname="make_afun_and_related_machinery" name="afun_internals_coverage"/>
+    <testcase time="0.00400000000000489" classname="make_afun_and_related_machinery" name="afun_internals_coverage"/>
+    <testcase time="0.00300000000000011" classname="make_afun_and_related_machinery" name="afun_internals_coverage"/>
+    <testcase time="0.000999999999990564" classname="make_afun_and_related_machinery" name="make_afun_works_for_x_arg"/>
+    <testcase time="0.00100000000000477" classname="make_afun_and_related_machinery" name="make_afun_works_for_x_arg"/>
+    <testcase time="0.00100000000000477" classname="make_afun_and_related_machinery" name="make_afun_works_for_x_arg"/>
+    <testcase time="0.0390000000000015" classname="make_afun_and_related_machinery" name="make_afun_works_for_x_arg"/>
+    <testcase time="0.00199999999999534" classname="make_afun_and_related_machinery" name="make_afun_works_for_x_arg"/>
+    <testcase time="0.00100000000000477" classname="make_afun_and_related_machinery" name="make_afun_works_for_df_functions"/>
+    <testcase time="0.000999999999990564" classname="make_afun_and_related_machinery" name="make_afun_works_for_df_functions"/>
+    <testcase time="0.00100000000000477" classname="make_afun_and_related_machinery" name="make_afun_works_for_df_functions"/>
+    <testcase time="0.00100000000000477" classname="make_afun_and_related_machinery" name="make_afun_works_for_df_functions"/>
+    <testcase time="0.000999999999990564" classname="make_afun_and_related_machinery" name="make_afun_works_for_df_functions"/>
+    <testcase time="0.00100000000000477" classname="make_afun_and_related_machinery" name="make_afun_works_for_df_functions"/>
+    <testcase time="0.00199999999999534" classname="make_afun_and_related_machinery" name="make_afun_works_for_df_functions"/>
+    <testcase time="0.00100000000000477" classname="make_afun_and_related_machinery" name="make_afun_works_for_df_functions"/>
+    <testcase time="0.00100000000000477" classname="make_afun_and_related_machinery" name="make_afun_works_for_funs_with_..."/>
+    <testcase time="0.00199999999999534" classname="make_afun_and_related_machinery" name="ungrouping_.ungroup_stats_works"/>
+    <testcase time="0.00100000000000477" classname="make_afun_and_related_machinery" name="ungrouping_.ungroup_stats_works"/>
+    <testcase time="0.000999999999990564" classname="make_afun_and_related_machinery" name="ungrouping_.ungroup_stats_works"/>
+    <testcase time="0.00200000000000955" classname="make_afun_and_related_machinery" name="make_afun_.indent_mods_argument_works"/>
+    <testcase time="0.00199999999999534" classname="make_afun_and_related_machinery" name="make_afun_.indent_mods_argument_works"/>
+    <testcase time="0.0250000000000057" classname="make_afun_and_related_machinery" name="make_afun_.indent_mods_argument_works"/>
+    <testcase time="0.00300000000000011" classname="make_afun_and_related_machinery" name="make_afun_override_arg_that_has_no_default"/>
+    <testcase time="0.0269999999999868" classname="make_afun_and_related_machinery" name="make_afun_build_table_integration_tests"/>
+    <testcase time="0.0310000000000059" classname="make_afun_and_related_machinery" name="make_afun_build_table_integration_tests"/>
+    <testcase time="0.0229999999999961" classname="make_afun_and_related_machinery" name="make_afun_build_table_integration_tests"/>
+    <testcase time="0.0360000000000014" classname="make_afun_and_related_machinery" name="make_afun_build_table_integration_tests"/>
+    <testcase time="0.0330000000000013" classname="make_afun_and_related_machinery" name="make_afun_build_table_integration_tests"/>
+    <testcase time="0.0360000000000014" classname="make_afun_and_related_machinery" name="make_afun_build_table_integration_tests"/>
+    <testcase time="0.00199999999999534" classname="make_afun_and_related_machinery" name="call_time_..._passed_down_correctly_by_funs_constructed_by_make_afun"/>
+    <testcase time="0.00199999999999534" classname="make_afun_and_related_machinery" name="call_time_..._passed_down_correctly_by_funs_constructed_by_make_afun"/>
+    <testcase time="0.00100000000000477" classname="make_afun_and_related_machinery" name="list_wrap_functions_work"/>
+    <testcase time="0.00199999999999534" classname="make_afun_and_related_machinery" name="list_wrap_functions_work"/>
+  </testsuite>
+  <testsuite name="Pagination" timestamp="2022-05-19T20:33:29Z" hostname="Gabriels-MacBook-Pro.local" tests="3" skipped="0" failures="0" errors="0" time="0.595">
+    <testcase time="0.0799999999999983" classname="Pagination" name="Page_by_splitting_works"/>
+    <testcase time="0.345000000000013" classname="Pagination" name="vertical_pagination_works"/>
+    <testcase time="0.169999999999987" classname="Pagination" name="vertical_pagination_works"/>
+  </testsuite>
+  <testsuite name="Printing tables" timestamp="2022-05-19T20:33:30Z" hostname="Gabriels-MacBook-Pro.local" tests="16" skipped="0" failures="0" errors="0" time="0.939">
+    <testcase time="0.112000000000009" classname="Printing_tables" name="toString_method_works_correclty"/>
+    <testcase time="0.0550000000000068" classname="Printing_tables" name="labels_correctly_used_for_columns_rather_than_names"/>
+    <testcase time="0.00100000000000477" classname="Printing_tables" name="labels_correctly_used_for_columns_rather_than_names"/>
+    <testcase time="0.0899999999999892" classname="Printing_tables" name="labels_correctly_used_for_columns_rather_than_names"/>
+    <testcase time="0.041000000000011" classname="Printing_tables" name="labels_correctly_used_for_columns_rather_than_names"/>
+    <testcase time="0.0309999999999917" classname="Printing_tables" name="nested_identical_labels_work_ok"/>
+    <testcase time="0.0339999999999918" classname="Printing_tables" name="newline_in_column_names_and_possibly_cell_values_work"/>
+    <testcase time="0.160000000000011" classname="Printing_tables" name="newline_in_column_names_and_possibly_cell_values_work"/>
+    <testcase time="0.000999999999990564" classname="Printing_tables" name="newline_in_column_names_and_possibly_cell_values_work"/>
+    <testcase time="0.00100000000000477" classname="Printing_tables" name="newline_in_column_names_and_possibly_cell_values_work"/>
+    <testcase time="0.102999999999994" classname="Printing_tables" name="newline_in_column_names_and_possibly_cell_values_work"/>
+    <testcase time="0.00100000000000477" classname="Printing_tables" name="newline_in_column_names_and_possibly_cell_values_work"/>
+    <testcase time="0.034000000000006" classname="Printing_tables" name="alignment_works"/>
+    <testcase time="0.0109999999999957" classname="Printing_tables" name="alignment_works"/>
+    <testcase time="0.0229999999999961" classname="Printing_tables" name="alignment_works"/>
+    <testcase time="0.241" classname="Printing_tables" name="Various_Printing_things_work"/>
+  </testsuite>
+  <testsuite name="regression tests" timestamp="2022-05-19T20:33:31Z" hostname="Gabriels-MacBook-Pro.local" tests="51" skipped="0" failures="0" errors="0" time="2.007">
+    <testcase time="0.0110000000000099" classname="regression_tests" name="unlisting_rtables_has_no_effect_on_them"/>
+    <testcase time="0.00300000000000011" classname="regression_tests" name="manually_created_label_l_rows_are_always_visible"/>
+    <testcase time="0.0109999999999957" classname="regression_tests" name="printing_table_with_0_rows_works"/>
+    <testcase time="0.0300000000000011" classname="regression_tests" name="inclNAs_argument_works_as_expected"/>
+    <testcase time="0.0240000000000009" classname="regression_tests" name="inclNAs_argument_works_as_expected"/>
+    <testcase time="0.00999999999999091" classname="regression_tests" name="head_tail_work"/>
+    <testcase time="0.007000000000005" classname="regression_tests" name="head_tail_work"/>
+    <testcase time="0.0660000000000025" classname="regression_tests" name="sort_does_not_clobber_top_level_siblings"/>
+    <testcase time="0.259999999999991" classname="regression_tests" name="repeated_multi_var_analyzes_work_as_expected"/>
+    <testcase time="0.110000000000014" classname="regression_tests" name="summarize_row_groups_after_analyze_call_s_work"/>
+    <testcase time="0.128" classname="regression_tests" name="summarize_row_groups_after_analyze_call_s_work"/>
+    <testcase time="0.0289999999999964" classname="regression_tests" name="summarize_row_groups_at_top_level_works"/>
+    <testcase time="0.000999999999990564" classname="regression_tests" name="summarize_row_groups_at_top_level_works"/>
+    <testcase time="0.0210000000000008" classname="regression_tests" name="add_colcounts_works_as_first_call"/>
+    <testcase time="0.00199999999999534" classname="regression_tests" name="CellValue_on_something_with_object_labels"/>
+    <testcase time="0.00100000000000477" classname="regression_tests" name="CellValue_on_something_with_object_labels"/>
+    <testcase time="0.00100000000000477" classname="regression_tests" name="CellValue_on_something_with_object_labels"/>
+    <testcase time="0.000999999999990564" classname="regression_tests" name="rcell_on_CellValue_overrides_attrs_as_necessary"/>
+    <testcase time="0.0310000000000059" classname="regression_tests" name="cell_level_formats_are_retained_when_column_subsetting"/>
+    <testcase time="0.0429999999999922" classname="regression_tests" name="cell_level_formats_are_retained_when_column_subsetting"/>
+    <testcase time="0.101000000000013" classname="regression_tests" name="row_subsetting_works_on_table_with_only_content_rows"/>
+    <testcase time="0.00399999999999068" classname="regression_tests" name="row_subsetting_works_on_table_with_only_content_rows"/>
+    <testcase time="0.0510000000000019" classname="regression_tests" name="calls_to_make_afun_within_loop_work_correctly"/>
+    <testcase time="0.0379999999999967" classname="regression_tests" name="keeping_non_existent_levels_doesn_t_break_internal_machinery"/>
+    <testcase time="0.00200000000000955" classname="regression_tests" name="keeping_non_existent_levels_doesn_t_break_internal_machinery"/>
+    <testcase time="0.0139999999999958" classname="regression_tests" name="keeping_non_existent_levels_doesn_t_break_internal_machinery"/>
+    <testcase time="0.00199999999999534" classname="regression_tests" name="keeping_non_existent_levels_doesn_t_break_internal_machinery"/>
+    <testcase time="0.0170000000000101" classname="regression_tests" name="keeping_non_existent_levels_doesn_t_break_internal_machinery"/>
+    <testcase time="0.0139999999999958" classname="regression_tests" name="keeping_non_existent_levels_doesn_t_break_internal_machinery"/>
+    <testcase time="0.0189999999999912" classname="regression_tests" name="add_overall_col_with_no_col_splits_works"/>
+    <testcase time="0.0600000000000023" classname="regression_tests" name="cell_values_works_when_you_path_all_the_way_to_the_row"/>
+    <testcase time="0.00200000000000955" classname="regression_tests" name="_xx_xx_format_works_correctly"/>
+    <testcase time="0.199999999999989" classname="regression_tests" name="inclNAs_with_empty_factor_levels_behaves"/>
+    <testcase time="0.103000000000009" classname="regression_tests" name="column_labeling_works_correctly_when_value_label_var_is_a_factor"/>
+    <testcase time="0.0150000000000006" classname="regression_tests" name="column_labeling_works_correctly_when_value_label_var_is_a_factor"/>
+    <testcase time="0.0679999999999978" classname="regression_tests" name="pathing_works"/>
+    <testcase time="0.078000000000003" classname="regression_tests" name="pathing_works"/>
+    <testcase time="0.00300000000000011" classname="regression_tests" name="pathing_works"/>
+    <testcase time="0.00199999999999534" classname="regression_tests" name="pathing_works"/>
+    <testcase time="0.007000000000005" classname="regression_tests" name="pagination_works_on_tables_with_only_1_row"/>
+    <testcase time="0.00300000000000011" classname="regression_tests" name="pagination_works_on_tables_with_only_1_row"/>
+    <testcase time="0.0219999999999914" classname="regression_tests" name="in_rows_doesn_t_clobber_cell_format_when_only_1_row"/>
+    <testcase time="0.0720000000000027" classname="regression_tests" name="newlabels_works_in_reorder_split_levels"/>
+    <testcase time="0.00300000000000011" classname="regression_tests" name="no_extraneous_footnote_attribute"/>
+    <testcase time="0.00300000000000011" classname="regression_tests" name="no_extraneous_footnote_attribute"/>
+    <testcase time="0.102999999999994" classname="regression_tests" name="no_max_is_Inf_warnings_from_make_row_df_when_content_rows_exist_in_places_that_don_t_have_any_child_rows_in_the_subsequent_split"/>
+    <testcase time="0.0640000000000072" classname="regression_tests" name="specifying_function_format_with_no_cfun_in_summarize_row_groups_works"/>
+    <testcase time="0.120999999999995" classname="regression_tests" name="child_label_hidden_does_not_affect_tree_structure_pathing"/>
+    <testcase time="0.0190000000000055" classname="regression_tests" name="child_label_hidden_does_not_affect_tree_structure_pathing"/>
+    <testcase time="0.00399999999999068" classname="regression_tests" name="child_label_hidden_does_not_affect_tree_structure_pathing"/>
+    <testcase time="0.00300000000000011" classname="regression_tests" name="child_label_hidden_does_not_affect_tree_structure_pathing"/>
+  </testsuite>
+  <testsuite name="rtables" timestamp="2022-05-19T20:33:33Z" hostname="Gabriels-MacBook-Pro.local" tests="39" skipped="0" failures="0" errors="0" time="0.206">
+    <testcase time="0.0210000000000008" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00100000000000477" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00100000000000477" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00300000000000011" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00300000000000011" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.012999999999991" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00100000000000477" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.000999999999990564" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00400000000000489" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00300000000000011" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00400000000000489" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00300000000000011" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00499999999999545" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00499999999999545" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00500000000000966" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00499999999999545" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00900000000000034" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00499999999999545" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00400000000000489" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.00400000000000489" classname="rtables" name="rtable_design_decisions"/>
+    <testcase time="0.0229999999999961" classname="rtables" name="multi_header_tables_work"/>
+    <testcase time="0.00100000000000477" classname="rtables" name="multi_header_tables_work"/>
+    <testcase time="0.00199999999999534" classname="rtables" name="multi_header_tables_work"/>
+    <testcase time="0.00100000000000477" classname="rtables" name="test_sprintf_based_format"/>
+    <testcase time="0.000999999999990564" classname="rtables" name="test_sprintf_based_format"/>
+    <testcase time="0.00200000000000955" classname="rtables" name="test_sprintf_based_format"/>
+    <testcase time="0.00199999999999534" classname="rtables" name="test_p_value_format"/>
+    <testcase time="0.00100000000000477" classname="rtables" name="test_p_value_format"/>
+    <testcase time="0.000999999999990564" classname="rtables" name="test_p_value_format"/>
+    <testcase time="0.00200000000000955" classname="rtables" name="test_3d_format_estimate_and_CI_"/>
+    <testcase time="0.000999999999990564" classname="rtables" name="test_3d_format_estimate_and_CI_"/>
+    <testcase time="0.046999999999997" classname="rtables" name="df_to_tt_works"/>
+    <testcase time="0.00100000000000477" classname="rtables" name="df_to_tt_works"/>
+    <testcase time="0.00100000000000477" classname="rtables" name="df_to_tt_works"/>
+    <testcase time="0.00699999999999079" classname="rtables" name="df_to_tt_works"/>
+    <testcase time="0.00200000000000955" classname="rtables" name="non_ref_rcell_works"/>
+    <testcase time="0.000999999999990564" classname="rtables" name="non_ref_rcell_works"/>
+    <testcase time="0.00900000000000034" classname="rtables" name="rtablel_works"/>
+    <testcase time="0.00100000000000477" classname="rtables" name="rtablel_works"/>
+  </testsuite>
+  <testsuite name="sorting and pruning" timestamp="2022-05-19T20:33:33Z" hostname="Gabriels-MacBook-Pro.local" tests="23" skipped="0" failures="0" errors="0" time="4.595">
+    <testcase time="0.962999999999994" classname="sorting_and_pruning" name="provided_pruning_functions_work"/>
+    <testcase time="0.00400000000000489" classname="sorting_and_pruning" name="provided_pruning_functions_work"/>
+    <testcase time="0.00100000000000477" classname="sorting_and_pruning" name="provided_pruning_functions_work"/>
+    <testcase time="0.0789999999999935" classname="sorting_and_pruning" name="pruning_and_trimming_work"/>
+    <testcase time="0.00200000000000955" classname="sorting_and_pruning" name="pruning_and_trimming_work"/>
+    <testcase time="0.000999999999990564" classname="sorting_and_pruning" name="pruning_and_trimming_work"/>
+    <testcase time="0.0100000000000051" classname="sorting_and_pruning" name="pruning_and_trimming_work"/>
+    <testcase time="0.0900000000000034" classname="sorting_and_pruning" name="pruning_and_trimming_work"/>
+    <testcase time="0.00699999999999079" classname="sorting_and_pruning" name="pruning_and_trimming_work"/>
+    <testcase time="0.0100000000000051" classname="sorting_and_pruning" name="pruning_and_trimming_work"/>
+    <testcase time="0.00799999999999557" classname="sorting_and_pruning" name="pruning_and_trimming_work"/>
+    <testcase time="0.0919999999999987" classname="sorting_and_pruning" name="provided_score_functions_work"/>
+    <testcase time="0.00100000000000477" classname="sorting_and_pruning" name="provided_score_functions_work"/>
+    <testcase time="0.00300000000000011" classname="sorting_and_pruning" name="provided_score_functions_work"/>
+    <testcase time="0.00300000000000011" classname="sorting_and_pruning" name="provided_score_functions_work"/>
+    <testcase time="0.00100000000000477" classname="sorting_and_pruning" name="provided_score_functions_work"/>
+    <testcase time="0.00600000000000023" classname="sorting_and_pruning" name="sort_at_path_just_returns_an_empty_input_table"/>
+    <testcase time="0.000999999999990564" classname="sorting_and_pruning" name="sort_at_path_just_returns_an_empty_input_table"/>
+    <testcase time="0.531000000000006" classname="sorting_and_pruning" name="trim_zero_rows_trim_rows_prune_do_the_same_thing_in_normal_cases"/>
+    <testcase time="0.611000000000004" classname="sorting_and_pruning" name="trim_zero_rows_trim_rows_prune_do_the_same_thing_in_normal_cases"/>
+    <testcase time="1.06099999999999" classname="sorting_and_pruning" name="trim_zero_rows_trim_rows_prune_do_the_same_thing_in_normal_cases"/>
+    <testcase time="0.921000000000006" classname="sorting_and_pruning" name="trim_zero_rows_trim_rows_prune_do_the_same_thing_in_normal_cases"/>
+    <testcase time="0.188999999999993" classname="sorting_and_pruning" name="trim_zero_rows_trim_rows_prune_do_the_same_thing_in_normal_cases"/>
+  </testsuite>
+  <testsuite name="column spanning" timestamp="2022-05-19T20:33:38Z" hostname="Gabriels-MacBook-Pro.local" tests="3" skipped="0" failures="0" errors="0" time="0.036">
+    <testcase time="0.0240000000000009" classname="column_spanning" name="column_spanning_works"/>
+    <testcase time="0.00600000000000023" classname="column_spanning" name="column_spanning_works"/>
+    <testcase time="0.00600000000000023" classname="column_spanning" name="column_spanning_works"/>
+  </testsuite>
+  <testsuite name="Split Functions" timestamp="2022-05-19T20:33:38Z" hostname="Gabriels-MacBook-Pro.local" tests="19" skipped="0" failures="0" errors="0" time="0.881">
+    <testcase time="0.0900000000000034" classname="Split_Functions" name="remove_split_levels_works_as_expected_with_factor_variables"/>
+    <testcase time="0.00300000000000011" classname="Split_Functions" name="remove_split_levels_works_as_expected_with_factor_variables"/>
+    <testcase time="0.039999999999992" classname="Split_Functions" name="remove_split_levels_works_as_expected_with_character_variables"/>
+    <testcase time="0.0430000000000064" classname="Split_Functions" name="drop_and_remove_levels_works_as_expected_when_dropping_not_appearing_levels"/>
+    <testcase time="0.0390000000000015" classname="Split_Functions" name="drop_and_remove_levels_also_works_with_character_variables"/>
+    <testcase time="0.11099999999999" classname="Split_Functions" name="trim_levels_to_map_split_function_works"/>
+    <testcase time="0.0190000000000055" classname="Split_Functions" name="trim_levels_to_map_split_function_works"/>
+    <testcase time="0.0420000000000016" classname="Split_Functions" name="trim_levels_to_map_split_function_works"/>
+    <testcase time="0.119" classname="Split_Functions" name="trim_levels_to_map_split_function_works"/>
+    <testcase time="0.000999999999990564" classname="Split_Functions" name="trim_levels_to_map_split_function_works"/>
+    <testcase time="0.00100000000000477" classname="Split_Functions" name="trim_levels_to_map_split_function_works"/>
+    <testcase time="0.00100000000000477" classname="Split_Functions" name="trim_levels_to_map_split_function_works"/>
+    <testcase time="0" classname="Split_Functions" name="trim_levels_to_map_split_function_works"/>
+    <testcase time="0.097999999999999" classname="Split_Functions" name="trim_levels_in_group_works"/>
+    <testcase time="0.0150000000000006" classname="Split_Functions" name="trim_levels_in_group_works"/>
+    <testcase time="0.0600000000000023" classname="Split_Functions" name="Custom_functions_in_mutlivar_splits_work"/>
+    <testcase time="0.0629999999999882" classname="Split_Functions" name="add_overall_level_works"/>
+    <testcase time="0.00100000000000477" classname="Split_Functions" name="add_overall_level_works"/>
+    <testcase time="0.135000000000005" classname="Split_Functions" name="add_overall_level_works"/>
+  </testsuite>
+  <testsuite name="Summarizing table structure" timestamp="2022-05-19T20:33:38Z" hostname="Gabriels-MacBook-Pro.local" tests="6" skipped="0" failures="0" errors="0" time="0.402">
+    <testcase time="0.222999999999999" classname="Summarizing_table_structure" name="path_summaries"/>
+    <testcase time="0.00399999999999068" classname="Summarizing_table_structure" name="path_summaries"/>
+    <testcase time="0.115000000000009" classname="Summarizing_table_structure" name="path_summaries"/>
+    <testcase time="0.039999999999992" classname="Summarizing_table_structure" name="path_summaries"/>
+    <testcase time="0.0190000000000055" classname="Summarizing_table_structure" name="vars_in_layout_works"/>
+    <testcase time="0.00100000000000477" classname="Summarizing_table_structure" name="vars_in_layout_works"/>
+  </testsuite>
+  <testsuite name="Accessing and subsetting tables" timestamp="2022-05-19T20:33:39Z" hostname="Gabriels-MacBook-Pro.local" tests="55" skipped="0" failures="0" errors="0" time="2.26">
+    <testcase time="0.253999999999991" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.00800000000000978" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.00699999999999079" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.00100000000000477" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.0100000000000051" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.00699999999999079" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.0139999999999958" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.0130000000000052" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.0100000000000051" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.00999999999999091" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.00500000000000966" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.00499999999999545" classname="Accessing_and_subsetting_tables" name="cell_values_function_works_as_desired"/>
+    <testcase time="0.137" classname="Accessing_and_subsetting_tables" name="make_row_df_make_col_df_give_paths_which_all_work"/>
+    <testcase time="0.00600000000000023" classname="Accessing_and_subsetting_tables" name="make_row_df_make_col_df_give_paths_which_all_work"/>
+    <testcase time="0.103999999999999" classname="Accessing_and_subsetting_tables" name="make_row_df_make_col_df_give_paths_which_all_work"/>
+    <testcase time="0.0700000000000074" classname="Accessing_and_subsetting_tables" name="make_row_df_make_col_df_give_paths_which_all_work"/>
+    <testcase time="0.0569999999999879" classname="Accessing_and_subsetting_tables" name="make_row_df_make_col_df_give_paths_which_all_work"/>
+    <testcase time="0.00900000000000034" classname="Accessing_and_subsetting_tables" name="make_row_df_make_col_df_give_paths_which_all_work"/>
+    <testcase time="0.0350000000000108" classname="Accessing_and_subsetting_tables" name="Duplicate_colvars_path_correctly"/>
+    <testcase time="0.00699999999999079" classname="Accessing_and_subsetting_tables" name="Duplicate_colvars_path_correctly"/>
+    <testcase time="0.0750000000000028" classname="Accessing_and_subsetting_tables" name="top_left_retention_behavior_is_correct_across_all_scenarios"/>
+    <testcase time="0.0150000000000006" classname="Accessing_and_subsetting_tables" name="top_left_retention_behavior_is_correct_across_all_scenarios"/>
+    <testcase time="0.0150000000000006" classname="Accessing_and_subsetting_tables" name="top_left_retention_behavior_is_correct_across_all_scenarios"/>
+    <testcase time="0.0150000000000006" classname="Accessing_and_subsetting_tables" name="top_left_retention_behavior_is_correct_across_all_scenarios"/>
+    <testcase time="0.00300000000000011" classname="Accessing_and_subsetting_tables" name="top_left_retention_behavior_is_correct_across_all_scenarios"/>
+    <testcase time="0.00300000000000011" classname="Accessing_and_subsetting_tables" name="top_left_retention_behavior_is_correct_across_all_scenarios"/>
+    <testcase time="0.00400000000000489" classname="Accessing_and_subsetting_tables" name="top_left_retention_behavior_is_correct_across_all_scenarios"/>
+    <testcase time="0.00999999999999091" classname="Accessing_and_subsetting_tables" name="top_left_retention_behavior_is_correct_across_all_scenarios"/>
+    <testcase time="0.007000000000005" classname="Accessing_and_subsetting_tables" name="top_left_retention_behavior_is_correct_across_all_scenarios"/>
+    <testcase time="0.00600000000000023" classname="Accessing_and_subsetting_tables" name="top_left_retention_behavior_is_correct_across_all_scenarios"/>
+    <testcase time="0.113" classname="Accessing_and_subsetting_tables" name="setters_work_ok"/>
+    <testcase time="0.0289999999999964" classname="Accessing_and_subsetting_tables" name="setters_work_ok"/>
+    <testcase time="0.00100000000000477" classname="Accessing_and_subsetting_tables" name="setters_work_ok"/>
+    <testcase time="0.00199999999999534" classname="Accessing_and_subsetting_tables" name="setters_work_ok"/>
+    <testcase time="0.0870000000000033" classname="Accessing_and_subsetting_tables" name="setters_work_ok"/>
+    <testcase time="0.00100000000000477" classname="Accessing_and_subsetting_tables" name="setters_work_ok"/>
+    <testcase time="0.10799999999999" classname="Accessing_and_subsetting_tables" name="cell_values_and_value_at_work_on_row_objects"/>
+    <testcase time="0.00100000000000477" classname="Accessing_and_subsetting_tables" name="cell_values_and_value_at_work_on_row_objects"/>
+    <testcase time="0.224000000000004" classname="Accessing_and_subsetting_tables" name="label_at_path_works"/>
+    <testcase time="0.00499999999999545" classname="Accessing_and_subsetting_tables" name="label_at_path_works"/>
+    <testcase time="0.0420000000000016" classname="Accessing_and_subsetting_tables" name="label_at_path_works"/>
+    <testcase time="0.0390000000000015" classname="Accessing_and_subsetting_tables" name="label_at_path_works"/>
+    <testcase time="0.0559999999999974" classname="Accessing_and_subsetting_tables" name="insert_row_at_path_works"/>
+    <testcase time="0.00199999999999534" classname="Accessing_and_subsetting_tables" name="insert_row_at_path_works"/>
+    <testcase time="0.0110000000000099" classname="Accessing_and_subsetting_tables" name="insert_row_at_path_works"/>
+    <testcase time="0.00499999999999545" classname="Accessing_and_subsetting_tables" name="insert_row_at_path_works"/>
+    <testcase time="0.00499999999999545" classname="Accessing_and_subsetting_tables" name="insert_row_at_path_works"/>
+    <testcase time="0.00500000000000966" classname="Accessing_and_subsetting_tables" name="insert_row_at_path_works"/>
+    <testcase time="0.0429999999999922" classname="Accessing_and_subsetting_tables" name="insert_row_at_path_works"/>
+    <testcase time="0.00199999999999534" classname="Accessing_and_subsetting_tables" name="insert_row_at_path_works"/>
+    <testcase time="0.00100000000000477" classname="Accessing_and_subsetting_tables" name="insert_row_at_path_works"/>
+    <testcase time="0.0679999999999978" classname="Accessing_and_subsetting_tables" name="bracket_methods_all_work"/>
+    <testcase time="0.00100000000000477" classname="Accessing_and_subsetting_tables" name="bracket_methods_all_work"/>
+    <testcase time="0.102999999999994" classname="Accessing_and_subsetting_tables" name="bracket_methods_all_work"/>
+    <testcase time="0.384" classname="Accessing_and_subsetting_tables" name="bracket_methods_all_work"/>
   </testsuite>
 </testsuites>

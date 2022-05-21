@@ -1358,7 +1358,8 @@ setClass("VTableTree", contains = c("VIRTUAL", "VTableNodeInfo", "VTree", "VTitl
          representation(children = "list",
                         rowspans = "data.frame",
                         labelrow = "LabelRow",
-                        page_titles = "character"
+                        page_titles = "character",
+                        horizontal_sep = "character"
                         ))
 
 setClassUnion("IntegerOrNull", c("integer", "NULL"))
@@ -1419,6 +1420,7 @@ setClass("ElementaryTable", contains = "VTableTree",
 
 #' Table Constructors and Classes
 #' @inheritParams constr_args
+#' @inheritParams gen_args
 #' @inheritParams lyt_args
 #' @param rspans data.frame. Currently stored but otherwise ignored.
 #' @rdname tabclasses
@@ -1440,7 +1442,8 @@ ElementaryTable <- function(kids = list(),
                            title = "",
                            subtitles = character(),
                            main_footer = character(),
-                           prov_footer = character()) {
+                           prov_footer = character(),
+                           hsep = default_hsep()) {
     if (is.null(cinfo)) {
         if (length(kids) > 0)
             cinfo <- col_info(kids[[1]])
@@ -1464,7 +1467,8 @@ ElementaryTable <- function(kids = list(),
               main_title = title,
               subtitles = subtitles,
               main_footer = main_footer,
-              provenance_footer = prov_footer
+              provenance_footer = prov_footer,
+              horizontal_sep = hsep
               )
     tab <- set_format_recursive(tab, format, FALSE)
     tab
@@ -1503,7 +1507,8 @@ TableTree <- function(kids = list(),
                      subtitles = character(),
                      main_footer = character(),
                      prov_footer = character(),
-                     page_title = NA_character_) {
+                     page_title = NA_character_,
+                     hsep = default_hsep()) {
     if (is.null(cinfo)) {
         if (!is.null(cont)) {
             cinfo <- col_info(cont)
@@ -1535,7 +1540,8 @@ TableTree <- function(kids = list(),
                         title = title,
                         subtitles = subtitles,
                         main_footer = main_footer,
-                        prov_footer = prov_footer)
+                        prov_footer = prov_footer,
+                        hsep = hsep)
     } else {
         tab <- new("TableTree", content = cont,
                   children = kids,
@@ -1550,8 +1556,11 @@ TableTree <- function(kids = list(),
                   subtitles = subtitles,
                   main_footer = main_footer,
                   provenance_footer = prov_footer,
-                  page_title_prefix = page_title)
+                  page_title_prefix = page_title,
+                  horizontal_sep = "-" ) ## this is overridden below to get recursiveness
         tab <- set_format_recursive(tab, format, FALSE)
+        ## this is recursive
+        horizontal_sep(tab) <- hsep
         tab
     }
 }
@@ -1725,7 +1734,7 @@ RefFootnote = function(note, index = NA_integer_) {
 ## label: row label to be used for parent row
 ## indent_mod: indent modifier to be used for parent row
 CellValue <- function(val, format = NULL, colspan = 1L, label = NULL, indent_mod = NULL, footnotes = NULL,
-                      align = NULL)  {
+                      align = NULL, format_na_str = NULL)  {
 
     if (is.null(colspan))
         colspan <- 1L
@@ -1743,6 +1752,7 @@ CellValue <- function(val, format = NULL, colspan = 1L, label = NULL, indent_mod
     ret <- structure(list(val), format = format, colspan = colspan, label = label,
                      indent_mod = indent_mod, footnotes = footnotes,
                      align = align,
+                     format_na_str = format_na_str,
                      class = "CellValue")
 }
 
@@ -1768,7 +1778,8 @@ RowsVerticalSection <- function(values,
                                labels = NULL,
                                indent_mods = NULL,
                                formats = NULL,
-                               footnotes = NULL) {
+                               footnotes = NULL,
+                               format_na_strs = NULL) {
     stopifnot(is(values, "list"))
 ##    innernms <- value_names(values)
 
@@ -1786,6 +1797,7 @@ RowsVerticalSection <- function(values,
     ##     row_formats = formats)
     structure(values, class = "RowsVerticalSection", row_names = names, row_labels = labels, indent_mods = indent_mods,
               row_formats = formats,
+              row_na_strs = format_na_strs,
               row_footnotes = lapply(footnotes,
                                      ## cause each row needs to accept
                                      ## a *list* of row footnotes
