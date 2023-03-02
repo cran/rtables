@@ -4,18 +4,23 @@
 \alias{rrowl}
 \title{rrowl}
 \usage{
-rrowl(row.name, ..., format = NULL, indent = 0)
+rrowl(row.name, ..., format = NULL, indent = 0, inset = 0L)
 }
 \arguments{
-\item{row.name}{if \code{NULL} then the \code{FUN} argument is deparsed and
-used as \code{row.name} of the \code{\link{rrow}}}
+\item{row.name}{if \code{NULL} then an empty string is used as
+\code{row.name} of the \code{\link{rrow}}.}
 
 \item{\dots}{values in vector/list form}
 
-\item{format}{if \code{FUN} does not return a formatted \code{\link{rcell}}
-then the \code{format} is applied}
+\item{format}{character(1) or function. The format label (string) or
+formatter function to apply to the cell values passed via \code{...}. See
+\code{\link[formatters]{list_valid_format_labels}} for currently supported
+format labels.}
 
 \item{indent}{deprecated.}
+
+\item{inset}{integer(1). The table inset for the row or table being
+constructed. See \code{\link[formatters]{table_inset}}.}
 }
 \value{
 A row object of the context-appropriate type (label or data)
@@ -40,9 +45,9 @@ rrowl(row.name = "row 1", c(1, 2), c(3,4))
 rrow(row.name = "row 2", c(1, 2), c(3,4))
 }
 \seealso{
-Other compatability: 
+Other compatibility: 
 \code{\link{rheader}()},
 \code{\link{rrow}()},
 \code{\link{rtable}()}
 }
-\concept{compatability}
+\concept{compatibility}

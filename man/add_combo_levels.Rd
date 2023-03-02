@@ -14,22 +14,30 @@ select_all_levels
 add_combo_levels(combosdf, trim = FALSE, first = FALSE, keep_levels = NULL)
 }
 \arguments{
-\item{combosdf}{data.frame/tbl_df. Columns valname, label, levelcombo, exargs. Of which levelcombo and exargs are list columns. Passing the \code{select_all_levels} object as a value in the \code{comblevels} column indicates that an overall/all-observations level should be created.}
+\item{combosdf}{data.frame/tbl_df. Columns valname, label, levelcombo,
+exargs. Of which levelcombo and exargs are list columns. Passing the
+\code{select_all_levels} object as a value in the \code{comblevels} column
+indicates that an overall/all-observations level should be created.}
 
-\item{trim}{logical(1). Should splits corresponding with 0 observations be kept when tabulating.}
+\item{trim}{logical(1). Should splits corresponding with 0 observations be
+kept when tabulating.}
 
-\item{first}{logical(1). Should the created split level be placed first in the levels (\code{TRUE}) or last (\code{FALSE}, the default).}
+\item{first}{logical(1). Should the created split level be placed first in
+the levels (\code{TRUE}) or last (\code{FALSE}, the default).}
 
-\item{keep_levels}{character or NULL. If non-NULL, the levels to retain across both combination and individual levels.}
+\item{keep_levels}{character or NULL. If non-NULL, the levels to retain
+across both combination and individual levels.}
 }
 \value{
-a closure suitable for use as a splitting function (\code{splfun}) when creating a table layout
+a closure suitable for use as a splitting function (\code{splfun})
+when creating a table layout
 }
 \description{
 Add Combination Levels to split
 }
 \note{
-Analysis or summary functions for which the order matters should never be used within the tabulation framework.
+Analysis or summary functions for which the order matters should never
+be used within the tabulation framework.
 }
 \examples{
 library(tibble)
@@ -38,35 +46,39 @@ combodf <- tribble(
     "A_B", "Arms A+B", c("A: Drug X", "B: Placebo"), list(),
     "A_C", "Arms A+C", c("A: Drug X", "C: Combination"), list())
 
-l <- basic_table() \%>\%
+lyt <- basic_table(show_colcounts = TRUE) \%>\%
     split_cols_by("ARM", split_fun = add_combo_levels(combodf)) \%>\%
-    add_colcounts() \%>\%
     analyze("AGE")
 
-build_table(l, DM)
+tbl <- build_table(lyt, DM)
+tbl
 
-la <- basic_table() \%>\%
-    split_cols_by("ARM", split_fun = add_combo_levels(combodf, keep_levels = c("A_B", "A_C"))) \%>\%
-    add_colcounts() \%>\%
+lyt1 <- basic_table(show_colcounts = TRUE) \%>\%
+    split_cols_by("ARM",
+                  split_fun = add_combo_levels(combodf,
+                                               keep_levels = c("A_B",
+                                                               "A_C"))) \%>\%
     analyze("AGE")
 
-build_table(la, DM)
+tbl1 <- build_table(lyt1, DM)
+tbl1
 
 smallerDM <- droplevels(subset(DM, SEX \%in\% c("M", "F") &
                         grepl("^(A|B)", ARM)))
-l2 <- basic_table() \%>\%
+lyt2 <- basic_table(show_colcounts = TRUE) \%>\%
     split_cols_by("ARM", split_fun = add_combo_levels(combodf[1,])) \%>\%
-    split_cols_by("SEX", split_fun = add_overall_level("SEX_ALL", "All Genders")) \%>\%
-    add_colcounts() \%>\%
+    split_cols_by("SEX",
+                  split_fun = add_overall_level("SEX_ALL", "All Genders")) \%>\%
     analyze("AGE")
 
-l3 <-  basic_table() \%>\%
+lyt3 <-  basic_table(show_colcounts = TRUE) \%>\%
     split_cols_by("ARM", split_fun = add_combo_levels(combodf)) \%>\%
-    add_colcounts() \%>\%
-    split_rows_by("SEX", split_fun = add_overall_level("SEX_ALL", "All Genders")) \%>\%
+    split_rows_by("SEX",
+                  split_fun = add_overall_level("SEX_ALL", "All Genders")) \%>\%
     summarize_row_groups() \%>\%
     analyze("AGE")
 
-build_table(l3, smallerDM)
+tbl3 <- build_table(lyt3, smallerDM)
+tbl3
 }
 \keyword{datasets}

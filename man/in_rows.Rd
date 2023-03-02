@@ -20,7 +20,8 @@ in_rows(
 \arguments{
 \item{...}{single row defining expressions}
 
-\item{.list}{list. list cell content, usually \code{rcells}, the \code{.list} is concatenated to \code{...}}
+\item{.list}{list. list cell content, usually \code{rcells}, the \code{.list} is
+concatenated to \code{...}}
 
 \item{.names}{character or NULL. Names of the returned list/structure.}
 
@@ -28,18 +29,24 @@ in_rows(
 
 \item{.formats}{character or NULL. Formats for the values}
 
-\item{.indent_mods}{integer or NULL. Indent modificatons for the defined rows.}
+\item{.indent_mods}{integer or NULL. Indent modifications for the defined
+rows.}
 
-\item{.cell_footnotes}{list. Referential footnote messages to be associated by name with \emph{cells}}
+\item{.cell_footnotes}{list. Referential footnote messages to be associated
+by name with \emph{cells}}
 
-\item{.row_footnotes}{list. Referential footnotes messages to be associated by name with \emph{rows}}
+\item{.row_footnotes}{list. Referential footnotes messages to be associated
+by name with \emph{rows}}
 
-\item{.aligns}{character or NULL. Alignments for the cells}
+\item{.aligns}{character or NULL. Alignments for the cells. Standard for \code{NULL}
+is \code{"center"}. See \code{\link{rtables_aligns}} for currently supported
+alignments.}
 
 \item{.format_na_strs}{character or NULL. NA strings for the cells}
 }
 \value{
-an \code{RowsVerticalSection} object (or \code{NULL}). The details of this object should be considered an internal implementation detail.
+an \code{RowsVerticalSection} object (or \code{NULL}). The details of
+this object should be considered an internal implementation detail.
 }
 \description{
 define the cells that get placed into multiple rows in \code{afun}
@@ -52,17 +59,19 @@ in_rows(1, 2, 3, .names = c("a", "b", "c"), .labels = c("AAA", "BBB", "CCC"))
 in_rows(.list = list(a = 1, b = 2, c = 3))
 in_rows(1, 2, .list = list(3), .names = c("a", "b", "c"))
 
-basic_table() \%>\%
+lyt <- basic_table() \%>\%
   split_cols_by("ARM") \%>\%
   analyze("AGE", afun = function(x) {
     in_rows(
        "Mean (sd)" = rcell(c(mean(x), sd(x)), format = "xx.xx (xx.xx)"),
        "Range" = rcell(range(x), format = "xx.xx - xx.xx")
     )
-  }) \%>\%
-  build_table(ex_adsl)
+  })
+
+tbl <- build_table(lyt, ex_adsl)
+tbl
 
 }
 \seealso{
-\code{analyze}
+\code{\link[=analyze]{analyze()}}
 }

@@ -8,23 +8,43 @@ tt_to_flextable(
   tt,
   paginate = FALSE,
   lpp = NULL,
+  cpp = NULL,
   ...,
   colwidths = propose_column_widths(matrix_form(tt, indent_rownames = TRUE)),
+  tf_wrap = !is.null(cpp),
+  max_width = cpp,
   total_width = 10
 )
 }
 \arguments{
-\item{tt}{TableTree (or related class). A TableTree object representing a populated table.}
+\item{tt}{TableTree (or related class). A TableTree object representing a
+populated table.}
 
-\item{paginate}{logical(1). Should \code{tt} be paginated and exported as multiple flextables. Defaults to \code{FALSE}}
+\item{paginate}{logical(1). Should \code{tt} be paginated and exported as
+multiple flextables. Defaults to \code{FALSE}}
 
 \item{lpp}{numeric. Maximum lines per page including (re)printed header and context rows}
 
+\item{cpp}{numeric(1) or NULL. Width (in characters) of the pages for
+horizontal pagination. \code{NULL} (the default) indicates no horizontal
+pagination should be done.}
+
 \item{...}{Passed on to methods or tabulation functions.}
 
-\item{colwidths}{numeric vector. Column widths for use with vertical pagination. Currently ignored.}
+\item{colwidths}{numeric vector. Column widths for use with vertical pagination.}
 
-\item{total_width}{numeric(1). Total width in inches for the resulting flextable(s). Defaults to 5.}
+\item{tf_wrap}{logical(1). Should  the texts for  title, subtitle,
+and footnotes be wrapped?}
+
+\item{max_width}{integer(1), character(1) or NULL. Width that title
+and   footer   (including   footnotes)  materials   should   be
+word-wrapped to. If NULL, it is  set to the current print width
+of the  session (\code{getOption("width")}). If set to \code{"auto"},
+the width of the table (plus any table inset) is used. Ignored
+completely if \code{tf_wrap} is \code{FALSE}.}
+
+\item{total_width}{numeric(1). Total width in inches for the resulting
+flextable(s). Defaults to 5.}
 }
 \value{
 a flextable object

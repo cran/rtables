@@ -9,10 +9,13 @@ add_colcounts(lyt, format = "(N=xx)")
 \arguments{
 \item{lyt}{layout object pre-data used for tabulation}
 
-\item{format}{FormatSpec. Format associated with this split. Formats can be declared via strings (\code{"xx.x"}) or function. In cases such as \code{analyze} calls, they can character vectors or lists of functions.}
+\item{format}{FormatSpec. Format associated with this split. Formats can be
+declared via strings (\code{"xx.x"}) or function. In cases such as
+\code{analyze} calls, they can character vectors or lists of functions.}
 }
 \value{
-A \code{PreDataTableLayouts} object suitable for passing to further layouting functions, and to \code{build_table}.
+A \code{PreDataTableLayouts} object suitable for passing to further
+layouting functions, and to \code{build_table}.
 }
 \description{
 Add the data derived column counts.
@@ -26,13 +29,14 @@ case use the \code{col_count} argument in \code{build_table} to control the coun
 displayed in the table header.
 }
 \examples{
-l <- basic_table() \%>\% split_cols_by("ARM") \%>\%
+lyt <- basic_table() \%>\% split_cols_by("ARM") \%>\%
     add_colcounts() \%>\%
     split_rows_by("RACE", split_fun = drop_split_levels) \%>\%
     analyze("AGE", afun = function(x) list(min = min(x), max = max(x)))
-l
+lyt
 
-build_table(l, DM)
+tbl <- build_table(lyt, DM)
+tbl
 
 }
 \author{

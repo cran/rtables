@@ -2,7 +2,7 @@
 
 test_that("cbind_rtables works", {
 
-    x <- rtable(c("A", "B"), rrow("row 1", 1,2), rrow("row 2", 3, 4))
+    x <- rtable(c("A", "B"), rrow("row 1", 1, 2), rrow("row 2", 3, 4))
 
     y <- rtable("C", rrow("row 1", 5), rrow("row 2", 6))
 
@@ -34,6 +34,35 @@ test_that("cbind_rtables works with 3 tables", {
 })
 
 
+## regressions for #341
+test_that("mixing NA and non-NA counts and avars is ok", {
+
+    iris2 <- iris
+    iris2$origin <- sample(c("USA", "CH", "JP"), nrow(iris), replace = TRUE)
+    iris2$manmade <- sample(c("Y", "N"), nrow(iris), replace = TRUE)
+                                        # First case: no LabelRow objects (hidden)
+
+    rtb_t <- basic_table() %>%
+        split_cols_by("manmade") %>%
+        analyze(
+            vars = colnames(iris)[1:3], afun = mean, format = "xx.x",
+            show_labels = "hidden"
+        ) %>%
+        build_table(iris2)
+
+    cinfo <- manual_cols("hiya")
+    mantab_lst <- lapply(1:3, function(i) {
+        TableTree(name = names(tree_children(rtb_t))[i],
+                  label = "",
+                  kids = list(rrow("", i)),
+                  cinfo = cinfo)
+    })
+
+    rtb_t2 <- TableTree(kids = mantab_lst, cinfo = cinfo)
+    expect_warning(res <- cbind_rtables(rtb_t, rtb_t2),
+                   "Mixture of missing and non-missing column counts")
+    expect_identical(dim(res), c(3L, 3L))
+})
 test_that("cell formats not dropped when cbinding", {
 
     tab1 <- rtable(
@@ -66,7 +95,7 @@ test_that("chk_cbindable_many works", {
     expect_true(chk_cbindable_many(list(tab1, tab1, tab1)))
     tab2 <- tab1
     top_left(tab2) <- "hiii"
-    ## topleft missmatch ok if mix of empty and single non-empty value
+    ## topleft mismatch ok if mix of empty and single non-empty value
     expect_true(chk_cbindable_many(list(tab1, tab2, tab1, tab2)))
     tab3 <- tab1
     top_left(tab3) <- "oops"
@@ -96,9 +125,9 @@ test_that("c/rbind and top-left behave", {
     tab2 <- tab
     top_left(tab2) <- "oh no!"
     mat_form <- matrix_form(tab)
-    expect_identical(mat_form$strings[1,1], top_left(tab))
+    expect_identical(mat_form$strings[1, 1], top_left(tab))
     mat_form2 <- matrix_form(tab2)
-    expect_identical(mat_form2$strings[1,1], top_left(tab2))
+    expect_identical(mat_form2$strings[1, 1], top_left(tab2))
     ## might be redundant in light of chk_cbindable_many unit tests above
     ## but its not hurting anything so just leave it
     expect_error(cbind_rtables(tab, tab2))
@@ -110,9 +139,9 @@ test_that("c/rbind and top-left behave", {
     expect_identical(tt_at_path(rbind(tab), c("rbind_root", obj_name(tab))),
                      tab)
 
-    mform <- matrix_form(cbind_rtables(tab[0,], tab[0,]))
-    expect_identical(mform$strings[1,, drop= TRUE],
-                     c("",rep("all obs", 2)))
+    mform <- matrix_form(cbind_rtables(tab[0, ], tab[0, ]))
+    expect_identical(mform$strings[1, , drop = TRUE],
+                     c("", rep("all obs", 2)))
 })
 
 ## NB: insert_rrow is now deprecated.
@@ -126,4 +155,48 @@ test_that("insert_rrow works", {
     expect_error(suppressWarnings(insert_rrow(tbl, rrow("Total xx", ""), at = 1)))
     ## this is ok cause its a LabelRow not a DataRow
     expect_silent(suppressWarnings(insert_rrow(tbl, rrow("Total xx"), at = 1)))
+})
+
+## regression test for #340
+## ensure split functions that are fully equivalent but
+## have different actual enclosing environments don't
+## cause problems with any of the column info checks
+
+test_that("equivalent split funs withs differrent environments dont' block rbinding", {
+    combodf <- tibble::tribble(
+        ~valname, ~label, ~levelcombo, ~exargs,
+        "A_B", "Arms A+B", c("A: Drug X", "B: Placebo"), list(),
+        "A_C", "Arms A+C", c("A: Drug X", "C: Combination"), list())
+
+    l1 <- basic_table(show_colcounts = TRUE) %>%
+        split_cols_by("ARM", split_fun = add_combo_levels(combodf)) %>%
+        analyze("AGE")
+
+    tab1 <- build_table(l1, DM)
+
+    l2 <- basic_table(show_colcounts = TRUE) %>%
+        split_cols_by("ARM", split_fun = add_combo_levels(combodf)) %>%
+        analyze("SEX")
+
+    tab2 <- build_table(l2, DM)
+
+    tab3 <- rbind(tab1, tab2)
+    expect_true(TRUE)
+})
+
+test_that("cbinding table with counts and with NA counts works", {
+
+    tbl <- basic_table(show_colcounts = TRUE) %>%
+    split_cols_by("ARM") %>%
+    analyze("AGE") %>%
+    build_table(DM)
+
+
+    mytab <- rtable(header = "new column", rrow(NULL, 75))
+    expect_warning({res <- cbind_rtables(tbl, mytab)},
+                   "Mixture of missing and non-missing column counts when creating column info")
+
+    mform <- matrix_form(res)
+    expect_identical(mform$strings[2, 4], "(N=129)")
+    expect_identical(mform$strings[2, 5], "")
 })

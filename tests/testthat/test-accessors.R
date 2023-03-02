@@ -34,10 +34,20 @@ test_that("various accessors work at the layout/table level", {
 
     ccounts <- col_counts(tbl)
 
+    expect_identical(col_counts(tbl, path = c("ARM", "B: Placebo", "multivars", "AGE")),
+                     ccounts[3])
+
     newccs <-  rep(7L, ncol(tbl))
     col_counts(tbl) <- newccs
 
+
+
+
     expect_identical(newccs,
+                     col_counts(tbl))
+
+    col_counts(tbl, path = c("ARM", "B: Placebo", "multivars", "BMRKR1")) <- 5L
+    expect_identical(rep(c(7L, 5L, 7L), times = c(3, 1, 2)),
                      col_counts(tbl))
 
     col_total(tbl) <- 75L
@@ -81,6 +91,8 @@ test_that("various accessors work at the layout/table level", {
     expect_identical(tt_level(tbl), 1L)
 
     tt_level(tbl) <- 2
+    expect_error({table_inset(tbl) <- -1},
+                 "invalid table_inset value")
 })
 
 test_that("Accessors for Split objects work", {
@@ -161,8 +173,8 @@ test_that("header sep setting works", {
 
     hsep_test <- function(tab, exp) {
         expect_identical(horizontal_sep(tab), exp)
-        expect_identical(horizontal_sep(tab[1:5,]), exp)
-        expect_identical(horizontal_sep(tab[,1:3]), exp)
+        expect_identical(horizontal_sep(tab[1:5, ]), exp)
+        expect_identical(horizontal_sep(tab[, 1:3]), exp)
         expect_identical(horizontal_sep(tab[1:5, 1:3]), exp)
         expect_identical(horizontal_sep(tree_children(tab)[[1]]), exp)
         TRUE

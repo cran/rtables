@@ -17,7 +17,8 @@ LabelRow(
   name = label,
   vis = !is.na(label) && nzchar(label),
   cinfo = EmptyColInfo,
-  indent_mod = 0L
+  indent_mod = 0L,
+  table_inset = 0L
 )
 
 .tablerow(
@@ -29,9 +30,11 @@ LabelRow(
   cinfo = EmptyColInfo,
   var = NA_character_,
   format = NULL,
+  na_str = NA_character_,
   klass,
   indent_mod = 0L,
-  footnotes = list()
+  footnotes = list(),
+  table_inset = 0L
 )
 
 DataRow(...)
@@ -39,17 +42,28 @@ DataRow(...)
 ContentRow(...)
 }
 \arguments{
-\item{lev}{integer. Nesting level (roughly, indentation level in practical terms).}
+\item{lev}{integer. Nesting level (roughly, indentation level in practical
+terms).}
 
-\item{label}{character(1). A label (not to be confused with the name) for the object/structure.}
+\item{label}{character(1). A label (not to be confused with the name) for the
+object/structure.}
 
-\item{name}{character(1). Name of the split/table/row being creatted. Defaults to same as the corresponding llabel, but is not required to be.}
+\item{name}{character(1). Name of the split/table/row being created. Defaults
+to same as the corresponding label, but is not required to be.}
 
 \item{vis}{logical. Should the row be visible (\code{LabelRow} only).}
 
-\item{cinfo}{InstantiatedColumnInfo (or NULL). Column structure for the object being created.}
+\item{cinfo}{InstantiatedColumnInfo (or NULL). Column structure for the
+object being created.}
 
-\item{indent_mod}{numeric. Modifier for the default indent position for the structure created by this function(subtable, content table, or row) \emph{and all of that structure's children}. Defaults to 0, which corresponds to the unmodified default behavior.}
+\item{indent_mod}{numeric. Modifier for the default indent position for the
+structure created by this function(subtable, content table, or row)
+\emph{and all of that structure's children}. Defaults to 0, which
+corresponds to the unmodified default behavior.}
+
+\item{table_inset}{numeric(1). Number of spaces to inset the table header, table
+body, referential footnotes, and main_footer, as compared to alignment
+of title, subtitle, and provenance footer. Defaults to 0 (no inset).}
 
 \item{vals}{list. cell values for the row}
 
@@ -57,11 +71,17 @@ ContentRow(...)
 
 \item{var}{string, variable name}
 
-\item{format}{FormatSpec. Format associated with this split. Formats can be declared via strings (\code{"xx.x"}) or function. In cases such as \code{analyze} calls, they can character vectors or lists of functions.}
+\item{format}{FormatSpec. Format associated with this split. Formats can be
+declared via strings (\code{"xx.x"}) or function. In cases such as
+\code{analyze} calls, they can character vectors or lists of functions.}
+
+\item{na_str}{character(1). String that should be displayed when the value of \code{x} is missing.
+Defaults to \code{"NA"}.}
 
 \item{klass}{Internal detail.}
 
-\item{footnotes}{list or NULL. Referential footnotes to be applied at current level}
+\item{footnotes}{list or NULL. Referential footnotes to be applied at current
+level}
 
 \item{\dots}{passed to shared constructor (\code{.tablerow}).}
 }

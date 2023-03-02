@@ -5,18 +5,43 @@
 \alias{table_shell_str}
 \title{Table shells}
 \usage{
-table_shell(tt, widths = NULL, col_gap = 3, hsep = default_hsep())
+table_shell(
+  tt,
+  widths = NULL,
+  col_gap = 3,
+  hsep = default_hsep(),
+  tf_wrap = FALSE,
+  max_width = NULL
+)
 
-table_shell_str(tt, widths = NULL, col_gap = 3, hsep = default_hsep())
+table_shell_str(
+  tt,
+  widths = NULL,
+  col_gap = 3,
+  hsep = default_hsep(),
+  tf_wrap = FALSE,
+  max_width = NULL
+)
 }
 \arguments{
-\item{tt}{TableTree (or related class). A TableTree object representing a populated table.}
+\item{tt}{TableTree (or related class). A TableTree object representing a
+populated table.}
 
-\item{widths}{widths of row.name and columns columns}
+\item{widths}{widths of row.name and columns}
 
 \item{col_gap}{gap between columns}
 
 \item{hsep}{character to create line separator}
+
+\item{tf_wrap}{logical(1). Should  the texts for  title, subtitle,
+and footnotes be wrapped?}
+
+\item{max_width}{integer(1), character(1) or NULL. Width that title
+and   footer   (including   footnotes)  materials   should   be
+word-wrapped to. If NULL, it is  set to the current print width
+of the  session (\code{getOption("width")}). If set to \code{"auto"},
+the width of the table (plus any table inset) is used. Ignored
+completely if \code{tf_wrap} is \code{FALSE}.}
 }
 \value{
 for \code{table_shell_str} the string representing the table shell, for \code{table_shell},
@@ -34,11 +59,11 @@ iris2 <- iris \%>\%
   mutate(group = as.factor(rep_len(c("a", "b"), length.out = n()))) \%>\%
   ungroup()
 
-l <- basic_table() \%>\%
+lyt <- basic_table() \%>\%
   split_cols_by("Species") \%>\%
   split_cols_by("group") \%>\%
   analyze(c("Sepal.Length", "Petal.Width"), afun = list_wrap_x(summary) , format = "xx.xx")
 
-tbl <- build_table(l, iris2)
+tbl <- build_table(lyt, iris2)
 table_shell(tbl)
 }

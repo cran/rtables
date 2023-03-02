@@ -1,3 +1,87 @@
+## rtables 0.6.0
+ * added `make_split_fun` function for creation of custom split functions
+ * `basic_table` now accepts `colcount_format`
+ * 2d formats are now allowed for column counts provided one element is a percent, which will be automatically set to 100%
+ * `spl_context` now includes root row in row-split contexts.
+ * Added vignette on format precedence
+ * Added vignette on split functions
+ * Added custom appearance vignette
+ * Significant overhaul of sorting vignette
+ * extended and clarified documentation
+ * `export_as_pdf` now correctly takes `margins` into account when calculating `lpp` and `cpp` from page size.
+ * exporters now pass down non-default `colwidths` values correctly
+ * `nlines` `TableRow` method (used for both rows and column label extent in paginaton) now correctly handles column spanning
+ * pagination with `verbose = TRUE` now includes original and adjusted lines-per page information
+ * `cont_n_allcols` and `cont_n_onecol` score functions now throw errors when they are applied to subtables that
+   have no content table, instead of the previously returned `NA`
+ * `sort_at_path` now emits an informative error message when score functions fail.
+ * `paginate_table` now accepts `colwidths` and paginates assuming column label and
+   cell values are wrapped to those widths.
+ * `make_row_df` now accepts `colwidths` and calculates row extents assuming cell values
+   are wrapped to those widths
+ * `nlines` `TableRow` method now uses provided `colwidths` to assume cell-value wrapping
+ * `export_to_txt` now automatically paginates when any form of page dimension is provided
+   (previously the default was unconditionally not paginating).
+ * Versioned dependency on `formatters` increased to `>=0.4.0`
+ 
+## rtables 0.5.3
+ * `[<-` now treats character `i` and `j` values as paths, the same as `[` always has.
+ * `[<-` `CellValue` method now preserves CellValue attributes (e.g., format)
+ * More detailed subsetting and modification vignette
+ * `nlines` methods now accept both `colwidths` and `max_width`
+ * `max_width` is now used during pagination to determine lines taken up by referential footnotes
+ * `make_col_df` now accepts `colwidths` argument, and can be called directly on `InstantiatedColumnInfo` objects
+ * versioned dependency on `formatters` increase to `>0.3.3.12`
+ * wordwrapping title/footer materials no longer fails in the presence of `""` values.
+ * versioned dependency on `formatters` increase to `>0.3.3.11`
+ * `paginate_table` now accepts `tf_wrap` and `max_width` and respects title/footer word wrapping when present
+ * export functions now accepts `tf_wrap` and `max_width` and use them in both pagination (when turned on) *and* `toString` when used (pdf, txt exporters).
+ * versioned dependency on `formatters` increased to `>0.3.3.10`
+ * `export_as_pdf` now accepts standard page/font size parameters
+ * original parameters (`width`, `height`, `fontsize` are soft deprecated (no warning) and 
+   will be fully deprecated and then removed in the future.
+ * `toString` method for `VTableTree` now accepts `tf_wrap` and `max_width`
+ * `export_as_txt` and `export_as_pdf` now accept `cpp`, as well as `tf_wrap` and `max_width` and
+    default to `tf_wrap` being on and `max_width = cpp` when `cpp` is non-NULL.
+ * `basic_table` now accepts `inset` argument for declaring table inset
+ * Table and Layout object classes now have a `table_inset` slot, with accessor functions.
+ * `matrix_form` method for `VTableTree` sets `table_inset` value
+ * Increase versioned dependency on `formatters` to `>0.3.3.5` for `table_inset` support
+ * Use `exact=TRUE` in all calls to `attr` within access functions
+ * Increase versioned dependency on `formatters` to `>0.3.3.4`
+ * layouting instructions now accept na_str argument, which specifies na string with the same
+   inheritance rules as formats
+ * (pre-data) Split and (post tabulation) Table/row S4 classes now carry around na_str information
+ * Increase versioned dependency on `formatters` to `>= 0.3.3.3` for support of na_strs with `NA_character_` values
+ * `paginate_table` now takes page dimension and font information and uses `formatters::page_lcpp` to
+   calculate `lpp` and `cpp` automatically when those are provided.
+ * Increase versioned dependency on `formatters` to `>= 0.3.3.2` for `page_lcpp`
+
+## rtables 0.5.2
+ * `paginate_table` now accepts `cpp` and will perform vertical pagination when it is non-null
+ * `vpaginate_table` is now deprecated
+ * Increased versioned dependency on `formatters` to `>=0.3.2.4`
+
+## rtables 0.5.1.5
+ * Support for section dividers (`section_div` argument in `split_rows_by*` function)
+ * Updated versioned dependency on `formatters` to `>=0.3.2.3`
+ * Equivalent split functions with different enclosing environments (e.g., 2 identical calls to `add_combo_levels` #340) no longer block `rbind`ing
+ * Fixed various documentation bugs where description section was being added to header.
+ 
+## rtables 0.5.1.4
+ * empty level check for splitting variables reinstated.
+
+## rtables 0.5.1.3
+ * Throw informative error messages when custom analysis, content or split functions fail (#329)
+
+## rtables 0.5.1.2
+ * empty level check for splitting variables temporarily removed. It is very likely to be reinstated in a future release.
+
+## rtables 0.5.1.1
+ * `col_counts` getter and setter now accept `path` argument.
+ * empty levels of a splitting variable now result in an informative error message (character and factor cases).
+ * fixed bug in handling of column extra arguments that was preventing cbinding tables from working correctly (#324)
+ 
 ## rtables 0.5.1
  * empty factor levels are now *not* dropped for column splits when ref_group is set (#323)
  * `linesep` argument to `toString` and related functions renamed to `hsep`
@@ -39,7 +123,7 @@
  * support for adding footnotes to existing table via `fnotes_at_path<-` function
  * `trim_levels_in_group` now trims empty levels of outer (split) variable by default
  * `value_at` and `cell_values` now work for tablerow objects
- * Fixed `as_html` bug in multvar split columns case 
+ * Fixed `as_html` bug in multivar split columns case 
  * Fixed pagination off-by-one error
 
 
@@ -94,12 +178,12 @@ tables in the context of clinical trials.
 
 ## rtables 0.3.2.17.9045
 
-* Tabulation machinery no longer removes NAs mandatorily in some cases, including mutlivar column splits
+* Tabulation machinery no longer removes NAs mandatorily in some cases, including multivar column splits
 * `analyze_colvars`'s `inclNAs` argument now respected.
 
 ## rtables 0.3.2.17.9044
 
-* Fix indent modifier propogation during tabulation
+* Fix indent modifier propagation during tabulation
 * Fix indent calculation in `make_pagdf`
 * Add significant testing to ensure `make_pagdf` indent calculation remains correct
 
@@ -110,7 +194,7 @@ tables in the context of clinical trials.
 ## rtables 0.3.2.17.9042
 
 * Fix naming/pathing for columns in multivar case (split itself now has default name "multivars")
-* Fix labelling bug when same variable appears multiple times in MultiVarSplit with different associated levels
+* Fix labeling bug when same variable appears multiple times in MultiVarSplit with different associated levels
 
 
 ## rtables 0.3.2.17.9041
@@ -124,7 +208,7 @@ tables in the context of clinical trials.
 
 ## rtables 0.3.2.17.9039
 
-* Fix bug in display of column information when column structure is not symetric, as with recursive cbinds.
+* Fix bug in display of column information when column structure is not symmetric, as with recursive cbinds.
 
 ## rtables 0.3.2.17.9036
 
@@ -142,7 +226,7 @@ tables in the context of clinical trials.
 ## rtables 0.3.2.17.9034
 
 * Fix internal `value_formats` accessor so it operates on CellValues rather than the raw contained values (thus always returning NULL)
-* `rrow` constructor no longer interpretes cell formats a row format when they are the same across all cells. Fixes bug in  "correct way" code discussed in #112
+* `rrow` constructor no longer interprets cell formats a row format when they are the same across all cells. Fixes bug in  "correct way" code discussed in #112
 
 ## rtables 0.3.2.17.9033
 
@@ -154,7 +238,7 @@ tables in the context of clinical trials.
 
 ## rtables 0.3.2.17.9029
 
-* Fix issue underlying spurious length-missmatch warning in some cases when using `analyze_colvars`
+* Fix issue underlying spurious length-mismatch warning in some cases when using `analyze_colvars`
 
 ## rtables 0.3.2.17.9028
 

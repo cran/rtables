@@ -1,5 +1,5 @@
 ## ---- echo=FALSE--------------------------------------------------------------
-knitr::opts_chunk$set(comment = "")
+knitr::opts_chunk$set(comment = "#")
 
 ## ---- message=FALSE-----------------------------------------------------------
 library(rtables)
@@ -18,76 +18,94 @@ df <- tibble(
   age = rchisq(n, 30) + 10
 ) %>% mutate(
   weight = 35 * rnorm(n, sd = .5) + ifelse(gender == "Female", 140, 180)
-) 
+)
 
 head(df)
 
 ## ---- echo=FALSE--------------------------------------------------------------
-basic_table() %>%
+lyt <- basic_table(show_colcounts = TRUE) %>%
   split_cols_by("arm") %>%
   split_cols_by("gender") %>%
-  add_colcounts() %>%
   split_rows_by("country") %>%
   summarize_row_groups() %>%
   split_rows_by("handed") %>%
   summarize_row_groups() %>%
-  analyze("age", afun = mean, format = "xx.x") %>%
-  build_table(df)
+  analyze("age", afun = mean, format = "xx.x")
+
+tbl <- build_table(lyt, df)
+tbl
 
 ## -----------------------------------------------------------------------------
-l <- basic_table() %>%
+lyt <- basic_table() %>%
   analyze("age", mean, format = "xx.x")
 
-build_table(l, df)
+tbl <- build_table(lyt, df)
+tbl
 
 ## -----------------------------------------------------------------------------
-l
+lyt
 
 ## -----------------------------------------------------------------------------
-l <- basic_table() %>%
+lyt <- basic_table() %>%
   split_cols_by("arm") %>%
   analyze("age", afun = mean, format = "xx.x")
 
-build_table(l, df)
+tbl <- build_table(lyt, df)
+tbl
 
 ## -----------------------------------------------------------------------------
-l <- basic_table() %>%
+lyt <- basic_table() %>%
   split_cols_by("arm") %>%
   split_cols_by("gender") %>%
   analyze("age", afun = mean, format = "xx.x")
 
-build_table(l, df)
+tbl <- build_table(lyt, df)
+tbl
 
 ## -----------------------------------------------------------------------------
-l <- basic_table() %>%
+lyt <- basic_table() %>%
   split_cols_by("arm") %>%
   split_cols_by("gender") %>%
   split_rows_by("country") %>%
   analyze("age", afun = mean, format = "xx.x")
 
-build_table(l, df)
+tbl <- build_table(lyt, df)
+tbl
 
 ## -----------------------------------------------------------------------------
 mean(df$age[df$country == "CAN" & df$arm == "Arm A" & df$gender == "Female"])
 
 ## -----------------------------------------------------------------------------
-l <- basic_table() %>%
+lyt <- basic_table() %>%
+  split_cols_by("arm") %>%
+  split_cols_by("gender") %>%
+  split_rows_by("country", page_by = TRUE) %>%
+  split_rows_by("handed") %>%  
+  analyze("age", afun = mean, format = "xx.x")
+
+tbl <- build_table(lyt, df)
+cat(export_as_txt(tbl, page_type = "letter",
+                  page_break = "\n\n~~~~~~ Page Break ~~~~~~\n\n"))
+
+## -----------------------------------------------------------------------------
+lyt <- basic_table() %>%
   split_cols_by("arm") %>%
   split_cols_by("gender") %>%
   split_rows_by("country") %>%
   summarize_row_groups() %>%
   analyze("age", afun = mean, format = "xx.x")
 
-build_table(l, df)
+tbl <- build_table(lyt, df)
+tbl
 
 ## -----------------------------------------------------------------------------
 df_cell <- subset(df, df$country == "CAN" & df$arm == "Arm A" & df$gender == "Female")
 df_col_1 <- subset(df, df$arm == "Arm A" & df$gender == "Female")
 
-c(count = nrow(df_cell), percentage = nrow(df_cell)/nrow(df_col_1))
+c(count = nrow(df_cell), percentage = nrow(df_cell) / nrow(df_col_1))
 
 ## -----------------------------------------------------------------------------
-l <- basic_table() %>%
+lyt <- basic_table() %>%
   split_cols_by("arm") %>%
   split_cols_by("gender") %>%
   split_rows_by("country") %>%
@@ -95,10 +113,11 @@ l <- basic_table() %>%
   split_rows_by("handed") %>%
   analyze("age", afun = mean, format = "xx.x")
 
-build_table(l, df)
+tbl <- build_table(lyt, df)
+tbl
 
 ## -----------------------------------------------------------------------------
-l <- basic_table() %>%
+lyt <- basic_table() %>%
   split_cols_by("arm") %>%
   split_cols_by("gender") %>%
   split_rows_by("country") %>%
@@ -107,5 +126,30 @@ l <- basic_table() %>%
   summarize_row_groups() %>%
   analyze("age", afun = mean, format = "xx.x")
 
-build_table(l, df)
+tbl <- build_table(lyt, df)
+tbl
+
+## -----------------------------------------------------------------------------
+table_structure(tbl)
+
+## -----------------------------------------------------------------------------
+table_structure(tbl, detail = "row")
+
+## -----------------------------------------------------------------------------
+make_row_df(tbl)[,c("label", "name", "abs_rownumber", "path", "node_class")]
+
+## -----------------------------------------------------------------------------
+make_row_df(tbl, visible_only = FALSE)[,c("label", "name", "abs_rownumber", "path", "node_class")]
+
+## -----------------------------------------------------------------------------
+make_col_df(tbl)
+
+## -----------------------------------------------------------------------------
+make_col_df(tbl, visible_only = FALSE)
+
+## -----------------------------------------------------------------------------
+row_paths_summary(tbl)
+
+## -----------------------------------------------------------------------------
+col_paths_summary(tbl)
 

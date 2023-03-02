@@ -9,7 +9,9 @@ basic_table(
   subtitles = character(),
   main_footer = character(),
   prov_footer = character(),
-  show_colcounts = FALSE
+  show_colcounts = FALSE,
+  colcount_format = "(N=xx)",
+  inset = 0L
 )
 }
 \arguments{
@@ -19,31 +21,65 @@ basic_table(
 
 \item{main_footer}{character. Main global (non-referential) footer materials.}
 
-\item{prov_footer}{character. Provenance-related global footer materials. Generally should not be modified by hand.}
+\item{prov_footer}{character. Provenance-related global footer materials.
+Generally should not be modified by hand.}
 
-\item{show_colcounts}{logical(1). Should column counts be displayed in the resulting table
-when this layout is applied to data}
+\item{show_colcounts}{logical(1). Should column counts be displayed in the
+resulting table when this layout is applied to data}
+
+\item{colcount_format}{character(1). Format for use when displaying the
+column counts. Must be 1d, or 2d where one component is a percent. See
+details.}
+
+\item{inset}{numeric(1). Number of spaces to inset the table header, table
+body, referential footnotes, and main_footer, as compared to alignment
+of title, subtitle, and provenance footer. Defaults to 0 (no inset).}
 }
 \value{
-A \code{PreDataTableLayouts} object suitable for passing to further layouting functions, and to \code{build_table}.
+A \code{PreDataTableLayouts} object suitable for passing to further
+layouting functions, and to \code{build_table}.
 }
 \description{
 Every layout must start with a basic table.
+}
+\details{
+\code{colcount_format} is ignored if \code{show_colcounts} is \code{FALSE} (the default).
+When \code{show_colcounts} is \code{TRUE}, and \code{colcount_format} is 2-dimensional with
+a percent component, the value component for the percent is always populated
+with \code{1} (ie 100\%). 1d formats are used to render the counts exactly as they
+normally would be, while 2d formats which don't include a percent, and all 3d
+formats result in an error. Formats in the form of functions are not supported for
+colcount format. See \code{\link[formatters]{list_valid_format_labels}} for
+the list of valid format labels to select from.
+}
+\note{
+Because percent components in \code{colcount_format} are \emph{always}
+populated with the value 1, we can get arguably strange results, such as
+that individual arm columns and a combined "all patients" column all
+list "100\%" as their percentage, even though the individual arm columns
+represent strict subsets of the all patients column.
 }
 \examples{
 
 lyt <- basic_table() \%>\%
   analyze("AGE", afun = mean)
 
-build_table(lyt, DM)
+tbl <- build_table(lyt, DM)
+tbl
 
-
-lyt <- basic_table(title = "Title of table", subtitles = c("a number", "of subtitles"),
+lyt2 <- basic_table(title = "Title of table",
+                   subtitles = c("a number", "of subtitles"),
                    main_footer = "test footer",
-                   prov_footer = paste("test.R program, executed at", Sys.time())) \%>\%
+                   prov_footer = paste("test.R program, executed at",
+                                       Sys.time())) \%>\%
   split_cols_by("ARM") \%>\%
   analyze("AGE", mean)
 
-build_table(lyt, DM)
+tbl2 <- build_table(lyt2, DM)
+tbl2
+
+lyt3 <- basic_table(show_colcounts = TRUE,
+                    colcount_format = "xx. (xx.\%)") \%>\%
+  split_cols_by("ARM")
 
 }

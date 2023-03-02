@@ -1,5 +1,5 @@
 ## ---- echo=FALSE--------------------------------------------------------------
-knitr::opts_chunk$set(comment = "")
+knitr::opts_chunk$set(comment = "#")
 
 ## ---- message=FALSE-----------------------------------------------------------
 library(rtables)

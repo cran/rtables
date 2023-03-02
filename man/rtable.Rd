@@ -5,25 +5,33 @@
 \alias{rtablel}
 \title{Create a Table}
 \usage{
-rtable(header, ..., format = NULL, hsep = default_hsep())
+rtable(header, ..., format = NULL, hsep = default_hsep(), inset = 0L)
 
-rtablel(header, ..., format = NULL, hsep = default_hsep())
+rtablel(header, ..., format = NULL, hsep = default_hsep(), inset = 0L)
 }
 \arguments{
-\item{header}{Information defining the header (column strucure) of the table. This can be as row objects (legacy), character vectors or a \code{InstantiatedColumnInfo} object.}
+\item{header}{Information defining the header (column structure) of the table.
+This can be as row objects (legacy), character vectors or a
+\code{InstantiatedColumnInfo} object.}
 
 \item{\dots}{Rows to place in the table.}
 
-\item{format}{if \code{FUN} does not return a formatted \code{\link{rcell}}
-then the \code{format} is applied}
+\item{format}{character(1) or function. The format label (string) or
+formatter function to apply to the cell values passed via \code{...}. See
+\code{\link[formatters]{list_valid_format_labels}} for currently supported
+format labels.}
 
-\item{hsep}{character(1). Set of character(s) to be repeated as the separator between
-the header and body of the table when rendered as text. Defaults to a connected horrizontal
-line (unicode 2014) in locals that use a UTF charset, and to \code{-} elsewhere (with a
-once per session warning).}
+\item{hsep}{character(1). Set of character(s) to be repeated as the separator
+between the header and body of the table when rendered as text. Defaults to
+a connected horizontal line (unicode 2014) in locals that use a UTF
+charset, and to \code{-} elsewhere (with a once per session warning).}
+
+\item{inset}{integer(1). The table inset for the row or table being
+constructed. See \code{\link[formatters]{table_inset}}.}
 }
 \value{
-a formal table object of the appropriate type (\code{ElementaryTable} or \code{TableTree})
+a formal table object of the appropriate type (\code{ElementaryTable}
+or \code{TableTree})
 }
 \description{
 Create a Table
@@ -112,9 +120,9 @@ tbl2
 
 }
 \seealso{
-Other compatability: 
+Other compatibility: 
 \code{\link{rheader}()},
 \code{\link{rrowl}()},
 \code{\link{rrow}()}
 }
-\concept{compatability}
+\concept{compatibility}

@@ -2,29 +2,20 @@
 % Please edit documentation in R/tt_pos_and_access.R
 \name{tt_at_path}
 \alias{tt_at_path}
-\alias{tt_at_path,VTableTree-method}
 \alias{tt_at_path<-}
-\alias{tt_at_path<-,VTableTree,ANY,VTableTree-method}
-\alias{tt_at_path<-,VTableTree,ANY,NULL-method}
-\alias{tt_at_path<-,VTableTree,ANY,TableRow-method}
 \title{Get or set table elements at specified path}
 \usage{
 tt_at_path(tt, path, ...)
 
-\S4method{tt_at_path}{VTableTree}(tt, path, ...)
-
 tt_at_path(tt, path, ...) <- value
-
-\S4method{tt_at_path}{VTableTree,ANY,VTableTree}(tt, path, ...) <- value
-
-\S4method{tt_at_path}{VTableTree,ANY,`NULL`}(tt, path, ...) <- value
-
-\S4method{tt_at_path}{VTableTree,ANY,TableRow}(tt, path, ...) <- value
 }
 \arguments{
-\item{tt}{TableTree (or related class). A TableTree object representing a populated table.}
+\item{tt}{TableTree (or related class). A TableTree object representing a
+populated table.}
 
-\item{path}{character. A vector path for a position within the structure of a tabletree. Each element represents a subsequent choice amongst the children of the previous choice.}
+\item{path}{character. A vector path for a position within the structure of a
+tabletree. Each element represents a subsequent choice amongst the children
+of the previous choice.}
 
 \item{\dots}{unused.}
 
@@ -32,4 +23,35 @@ tt_at_path(tt, path, ...) <- value
 }
 \description{
 Get or set table elements at specified path
+}
+\note{
+Setting \code{NULL} at a defined path removes the corresponding sub table.
+}
+\examples{
+# Accessing sub table.
+lyt <- basic_table() \%>\%
+   split_cols_by("ARM") \%>\%
+   split_rows_by("SEX") \%>\%
+   split_rows_by("BMRKR2") \%>\%
+   analyze("AGE")
+
+tbl <- build_table(lyt, ex_adsl) \%>\% prune_table()
+sub_tbl <- tt_at_path(tbl, path = c("SEX", "F", "BMRKR2"))
+
+# Removing sub table.
+tbl2 <- tbl
+tt_at_path(tbl2, path = c("SEX", "F")) <- NULL
+tbl2
+
+# Setting sub table.
+lyt3 <- basic_table() \%>\%
+   split_cols_by("ARM") \%>\%
+   split_rows_by("SEX") \%>\%
+   analyze("BMRKR2")
+
+tbl3 <- build_table(lyt3, ex_adsl) \%>\% prune_table()
+
+tt_at_path(tbl3, path = c("SEX", "F", "BMRKR2")) <- sub_tbl
+tbl3
+
 }

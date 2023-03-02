@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Gabriel Becker" />
+
+<meta name="date" content="2023-03-02" />
+
+<title>Controlling Splitting Behavior</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Controlling Splitting Behavior</h1>
+<h4 class="author">Gabriel Becker</h4>
+<h4 class="date">2023-03-02</h4>
+
+
+
+<div id="controlling-facet-levels" class="section level1">
+<h1>Controlling Facet Levels</h1>
+<div id="provided-functions" class="section level2">
+<h2>Provided Functions</h2>
+<p>By default, <code>split_*_by(varname, ...)</code> generates a facet
+for each <em>level</em> the variable <code>varname</code> takes in the
+data - including unobserved ones in the <code>factor</code> case. This
+behavior can be customized in various ways.</p>
+<p>The most straightforward way to customize which facets are generated
+by a split is with one of the split functions or split function families
+provided by <code>rtables</code>.</p>
+<p>These predefined split functions and function factories implement
+commonly desired customization patterns of splitting behavior (i.e.,
+faceting behavior). They include:</p>
+<ul>
+<li><code>remove_split_levels</code> - remove specified levels from the
+data for facet generation.</li>
+<li><code>keep_split_levels</code> - keep only specified levels in the
+data for facet generation (removing all others).</li>
+<li><code>drop_split_levels</code> - drop levels that are unobserved
+<em>within the data being split</em>, i.e., associated with the parent
+facet.</li>
+<li><code>reorder_split_levels</code> - reorder the levels (and thus the
+generated facets) to the specified order.</li>
+<li><code>trim_levels_in_group</code> - drop unobserved levels <em>of
+another variable</em> independently within the data associated with each
+facet generated by the current split.</li>
+<li><code>add_overall_level</code>, <code>add_combo_levels</code> - add
+additional “virtual” levels which combine two or more levels of the
+variable being split. See the following section.</li>
+<li><code>trim_levels_to_map</code> - trim the levels of multiple
+variables to a pre-specified set of value combinations. See the
+following section.</li>
+</ul>
+<p>The first four of these are fairly self-describing and for brevity,
+we refer our readers to <code>?split_funcs</code> for details including
+working examples.</p>
+</div>
+<div id="controlling-combinations-of-levels-across-multiple-variables" class="section level2">
+<h2>Controlling Combinations of Levels Across Multiple Variables</h2>
+<p>Often with nested splitting involving multiple variables, the values
+of the variables in question are <em>logically nested</em>; meaning that
+certain values of the inner variable are only coherent in combination
+with a specific value or values of the outer variable.</p>
+<p>As an example, suppose we have a variable <code>vehicle_class</code>,
+which can take the values <code>&quot;automobile&quot;</code>, and
+<code>&quot;boat&quot;</code>, and a variable <code>vehicle_type</code>, which can
+take the values <code>&quot;car&quot;</code>, <code>&quot;truck&quot;</code>,
+<code>&quot;suv&quot;</code>,<code>&quot;sailboat&quot;</code>, and
+<code>&quot;cruiseliner&quot;</code>. The combination (<code>&quot;automobile&quot;</code>,
+<code>&quot;cruiseliner&quot;</code>) does not make sense and will never occur in
+any (correctly cleaned) data set; nor does the combination
+(<code>&quot;boat&quot;</code>, <code>&quot;truck&quot;</code>).</p>
+<p>We will showcase strategies to deal with this in the next sections
+using the following artificial data:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">0</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>levs_type <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;car&quot;</span>, <span class="st">&quot;truck&quot;</span>, <span class="st">&quot;suv&quot;</span>, <span class="st">&quot;sailboat&quot;</span>, <span class="st">&quot;cruiseliner&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>vclass <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;auto&quot;</span>, <span class="st">&quot;boat&quot;</span>), <span class="dv">1000</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>auto_inds <span class="ot">&lt;-</span> <span class="fu">which</span>(vclass <span class="sc">==</span> <span class="st">&quot;auto&quot;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>vtype <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA_character_</span>, <span class="dv">1000</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>vtype[auto_inds] <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;car&quot;</span>, <span class="st">&quot;truck&quot;</span>), <span class="do">## suv missing on purpose</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">length</span>(auto_inds),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>vtype[<span class="sc">-</span>auto_inds] <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;sailboat&quot;</span>, <span class="st">&quot;cruiseliner&quot;</span>),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">1000</span> <span class="sc">-</span> <span class="fu">length</span>(auto_inds),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                            <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>vehic_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">vehicle_class =</span> <span class="fu">factor</span>(vclass),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                         <span class="at">vehicle_type =</span> <span class="fu">factor</span>(vtype, <span class="at">levels =</span> levs_type),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                         <span class="at">color =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;white&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="dv">1000</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">prob =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                         <span class="at">cost =</span> <span class="fu">ifelse</span>(vclass <span class="sc">==</span> <span class="st">&quot;boat&quot;</span>, <span class="fu">rnorm</span>(<span class="dv">1000</span>, <span class="dv">100000</span>, <span class="at">sd =</span> <span class="dv">5000</span>),</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">rnorm</span>(<span class="dv">1000</span>, <span class="dv">40000</span>, <span class="at">sd =</span> <span class="dv">5000</span>)))</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(vehic_data)</span></code></pre></div>
+<pre><code>##   vehicle_class vehicle_type color      cost
+## 1          boat     sailboat black 100393.81
+## 2          auto          car white  38150.17
+## 3          boat     sailboat white  98696.13
+## 4          auto        truck white  37677.16
+## 5          auto        truck black  38489.27
+## 6          boat  cruiseliner black 108709.72</code></pre>
+<div id="trim_levels_in_group" class="section level3">
+<h3><code>trim_levels_in_group</code></h3>
+<p>The <code>trim_levels_in_group</code> split function factory creates
+split functions which deal with this issue empirically; any combination
+which <em>is observed in the data being tabulated</em> will appear as
+nested facets within the table, while those that do not, will not.</p>
+<p>If we use default level-based faceting, we get several logically
+incoherent cells within our table:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt, vehic_data)</span></code></pre></div>
+<pre><code>##                   black      white        red   
+## ————————————————————————————————————————————————
+## auto                                            
+##   car                                           
+##     Mean        40431.92    40518.92   38713.14 
+##   truck                                         
+##     Mean        40061.70    40635.74   40024.41 
+##   suv                                           
+##     Mean           NA          NA         NA    
+##   sailboat                                      
+##     Mean           NA          NA         NA    
+##   cruiseliner                                   
+##     Mean           NA          NA         NA    
+## boat                                            
+##   car                                           
+##     Mean           NA          NA         NA    
+##   truck                                         
+##     Mean           NA          NA         NA    
+##   suv                                           
+##     Mean           NA          NA         NA    
+##   sailboat                                      
+##     Mean        99349.69    99996.54   101865.73
+##   cruiseliner                                   
+##     Mean        100212.00   99340.25   100363.52</code></pre>
+<p>This is obviously not the table we want, as the majority of its space
+is taken up by meaningless combinations. If we use
+<code>trim_levels_in_group</code> to trim the levels of
+<code>vehicle_type</code> separately within each level of
+<code>vehicle_class</code>, we get a table which only has meaningful
+combinations:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">trim_levels_in_group</span>(<span class="st">&quot;vehicle_type&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt2, vehic_data)</span></code></pre></div>
+<pre><code>##                   black      white        red   
+## ————————————————————————————————————————————————
+## auto                                            
+##   car                                           
+##     Mean        40431.92    40518.92   38713.14 
+##   truck                                         
+##     Mean        40061.70    40635.74   40024.41 
+## boat                                            
+##   sailboat                                      
+##     Mean        99349.69    99996.54   101865.73
+##   cruiseliner                                   
+##     Mean        100212.00   99340.25   100363.52</code></pre>
+<p>Note, however, that it does not contain <em>all</em> meaningful
+combinations, only those that were actually observed in our data; which
+<em>happens</em> to not include the perfectly valid <code>&quot;auto&quot;</code>,
+<code>&quot;suv&quot;</code> combination.</p>
+<p>To restrict level combinations to those which are valid
+<em>regardless of whether the combination was observed</em>, we must use
+<code>trim_levels_to_map()</code> instead.</p>
+</div>
+<div id="trim_levels_to_map" class="section level3">
+<h3><code>trim_levels_to_map</code></h3>
+<p><code>trim_levels_to_map</code> is similar to
+<code>trim_levels_in_group</code> in that its purpose is to avoid
+combinatorial explosion when nesting splitting with logically nested
+variables. Unlike its sibling function, however, with
+<code>trim_levels_to_map</code> we define the exact set of allowed
+combinations <em>a priori</em>, and that exact set of combinations is
+produced in the resulting table, regardless of whether they are observed
+or not.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>map <span class="ot">&lt;-</span> <span class="fu">tribble</span>(<span class="sc">~</span>vehicle_class, <span class="sc">~</span>vehicle_type,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;auto&quot;</span>,         <span class="st">&quot;truck&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;auto&quot;</span>,         <span class="st">&quot;suv&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;auto&quot;</span>,         <span class="st">&quot;car&quot;</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;boat&quot;</span>,         <span class="st">&quot;sailboat&quot;</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;boat&quot;</span>,         <span class="st">&quot;cruiseliner&quot;</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt3, vehic_data)</span></code></pre></div>
+<pre><code>##                   black      white        red   
+## ————————————————————————————————————————————————
+## auto                                            
+##   car                                           
+##     Mean        40431.92    40518.92   38713.14 
+##   truck                                         
+##     Mean        40061.70    40635.74   40024.41 
+##   suv                                           
+##     Mean           NA          NA         NA    
+## boat                                            
+##   sailboat                                      
+##     Mean        99349.69    99996.54   101865.73
+##   cruiseliner                                   
+##     Mean        100212.00   99340.25   100363.52</code></pre>
+<p>Now we see that the <code>&quot;auto&quot;</code>, <code>&quot;suv&quot;</code>
+combination is again present, even though it is populated with
+<code>NA</code>s (because there is no data in that category), but the
+logically invalid combinations are still absent.</p>
+</div>
+</div>
+<div id="combining-levels" class="section level2">
+<h2>Combining Levels</h2>
+<p>Another very common manipulation of faceting in a table context is
+the introduction of combination levels that are not explicitly modeled
+in the data. Most often, this involves the addition of an “overall”
+category, but in both principle and practice it can involve any
+arbitrary combination of levels.</p>
+<p><code>rtables</code> explicitly supports this via the
+<code>add_overall_level</code> (for the all case) and
+<code>add_combo_levels</code> split function factories.</p>
+<div id="add_overall_level" class="section level3">
+<h3><code>add_overall_level</code></h3>
+<p><code>add_overall_level</code> accepts <code>valname</code> which is
+the name of the new level, as well as <code>label</code>, and
+<code>first</code> (whether it should come first, if <code>TRUE</code>,
+or last, if <code>FALSE</code>, in the ordering).</p>
+<p>Building further on our arbitrary vehicles table, we can use this to
+create an “all colors” category:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lyt4 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">add_overall_level</span>(<span class="st">&quot;allcolors&quot;</span>, <span class="at">label =</span> <span class="st">&quot;All Colors&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt4, vehic_data)</span></code></pre></div>
+<pre><code>##                 All Colors     black      white        red   
+##                  (N=1000)     (N=521)    (N=251)     (N=228) 
+## —————————————————————————————————————————————————————————————
+## auto                                                         
+##   car                                                        
+##     Mean         40095.49    40431.92    40518.92   38713.14 
+##   truck                                                      
+##     Mean         40194.68    40061.70    40635.74   40024.41 
+##   suv                                                        
+##     Mean            NA          NA          NA         NA    
+## boat                                                         
+##   sailboat                                                   
+##     Mean        100133.22    99349.69    99996.54   101865.73
+##   cruiseliner                                                
+##     Mean        100036.76    100212.00   99340.25   100363.52</code></pre>
+<p>With the column counts turned on, we can see that the “All Colors”
+column encompasses the full 1000 (completely fake) vehicles in our data
+set.</p>
+<p>To add more arbitrary combinations, we use
+<code>add_combo_levels</code>.</p>
+</div>
+<div id="add_combo_levels" class="section level3">
+<h3><code>add_combo_levels</code></h3>
+<p><code>add_combo_levels</code> allows us to add one or more arbitrary
+combination levels to the faceting structure of our table.</p>
+<p>We do this by defining a <em>combination data.frame</em> which
+describes the levels we want to add. A combination
+<code>data.frame</code> has the following columns and one row for each
+combination to add:</p>
+<ul>
+<li><code>valname</code> - string indicating the name of the value,
+which will appear in paths.</li>
+<li><code>label</code> - a string indicating the label which should be
+displayed when rendering.</li>
+<li><code>levelcombo</code> - character vector of the individual levels
+to be combined in this combination level.</li>
+<li><code>exargs</code> - a list (usually <code>list()</code>) of extra
+arguments which should be passed to analysis and content functions when
+tabulated within this column or row.</li>
+</ul>
+<p>Suppose we wanted combinations levels for all non-white colors, and
+for white and black colors. We do this like so:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>combodf <span class="ot">&lt;-</span> <span class="fu">tribble</span>(<span class="sc">~</span>valname,    <span class="sc">~</span>label,            <span class="sc">~</span>levelcombo,         <span class="sc">~</span>exargs,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;non-white&quot;</span>, <span class="st">&quot;Non-White&quot;</span>,       <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>),   <span class="fu">list</span>(),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;blackwhite&quot;</span>, <span class="st">&quot;Black or White&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;white&quot;</span>), <span class="fu">list</span>())</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>lyt5 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>, <span class="at">split_fun =</span> <span class="fu">add_combo_levels</span>(combodf)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt5, vehic_data)</span></code></pre></div>
+<pre><code>##                   black      white        red      Non-White   Black or White
+##                  (N=521)    (N=251)     (N=228)     (N=749)       (N=772)    
+## —————————————————————————————————————————————————————————————————————————————
+## auto                                                                         
+##   car                                                                        
+##     Mean        40431.92    40518.92   38713.14    39944.93       40460.77   
+##   truck                                                                      
+##     Mean        40061.70    40635.74   40024.41    40050.66       40243.57   
+##   suv                                                                        
+##     Mean           NA          NA         NA          NA             NA      
+## boat                                                                         
+##   sailboat                                                                   
+##     Mean        99349.69    99996.54   101865.73   100179.72      99567.50   
+##   cruiseliner                                                                
+##     Mean        100212.00   99340.25   100363.52   100258.56      99937.47</code></pre>
+</div>
+</div>
+</div>
+<div id="fully-customizing-split-facet-behavior" class="section level1">
+<h1>Fully Customizing Split (Facet) Behavior</h1>
+<p>Beyond the ability to select common splitting customizations from the
+split functions and split function factories <code>rtables</code>
+provides, we can also fully customize every aspect of splitting behavior
+by creating our own split functions. While it is possible to do so by
+hand, the primary way we do this is via the
+<code>make_split_fun()</code> function, which accepts functions
+implementing different component behaviors and combines them into a
+split function which can be used in a layout.</p>
+<p>Splitting, or faceting as it is done in <code>rtables</code>, can be
+thought of as the combination of 3 steps:</p>
+<ol style="list-style-type: decimal">
+<li>preprocessing - transformation of the incoming data which will be
+faceted</li>
+</ol>
+<ul>
+<li>e.g., dropping unused factor levels, etc.</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>splitting - mapping the incoming data to a set of 1 or more subsets
+representing individual facets.</li>
+<li>postprocessing - operations on the facets - e.g., combining them,
+removing them, etc.</li>
+</ol>
+<p>The <code>make_split_fun()</code> function allows us to specify
+custom behaviors for each of these steps independently when defining
+custom splitting behavior via the <code>pre</code>,
+<code>core_split</code>, and <code>post</code> arguments, which dictate
+the above steps, respectively.</p>
+<p>The <code>pre</code> argument accepts zero or more pre-processing
+functions, which must accept: <code>df</code>, <code>spl</code>,
+<code>vals</code>, <code>labels</code>, and can optionally accept
+<code>.spl_context</code>. They then manipulate <code>df</code> (the
+incoming data for the split) and return a modified data.frame. This
+modified data.frame <em>must</em> contain all columns present in the
+incoming data.frame, but can add columns if necessary. Although, we note
+that these new columns <em>cannot be used in the layout as split or
+analysis variables</em>, because they will not be present when validity
+checking is done.</p>
+<p>The pre-processing component is useful for things such as
+manipulating factor levels, e.g., to trim unobserved ones or to reorder
+levels based on observed counts, etc.</p>
+<div id="an-example-custom-split-function" class="section level2">
+<h2>An Example Custom Split Function</h2>
+<p>Here we will implement an arbitrary, custom split function where we
+specify both pre- and post-processing instructions. It is unusual for
+users to need to override the core splitting logic - and, in fact, is
+only supported in row space currently - so we leave this off of our
+example here but will provide another narrow example of that usage
+below.</p>
+<div id="an-illustrative-example-of-a-custom-split-function" class="section level3">
+<h3>An Illustrative Example of A Custom Split Function</h3>
+<p>First, we define two aspects of ‘pre-processing step’ behavior:</p>
+<ol style="list-style-type: decimal">
+<li>A function which reverses the order of the levels of a variable
+(while retaining which level is associated with which observation),
+and</li>
+<li>A function factory which creates a function that removes a level and
+the data associated with it.</li>
+</ol>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## reverse order of levels</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>rev_lev <span class="ot">&lt;-</span> <span class="cf">function</span>(df, spl, vals, labels, ...) {</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="do">## in the split_rows_by() and split_cols_by() cases,</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="do">## spl_variable() gives us the variable</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    var <span class="ot">&lt;-</span> <span class="fu">spl_variable</span>(spl)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    vec <span class="ot">&lt;-</span> df[[var]]</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    levs <span class="ot">&lt;-</span> <span class="cf">if</span>(<span class="fu">is.character</span>(vec)) <span class="fu">unique</span>(vec) <span class="cf">else</span> <span class="fu">levels</span>(vec)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    df[[var]] <span class="ot">&lt;-</span> <span class="fu">factor</span>(vec, <span class="at">levels =</span> <span class="fu">rev</span>(levs))</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    df</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>rem_lev_facet <span class="ot">&lt;-</span> <span class="cf">function</span>(torem) {</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(df, spl, vals, labels, ...) {</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        var <span class="ot">&lt;-</span> <span class="fu">spl_variable</span>(spl)</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        vec <span class="ot">&lt;-</span> df[[var]]</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        bad <span class="ot">&lt;-</span> vec <span class="sc">==</span> torem</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>        df <span class="ot">&lt;-</span> df[<span class="sc">!</span>bad,]</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>        levs <span class="ot">&lt;-</span> <span class="cf">if</span>(<span class="fu">is.character</span>(vec)) <span class="fu">unique</span>(vec) <span class="cf">else</span> <span class="fu">levels</span>(vec)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>        df[[var]] <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">as.character</span>(vec[<span class="sc">!</span>bad]), <span class="at">levels =</span> <span class="fu">setdiff</span>(levs, torem))</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>        df</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Finally we implement our post-processing function. Here we will
+reorder the facets based on the amount of data each of them
+represents.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sort_them_facets <span class="ot">&lt;-</span> <span class="cf">function</span>(splret, spl, fulldf, ...) {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    ord <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">sapply</span>(splret<span class="sc">$</span>datasplit, nrow))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">make_split_result</span>(splret<span class="sc">$</span>values[ord],</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                      splret<span class="sc">$</span>datasplit[ord],</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                      splret<span class="sc">$</span>labels[ord])</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Finally, we construct our custom split function and use it to create
+our table:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>silly_splfun1 <span class="ot">&lt;-</span> <span class="fu">make_split_fun</span>(<span class="at">pre =</span> <span class="fu">list</span>(rev_lev,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="fu">rem_lev_facet</span>(<span class="st">&quot;white&quot;</span>)),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">post =</span> <span class="fu">list</span>(sort_them_facets))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>lyt6 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>, <span class="at">split_fun =</span> silly_splfun1) <span class="sc">%&gt;%</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt6, vehic_data)</span></code></pre></div>
+<pre><code>##                    red        black  
+##                  (N=228)     (N=521) 
+## —————————————————————————————————————
+## auto                                 
+##   car                                
+##     Mean        38713.14    40431.92 
+##   truck                              
+##     Mean        40024.41    40061.70 
+##   suv                                
+##     Mean           NA          NA    
+## boat                                 
+##   sailboat                           
+##     Mean        101865.73   99349.69 
+##   cruiseliner                        
+##     Mean        100363.52   100212.00</code></pre>
+</div>
+<div id="overriding-the-core-split-function" class="section level3">
+<h3>Overriding the Core Split Function</h3>
+<p><strong>Currently, overriding core split behavior is only supported
+in functions used for row splits.</strong></p>
+<p>Next, we write a custom core-splitting function which divides the
+observations into 4 groups: the first 100, observations 101-500,
+observations 501-900, and the last hundred. We could claim this was to
+test for structural bias in the first and last observations, but really
+its to simply illustrate overriding the core splitting machinery and has
+no meaningful statistical purpose.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>silly_core_split <span class="ot">&lt;-</span> <span class="cf">function</span>(spl, df, vals, labels, .spl_context) {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">make_split_result</span>(<span class="fu">c</span>(<span class="st">&quot;first&quot;</span>, <span class="st">&quot;lowmid&quot;</span>, <span class="st">&quot;highmid&quot;</span>, <span class="st">&quot;last&quot;</span>),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">datasplit =</span> <span class="fu">list</span>(df[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,],</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                                       df[<span class="dv">101</span><span class="sc">:</span><span class="dv">500</span>,],</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                                       df[<span class="dv">501</span><span class="sc">:</span><span class="dv">900</span>,],</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                                       df[<span class="dv">901</span><span class="sc">:</span><span class="dv">1000</span>,]),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;first 100&quot;</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;obs 101-500&quot;</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;obs 501-900&quot;</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;last 100&quot;</span>))</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>We can use this to construct a splitting function. This can be
+combined with pre- and post-processing functions, as each of the stages
+is performed independently, but in this case, we won’t, because our core
+splitting behavior is such that pre- or post-processing do not make much
+sense.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>even_sillier_splfun <span class="ot">&lt;-</span> <span class="fu">make_split_fun</span>(<span class="at">core_split =</span> silly_core_split)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>lyt7 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">split_fun =</span> even_sillier_splfun) <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt7, vehic_data)</span></code></pre></div>
+<pre><code>##                   black       white        red   
+##                  (N=521)     (N=251)     (N=228) 
+## —————————————————————————————————————————————————
+## first 100                                        
+##   car                                            
+##     Mean        40496.05    37785.41    37623.17 
+##   truck                                          
+##     Mean        41094.17    40437.29    37866.81 
+##   suv                                            
+##     Mean           NA          NA          NA    
+##   sailboat                                       
+##     Mean        100560.80   102017.05   101185.96
+##   cruiseliner                                    
+##     Mean        100838.12   96952.27    100610.71
+## obs 101-500                                      
+##   car                                            
+##     Mean        39350.88    41185.98    37978.72 
+##   truck                                          
+##     Mean        40166.87    41385.32    39885.72 
+##   suv                                            
+##     Mean           NA          NA          NA    
+##   sailboat                                       
+##     Mean        98845.47    99563.02    101462.79
+##   cruiseliner                                    
+##     Mean        101558.62   99039.91    97335.05 
+## obs 501-900                                      
+##   car                                            
+##     Mean        40721.82    40379.48    38681.26 
+##   truck                                          
+##     Mean        39951.92    39846.89    39840.39 
+##   suv                                            
+##     Mean           NA          NA          NA    
+##   sailboat                                       
+##     Mean        99533.20    100347.18   102732.12
+##   cruiseliner                                    
+##     Mean        99140.43    100074.43   101994.99
+## last 100                                         
+##   car                                            
+##     Mean        45204.44    40626.95    41214.33 
+##   truck                                          
+##     Mean        38920.70    40620.47    42899.14 
+##   suv                                            
+##     Mean           NA          NA          NA    
+##   sailboat                                       
+##     Mean        99380.21    97644.77    101691.92
+##   cruiseliner                                    
+##     Mean        100017.53   99581.94    100751.30</code></pre>
+</div>
+<div id="design-of-pre--and-post-processing-functions-for-use-in-make_split_fun" class="section level3">
+<h3>Design of Pre- and Post-Processing Functions For Use in
+<code>make_split_fun</code></h3>
+<p>Pre-processing and post-processing functions in the custom-splitting
+context are best thought of as (and implemented as) independent, atomic
+building blocks for the desired overall behavior. This allows them to be
+reused in a flexible mix-and-match way.</p>
+<p><code>rtables</code> provides several behavior components implemented
+as either functions or function factories:</p>
+<ul>
+<li>Pre-processing “behavior blocks”
+<ul>
+<li><code>drop_facet_levels</code> - drop unobserved levels in the
+variable being split</li>
+</ul></li>
+<li>Post-processing “behavior blocks”
+<ul>
+<li><code>trim_levels_in_facets</code> - provides
+<code>trim_levels_in_group</code> behavior</li>
+<li><code>add_overall_facet</code> - add a combination facet for the
+full data</li>
+<li><code>add_combo_facet</code> - add a single combination facet (can
+be used more than once in a single <code>make_split_fun</code>
+call)</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

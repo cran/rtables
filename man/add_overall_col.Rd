@@ -9,10 +9,12 @@ add_overall_col(lyt, label)
 \arguments{
 \item{lyt}{layout object pre-data used for tabulation}
 
-\item{label}{character(1). A label (not to be confused with the name) for the object/structure.}
+\item{label}{character(1). A label (not to be confused with the name) for the
+object/structure.}
 }
 \value{
-A \code{PreDataTableLayouts} object suitable for passing to further layouting functions, and to \code{build_table}.
+A \code{PreDataTableLayouts} object suitable for passing to further
+layouting functions, and to \code{build_table}.
 }
 \description{
 This function will \emph{only} add an overall
@@ -22,16 +24,16 @@ See \code{\link{add_overall_level}} for the recommended
 way to add overall columns more generally within existing splits.
 }
 \examples{
-l <- basic_table() \%>\%
+lyt <- basic_table() \%>\%
    split_cols_by("ARM") \%>\%
    add_overall_col("All Patients") \%>\%
    analyze("AGE")
+lyt
 
-l
-
-build_table(l, DM)
+tbl <- build_table(lyt, DM)
+tbl
 
 }
 \seealso{
-\code{\link{add_overall_level}}
+\code{\link[=add_overall_level]{add_overall_level()}}
 }

@@ -7,12 +7,18 @@
 rheader(..., format = "xx", .lst = NULL)
 }
 \arguments{
-\item{\dots}{row specifications (either as character vectors or the output from \code{\link{rrow}} or \code{\link{DataRow}}, \code{\link{LabelRow}}, etc.}
+\item{\dots}{row specifications (either as character vectors or the output
+from \code{\link{rrow}} or \code{\link{DataRow}}, \code{\link{LabelRow}},
+etc.}
 
-\item{format}{if \code{FUN} does not return a formatted \code{\link{rcell}}
-then the \code{format} is applied}
+\item{format}{character(1) or function. The format label (string) or
+formatter function to apply to the cell values passed via \code{...}. See
+\code{\link[formatters]{list_valid_format_labels}} for currently supported
+format labels.}
 
-\item{.lst}{list. An already-collected list of arguments tot be used instead of the elements of \code{\dots}. Arguments passed via \code{\dots} will be ignored if this is specified.}
+\item{.lst}{list. An already-collected list of arguments to be used instead
+of the elements of \code{\dots}. Arguments passed via \code{\dots} will be
+ignored if this is specified.}
 }
 \value{
 a \code{InstantiatedColumnInfo} object.
@@ -35,9 +41,9 @@ h2
 
 }
 \seealso{
-Other compatability: 
+Other compatibility: 
 \code{\link{rrowl}()},
 \code{\link{rrow}()},
 \code{\link{rtable}()}
 }
-\concept{compatability}
+\concept{compatibility}

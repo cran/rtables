@@ -2,9 +2,8 @@ context("Printing tables")
 
 test_that("toString method works correclty", {
 
-    tbl <- basic_table() %>%
+    tbl <- basic_table(show_colcounts = TRUE) %>%
         split_cols_by("Species") %>%
-        add_colcounts() %>%
         analyze(c("Sepal.Length", "Petal.Width"), function(x) {
             in_rows(
                 mean_sd = c(mean(x), sd(x)),
@@ -16,7 +15,7 @@ test_that("toString method works correclty", {
         }) %>%
         build_table(iris, hsep = "=")
 
-    print(tbl)
+    capture.output(print(tbl))
 
     expstr_lns <- c("                 setosa      versicolor     virginica ",
                     "                 (N=50)        (N=50)        (N=50)   ",
@@ -46,7 +45,7 @@ test_that("labels correctly used for columns rather than names", {
     tbl <- build_table(lyt, rawdat)
 
     matform <- matrix_form(tbl)
-    expect_identical(matform$strings[1:2,],
+    expect_identical(matform$strings[1:2, ],
                      matrix(c("", rep(c("ARM1", "ARM2"), times = c(2, 2)),
                               "", rep(c("Male", "Female"), times = 2)),
                             byrow = TRUE, nrow = 2, dimnames = NULL))
@@ -56,13 +55,14 @@ test_that("labels correctly used for columns rather than names", {
                             byrow = TRUE,
                             nrow = 3,
                             dimnames = list(NULL, c("", paste(rep(c("ARM1", "ARM2"),
-                                                                      times = c(2,2)),
+                                                                      times = c(2, 2)),
                                                               rep(c("M", "F"),
                                                                   times = 2),
                                                               sep = ".")))))
 
     ## multivarsplit varlabels work correctly
-    tbl2 <- basic_table() %>% split_cols_by("ARM") %>%
+    tbl2 <- basic_table() %>%
+        split_cols_by("ARM") %>%
         split_cols_by_multivar(c("VALUE", "PCTDIFF"), varlabels = c("Measurement", "Pct Diff")) %>%
         split_rows_by("RACE", split_label = "ethnicity", split_fun = drop_split_levels) %>%
         summarize_row_groups() %>%
@@ -71,7 +71,7 @@ test_that("labels correctly used for columns rather than names", {
 
     matform2 <- matrix_form(tbl2)
 
-    expect_identical(matform2$strings[1:2,],
+    expect_identical(matform2$strings[1:2, ],
                      matrix(c("", rep(c("ARM1", "ARM2"), times = c(2, 2)),
                        "", rep(c("Measurement", "Pct Diff"), times = 2)),
                        byrow = TRUE, nrow = 2))
@@ -81,11 +81,11 @@ test_that("labels correctly used for columns rather than names", {
     lyt3 <- basic_table() %>%
         split_cols_by_multivar(c("AGE", "AGE", "SEX", "AGE"),
                                varlabels = vlabs) %>%
-        analyze_colvars(list(mean, median, function(x,...) max(table(x)), sd))
+        analyze_colvars(list(mean, median, function(x, ...) max(table(x)), sd))
 
     tbl3 <- build_table(lyt3, rawdat)
     matform3 <- matrix_form(tbl3)
-    expect_identical(matform3$strings[1,],
+    expect_identical(matform3$strings[1, ],
                      c("", vlabs))
 
 })
@@ -101,7 +101,7 @@ test_that("nested identical labels work ok", {
         analyze("x") %>%
         build_table(df)
     mat <- matrix_form(t2)
-    expect_identical(mat$strings[,1], c("", "<Missing>", "<Missing>"))
+    expect_identical(mat$strings[, 1], c("", "<Missing>", "<Missing>"))
 })
 
 
@@ -126,11 +126,11 @@ test_that("newline in column names and possibly cell values work", {
                             nrow = 3, byrow = TRUE))
     ## Test top_left preservation
     rawdat2 <- rawdat
-    rawdat2$arm_label <- ifelse(rawdat2$ARM=="ARM1", "Arm\n 1 ", "Arm\n 2 ")
+    rawdat2$arm_label <- ifelse(rawdat2$ARM == "ARM1", "Arm\n 1 ", "Arm\n 2 ")
 
-    lyt2 <- basic_table() %>% split_cols_by("ARM", labels_var = "arm_label") %>%
+    lyt2 <- basic_table(show_colcounts = TRUE) %>%
+        split_cols_by("ARM", labels_var = "arm_label") %>%
         split_cols_by("SEX", "Gender", labels_var = "gend_label") %>%
-        add_colcounts() %>%
         split_rows_by("RACE", "Ethnicity", labels_var = "ethn_label", label_pos = "topleft") %>%
         split_rows_by("FACTOR2", "Factor2",
                       split_fun = remove_split_levels("C"),
@@ -144,7 +144,7 @@ test_that("newline in column names and possibly cell values work", {
     matform2 <- matrix_form(tbl2)
     expect_identical(dim(matform2$strings),
                      c(18L, 5L))
-    expect_identical(attr(matform2, "nlines_header"),
+    expect_identical(mf_nlheader(matform2),
                      4L)
     expect_identical(matform2$strings[1:4, 1, drop = TRUE],
                      c("Ethnicity", "  Factor2", "", ""))
@@ -165,13 +165,13 @@ test_that("newline in column names and possibly cell values work", {
         })
     tbl3 <- build_table(lyt3, DM)
     matform3 <- matrix_form(tbl3)
-    expect_identical(matform3$strings[,1, drop = TRUE],
+    expect_identical(matform3$strings[, 1, drop = TRUE],
                      c("",
                        "F", "my_row_label", "",
                        "M", "my_row_label", "",
                        "U", "my_row_label",
                        "UNDIFFERENTIATED", "my_row_label"))
-    expect_identical(matform3$strings[,2, drop = TRUE],
+    expect_identical(matform3$strings[, 2, drop = TRUE],
                      c("A: Drug X",
                        "", "33.71", "",
                        "", "36.55", "  ^  ",
@@ -201,7 +201,8 @@ test_that("alignment works", {
 
     str <- toString(aligntab)
     expect_identical(str,
-                     gsub("—", horizontal_sep(aligntab), "         all obs\n————————————————\nleft     l      \nright          r\ncenter      c   \n"))
+                     gsub("—", horizontal_sep(aligntab),
+                          "         all obs\n————————————————\nleft     l      \nright          r\ncenter      c   \n"))
 
     lyt2 <-  basic_table() %>%
         analyze("AGE", function(x) {
@@ -263,5 +264,220 @@ test_that("Various Printing things work", {
     show(ctr)
     print(collect_leaves(tab)[[2]])
     sink(NULL)
-    expect_false(any(grepl( "new..AnalyzeColVarSplit., analysis_fun =", printoutput)))
+    expect_false(any(grepl("new..AnalyzeColVarSplit., analysis_fun =", printoutput)))
+})
+
+
+test_that("section_div works throughout", {
+    lyt <- basic_table() %>%
+        split_rows_by("ARM", section_div = "-") %>%
+        split_rows_by("STRATA1", section_div = " ") %>%
+        analyze("AGE")
+
+    tbl <- build_table(lyt, DM)
+
+    mylns <- strsplit(toString(tbl), "\\n")[[1]]
+    expect_identical(mylns[9],  "                        ")
+    expect_identical(mylns[12], "------------------------")
+    expect_identical(length(mylns), 31L) ## sect div not printed for last one
+})
+
+test_that("Inset works for table, ref_footnotes, and main footer", {
+  general_inset <- 3
+
+  lyt <- basic_table(
+    title = paste0("Very ", paste0(rep("very", 10), collapse = " "), " long title"),
+    subtitles = paste0("Very ", paste0(rep("very", 15), collapse = " "), " long subtitle"),
+    main_footer = paste0("Very ", paste0(rep("very", 6), collapse = " "), " long footer"),
+    prov_footer = paste0("Very ", paste0(rep("very", 15), collapse = " "), " prov footer"),
+    show_colcounts = TRUE,
+    inset = 2
+  ) %>%
+    split_rows_by("SEX", page_by = TRUE) %>%
+    analyze("AGE")
+
+  # Building the table and trimming NAs
+  tt <- build_table(lyt, DM)
+  tt <- prune_table(tt)
+  # tt <- trim_rows(tt)
+
+  # Adding references
+  # row_paths(tt)
+  # row_paths_summary(tt)
+  # col_paths(tt)
+  # col_paths_summary(tt)
+  txt1 <- "Not the best but very long one, probably longer than possible."
+  txt2 <- "Why trimming does not take it out?"
+  fnotes_at_path(tt, rowpath = c("SEX", "F", "AGE", "Mean")) <- txt1
+  fnotes_at_path(tt, rowpath = c("SEX", "M", "AGE", "Mean"), colpath = c("all obs", "all obs")) <- txt2
+  # Test also assign function
+  table_inset(tt) <- general_inset
+
+  # Recreating the printed form as a vector
+  cat_tt <- toString(matrix_form(tt, TRUE), hsep = "=")
+  vec_tt <- strsplit(cat_tt, "\n")[[1]]
+
+  # Taking out empty lines
+  vec_tt <- vec_tt[vec_tt != ""]
+
+  # Divide string vector in interested sectors
+  sep_index <- which(grepl("==", vec_tt)) - 1
+  log_v <- seq_along(vec_tt) %in% c(seq_len(sep_index[1]), length(vec_tt))
+  no_inset_part <- vec_tt[log_v]
+  inset_part <- vec_tt[!log_v]
+
+  # Check indentation
+  no_ins_v <- sapply(no_inset_part, function(x) substr(x, 1, general_inset), USE.NAMES = FALSE)
+  ins_v <- sapply(inset_part, function(x) substr(x, 1, general_inset), USE.NAMES = FALSE)
+  result <- lapply(list(no_ins_v, ins_v), function(x) all(lengths(regmatches(x, gregexpr(" ", x))) == general_inset))
+
+  expect_false(result[[1]]) # No inset
+  expect_true(result[[2]]) # Inset
+  expect_true(all(vec_tt[sep_index + 1] == "   ======================"))
+})
+
+test_that("Cell and column label wrapping works in printing", {
+    # Set colwidths vector
+    clw <- c(5, 7, 6, 6) + 12
+
+    # Checking in detail if Cell values did wrap correctly
+    result <- toString(matrix_form(tt_for_wrap[10, 1, keep_footers = TRUE], TRUE), widths = c(10, 8), col_gap = 2)
+    splitted_res <- strsplit(result, "\n")[[1]]
+
+    # First column (rownames) has widths 10 and there is colgap 2
+    expect_identical(.count_chr_from_str(splitted_res[1], " "), 10L + 2L)
+
+    # First column label is 8 char
+    expect_identical(.count_chr_from_str(splitted_res[1], " ", TRUE), 8L)
+
+    # Separator is at the right place and colnames are wrapped
+    expect_identical(splitted_res[7], "————————————————————")
+    expected <- c("            Incredib",
+                  "            ly long ",
+                  "             column ",
+                  "            name to ",
+                  "               be   ")
+    expect_identical(splitted_res[1:5], expected)
+
+    # String replacement of NAs wider than expected works with cell wrapping
+    expected <- c("Mean         A very ",
+                  "              long  ",
+                  "            content ",
+                  "            to_be_wr",
+                  "            apped_an",
+                  "            d_splitt",
+                  "               ed   ")
+    expect_identical(splitted_res[8:14], expected)
+
+    # Testing if footers are not affected by this
+    expect_identical(splitted_res[17], main_footer(tt_for_wrap))
+
+    # Works for row names too
+    result <- toString(matrix_form(tt_for_wrap[6, 1], TRUE), widths = c(10, 8), col_gap = 2)
+    splitted_res2 <- strsplit(result, "\n")[[1]]
+    expected <- c("BLACK OR            ",
+                  "AFRICAN             ",
+                  "AMERICAN            ")
+    expect_identical(splitted_res2[8:10], expected)
+
+    # Test if it works with numeric values
+    tt_simple <- basic_table() %>%
+        analyze("AGE", format = "xx.xxxx") %>%
+        build_table(ex_adsl)
+    result <- toString(matrix_form(tt_simple, TRUE), widths = c(2, 3), col_gap = 1)
+    sre3 <- strsplit(result, "\n")[[1]]
+    expected <- c("   all", "   obs", "——————", "Me 34.", "an 88 ")
+    expect_identical(sre3, expected)
+
+    # See if general table has the right amount of \n
+    result <- toString(matrix_form(tt_for_wrap, TRUE), widths = clw)
+    expect_identical(.count_chr_from_str(result, "\n"), 25L)
+})
+
+
+test_that("row label indentation is kept even if there are newline characters", {
+    ANL <- DM %>% mutate(value = rnorm(n()), pctdiff = runif(n())) %>%
+        filter(ARM == "A: Drug X")
+    ANL$ARM <- factor(ANL$ARM)
+    
+    ## toy example where we take the mean of the first variable and the
+    ## count of >.5 for the second.
+    colfuns <- list(function(x) in_rows(" " = mean(x), .formats = "xx.x"), # Empty labels are introduced
+                    function(x) in_rows("# x > 5" = sum(x > .5), .formats = "xx"))
+    
+    tbl_a <- basic_table() %>%
+        split_cols_by("ARM") %>%
+        split_cols_by_multivar(c("value", "pctdiff"), varlabels = c("abc", "def")) %>%
+        split_rows_by("RACE", split_label = "Ethnicity",
+                      split_fun = drop_split_levels,
+                      label_pos = "topleft") %>%
+        summarize_row_groups(indent_mod = 2) %>%
+        split_rows_by("SEX", split_label = "Sex", label_pos = "topleft", 
+                      split_fun = drop_and_remove_levels(c("UNDIFFERENTIATED", "U"))) %>% 
+        analyze_colvars(afun = colfuns, indent_mod = 4) %>%
+        build_table(ANL)
+    
+    # Decorating
+    table_inset(tbl_a) <- 2
+    main_title(tbl_a) <- "Summary of \nTime and \nTreatment"
+    subtitles(tbl_a) <- paste("Number: ", 1:3)
+    main_footer(tbl_a) <- "NE: Not Estimable"
+    
+    # Matrix form and toString
+    mf_a <- matrix_form(tbl_a, TRUE, FALSE)
+    expect_error(res_a <- toString(mf_a, widths = c(15, 12, 12)), 
+                 regexp = "Inserted width\\(s\\) for column\\(s\\) 1 is\\(are\\) not wide enough for the desired indentation.")
+    res_a <- toString(mf_a, widths = c(16, 12, 12))
+    # 2 is the indentation of summarize_row_groups
+    # 1 is the standard indentation
+    # 1 + 1 + 4 is the standard nesting indentation (twice) + 4 manual indentation (indentation_mod)
+    man_ind <- c(2, 1, 1 + 1 + 4) 
+    expect_equal(mf_rinfo(mf_a)$indent[1:3], table_inset(tbl_a) + man_ind)
+    res_a <- strsplit(res_a, "\n")[[1]]
+    
+    # Checking indentation size propagation
+    ind_s1 <- 3
+    ind_s2 <- 2
+    mf3_v1 <- matrix_form(tbl_a, indent_rownames = TRUE, expand_newlines = FALSE, indent_size = ind_s1)
+    mf3_v2 <- matrix_form(tbl_a, indent_rownames = TRUE, expand_newlines = FALSE, indent_size = ind_s2)
+    which_to_rm <- which(names(mf3_v1) %in% c("strings", "formats", "indent_size"))
+    expect_equal(mf3_v1[-which_to_rm], mf3_v2[-which_to_rm]) # These should be the only differences
+    
+    str_v1 <- strsplit(mf3_v1$strings[3, 1], "ASIAN")[[1]]
+    str_v2 <- strsplit(mf3_v2$strings[3, 1], "ASIAN")[[1]]
+    expect_equal(nchar(str_v1), (2 + 2) * ind_s1) # (inset + indent of summ group) * indent_size
+    expect_equal(nchar(str_v2), (2 + 2) * ind_s2) # (inset + indent of summ group) * indent_size
+    expect_equal(nchar(str_v1), nchar(str_v2) + 4) # This should be the diff in indentation
+    
+    # Number of characters (so indentation) are the same when indent_size is used in mf() or toString()
+    ind_tbl_v1 <- strsplit(toString(mf3_v1), "\n")[[1]]
+    ind_tbl_v2 <- strsplit(toString(tbl_a, indent_size = 3), "\n")[[1]]
+    expect_equal(ind_tbl_v1, ind_tbl_v2)
+    
+    tbl_b <- basic_table() %>%
+        split_cols_by("ARM") %>%
+        split_cols_by_multivar(c("value", "pctdiff"), varlabels = c("abc", "de\nf")) %>%
+        split_rows_by("RACE", split_label = "Ethnicity",
+                      label_pos = "topleft") %>%
+        summarize_row_groups(indent_mod = 2) %>%
+        split_rows_by("SEX", split_label = "Sex", label_pos = "topleft", 
+                      split_fun = drop_and_remove_levels(c("UNDIFFERENTIATED", "U"))) %>% 
+        analyze_colvars(afun = colfuns, indent_mod = 4) %>%
+        build_table(ANL)
+    
+    # Decorating
+    table_inset(tbl_b) <- 2
+    main_title(tbl_b) <- "Summary of \nTime and \nTreatment"
+    subtitles(tbl_b) <- paste("Number: ", 1:3)
+    main_footer(tbl_b) <- "NE: Not Estimable"
+    mf_b <- matrix_form(tbl_b, indent_rownames = TRUE, expand_newlines = TRUE)
+    res_b <- toString(mf_b, widths = c(16, 12, 12))
+    res_b <- strsplit(res_b, "\n")[[1]]
+    
+    # Taking out the splitted col names and the trailing 0s lets check it is the same none-the-less
+    res_a <- res_a[-10]
+    res_b <- res_b[-c(10, 11)]
+    expect_identical(res_a[1:10], res_b[1:10]) # First part
+    expect_identical(res_a[10:27], res_b[10:27]) # Center part
+    expect_identical(res_a[seq(28, length(res_a))], res_b[seq(41, length(res_b))]) # Final part
 })

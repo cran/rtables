@@ -1,4 +1,7 @@
-#' Dispaly an \code{\link{rtable}} object in the Viewer pane in RStudio or in a
+#' @importFrom utils  browseURL
+NULL
+
+#' Display an \code{\link{rtable}} object in the Viewer pane in RStudio or in a
 #' browser
 #'
 #' The table will be displayed using the bootstrap styling for tables.
@@ -21,16 +24,17 @@
 #'
 #' df <- cbind(iris, sl5 = sl5)
 #'
-#' tbl <- basic_table() %>%
+#' lyt <- basic_table() %>%
 #'    split_cols_by("sl5") %>%
-#'    analyze("Sepal.Length") %>%
-#'    build_table(df)
+#'    analyze("Sepal.Length")
+#' 
+#' tbl <- build_table(lyt, df)
 #'
 #' Viewer(tbl)
 #' Viewer(tbl, tbl)
 #'
 #'
-#' tbl2 <-htmltools::tags$div(
+#' tbl2 <- htmltools::tags$div(
 #'   class = "table-responsive",
 #'   as_html(tbl, class_table = "table")
 #' )
@@ -58,9 +62,9 @@ Viewer <- function(x, y = NULL, row.names.bold = FALSE, ...) {
   html_output <- if (is.null(y)) {
     x_tag
   } else {
-    htmltools::tags$div(class = "container-fluid",  htmltools::tags$div(class = "row",
-      htmltools::tags$div(class= "col-xs-6", x_tag),
-      htmltools::tags$div(class= "col-xs-6", y_tag)
+    tags$div(class = "container-fluid",  htmltools::tags$div(class = "row",
+    tags$div(class = "col-xs-6", x_tag),
+    tags$div(class = "col-xs-6", y_tag)
     ))
   }
 
@@ -86,13 +90,15 @@ Viewer <- function(x, y = NULL, row.names.bold = FALSE, ...) {
   }
 
   html_bs <- tags$html(
-    lang="en",
+    lang = "en",
     tags$head(
-      tags$meta(charset="utf-8"),
-      tags$meta("http-equiv"="X-UA-Compatible", content="IE=edge"),
-      tags$meta(name="viewport", content="width=device-width, initial-scale=1"),
+      tags$meta(charset = "utf-8"),
+      tags$meta("http-equiv" = "X-UA-Compatible", content = "IE=edge"),
+      tags$meta(name = "viewport",
+                content = "width=device-width, initial-scale=1"),
       tags$title("rtable"),
-      tags$link(href="css/bootstrap.min.css", rel="stylesheet")
+      tags$link(href = "css/bootstrap.min.css",
+                rel = "stylesheet")
     ),
     tags$body(
       html_output
@@ -109,8 +115,7 @@ Viewer <- function(x, y = NULL, row.names.bold = FALSE, ...) {
   if (!is.null(viewer)) {
     viewer(htmlFile)
   } else {
-    utils::browseURL(htmlFile)
+    browseURL(htmlFile)
   }
 
 }
-

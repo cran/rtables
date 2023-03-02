@@ -20,13 +20,20 @@ test_that("referential footnotes work", {
     expect_identical(rdf[2, "ncellrefs"], 3L)
     expect_identical(rdf[1, "ncellrefs"], 0L)
 
+    rfn_out <- row_footnotes(result)
+    expect_identical(list(row1 = list(rtables:::RefFootnote("row 1 rfn", 1L)),
+                          row2 = list()),
+                     rfn_out)
+    cfn_out <- cell_footnotes(result)
+    expect_identical(cfn_out[2, 1][[1]],
+                     list(rtables:::RefFootnote("row 2 cfn", 2L)))
 
     analysisfun2 <- function(x, cutoff,  ...) {
         mn <- mean(x)
         if(mn >= cutoff)
-            cf = list(mean = "Elevated group mean")
+            cf <- list(mean = "Elevated group mean")
         else
-            cf = list()
+            cf <- list()
         in_rows(mean = mean(x),
                 range = range(x),
                 .cell_footnotes = cf,
@@ -49,7 +56,8 @@ test_that("post-processing addition of referential footnotes works", {
                      "ASIAN",
                      "AMERICAN INDIAN OR ALASKA NATIVE",
                      "MULTIPLE")
-    l1 <- basic_table() %>% split_cols_by("ARM") %>%
+    l1 <- basic_table() %>%
+        split_cols_by("ARM") %>%
         split_rows_by("RACE", split_fun = keep_split_levels(race_levels)) %>%
         summarize_row_groups() %>%
         analyze("AGE", mean, format = "xx.x")
@@ -97,7 +105,8 @@ test_that("post-processing addition of referential footnotes works", {
 
 
 
-    l2 <- basic_table() %>% split_cols_by("ARM") %>%
+    l2 <- basic_table() %>%
+        split_cols_by("ARM") %>%
         split_rows_by("RACE", split_fun = keep_split_levels(race_levels)) %>%
         analyze("AGE", mean, format = "xx.x")
 
@@ -110,4 +119,11 @@ test_that("post-processing addition of referential footnotes works", {
     expect_identical(unname(mform2$ref_footnotes),
                      "{1} - fnote on label row")
 
+    ## test that tf_wrap and pagination work in the presence of ref fnotes
+
+    pag_nowrap <- paginate_table(tb1, lpp = 20)
+    pag_wrap <- paginate_table(tb1, lpp = 20, max_width = 20, tf_wrap = TRUE)
+
+    expect_equal(nrow(pag_nowrap[[1]]), 8)
+    expect_equal(nrow(pag_wrap[[1]]), 4)
 })

@@ -15,45 +15,99 @@
 
 
 
-
+#' @exportMethod nlines
+#' @inheritParams formatters::nlines
+#' @name formatters_methods
+#' @rdname formatters_methods
+#' @aliases nlines,TableRow-method
 setMethod("nlines", "TableRow",
-          function(x, colwidths) {
-    fns <- sum(unlist(lapply(row_footnotes(x), nlines))) + sum(unlist(lapply(cell_footnotes(x), nlines)))
-    fcells <- get_formatted_cells(x)
-    rowext <- max(vapply(strsplit(c(obj_label(x), fcells), "\n", fixed = TRUE),
-                         length,
-                         1L))
+          function(x, colwidths, max_width) {
+    ## XXX this is wrong and needs to be fixed
+    ## should not be hardcoded here
+    col_gap <- 3L
+    fns <- sum(unlist(lapply(row_footnotes(x), nlines, max_width = max_width))) +
+        sum(unlist(lapply(cell_footnotes(x), nlines, max_width = max_width)))
+    fcells <- as.vector(get_formatted_cells(x))
+    spans <- row_cspans(x)
+    have_cw <- !is.null(colwidths)
+    ## handle spanning so that the projected word-wrapping from nlines is correct
+    if(any(spans > 1)) {
+        new_fcells <- character(length(spans))
+        new_colwidths <- numeric(length(spans))
+        cur_fcells <- fcells
+        cur_colwidths <- colwidths[-1] ## not the row labels they can't span
+        for(i in seq_along(spans)) {
+            spi <- spans[i]
+            new_fcells[i] <- cur_fcells[1] ## 1 cause we're trimming it every loop
+            new_colwidths[i] <- sum(head(cur_colwidths, spi)) + col_gap * (spi - 1)
+            cur_fcells <- tail(cur_fcells, -1*spi)
+            cur_colwidths <- tail(cur_colwidths, -1*spi)
+        }
+        if(have_cw)
+            colwidths <- c(colwidths[1], new_colwidths)
+        fcells <- new_fcells
+    }
+
+    ## rowext <- max(vapply(strsplit(c(obj_label(x), fcells), "\n", fixed = TRUE),
+    ##                      length,
+    ##                      1L))
+    rowext <- max(unlist(mapply(function(s, w) {
+        nlines(strsplit(s, "\n", fixed = TRUE), max_width = w)
+    }, s = c(obj_label(x), fcells), w = (colwidths %||% max_width) %||% 1000L, SIMPLIFY = FALSE)))
+
     rowext + fns
 })
 
+#' @export
+#' @rdname formatters_methods
 setMethod("nlines", "LabelRow",
-          function(x, colwidths) {
+          function(x, colwidths, max_width) {
     if(labelrow_visible(x))
-        length(strsplit(obj_label(x), "\n", fixed = TRUE)[[1]]) + sum(unlist(lapply(row_footnotes(x), nlines)))
+        nlines(strsplit(obj_label(x), "\n", fixed = TRUE)[[1]], max_width = colwidths[1]) +
+            sum(unlist(lapply(row_footnotes(x), nlines, max_width = max_width)))
     else
         0L
 })
 
+#' @export
+#' @rdname formatters_methods
 setMethod("nlines", "RefFootnote",
-          function(x, colwidths) {
-    1L
+          function(x, colwidths, max_width ) {
+    nlines(format_fnote_note(x), colwidths = colwidths, max_width = max_width)
 })
 
 
-setMethod("nlines", "VTableTree",
-          function(x, colwidths) {
-    length(collect_leaves(x, TRUE, TRUE))
-})
-
+#' @export
+#' @rdname formatters_methods
 setMethod("nlines", "InstantiatedColumnInfo",
-          function(x, colwidths) {
-    lfs = collect_leaves(coltree(x))
-    depths = sapply(lfs, function(l) length(pos_splits(l)))
-    max(depths, length(top_left(x))) + divider_height(x)
+          function(x, colwidths, max_width) {
+    h_rows <- .do_tbl_h_piece2(x)
+    tl <- top_left(x) %||% rep("", length(h_rows))
+    main_nls <- vapply(seq_along(h_rows),
+                       function(i) max(nlines(h_rows[[i]], colwidths = colwidths),
+                                       nlines(tl[i], colwidths = colwidths[1])),
+                       1L)
 
+    ## lfs <- collect_leaves(coltree(x))
+    ## depths <- sapply(lfs, function(l) length(pos_splits(l)))
+
+    coldf <- make_col_df(x, colwidths = colwidths)
+    have_fnotes <- length(unlist(coldf$col_fnotes)) > 0
+    ## ret <- max(depths, length(top_left(x))) +
+    ##     divider_height(x)
+    ret <- sum(main_nls, divider_height(x))
+    if(have_fnotes) {
+        ret <- sum(ret,
+                   vapply(unlist(coldf$col_fnotes),
+                          nlines,
+                          1,
+                          max_width = max_width),
+                   2*divider_height(x))
+    }
+    ret
 })
 
-col_dfrow = function(col,
+col_dfrow <- function(col,
                     nm = obj_name(col),
                     lab = obj_label(col),
                     cnum,
@@ -96,39 +150,24 @@ pos_to_path <- function(pos) {
 
 
 
-## ' Make row and column layout summary data.frames for use during pagination
-## ' @inheritParams gen_args
-## ' @param visible_only logical(1). Should only visible aspects of the table structure be reflected in this summary. Defaults to \code{TRUE}.
-## ' @param incontent logical(1). Internal detail do not set manually.
-## ' @param repr_ext integer(1). Internal detail do not set manually.
-## ' @param repr_inds integer. Internal detail do not set manually.
-## ' @param sibpos integer(1). Internal detail do not set manually.
-## ' @param nsibs integer(1). Internal detail do not set manually.
-## ' @param rownum numeric(1). Internal detail do not set manually.
-## ' @param indent integer(1). Internal detail do not set manually.
-
-## ' @param colwidths numeric. Internal detail do not set manually.
-## ' @param nrowrefs integer(1). Internal detail do not set manually.
-## ' @param ncellrefs integer(1). Internal detail do not set manually.
-## ' @param nreflines integer(1). Internal detail do not set manually.
-## '
-## ' @details
-## ' When \code{visible_only} is \code{TRUE}, the resulting data.frame will have exactly one row per visible row in the table. This is useful when reasoning about how a table will print, but does not reflect the full pathing space of the structure (though the paths which are given will all work as is).
-## '
-## ' When \code{visible_only} is \code{FALSE}, every structural element of the table (in row-space) will be reflected in the returned data.frame, meaning the full pathing-space will be represented but some rows in the layout summary will not represent printed rows in the table as it is displayed.
 #' @inherit formatters::make_row_df
 #'
-#' @note the technically present root tree node is excluded from the summary returne dby
-#' both \code{make_row_df} and \code{make_col_df}, as it is simply the
-#' row/column structure of \code{tt} and thus not useful for pathing or pagination.
-#' @export
-#' @return a data.frame of row/column-structure information used by the pagination machinery.
-#' @name make_row_df
-#' @rdname make_row_df
-#' @aliases make_row_df,VTableTree-method
-# #' @exportMethod make_row_df
+# #' @note the technically present root tree node is excluded from the summary
+# #'   returned by both \code{make_row_df} and \code{make_col_df}, as it is simply
+# #'   the row/column structure of \code{tt} and thus not useful for pathing or
+# #'   pagination.
+# #' @export
+# #' @return a data.frame of row/column-structure information used by the
+# #'   pagination machinery.
+# #' @name make_row_df
+# #' @rdname make_row_df
+                                        # #' @aliases make_row_df,VTableTree-method
+#' @rdname formatters_methods
+#' @exportMethod make_row_df
 setMethod("make_row_df", "VTableTree",
-          function(tt, colwidths = NULL, visible_only = TRUE,
+          function(tt,
+                   colwidths = NULL,
+                   visible_only = TRUE,
                    rownum = 0,
                    indent = 0L,
                    path = character(),
@@ -136,10 +175,12 @@ setMethod("make_row_df", "VTableTree",
                    repr_ext = 0L,
                    repr_inds = integer(),
                    sibpos = NA_integer_,
-                   nsibs = NA_integer_) {
+                   nsibs = NA_integer_,
+                   max_width = NULL) {
 
     indent <- indent + indent_mod(tt)
-    orig_rownum <- rownum
+    ## retained for debugging info
+    orig_rownum <- rownum # nolint
     if(incontent)
         path <- c(path, "@content")
     else if (length(path) > 0 || nzchar(obj_name(tt))) ## don't add "" for root
@@ -166,22 +207,23 @@ setMethod("make_row_df", "VTableTree",
                                nreflines = 0L)))
     }
     if(labelrow_visible(tt)) {
-        lr = tt_labelrow(tt)
+        lr <- tt_labelrow(tt)
         newdf <- make_row_df(lr,
-                            colwidths= colwidths,
+                            colwidths = colwidths,
                             visible_only = visible_only,
                             rownum = rownum,
                             indent = indent,
                             path = path,
                             incontent = TRUE,
                             repr_ext = repr_ext,
-                            repr_inds = repr_inds)
-        rownum <- max(newdf$abs_rownumber,na.rm = TRUE)
+                            repr_inds = repr_inds,
+                            max_width = max_width)
+        rownum <- max(newdf$abs_rownumber, na.rm = TRUE)
 
-        ret  =  c(ret,
+        ret <- c(ret,
                   list(newdf))
-        repr_ext = repr_ext + 1L
-        repr_inds = c(repr_inds, rownum)
+        repr_ext <- repr_ext + 1L
+        repr_inds <- c(repr_inds, rownum)
         indent <- indent + 1L
     }
 
@@ -189,14 +231,15 @@ setMethod("make_row_df", "VTableTree",
     if(NROW(content_table(tt)) > 0) {
         cind <- indent + indent_mod(content_table(tt))
         contdf <-  make_row_df(content_table(tt),
-                              colwidths= colwidths,
+                              colwidths = colwidths,
                               visible_only = visible_only,
                               rownum = rownum,
                               indent = cind,
                               path = path,
                               incontent = TRUE,
                               repr_ext = repr_ext,
-                              repr_inds = repr_inds)
+                              repr_inds = repr_inds,
+                              max_width = max_width)
         crnums <- contdf$abs_rownumber
         crnums <- crnums[!is.na(crnums)]
 
@@ -216,7 +259,7 @@ setMethod("make_row_df", "VTableTree",
     for(i in seq_along(allkids)) {
         kid <- allkids[[i]]
         kiddfs <- make_row_df(kid,
-                            colwidths= colwidths,
+                            colwidths = colwidths,
                             visible_only = visible_only,
                             rownum = force(rownum),
                             indent = indent, ## + 1,
@@ -225,20 +268,24 @@ setMethod("make_row_df", "VTableTree",
                             repr_ext = repr_ext,
                             repr_inds = repr_inds,
                             nsibs = newnsibs,
-                            sibpos = i)
+                            sibpos = i,
+                            max_width = max_width)
 
  #       print(kiddfs$abs_rownumber)
-        rownum <- max(rownum + 1L, kiddfs$abs_rownumber, na.rm = TRUE) ##max(kiddfs[[length(kiddfs)]]$abs_rownumber, na.rm = TRUE)
+        rownum <- max(rownum + 1L, kiddfs$abs_rownumber, na.rm = TRUE)
         ret <- c(ret, list(kiddfs))
     }
 
-    do.call(rbind, ret)
+    ret <- do.call(rbind, ret)
+    if(!is.na(trailing_sep(tt)))
+        ret$trailing_sep[nrow(ret)] <- trailing_sep(tt)
+    ret
 })
 
                                         # #' @exportMethod make_row_df
 #' @inherit formatters::make_row_df
 #' @export
-#' @rdname make_row_df
+#' @rdname formatters_methods
 setMethod("make_row_df", "TableRow",
           function(tt, colwidths = NULL, visible_only = TRUE,
                    rownum = 0,
@@ -248,12 +295,13 @@ setMethod("make_row_df", "TableRow",
                    repr_ext = 0L,
                    repr_inds = integer(),
                    sibpos = NA_integer_,
-                   nsibs = NA_integer_) {
+                   nsibs = NA_integer_,
+                   max_width = NULL) {
     indent <- indent + indent_mod(tt)
     rownum <- rownum + 1
     rrefs <- row_footnotes(tt)
     crefs <- cell_footnotes(tt)
-    reflines <- sum(sapply(c(rrefs, crefs), nlines))
+    reflines <- sum(sapply(c(rrefs, crefs), nlines, colwidths = colwidths, max_width = max_width))
     ret <- pagdfrow(row = tt,
                     rnum = rownum,
                     colwidths = colwidths,
@@ -263,8 +311,9 @@ setMethod("make_row_df", "TableRow",
                     repext = repr_ext,
                     repind = repr_inds,
                     indent = indent,
+                    extent = nlines(tt, colwidths = colwidths, max_width = max_width),
                     ## these two are unlist calls cause they come in lists even with no footnotes
-                    nrowrefs = length(rrefs) ,
+                    nrowrefs = length(rrefs),
                     ncellrefs = length(unlist(crefs)),
                     nreflines = reflines
                     )
@@ -273,7 +322,7 @@ setMethod("make_row_df", "TableRow",
 
 # #' @exportMethod make_row_df
 #' @export
-#' @rdname make_row_df
+#' @rdname formatters_methods
 setMethod("make_row_df", "LabelRow",
           function(tt, colwidths = NULL, visible_only = TRUE,
                    rownum = 0,
@@ -283,10 +332,13 @@ setMethod("make_row_df", "LabelRow",
                    repr_ext = 0L,
                    repr_inds = integer(),
                    sibpos = NA_integer_,
-                   nsibs = NA_integer_) {
+                   nsibs = NA_integer_,
+                   max_width = NULL) {
     rownum <- rownum + 1
     indent <- indent + indent_mod(tt)
-    ret <- pagdfrow(tt, rnum = rownum,
+    ret <- pagdfrow(tt,
+                    extent = nlines(tt, colwidths = colwidths, max_width = max_width),
+                    rnum = rownum,
                     colwidths = colwidths,
                     sibpos = sibpos,
                     nsibs = nsibs,
@@ -296,9 +348,11 @@ setMethod("make_row_df", "LabelRow",
                     indent = indent,
                     nrowrefs = length(row_footnotes(tt)),
                     ncellrefs = 0L,
-                    nreflines = sum(vapply(row_footnotes(tt), nlines, NA_integer_)))
+                    nreflines = sum(vapply(row_footnotes(tt), nlines, NA_integer_,
+                                           colwidths = colwidths,
+                                           max_width = max_width)))
     if(!labelrow_visible(tt))
-        ret <- ret[0,]
+        ret <- ret[0, ]
     ret
 })
 
@@ -312,15 +366,18 @@ setGeneric("inner_col_df", function(ct, colwidths = NULL, visible_only = TRUE,
 
 #' Column Layout Summary
 #'
+#' Generate a structural summary of the columns of an
+#' rtables table and return it as a data.frame.
+#'
 #' Used for Pagination
-#' @inheritParams make_row_df
-#' @rdname make_row_df
+#' @inheritParams formatters::make_row_df
 #' @export
-make_col_df <-    function(tt,
-                           visible_only = TRUE) {
-    ctree <- coltree(tt)
-    rows <- inner_col_df(ctree, ## this is a null op if its already a coltree object
-                 colwidths = propose_column_widths(matrix_form(tt, indent_rownames = TRUE)),
+make_col_df <- function(tt,
+                        colwidths = NULL,
+                        visible_only = TRUE) {
+    ctree <- coltree(tt) ## this is a null op if its already a coltree object
+    rows <- inner_col_df(ctree,
+                 colwidths = colwidths, ##this is currently unused anyway...  propose_column_widths(matrix_form(tt, indent_rownames = TRUE)),
                  visible_only = visible_only,
                  colnum = 1L,
                  sibpos = 1L,
@@ -352,7 +409,6 @@ setMethod("inner_col_df", "LayoutColTree",
     ret <- vector("list", length(kids))
     for(i in seq_along(kids)) {
         k <- kids[[i]]
-        nleaves <- length(collect_leaves(k))
         newrows <- do.call(rbind,
                            inner_col_df(k,
                                         colnum = colnum,
@@ -360,7 +416,7 @@ setMethod("inner_col_df", "LayoutColTree",
                                         nsibs = length(kids),
                                         visible_only = visible_only))
         colnum <- max(newrows$abs_pos, colnum, na.rm = TRUE) + 1
-        ret[[i]] = newrows
+        ret[[i]] <- newrows
     }
 
     if(!visible_only) {
@@ -382,14 +438,94 @@ setMethod("inner_col_df", "LayoutColTree",
 })
 
 
+
+
+## THIS INCLUDES BOTH "table stub" (ie column label and top_left) AND
+## title/subtitle!!!!!
+.header_rep_nlines <- function(tt, colwidths, max_width, verbose = FALSE) {
+    cinfo_lines <- nlines(col_info(tt), colwidths = colwidths, max_width = max_width)
+    if (any(nzchar(all_titles(tt)))) {
+        ## +1 is for blank line between subtitles and divider
+        tlines <- sum(nlines(all_titles(tt), colwidths = colwidths,
+                             max_width = max_width)) + divider_height(tt) + 1L
+    } else {
+        tlines <- 0
+    }
+    ret <- cinfo_lines + tlines
+    if(verbose)
+        message("Lines required for header content: ",
+                ret, " (col info: ", cinfo_lines, ", titles: ", tlines, ")")
+    ret
+}
+
+## this is ***only*** lines that are expected to be repeated on  multiple pages:
+## main footer, prov footer, and referential footnotes on **columns**
+
+.footer_rep_nlines <- function(tt, colwidths, max_width, have_cfnotes, verbose = FALSE) {
+    flines <- nlines(main_footer(tt), colwidths = colwidths,
+                     max_width = max_width - table_inset(tt)) +
+        nlines(prov_footer(tt), colwidths = colwidths, max_width = max_width)
+    if(flines > 0) {
+        dl_contrib <- if(have_cfnotes) 0 else divider_height(tt)
+        flines <- flines + dl_contrib + 1L
+    }
+
+    if(verbose)
+        message("Determining lines required for footer content",
+                if(have_cfnotes) " [column fnotes present]",
+                ": ", flines, " lines")
+
+    flines
+}
+
+
 #' Pagination of a TableTree
 #'
 #'
-#' @note This is our first take on pagination. We will refine pagination in subsequent releases. Currently only
-#'   pagination in the row space work. Pagination in the column space will be added in the future.
+#' Paginate  an  `rtables` table  in  the  vertical and/or  horizontal
+#' direction, as required for the specified page size.
 #'
+#' @details
+#'
+#' `rtables` pagination is context aware,  meaning that label rows and
+#' row-group summaries  (content rows)  are repeated  after (vertical)
+#' pagination, as  appropriate. This allows the  reader to immediately
+#' understand where they are in the table after turning to a new page,
+#' but does  also mean that a  rendered, paginated table will  take up
+#' more  lines of  text than  rendering the  table without  pagination
+#' would.
+#'
+#' Pagination also takes into account word-wrapping of title, footer,
+#' column-label, and formatted cell value content.
+#'
+#' Vertical pagination information (pagination data.frame) is created
+#' using (`make_row_df`)
+#'
+#' Horizontal  pagination  is  performed   by  creating  a  pagination
+#' dataframe for  the columns,  and then  applying the  same algorithm
+#' used for vertical pagination to it.
+#'
+#' If physical page size and font information are specified, these are
+#' used  to  derive  lines-per-page  (`lpp`)  and  characters-per-page
+#' (`cpp`) values.
+#'
+#' The full multi-direction pagination algorithm then is as follows:
+#'
+#' 0. Adjust `lpp` and `cpp` to account for rendered elements that are not rows (columns)
+#'   - titles/footers/column labels, and horizontal dividers in the vertical pagination case
+#'   - row-labels, table_inset, and top-left materials in the horizontal case
+#' 1. Perform 'forced pagination' representing page-by row splits, generating 1 or more tables
+#' 2. Perform vertical pagination separately on each table generated in (1)
+#' 3. Perform horizontal pagination **on the entire table** and apply the results to each table page generated in (1)-(2)
+#' 4. Return a list of subtables representing full bi-directional pagination
+#'
+#' Pagination in both directions is done using the *Core Pagination Algorithm*
+#' implemented in the `formatters` package:
+#'
+#' @inheritSection formatters::pagination_algo Pagination Algorithm
 #'
 #' @inheritParams gen_args
+#' @inheritParams paginate_table
 #' @param lpp numeric. Maximum lines per page including (re)printed header and context rows
 #' @param min_siblings  numeric. Minimum sibling rows which must appear on either side of pagination row for a
 #'   mid-subtable split to be valid. Defaults to 2.
@@ -434,11 +570,10 @@ setMethod("inner_col_df", "LayoutColTree",
 #'
 #' row_paths_summary(tbl)
 #'
-#' tbls <- paginate_table(tbl)
+#' tbls <- paginate_table(tbl, lpp = 15)
 #' mf <- matrix_form(tbl, indent_rownames = TRUE)
 #' w_tbls <- propose_column_widths(mf) # so that we have the same column widths
 #'
-#' tmp <- lapply(tbls, print, widths = w_tbls)
 #'
 #' tmp <- lapply(tbls, function(tbli) {
 #'   cat(toString(tbli, widths = w_tbls))
@@ -448,30 +583,48 @@ setMethod("inner_col_df", "LayoutColTree",
 #' })
 #'
 #'
-pag_tt_indices = function(tt, lpp = 15,
+pag_tt_indices <- function(tt, lpp = 15,
                            min_siblings = 2,
                            nosplitin = character(),
                            colwidths = NULL,
+                           max_width = NULL,
                            verbose = FALSE) {
 
     dheight <- divider_height(tt)
 
-    cinfo_lines <- nlines(col_info(tt))
-    if(any(nzchar(all_titles(tt)))) {
-        tlines <- length(all_titles(tt)) + dheight + 1L
-    } else {
-        tlines <- 0
-    }
-    flines <- length(all_footers(tt))
-    if(flines > 0)
-        flines <- flines + dheight + 1L
+  #  cinfo_lines <- nlines(col_info(tt), colwidths = colwidths, max_width = max_width)
+    coldf <- make_col_df(tt, colwidths)
+    have_cfnotes <- length(unlist(coldf$col_fnotes)) > 0
+
+    hlines <- .header_rep_nlines(tt, colwidths = colwidths, max_width = max_width,
+                             verbose = verbose)
+    ## if(any(nzchar(all_titles(tt)))) {
+    ##     tlines <- sum(nlines(all_titles(tt), colwidths = colwidths, max_width = max_width)) + ##length(wrap_txt(all_titles(tt), max_width = max_width)) +
+    ##         dheight + 1L
+    ## } else {
+    ##     tlines <- 0
+    ## }
+    ## flines <- nlines(main_footer(tt), colwidths = colwidths,
+    ##                  max_width = max_width - table_inset(tt)) +
+    ##     nlines(prov_footer(tt), colwidths = colwidths, max_width = max_width)
+    ## if(flines > 0) {
+    ##     dl_contrib <- if(have_cfnotes) 0 else dheight
+    ##     flines <- flines + dl_contrib + 1L
+    ## }
+    flines <- .footer_rep_nlines(tt, colwidths = colwidths, max_width = max_width,
+                                 have_cfnotes = have_cfnotes, verbose = verbose)
     ## row lines per page
-    rlpp = lpp - cinfo_lines - tlines - flines
-    pagdf = make_row_df(tt, colwidths)
+    rlpp <- lpp - hlines - flines
+    if(verbose)
+        message("Adjusted Lines Per Page: ",
+                rlpp, " (original lpp: ", lpp, ")")
+    pagdf <- make_row_df(tt, colwidths, max_width = max_width)
 
     pag_indices_inner(pagdf, rlpp = rlpp, min_siblings = min_siblings,
-                         nosplitin = nosplitin,
-                         verbose = verbose)
+                      nosplitin = nosplitin,
+                      verbose = verbose,
+                      have_col_fnotes = have_cfnotes,
+                      div_height = dheight)
 }
 
 
@@ -509,7 +662,7 @@ do_force_paginate <- function(tt,
     }
     chunks <- list()
     kinds <- seq_along(force_pag)
-    while(length(kinds) > 0 ) {
+    while(length(kinds) > 0) {
         if(force_pag[kinds[1]]) {
             outertbl <- copy_title_footer(tree_children(tt)[[kinds[1]]],
                                           tt,
@@ -534,50 +687,136 @@ do_force_paginate <- function(tt,
 
 #' @export
 #' @aliases paginate_table
+#' @param cpp numeric(1) or NULL. Width (in characters) of the pages for
+#' horizontal pagination. `NULL` (the default) indicates no horizontal
+#' pagination should be done.
 #' @rdname paginate
-paginate_table = function(tt, lpp = 15,
-                          min_siblings = 2,
-                          nosplitin = character(),
-                          colwidths = NULL,
-                          verbose = FALSE) {
+#' @inheritParams formatters::vert_pag_indices
+#' @inheritParams formatters::page_lcpp
+#' @inheritParams formatters::toString
+paginate_table <- function(tt,
+                           page_type = "letter",
+                           font_family = "Courier",
+                           font_size = 12,
+                           lineheight = 1,
+                           landscape = FALSE,
+                           pg_width = NULL,
+                           pg_height = NULL,
+                           margins = c(top = .5, bottom = .5, left = .75, right = .75),
+                           lpp,
+                           cpp,
+                           min_siblings = 2,
+                           nosplitin = character(),
+                           colwidths = NULL,
+                           tf_wrap = FALSE,
+                           max_width = NULL,
+                           verbose = FALSE) {
+
+    if(missing(lpp) && missing(cpp) &&
+        !is.null(page_type) || (!is.null(pg_width) && !is.null(pg_height))) {
+        pg_lcpp <- page_lcpp(page_type = page_type,
+                             font_family = font_family,
+                             font_size = font_size,
+                             lineheight = lineheight,
+                             pg_width = pg_width,
+                             pg_height = pg_height,
+                             margins = margins,
+                             landscape = landscape)
+
+        if(missing(lpp))
+            lpp <- pg_lcpp$lpp
+        if(missing(cpp))
+            cpp <- pg_lcpp$cpp
+    } else {
+        if(missing(cpp))
+            cpp <- NULL
+        if(missing(lpp))
+            lpp <- 70
+    }
+
+    if(is.null(colwidths)) {
+        colwidths <- propose_column_widths(matrix_form(tt, indent_rownames = TRUE))
+    }
+
+    if(!tf_wrap) {
+        if(!is.null(max_width))
+            warning("tf_wrap is FALSE - ignoring non-null max_width value.")
+        max_width <- NULL
+    } else if (is.null(max_width)) {
+        max_width <- cpp
+    } else if(identical(max_width, "auto")) {
+        ## XXX this 3 is column sep width!!!!!!!
+        max_width <- sum(colwidths) + 3 * (length(colwidths) - 1)
+    }
+    if(!is.null(cpp) && !is.null(max_width) && max_width > cpp)
+        warning("max_width specified is wider than characters per page width (cpp).")
+
+    ## taken care of in vert_pag_indices now
+    ## if(!is.null(cpp))
+    ##     cpp <- cpp - table_inset(tt)
 
     force_pag <- vapply(tree_children(tt), has_force_pag, TRUE)
     if(has_force_pag(tt) || any(force_pag)) {
-        if(is.null(colwidths)) {
-            colwidths <- propose_column_widths(matrix_form(tt))
-        }
-
         spltabs <- do_force_paginate(tt, verbose = verbose)
         spltabs <- unlist(spltabs, recursive = TRUE)
         ret <- lapply(spltabs, paginate_table,
                       lpp = lpp,
+                      cpp = NULL,
                       min_siblings = min_siblings,
                       nosplitin = nosplitin,
                       colwidths = colwidths,
-                      verbose = verbose)
-        return(unlist(ret, recursive = TRUE))
+                      verbose = verbose,
+                      tf_wrap = tf_wrap,
+                      max_width = max_width)
+        res <- unlist(ret, recursive = TRUE)
 
-    }
-    inds = pag_tt_indices(tt, lpp = lpp,
-                          min_siblings = min_siblings,
-                          nosplitin = nosplitin,
-                          colwidths = colwidths,
-                          verbose = verbose)
-    lapply(inds, function(x) tt[x,,keep_topleft = TRUE,
+    } else if(!is.null(lpp)) {
+        inds <- pag_tt_indices(tt, lpp = lpp,
+                               min_siblings = min_siblings,
+                               nosplitin = nosplitin,
+                               colwidths = colwidths,
+                               verbose = verbose,
+                               max_width = max_width)
+        res <- lapply(inds, function(x) tt[x, , keep_topleft = TRUE,
                                 keep_titles = TRUE,
                                 reindex_refs = FALSE])
+    } else { ## lpp is NULL
+        res <- list(tt)
+    }
+
+    if(!is.null(cpp)) {
+        inds  <- vert_pag_indices(tt, cpp = cpp, colwidths = colwidths,
+                                  verbose = verbose,
+                                  rep_cols = 0L)
+        res <- lapply(res,
+                      function(oneres) {
+                          lapply(inds,
+                                 function(ii) oneres[, ii, drop = FALSE,
+                                                     keep_titles = TRUE,
+                                                     reindex_refs = FALSE])
+                      })
+        res <- unlist(res, recursive = FALSE)
+    }
+    res
 }
 
 
 
+#' @title Deprecated - vertically paginate table
+#'
+#' @description This function is deprecated and should not be used.
+#'
+#' @inheritParams paginate_table
+#' @description this function is deprecated. please use `paginate_table` with a
+#' non-null `cpp` argument instead.
 #' @export
-#' @aliases paginate_table
 #' @inheritParams formatters::vert_pag_indices
-#' @rdname paginate
+#' @keywords internal
 vpaginate_table <- function(tt, cpp = 40, verbose = FALSE) {
-    inds <- vert_pag_indices(tt, cpp = cpp, verbose = verbose)
-
-    lapply(inds, function(j) tt[,j, keep_topleft = TRUE,
+    .Deprecated("paginate_table(cpp=<>)")
+    inds <- vert_pag_indices(tt, cpp = cpp,
+                             verbose = verbose)
+    lapply(inds, function(j) tt[, j, keep_topleft = TRUE,
                                 keep_titles = TRUE,
                                 reindex_refs = FALSE])
 

@@ -19,11 +19,11 @@ a list of paths to each row/column within \code{x}
 Return List with Table Row/Col Paths
 }
 \examples{
-tbl <- basic_table() \%>\%
+lyt <- basic_table() \%>\%
   split_cols_by("ARM") \%>\%
-  analyze(c("SEX", "AGE")) \%>\%
-  build_table(ex_adsl)
-
+  analyze(c("SEX", "AGE"))
+  
+tbl <- build_table(lyt, ex_adsl)
 tbl
 
 row_paths(tbl)
@@ -31,4 +31,8 @@ col_paths(tbl)
 
 cell_values(tbl, c("AGE", "Mean"),  c("ARM", "B: Placebo"))
 
+}
+\seealso{
+\code{\link[=cell_values]{cell_values()}}, \code{\link{fnotes_at_path<-}},
+\code{\link[=row_paths_summary]{row_paths_summary()}}, \code{\link[=col_paths_summary]{col_paths_summary()}}
 }

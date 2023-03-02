@@ -10,32 +10,44 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<meta name="author" content="Gabriel Becker and Adrian Waddell" />
+<meta name="author" content="Gabriel Becker, Adrian Waddell and Davide Garolini" />
 
-<meta name="date" content="2022-05-20" />
+<meta name="date" content="2023-03-02" />
 
 <title>Pruning and Sorting Tables</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
@@ -53,55 +65,54 @@ pre > code.sourceCode { white-space: pre-wrap; }
 pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -110,13 +121,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -128,7 +146,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -141,478 +339,962 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <h1 class="title toc-ignore">Pruning and Sorting Tables</h1>
-<h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2022-05-20</h4>
+<h4 class="author">Gabriel Becker, Adrian Waddell and Davide
+Garolini</h4>
+<h4 class="date">2023-03-02</h4>
 
 
 
 <style type="text/css">
 .reveal .r code {
-    white-space: pre;
+white-space: pre;
 }
 </style>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Often we want to filter or reorder subsections of a table in ways that take into account the table structure. For example</p>
+<p>Often we want to filter or reorder elements of a table in ways that
+take into account the table structure. For example:</p>
 <ul>
-<li>sorting subtables corresponding to factor levels so that most commonly observed levels occur first in the table</li>
-<li>Removing subtables which represent 0 observations or which after other filtering contain 0 rows</li>
+<li>Sorting subtables corresponding to factor levels so that most
+commonly observed levels occur first in the table.</li>
+<li>Sorting rows within a single subtable</li>
+<li>Removing subtables which represent 0 observations or which after
+other filtering contain 0 rows.</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
 </div>
 <div id="a-table-in-need-of-attention" class="section level2">
 <h2>A Table In Need of Attention</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rawtable <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">build_table</span>(DM)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>rawtable</span></code></pre></div>
-<pre><code>                                                                 A: Drug X                                              B: Placebo                                           C: Combination                   
-                                                F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED
-——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
-ASIAN                                       44 (62.9%)   35 (68.6%)   0 (NA%)       0 (NA%)        37 (66.1%)   31 (62.0%)   0 (NA%)       0 (NA%)        40 (65.6%)   44 (64.7%)   0 (NA%)       0 (NA%)     
-  A                                         15 (21.4%)   12 (23.5%)   0 (NA%)       0 (NA%)        14 (25.0%)   6 (12.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
-    Mean                                      30.40        34.42        NA             NA            35.43        30.33        NA             NA            37.40        36.25        NA             NA       
-  B                                         16 (22.9%)   8 (15.7%)    0 (NA%)       0 (NA%)        13 (23.2%)   16 (32.0%)   0 (NA%)       0 (NA%)        10 (16.4%)   12 (17.6%)   0 (NA%)       0 (NA%)     
-    Mean                                      33.75        34.88        NA             NA            32.46        30.94        NA             NA            33.30        35.92        NA             NA       
-  C                                         13 (18.6%)   15 (29.4%)   0 (NA%)       0 (NA%)        10 (17.9%)   9 (18.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
-    Mean                                      36.92        35.60        NA             NA            34.00        31.89        NA             NA            33.47        31.38        NA             NA       
-BLACK OR AFRICAN AMERICAN                   18 (25.7%)   10 (19.6%)   0 (NA%)       0 (NA%)        12 (21.4%)   12 (24.0%)   0 (NA%)       0 (NA%)        13 (21.3%)   14 (20.6%)   0 (NA%)       0 (NA%)     
-  A                                          5 (7.1%)     1 (2.0%)    0 (NA%)       0 (NA%)         5 (8.9%)     2 (4.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
-    Mean                                      31.20        33.00        NA             NA            28.00        30.00        NA             NA            30.75        36.50        NA             NA       
-  B                                         7 (10.0%)     3 (5.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         6 (9.8%)     6 (8.8%)    0 (NA%)       0 (NA%)     
-    Mean                                      36.14        34.33        NA             NA            29.67        32.00        NA             NA            36.33        31.00        NA             NA       
-  C                                          6 (8.6%)    6 (11.8%)    0 (NA%)       0 (NA%)         4 (7.1%)    7 (14.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     4 (5.9%)    0 (NA%)       0 (NA%)     
-    Mean                                      31.33        39.67        NA             NA            34.50        34.00        NA             NA            33.00        36.50        NA             NA       
-WHITE                                       8 (11.4%)    6 (11.8%)    0 (NA%)       0 (NA%)        7 (12.5%)    7 (14.0%)    0 (NA%)       0 (NA%)        8 (13.1%)    10 (14.7%)   0 (NA%)       0 (NA%)     
-  A                                          2 (2.9%)     1 (2.0%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         1 (1.6%)     5 (7.4%)    0 (NA%)       0 (NA%)     
-    Mean                                      34.00        45.00        NA             NA            29.33        33.33        NA             NA            35.00        32.80        NA             NA       
-  B                                          4 (5.7%)     3 (5.9%)    0 (NA%)       0 (NA%)         1 (1.8%)     4 (8.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     1 (1.5%)    0 (NA%)       0 (NA%)     
-    Mean                                      37.00        43.67        NA             NA            48.00        36.75        NA             NA            34.33        36.00        NA             NA       
-  C                                          2 (2.9%)     2 (3.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     0 (0.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
-    Mean                                      35.50        44.00        NA             NA            44.67          NA         NA             NA            38.50        35.00        NA             NA       
-AMERICAN INDIAN OR ALASKA NATIVE             0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-  A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-  B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-  C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-MULTIPLE                                     0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-  A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-  B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-  C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER    0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-  A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-  B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-  C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-OTHER                                        0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-  A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-  B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-  C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-UNKNOWN                                      0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-  A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-  B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
-  C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
-    Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       </code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>raw_lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>raw_tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(raw_lyt, DM)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>raw_tbl</span></code></pre></div>
+<pre><code>#                                                                  A: Drug X                                              B: Placebo                                           C: Combination                   
+#                                                 F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED
+# ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                                       44 (62.9%)   35 (68.6%)   0 (NA%)       0 (NA%)        37 (66.1%)   31 (62.0%)   0 (NA%)       0 (NA%)        40 (65.6%)   44 (64.7%)   0 (NA%)       0 (NA%)     
+#   A                                         15 (21.4%)   12 (23.5%)   0 (NA%)       0 (NA%)        14 (25.0%)   6 (12.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
+#     Mean                                      30.40        34.42        NA             NA            35.43        30.33        NA             NA            37.40        36.25        NA             NA       
+#   B                                         16 (22.9%)   8 (15.7%)    0 (NA%)       0 (NA%)        13 (23.2%)   16 (32.0%)   0 (NA%)       0 (NA%)        10 (16.4%)   12 (17.6%)   0 (NA%)       0 (NA%)     
+#     Mean                                      33.75        34.88        NA             NA            32.46        30.94        NA             NA            33.30        35.92        NA             NA       
+#   C                                         13 (18.6%)   15 (29.4%)   0 (NA%)       0 (NA%)        10 (17.9%)   9 (18.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
+#     Mean                                      36.92        35.60        NA             NA            34.00        31.89        NA             NA            33.47        31.38        NA             NA       
+# BLACK OR AFRICAN AMERICAN                   18 (25.7%)   10 (19.6%)   0 (NA%)       0 (NA%)        12 (21.4%)   12 (24.0%)   0 (NA%)       0 (NA%)        13 (21.3%)   14 (20.6%)   0 (NA%)       0 (NA%)     
+#   A                                          5 (7.1%)     1 (2.0%)    0 (NA%)       0 (NA%)         5 (8.9%)     2 (4.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+#     Mean                                      31.20        33.00        NA             NA            28.00        30.00        NA             NA            30.75        36.50        NA             NA       
+#   B                                         7 (10.0%)     3 (5.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         6 (9.8%)     6 (8.8%)    0 (NA%)       0 (NA%)     
+#     Mean                                      36.14        34.33        NA             NA            29.67        32.00        NA             NA            36.33        31.00        NA             NA       
+#   C                                          6 (8.6%)    6 (11.8%)    0 (NA%)       0 (NA%)         4 (7.1%)    7 (14.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+#     Mean                                      31.33        39.67        NA             NA            34.50        34.00        NA             NA            33.00        36.50        NA             NA       
+# WHITE                                       8 (11.4%)    6 (11.8%)    0 (NA%)       0 (NA%)        7 (12.5%)    7 (14.0%)    0 (NA%)       0 (NA%)        8 (13.1%)    10 (14.7%)   0 (NA%)       0 (NA%)     
+#   A                                          2 (2.9%)     1 (2.0%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         1 (1.6%)     5 (7.4%)    0 (NA%)       0 (NA%)     
+#     Mean                                      34.00        45.00        NA             NA            29.33        33.33        NA             NA            35.00        32.80        NA             NA       
+#   B                                          4 (5.7%)     3 (5.9%)    0 (NA%)       0 (NA%)         1 (1.8%)     4 (8.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     1 (1.5%)    0 (NA%)       0 (NA%)     
+#     Mean                                      37.00        43.67        NA             NA            48.00        36.75        NA             NA            34.33        36.00        NA             NA       
+#   C                                          2 (2.9%)     2 (3.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     0 (0.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+#     Mean                                      35.50        44.00        NA             NA            44.67          NA         NA             NA            38.50        35.00        NA             NA       
+# AMERICAN INDIAN OR ALASKA NATIVE             0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#   A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+#   B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+#   C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+# MULTIPLE                                     0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#   A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+#   B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+#   C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+# NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER    0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#   A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+#   B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+#   C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+# OTHER                                        0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#   A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+#   B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+#   C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+# UNKNOWN                                      0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#   A                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+#   B                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       
+#   C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     
+#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA</code></pre>
 </div>
 <div id="trimming" class="section level2">
 <h2>Trimming</h2>
-<div id="rows" class="section level3">
-<h3>Rows</h3>
-<p>Trimming represents a convenience wrapper around simple, direct subsetting of the rows of a <code>TableTree</code>.</p>
-<p>We use the <code>trim_rows()</code> function and pass it our table and a critera function. All rows where the criteria function returns <code>TRUE</code> will be removed, all others will be retained.</p>
-<p><strong>NOTE</strong>: each row is kept or removed completely independently, with no awareness of the surrounding structure. This means, for example, that a subtree could have all its analysis rows removed and not be removed itself. For structure-aware filtering of a table, we will use <em>pruning</em> described in the next section.</p>
-<p>A <em>trimming function</em> accepts a <code>TableRow</code> object and returns <code>TRUE</code> if the row should be removed.</p>
-<p>The default trimming function removes rows that have no values in them that have all <code>NA</code> values or all <code>0</code> values (but not if there is a mix)</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trim_rows</span>(rawtable)</span></code></pre></div>
-<pre><code>                                                 A: Drug X                                              B: Placebo                                           C: Combination                   
-                                F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED
-——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
-ASIAN                       44 (62.9%)   35 (68.6%)   0 (NA%)       0 (NA%)        37 (66.1%)   31 (62.0%)   0 (NA%)       0 (NA%)        40 (65.6%)   44 (64.7%)   0 (NA%)       0 (NA%)     
-  A                         15 (21.4%)   12 (23.5%)   0 (NA%)       0 (NA%)        14 (25.0%)   6 (12.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
-    Mean                      30.40        34.42        NA             NA            35.43        30.33        NA             NA            37.40        36.25        NA             NA       
-  B                         16 (22.9%)   8 (15.7%)    0 (NA%)       0 (NA%)        13 (23.2%)   16 (32.0%)   0 (NA%)       0 (NA%)        10 (16.4%)   12 (17.6%)   0 (NA%)       0 (NA%)     
-    Mean                      33.75        34.88        NA             NA            32.46        30.94        NA             NA            33.30        35.92        NA             NA       
-  C                         13 (18.6%)   15 (29.4%)   0 (NA%)       0 (NA%)        10 (17.9%)   9 (18.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
-    Mean                      36.92        35.60        NA             NA            34.00        31.89        NA             NA            33.47        31.38        NA             NA       
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   0 (NA%)       0 (NA%)        12 (21.4%)   12 (24.0%)   0 (NA%)       0 (NA%)        13 (21.3%)   14 (20.6%)   0 (NA%)       0 (NA%)     
-  A                          5 (7.1%)     1 (2.0%)    0 (NA%)       0 (NA%)         5 (8.9%)     2 (4.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
-    Mean                      31.20        33.00        NA             NA            28.00        30.00        NA             NA            30.75        36.50        NA             NA       
-  B                         7 (10.0%)     3 (5.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         6 (9.8%)     6 (8.8%)    0 (NA%)       0 (NA%)     
-    Mean                      36.14        34.33        NA             NA            29.67        32.00        NA             NA            36.33        31.00        NA             NA       
-  C                          6 (8.6%)    6 (11.8%)    0 (NA%)       0 (NA%)         4 (7.1%)    7 (14.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     4 (5.9%)    0 (NA%)       0 (NA%)     
-    Mean                      31.33        39.67        NA             NA            34.50        34.00        NA             NA            33.00        36.50        NA             NA       
-WHITE                       8 (11.4%)    6 (11.8%)    0 (NA%)       0 (NA%)        7 (12.5%)    7 (14.0%)    0 (NA%)       0 (NA%)        8 (13.1%)    10 (14.7%)   0 (NA%)       0 (NA%)     
-  A                          2 (2.9%)     1 (2.0%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         1 (1.6%)     5 (7.4%)    0 (NA%)       0 (NA%)     
-    Mean                      34.00        45.00        NA             NA            29.33        33.33        NA             NA            35.00        32.80        NA             NA       
-  B                          4 (5.7%)     3 (5.9%)    0 (NA%)       0 (NA%)         1 (1.8%)     4 (8.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     1 (1.5%)    0 (NA%)       0 (NA%)     
-    Mean                      37.00        43.67        NA             NA            48.00        36.75        NA             NA            34.33        36.00        NA             NA       
-  C                          2 (2.9%)     2 (3.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     0 (0.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
-    Mean                      35.50        44.00        NA             NA            44.67          NA         NA             NA            38.50        35.00        NA             NA       </code></pre>
+<div id="trimming-rows" class="section level3">
+<h3>Trimming Rows</h3>
+<p>Trimming represents a convenience wrapper around simple, direct
+subsetting of the rows of a <code>TableTree</code>.</p>
+<p>We use the <code>trim_rows()</code> function with our table and a
+criteria function. All rows where the criteria function returns
+<code>TRUE</code> will be removed, and all others will be retained.</p>
+<p><strong>NOTE</strong>: Each row is kept or removed completely
+independently, with no awareness of the surrounding structure. This
+means, for example, that a subtree could have all its analysis rows
+removed and not be removed itself. For structure-aware filtering of a
+table, we will use <em>pruning</em> described in the next section.</p>
+<p>A <em>trimming function</em> accepts a <code>TableRow</code> object
+and returns <code>TRUE</code> if the row should be removed.</p>
+<p>The default trimming function removes rows in which all columns have
+no values in them, i.e. that have all <code>NA</code> values or all
+<code>0</code> values:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trim_rows</span>(raw_tbl)</span></code></pre></div>
+<pre><code>#                                                  A: Drug X                                              B: Placebo                                           C: Combination                   
+#                                 F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED       F            M           U      UNDIFFERENTIATED
+# ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                       44 (62.9%)   35 (68.6%)   0 (NA%)       0 (NA%)        37 (66.1%)   31 (62.0%)   0 (NA%)       0 (NA%)        40 (65.6%)   44 (64.7%)   0 (NA%)       0 (NA%)     
+#   A                         15 (21.4%)   12 (23.5%)   0 (NA%)       0 (NA%)        14 (25.0%)   6 (12.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
+#     Mean                      30.40        34.42        NA             NA            35.43        30.33        NA             NA            37.40        36.25        NA             NA       
+#   B                         16 (22.9%)   8 (15.7%)    0 (NA%)       0 (NA%)        13 (23.2%)   16 (32.0%)   0 (NA%)       0 (NA%)        10 (16.4%)   12 (17.6%)   0 (NA%)       0 (NA%)     
+#     Mean                      33.75        34.88        NA             NA            32.46        30.94        NA             NA            33.30        35.92        NA             NA       
+#   C                         13 (18.6%)   15 (29.4%)   0 (NA%)       0 (NA%)        10 (17.9%)   9 (18.0%)    0 (NA%)       0 (NA%)        15 (24.6%)   16 (23.5%)   0 (NA%)       0 (NA%)     
+#     Mean                      36.92        35.60        NA             NA            34.00        31.89        NA             NA            33.47        31.38        NA             NA       
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   0 (NA%)       0 (NA%)        12 (21.4%)   12 (24.0%)   0 (NA%)       0 (NA%)        13 (21.3%)   14 (20.6%)   0 (NA%)       0 (NA%)     
+#   A                          5 (7.1%)     1 (2.0%)    0 (NA%)       0 (NA%)         5 (8.9%)     2 (4.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+#     Mean                      31.20        33.00        NA             NA            28.00        30.00        NA             NA            30.75        36.50        NA             NA       
+#   B                         7 (10.0%)     3 (5.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         6 (9.8%)     6 (8.8%)    0 (NA%)       0 (NA%)     
+#     Mean                      36.14        34.33        NA             NA            29.67        32.00        NA             NA            36.33        31.00        NA             NA       
+#   C                          6 (8.6%)    6 (11.8%)    0 (NA%)       0 (NA%)         4 (7.1%)    7 (14.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+#     Mean                      31.33        39.67        NA             NA            34.50        34.00        NA             NA            33.00        36.50        NA             NA       
+# WHITE                       8 (11.4%)    6 (11.8%)    0 (NA%)       0 (NA%)        7 (12.5%)    7 (14.0%)    0 (NA%)       0 (NA%)        8 (13.1%)    10 (14.7%)   0 (NA%)       0 (NA%)     
+#   A                          2 (2.9%)     1 (2.0%)    0 (NA%)       0 (NA%)         3 (5.4%)     3 (6.0%)    0 (NA%)       0 (NA%)         1 (1.6%)     5 (7.4%)    0 (NA%)       0 (NA%)     
+#     Mean                      34.00        45.00        NA             NA            29.33        33.33        NA             NA            35.00        32.80        NA             NA       
+#   B                          4 (5.7%)     3 (5.9%)    0 (NA%)       0 (NA%)         1 (1.8%)     4 (8.0%)    0 (NA%)       0 (NA%)         3 (4.9%)     1 (1.5%)    0 (NA%)       0 (NA%)     
+#     Mean                      37.00        43.67        NA             NA            48.00        36.75        NA             NA            34.33        36.00        NA             NA       
+#   C                          2 (2.9%)     2 (3.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     0 (0.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     
+#     Mean                      35.50        44.00        NA             NA            44.67          NA         NA             NA            38.50        35.00        NA             NA</code></pre>
 </div>
 <div id="trimming-columns" class="section level3">
 <h3>Trimming Columns</h3>
-<p>There are currently no special utilities for trimming columns but we can remove the empty columns with fairly straightforward column subsetting:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>coltrimmed <span class="ot">&lt;-</span> rawtable[,<span class="fu">col_counts</span>(rawtable) <span class="sc">&gt;</span> <span class="dv">0</span>]</span></code></pre></div>
-<pre><code>Note: method with signature &#39;VTableTree#missing#ANY&#39; chosen for function &#39;[&#39;,
- target signature &#39;TableTree#missing#logical&#39;.
- &quot;VTableTree#ANY#logical&quot; would also be valid</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(coltrimmed)</span></code></pre></div>
-<pre><code>                  A: Drug X                B: Placebo              C: Combination     
-               F            M            F            M            F            M     
-——————————————————————————————————————————————————————————————————————————————————————
-ASIAN      44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
-  A        15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
-    Mean     30.40        34.42        35.43        30.33        37.40        36.25   
-  B        16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
-    Mean     33.75        34.88        32.46        30.94        33.30        35.92   
-  C        13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)</code></pre>
+<p>There are currently no special utilities for trimming columns but we
+can remove the empty columns with fairly straightforward column
+subsetting using the <code>col_counts()</code> function:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>coltrimmed <span class="ot">&lt;-</span> raw_tbl[, <span class="fu">col_counts</span>(raw_tbl) <span class="sc">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>h_coltrimmed <span class="ot">&lt;-</span> <span class="fu">head</span>(coltrimmed, <span class="at">n =</span> <span class="dv">14</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>h_coltrimmed</span></code></pre></div>
+<pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
+#                                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+#   B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+#   A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+#   B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50</code></pre>
+<p>Now, it is interesting to see how this table is structured:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table_structure</span>(h_coltrimmed)</span></code></pre></div>
+<pre><code># [TableTree] RACE
+#  [TableTree] ASIAN [cont: 1 x 6]
+#   [TableTree] STRATA1
+#    [TableTree] A [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#    [TableTree] B [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#    [TableTree] C [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#  [TableTree] BLACK OR AFRICAN AMERICAN [cont: 1 x 6]
+#   [TableTree] STRATA1
+#    [TableTree] A [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#    [TableTree] B [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#    [TableTree] C [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)</code></pre>
+<p>For a deeper understanding of the fundamental structures in
+<code>rtables</code>, we suggest taking a look at slides 69-76 of this
+<a href="https://docs.google.com/presentation/d/1ygQE9UaoXY6C_FiQLkiYtXB_OnkVbXvsMIY6_MQPbx0/edit?usp=sharing">Slide
+deck</a>.</p>
+<p>In brief, it is important to notice how <code>[TableTree] RACE</code>
+is the root of the table that is split (with
+<code>split_rows_by(&quot;RACE&quot;) %&gt;%</code>) into two subtables:
+<code>[TableTree] ASIAN [cont: 1 x 6]</code> and
+<code>[TableTree] BLACK OR AFRICAN AMERICAN [cont: 1 x 6]</code>. These
+are then “described” with <code>summarize_row_groups() %&gt;%</code>,
+which creates for every split a “content” table containing 1 row (the 1
+in <code>cont: 1 x 6</code>), which when rendered takes the place of
+<code>LabelRow</code>.</p>
+<p>Each of these two subtables then contain a <code>STRATA1</code>
+table, representing the further <code>split_rows_by(&quot;STRATA1&quot;)</code> in
+the layout, which, similar to the <code>RACE</code> table, is split into
+subtables: one for each strata which have similar content tables; Each
+individual strata subtable, then, contains an
+<code>ElementaryTable</code> (whose children are individual rows)
+generated by the <code>analyze(&quot;AGE&quot;)</code> layout directive,
+i.e. <code>[ElementaryTable] AGE (1 x 6)</code>.</p>
+<p>This subtable and row structure is very important for both sorting
+and pruning; values in “content” (<code>ContentRow</code>) and “value”
+(<code>DataRow</code>) rows use different access functions and they
+should be treated differently.</p>
+<p>Another interesting function that can be used to understand the
+connection between row names and their representational path is the
+following:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">row_paths_summary</span>(h_coltrimmed)</span></code></pre></div>
+<pre><code># rowname                      node_class    path                                                                
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                        ContentRow    RACE, ASIAN, @content, ASIAN                                        
+#   A                          ContentRow    RACE, ASIAN, STRATA1, A, @content, A                                
+#     Mean                     DataRow       RACE, ASIAN, STRATA1, A, AGE, Mean                                  
+#   B                          ContentRow    RACE, ASIAN, STRATA1, B, @content, B                                
+#     Mean                     DataRow       RACE, ASIAN, STRATA1, B, AGE, Mean                                  
+#   C                          ContentRow    RACE, ASIAN, STRATA1, C, @content, C                                
+#     Mean                     DataRow       RACE, ASIAN, STRATA1, C, AGE, Mean                                  
+# BLACK OR AFRICAN AMERICAN    ContentRow    RACE, BLACK OR AFRICAN AMERICAN, @content, BLACK OR AFRICAN AMERICAN
+#   A                          ContentRow    RACE, BLACK OR AFRICAN AMERICAN, STRATA1, A, @content, A            
+#     Mean                     DataRow       RACE, BLACK OR AFRICAN AMERICAN, STRATA1, A, AGE, Mean              
+#   B                          ContentRow    RACE, BLACK OR AFRICAN AMERICAN, STRATA1, B, @content, B            
+#     Mean                     DataRow       RACE, BLACK OR AFRICAN AMERICAN, STRATA1, B, AGE, Mean              
+#   C                          ContentRow    RACE, BLACK OR AFRICAN AMERICAN, STRATA1, C, @content, C            
+#     Mean                     DataRow       RACE, BLACK OR AFRICAN AMERICAN, STRATA1, C, AGE, Mean</code></pre>
 </div>
 </div>
 <div id="pruning" class="section level2">
 <h2>Pruning</h2>
-<p>Pruning is similar in outcome to trimming, but more powerful and more complex, as it takes structure into account.</p>
-<p>Pruning is applied recursively, in that at each structural unit (subtable, row) it both applies the pruning function at that level and to all it’s children (up to a user-specifiable maximum depth).</p>
-<p>The default pruning funciton, for example, determines if a subtree is empty by</p>
-<ol style="list-style-type: lower-alpha">
-<li>Removing all children which contain a single content row which contains all zeros or all <code>NA</code>s</li>
-<li>Removing rows which contain either all zeros or all <code>NA</code>s</li>
+<p>Pruning is similar in outcome to trimming, but more powerful and more
+complex, as it takes structure into account.</p>
+<p>Pruning is applied recursively, in that at each structural unit
+(subtable, row) it applies the pruning function both at that level and
+to all it’s children (up to a user-specifiable maximum depth).</p>
+<p>The default pruning function, for example, determines if a subtree is
+empty by:</p>
+<ol style="list-style-type: decimal">
+<li>Removing all children which contain a single content row which
+contains all zeros or all <code>NA</code>s</li>
+<li>Removing rows which contain either all zeros or all
+<code>NA</code>s</li>
 <li>Removing the full subtree if no unpruned children remain</li>
 </ol>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pruned <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>pruned</span></code></pre></div>
-<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
-                                F            M            F            M            F            M     
-———————————————————————————————————————————————————————————————————————————————————————————————————————
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
-  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
-    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
-    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      35.50        44.00        44.67          NA         38.50        35.00   </code></pre>
-<p>We can also use the <code>low_obs_pruner</code> pruning function constructor to create a pruning function which removes subtrees with content summaries whose first entries for each column sum or average to below a specified number. (In the default summaries the first entry per column is the count).</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pruned2 <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed, <span class="fu">low_obs_pruner</span>(<span class="dv">10</span>, <span class="st">&quot;mean&quot;</span>))</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pruned2</span></code></pre></div>
-<pre><code>                  A: Drug X                B: Placebo              C: Combination     
-               F            M            F            M            F            M     
-——————————————————————————————————————————————————————————————————————————————————————
-ASIAN      44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
-  A        15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
-    Mean     30.40        34.42        35.43        30.33        37.40        36.25   
-  B        16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
-    Mean     33.75        34.88        32.46        30.94        33.30        35.92   
-  C        13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
-    Mean     36.92        35.60        34.00        31.89        33.47        31.38   </code></pre>
-<p>Note that because the pruning is being applied recursively, only the <code>ASIAN</code> subtree remains because even though the full <code>BLACK OR AFRICAN AMERICAN</code> subtree encompassed enough observations, the strata within it did not. We can take care of this by setting the <code>stop_depth</code> for pruning to <code>1</code>.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pruned3 <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed, <span class="fu">low_obs_pruner</span>(<span class="dv">10</span>, <span class="st">&quot;sum&quot;</span>), <span class="at">stop_depth =</span> <span class="dv">1</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pruned3</span></code></pre></div>
-<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
-                                F            M            F            M            F            M     
-———————————————————————————————————————————————————————————————————————————————————————————————————————
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
-  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
-    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
-    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      35.50        44.00        44.67          NA         38.50        35.00   </code></pre>
-<p>We can also see that pruning to a lower number of observations, say, to a total of <code>16</code>, with no <code>stop_depth</code> removes some but not all of the strata from our third race (<code>WHITE</code>)</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pruned4 <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed, <span class="fu">low_obs_pruner</span>(<span class="dv">16</span>, <span class="st">&quot;sum&quot;</span>))</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pruned4</span></code></pre></div>
-<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
-                                F            M            F            M            F            M     
-———————————————————————————————————————————————————————————————————————————————————————————————————————
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
-  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
-    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   </code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pruned <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pruned</span></code></pre></div>
+<pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
+#                                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+#   B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+#   A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+#   B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+# WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+#   A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+#     Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</code></pre>
+<p>We can also use the <code>low_obs_pruner()</code> pruning function
+constructor to create a pruning function which removes subtrees with
+content summaries whose first entries for each column sum or average are
+below a specified number. (In the default summaries the first entry per
+column is the count).</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pruned2 <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed, <span class="fu">low_obs_pruner</span>(<span class="dv">10</span>, <span class="st">&quot;mean&quot;</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>pruned2</span></code></pre></div>
+<pre><code>#                   A: Drug X                B: Placebo              C: Combination     
+#                F            M            F            M            F            M     
+# ——————————————————————————————————————————————————————————————————————————————————————
+# ASIAN      44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   A        15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean     30.40        34.42        35.43        30.33        37.40        36.25   
+#   B        16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean     33.75        34.88        32.46        30.94        33.30        35.92   
+#   C        13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean     36.92        35.60        34.00        31.89        33.47        31.38</code></pre>
+<p>Note that because the pruning is being applied recursively, only the
+<code>ASIAN</code> subtree remains because even though the full
+<code>BLACK OR AFRICAN AMERICAN</code> subtree encompassed enough
+observations, the strata within it did not. We can take care of this by
+setting the <code>stop_depth</code> for pruning to <code>1</code>.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pruned3 <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed, <span class="fu">low_obs_pruner</span>(<span class="dv">10</span>, <span class="st">&quot;sum&quot;</span>), <span class="at">stop_depth =</span> <span class="dv">1</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>pruned3</span></code></pre></div>
+<pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
+#                                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+#   B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+#   A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+#   B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+# WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+#   A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+#     Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</code></pre>
+<p>We can also see that pruning to a lower number of observations, say,
+to a total of <code>16</code>, with no <code>stop_depth</code> removes
+some but not all of the strata from our third race
+(<code>WHITE</code>).</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pruned4 <span class="ot">&lt;-</span> <span class="fu">prune_table</span>(coltrimmed, <span class="fu">low_obs_pruner</span>(<span class="dv">16</span>, <span class="st">&quot;sum&quot;</span>))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>pruned4</span></code></pre></div>
+<pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
+#                                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+#   B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+#   A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+#   B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+# WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00</code></pre>
 </div>
 <div id="sorting" class="section level2">
 <h2>Sorting</h2>
-<p>Sorting an rtable is done <strong>at a path</strong> and recursively, meaning a sort opreation will occur at a particular location within the table, and the subtables( children) will both be reordered themselves and potentially have their own children reordered as well.</p>
-<p>This is done by giving a <em>score function</em> which accepts a subtree or TableRow and returns a single numeric value. Within the context currently being sorted, the subtrees are then reordered by the value of the score function.</p>
-<p>Another difference between pruning and sorting is that sorting occurs at particular places in the table, as defined by a path. The path can contain &quot;*&quot; to indicate that at that portion of the structure sorting should occur <strong>separately</strong> within branch of the path.</p>
-<p>Sort the strata by observation counts within just the <code>ASIAN</code> subtable:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols)</span></code></pre></div>
-<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
-                                F            M            F            M            F            M     
-———————————————————————————————————————————————————————————————————————————————————————————————————————
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
-  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
-    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
-    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      35.50        44.00        44.67          NA         38.50        35.00   </code></pre>
-<p>Sort the ethnicities by observations, increasing</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ethsort <span class="ot">&lt;-</span> <span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols, <span class="at">decreasing =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>ethsort</span></code></pre></div>
-<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
-                                F            M            F            M            F            M     
-———————————————————————————————————————————————————————————————————————————————————————————————————————
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
-    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
-    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      35.50        44.00        44.67          NA         38.50        35.00   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
-  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   </code></pre>
-<p>Within each ethnicity separately, sort the strata by number of females in arm c (ie column position <code>5</code>)</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="fu">cont_n_onecol</span>(<span class="dv">5</span>))</span></code></pre></div>
-<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
-                                F            M            F            M            F            M     
-———————————————————————————————————————————————————————————————————————————————————————————————————————
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
-  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
-  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      35.50        44.00        44.67          NA         38.50        35.00   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
-    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
-  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
-    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   </code></pre>
+<div id="sorting-fundamentals" class="section level3">
+<h3>Sorting Fundamentals</h3>
+<p>Sorting of an <code>rtables</code> table is done <strong>at a
+path</strong>, meaning a sort operation will occur at a particular
+location within the table, and the <em>direct children</em> of the
+element at that path will be reordered. This occurs whether those
+children are subtables themselves, or individual rows. Sorting is done
+via the <code>sort_at_path()</code> function, which accepts both a (row)
+path and a scoring function.</p>
+<p>A <em>score function</em> accepts a subtree or <code>TableRow</code>
+and returns a single orderable (typically numeric) value. Within the
+subtable currently being sorted, the children are then reordered by the
+value of the score function. Importantly, “content”
+(<code>ContentRow</code>) and “values” (<code>DataRow</code>) need to be
+treated differently in the scoring function as they are retrieved: the
+<em>content</em> of a subtable is retrieved via the
+<code>content _table</code> accessor.</p>
+<p>The <code>cont_n_allcols()</code> scoring function provided by
+<code>rtables</code>, works by scoring subtables by the sum of the first
+elements in the first row of the subtable’s <em>content</em> table. Note
+that this function fails if the child being scored does not have a
+content function (i.e., if <code>summarize_row_groups()</code> was not
+used at the corresponding point in the layout). We can see this in it’s
+definition, below:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cont_n_allcols</span></code></pre></div>
+<pre><code># function (tt) 
+# {
+#     ctab &lt;- content_table(tt)
+#     if (NROW(ctab) == 0) 
+#         stop(&quot;cont_n_allcols score function used at subtable [&quot;, 
+#             obj_name(tt), &quot;] that has no content table.&quot;)
+#     sum(sapply(row_values(tree_children(ctab)[[1]]), function(cv) cv[1]))
+# }
+# &lt;bytecode: 0x7fa2e23ad978&gt;
+# &lt;environment: namespace:rtables&gt;</code></pre>
+<p>Therefore, a fundamental difference between pruning and sorting is
+that sorting occurs at particular places in the table, as defined by a
+path.</p>
+<p>For example, we can sort the strata values (<code>ContentRow</code>)
+by observation counts within just the <code>ASIAN</code> subtable:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols)</span></code></pre></div>
+<pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
+#                                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+#   B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+#   A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+#   B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+# WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+#   A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+#     Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># B and C are swapped as the global count (sum of all column counts) of strata C is higher than the one of strata B</span></span></code></pre></div>
+</div>
+<div id="wildcards-in-sort-paths" class="section level3">
+<h3>Wildcards in Sort Paths</h3>
+<p>Unlike other uses of pathing (currentl), a sorting path can contain
+“*“. This indicates that the children of each subtable matching he
+<code>*</code> element of the path should be sorted
+<strong>separately</strong> as indicated by the remainder of the path
+after the <code>*</code> and the score function.</p>
+<p>Thus we can extend our sorting of strata within the
+<code>ASIAN</code> subtable to all race-specific subtables bjy using the
+wildcard:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols)</span></code></pre></div>
+<pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
+#                                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+#   B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+#   B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+#   A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+# WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+#   A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+#     Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># All subtables, i.e. ASIAN, BLACK..., and WHITE, are reordered separately</span></span></code></pre></div>
+<p>The above is equivalent to separately calling the following:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>tmptbl <span class="ot">&lt;-</span> <span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>tmptbl <span class="ot">&lt;-</span> <span class="fu">sort_at_path</span>(tmptbl, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;BLACK OR AFRICAN AMERICAN&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>tmptbl <span class="ot">&lt;-</span> <span class="fu">sort_at_path</span>(tmptbl, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;WHITE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>tmptbl</span></code></pre></div>
+<pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
+#                                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+#   B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+#   B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+#   A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+# WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+#   A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+#     Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</code></pre>
+<p>It is possible to understand better pathing with
+<code>table_structure()</code> that highlights the tree-like structure
+and the node names:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table_structure</span>(pruned)</span></code></pre></div>
+<pre><code># [TableTree] RACE
+#  [TableTree] ASIAN [cont: 1 x 6]
+#   [TableTree] STRATA1
+#    [TableTree] A [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#    [TableTree] B [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#    [TableTree] C [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#  [TableTree] BLACK OR AFRICAN AMERICAN [cont: 1 x 6]
+#   [TableTree] STRATA1
+#    [TableTree] A [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#    [TableTree] B [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#    [TableTree] C [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#  [TableTree] WHITE [cont: 1 x 6]
+#   [TableTree] STRATA1
+#    [TableTree] A [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#    [TableTree] B [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)
+#    [TableTree] C [cont: 1 x 6]
+#     [ElementaryTable] AGE (1 x 6)</code></pre>
+<p>or with <code>row_paths_summary</code>:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">row_paths_summary</span>(pruned)</span></code></pre></div>
+<pre><code># rowname                      node_class    path                                                                
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                        ContentRow    RACE, ASIAN, @content, ASIAN                                        
+#   A                          ContentRow    RACE, ASIAN, STRATA1, A, @content, A                                
+#     Mean                     DataRow       RACE, ASIAN, STRATA1, A, AGE, Mean                                  
+#   B                          ContentRow    RACE, ASIAN, STRATA1, B, @content, B                                
+#     Mean                     DataRow       RACE, ASIAN, STRATA1, B, AGE, Mean                                  
+#   C                          ContentRow    RACE, ASIAN, STRATA1, C, @content, C                                
+#     Mean                     DataRow       RACE, ASIAN, STRATA1, C, AGE, Mean                                  
+# BLACK OR AFRICAN AMERICAN    ContentRow    RACE, BLACK OR AFRICAN AMERICAN, @content, BLACK OR AFRICAN AMERICAN
+#   A                          ContentRow    RACE, BLACK OR AFRICAN AMERICAN, STRATA1, A, @content, A            
+#     Mean                     DataRow       RACE, BLACK OR AFRICAN AMERICAN, STRATA1, A, AGE, Mean              
+#   B                          ContentRow    RACE, BLACK OR AFRICAN AMERICAN, STRATA1, B, @content, B            
+#     Mean                     DataRow       RACE, BLACK OR AFRICAN AMERICAN, STRATA1, B, AGE, Mean              
+#   C                          ContentRow    RACE, BLACK OR AFRICAN AMERICAN, STRATA1, C, @content, C            
+#     Mean                     DataRow       RACE, BLACK OR AFRICAN AMERICAN, STRATA1, C, AGE, Mean              
+# WHITE                        ContentRow    RACE, WHITE, @content, WHITE                                        
+#   A                          ContentRow    RACE, WHITE, STRATA1, A, @content, A                                
+#     Mean                     DataRow       RACE, WHITE, STRATA1, A, AGE, Mean                                  
+#   B                          ContentRow    RACE, WHITE, STRATA1, B, @content, B                                
+#     Mean                     DataRow       RACE, WHITE, STRATA1, B, AGE, Mean                                  
+#   C                          ContentRow    RACE, WHITE, STRATA1, C, @content, C                                
+#     Mean                     DataRow       RACE, WHITE, STRATA1, C, AGE, Mean</code></pre>
+<p>Note in the latter we see content rows as those with paths following
+<code>@content</code>, e.g., <code>ASIAN, @content, ASIAN</code>. The
+first of these at a given path (i.e.,
+<code>&lt;path&gt;, @content, &lt;&gt;</code> are the rows which will be
+used by the scoring functions which begin with <code>cont_</code>.</p>
+<p>We can directly sort the ethnicity by observations in increasing
+order:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>ethsort <span class="ot">&lt;-</span> <span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols, <span class="at">decreasing =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>ethsort</span></code></pre></div>
+<pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
+#                                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————
+# WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+#   A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+#     Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      35.50        44.00        44.67          NA         38.50        35.00   
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+#   A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+#   B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+# ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+#   B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38</code></pre>
+<p>Within each ethnicity separately, sort the strata by number of
+females in arm C (i.e. column position <code>5</code>):</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="fu">cont_n_onecol</span>(<span class="dv">5</span>))</span></code></pre></div>
+<pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
+#                                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+#   B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+#   B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+#   A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+# WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      35.50        44.00        44.67          NA         38.50        35.00   
+#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+#   A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+#     Mean                      34.00        45.00        29.33        33.33        35.00        32.80</code></pre>
+</div>
 <div id="sorting-within-an-analysis-subtable" class="section level3">
 <h3>Sorting Within an Analysis Subtable</h3>
-<p>When sorting within an analysis subtable (e.g., the subtable generated when your analysis function generates more than one row per group of data), the name of that subtable (generally the name of the variable being analyzed) must appear in the path, <em><strong>even if the variable label is not displayed when the table is printed</strong></em></p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>silly_afun <span class="ot">=</span> <span class="cf">function</span>(x) {</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="at">a =</span> <span class="fu">rcell</span>(<span class="dv">2</span>),</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">b =</span> <span class="fu">rcell</span>(<span class="dv">3</span>),</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">c =</span> <span class="fu">rcell</span>(<span class="dv">1</span>))</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>sillytbl <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span> <span class="fu">split_rows_by</span>(<span class="st">&quot;cyl&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;mpg&quot;</span>, silly_afun) <span class="sc">%&gt;%</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">build_table</span>(mtcars)</span></code></pre></div>
-<pre><code>Split var [cyl] was not character or factor. Converting to factor</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>sillytbl</span></code></pre></div>
-<pre><code>      all obs
-—————————————
-6            
-  a      2   
-  b      3   
-  c      1   
-4            
-  a      2   
-  b      3   
-  c      1   
-8            
-  a      2   
-  b      3   
-  c      1   </code></pre>
-<p>The path required to sort the rows inside our “analysis” of <code>mpg</code>, then is <code>c(&quot;cyl&quot;, &quot;*&quot;, &quot;mpg&quot;)</code>:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>scorefun <span class="ot">&lt;-</span> <span class="cf">function</span>(tt) { <span class="fu">mean</span>(<span class="fu">unlist</span>(<span class="fu">row_values</span>(tt)))}</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(sillytbl, <span class="fu">c</span>(<span class="st">&quot;cyl&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;mpg&quot;</span>), scorefun)</span></code></pre></div>
-<pre><code>      all obs
-—————————————
-6            
-  b      3   
-  a      2   
-  c      1   
-4            
-  b      3   
-  a      2   
-  c      1   
-8            
-  b      3   
-  a      2   
-  c      1   </code></pre>
+<p>When sorting within an analysis subtable (e.g., the subtable
+generated when your analysis function generates more than one row per
+group of data), the name of that subtable (generally the name of the
+variable being analyzed) must appear in the path, <em><strong>even if
+the variable label is not displayed when the table is
+printed</strong></em>.</p>
+<p>To show the differences between sorting an analysis subtable
+(<code>DataRow</code>), and a content subtable
+(<code>ContentRow</code>), we modify and prune (as before) a similar raw
+table as before:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>more_analysis_fnc <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;median&quot;</span> <span class="ot">=</span> <span class="fu">median</span>(x),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;mean&quot;</span> <span class="ot">=</span> <span class="fu">mean</span>(x),</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.formats =</span> <span class="st">&quot;xx.x&quot;</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>raw_lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;RACE&quot;</span>,</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">split_fun =</span> <span class="fu">drop_and_remove_levels</span>(<span class="st">&quot;WHITE&quot;</span>) <span class="co"># dropping WHITE levels</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> more_analysis_fnc)</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(raw_lyt, DM) <span class="sc">%&gt;%</span></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prune_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>#                             A: Drug X    B: Placebo   C: Combination
+# ————————————————————————————————————————————————————————————————————
+# ASIAN                       79 (65.3%)   68 (64.2%)     84 (65.1%)  
+#   A                         27 (22.3%)   20 (18.9%)     31 (24.0%)  
+#     median                     30.0         33.0           36.0     
+#     mean                       32.2         33.9           36.8     
+#   B                         24 (19.8%)   29 (27.4%)     22 (17.1%)  
+#     median                     32.5         32.0           34.0     
+#     mean                       34.1         31.6           34.7     
+#   C                         28 (23.1%)   19 (17.9%)     31 (24.0%)  
+#     median                     36.5         34.0           33.0     
+#     mean                       36.2         33.0           32.4     
+# BLACK OR AFRICAN AMERICAN   28 (23.1%)   24 (22.6%)     27 (20.9%)  
+#   A                          6 (5.0%)     7 (6.6%)       8 (6.2%)   
+#     median                     32.0         29.0           32.5     
+#     mean                       31.5         28.6           33.6     
+#   B                         10 (8.3%)     6 (5.7%)      12 (9.3%)   
+#     median                     33.0         30.0           33.5     
+#     mean                       35.6         30.8           33.7     
+#   C                         12 (9.9%)    11 (10.4%)      7 (5.4%)   
+#     median                     33.0         36.0           32.0     
+#     mean                       35.5         34.2           35.0</code></pre>
+<p>What should we do now if we want to sort each median and mean in each
+of the strata variables? We need to write a custom score function as the
+ready-made ones at the moment work only with content nodes
+(<code>content_table()</code> access function for
+<code>cont_n_allcols()</code> and <code>cont_n_onecol()</code>, of which
+we will talk in a moment). But before that, we need to think about what
+are we ordering, i.e. we need to specify the right path. We suggest
+looking at the structure first with <code>table_structure()</code> or
+<code>row_paths_summary()</code>.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table_structure</span>(tbl) <span class="co"># Direct inspection into the tree-like structure of rtables</span></span></code></pre></div>
+<pre><code># [TableTree] RACE
+#  [TableTree] ASIAN [cont: 1 x 3]
+#   [TableTree] STRATA1
+#    [TableTree] A [cont: 1 x 3]
+#     [ElementaryTable] AGE (2 x 3)
+#    [TableTree] B [cont: 1 x 3]
+#     [ElementaryTable] AGE (2 x 3)
+#    [TableTree] C [cont: 1 x 3]
+#     [ElementaryTable] AGE (2 x 3)
+#  [TableTree] BLACK OR AFRICAN AMERICAN [cont: 1 x 3]
+#   [TableTree] STRATA1
+#    [TableTree] A [cont: 1 x 3]
+#     [ElementaryTable] AGE (2 x 3)
+#    [TableTree] B [cont: 1 x 3]
+#     [ElementaryTable] AGE (2 x 3)
+#    [TableTree] C [cont: 1 x 3]
+#     [ElementaryTable] AGE (2 x 3)</code></pre>
+<p>We see that to order all of the <code>AGE</code> nodes we need to get
+there with something like this:
+<code>RACE, ASIAN, STRATA1, A, AGE</code> and no more as the next level
+is what we need to sort. But we see now that this path would sort only
+the first group. We need wildcards:
+<code>RACE, *, STRATA1, *, AGE</code>.</p>
+<p>Now, we have found a way to select relevant paths that we want to
+sort. We want to construct a scoring function that works on the median
+and mean and sort them. To do so, we may want to enter our scoring
+function with <code>browser()</code> to see what is fed to it and try to
+retrieve the single value that is to be returned to do the sorting. We
+allow the user to experiment with this, while here we show a possible
+solution that considers summing all the column values that are retrieved
+with <code>row_values(tt)</code> from the subtable that is fed to the
+function itself. Note that any score function should be defined as
+having a subtable <code>tt</code> as a unique input parameter and a
+single numeric value as output.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>scorefun <span class="ot">&lt;-</span> <span class="cf">function</span>(tt) {</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Here we could use browser()</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">unlist</span>(<span class="fu">row_values</span>(tt)))</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(tbl, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;AGE&quot;</span>), scorefun)</span></code></pre></div>
+<pre><code>#                             A: Drug X    B: Placebo   C: Combination
+# ————————————————————————————————————————————————————————————————————
+# ASIAN                       79 (65.3%)   68 (64.2%)     84 (65.1%)  
+#   A                         27 (22.3%)   20 (18.9%)     31 (24.0%)  
+#     mean                       32.2         33.9           36.8     
+#     median                     30.0         33.0           36.0     
+#   B                         24 (19.8%)   29 (27.4%)     22 (17.1%)  
+#     mean                       34.1         31.6           34.7     
+#     median                     32.5         32.0           34.0     
+#   C                         28 (23.1%)   19 (17.9%)     31 (24.0%)  
+#     median                     36.5         34.0           33.0     
+#     mean                       36.2         33.0           32.4     
+# BLACK OR AFRICAN AMERICAN   28 (23.1%)   24 (22.6%)     27 (20.9%)  
+#   A                          6 (5.0%)     7 (6.6%)       8 (6.2%)   
+#     mean                       31.5         28.6           33.6     
+#     median                     32.0         29.0           32.5     
+#   B                         10 (8.3%)     6 (5.7%)      12 (9.3%)   
+#     mean                       35.6         30.8           33.7     
+#     median                     33.0         30.0           33.5     
+#   C                         12 (9.9%)    11 (10.4%)      7 (5.4%)   
+#     mean                       35.5         34.2           35.0     
+#     median                     33.0         36.0           32.0</code></pre>
+<p>To help the user visualize what is happening in the score function we
+show here an example of its exploration from the debugging:</p>
+<pre><code>&gt; sort_at_path(tbl, c(&quot;RACE&quot;, &quot;*&quot;, &quot;STRATA1&quot;, &quot;*&quot;, &quot;AGE&quot;), scorefun)
+Called from: scorefun(x)
+Browse[1]&gt; tt ### THIS IS THE LEAF LEVEL -&gt; DataRow ###
+[DataRow indent_mod 0]: median   30.0   33.0   36.0
+Browse[1]&gt; row_values(tt) ### Extraction of values -&gt; It will be a named list! ###
+$`A: Drug X`
+[1] 30
+
+$`B: Placebo`
+[1] 33
+
+$`C: Combination`
+[1] 36
+
+Browse[1]&gt; sum(unlist(row_values(tt))) ### Final value we want to give back to sort_at_path ###
+[1] 99</code></pre>
+<p>We can see how powerful and pragmatic it might be to change the
+sorting principles from within the custom scoring function. We show this
+by selecting a specific column to sort. Looking at the pre-defined
+function <code>cont_n_onecol()</code> gives us an insight into how to
+proceed.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>cont_n_onecol</span></code></pre></div>
+<pre><code># function (j) 
+# {
+#     function(tt) {
+#         ctab &lt;- content_table(tt)
+#         if (NROW(ctab) == 0) 
+#             stop(&quot;cont_n_allcols score function used at subtable [&quot;, 
+#                 obj_name(tt), &quot;] that has no content table.&quot;)
+#         row_values(tree_children(ctab)[[1]])[[j]][1]
+#     }
+# }
+# &lt;bytecode: 0x7fa2e2e19b88&gt;
+# &lt;environment: namespace:rtables&gt;</code></pre>
+<p>We see that a similar function to <code>cont_n_allcols()</code> is
+wrapped by one that allows a parameter <code>j</code> to be used to
+select a specific column. We will do the same here for selecting which
+column we want to sort.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>scorefun_onecol <span class="ot">&lt;-</span> <span class="cf">function</span>(colpath) {</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(tt) {</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Here we could use browser()</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unlist</span>(<span class="fu">cell_values</span>(tt, <span class="at">colpath =</span> colpath), <span class="at">use.names =</span> <span class="cn">FALSE</span>)[<span class="dv">1</span>] <span class="co"># Modified to lose the list names</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(tbl, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;AGE&quot;</span>),</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>             <span class="fu">scorefun_onecol</span>(<span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>)))</span></code></pre></div>
+<pre><code>#                             A: Drug X    B: Placebo   C: Combination
+# ————————————————————————————————————————————————————————————————————
+# ASIAN                       79 (65.3%)   68 (64.2%)     84 (65.1%)  
+#   A                         27 (22.3%)   20 (18.9%)     31 (24.0%)  
+#     mean                       32.2         33.9           36.8     
+#     median                     30.0         33.0           36.0     
+#   B                         24 (19.8%)   29 (27.4%)     22 (17.1%)  
+#     mean                       34.1         31.6           34.7     
+#     median                     32.5         32.0           34.0     
+#   C                         28 (23.1%)   19 (17.9%)     31 (24.0%)  
+#     median                     36.5         34.0           33.0     
+#     mean                       36.2         33.0           32.4     
+# BLACK OR AFRICAN AMERICAN   28 (23.1%)   24 (22.6%)     27 (20.9%)  
+#   A                          6 (5.0%)     7 (6.6%)       8 (6.2%)   
+#     median                     32.0         29.0           32.5     
+#     mean                       31.5         28.6           33.6     
+#   B                         10 (8.3%)     6 (5.7%)      12 (9.3%)   
+#     mean                       35.6         30.8           33.7     
+#     median                     33.0         30.0           33.5     
+#   C                         12 (9.9%)    11 (10.4%)      7 (5.4%)   
+#     mean                       35.5         34.2           35.0     
+#     median                     33.0         36.0           32.0</code></pre>
+<p>In the above table we see that the mean and median rows are reordered
+by their values in the first column, comparead to the raw table, as
+desired.</p>
+<p>With this function we can also do the same for columns that are
+nested within larger splits:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simpler table</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">split_fun =</span> <span class="fu">drop_and_remove_levels</span>(<span class="fu">c</span>(<span class="st">&quot;U&quot;</span>, <span class="st">&quot;UNDIFFERENTIATED&quot;</span>))</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> more_analysis_fnc) <span class="sc">%&gt;%</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(DM) <span class="sc">%&gt;%</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prune_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code></pre></div>
+<pre><code>#           A: Drug X      B: Placebo      C: Combination  
+#            F      M       F       M        F         M   
+# —————————————————————————————————————————————————————————
+# median   32.0    35.0   33.0    31.0     35.0      32.0  
+# mean     33.7    36.5   33.8    32.1     34.9      34.3</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(tbl, <span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>),</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">scorefun_onecol</span>(<span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;B: Placebo&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span></code></pre></div>
+<pre><code>#           A: Drug X      B: Placebo      C: Combination  
+#            F      M       F       M        F         M   
+# —————————————————————————————————————————————————————————
+# mean     33.7    36.5   33.8    32.1     34.9      34.3  
+# median   32.0    35.0   33.0    31.0     35.0      32.0</code></pre>
 </div>
 </div>
 <div id="writing-custom-pruning-criteria-and-scoring-functions" class="section level1">
 <h1>Writing Custom Pruning Criteria and Scoring Functions</h1>
-<p>Pruning criteria and scoring functions map TableTree or TableRow objects to a boolean value (for pruning criteria) or a sortable scalar value (scoring functions). To do this we currently need to interact with the structure of the objects in more than usual.</p>
+<p>Pruning criteria and scoring functions map <code>TableTree</code> or
+<code>TableRow</code> objects to a Boolean value (for pruning criteria)
+or a sortable scalar value (scoring functions). To do this we currently
+need to interact with the structure of the objects more than usual.
+Indeed, we showed already how sorting can be very complicated if the
+concept of tree-like structure and pathing is not well understood. It is
+important though to have in mind the following functions that can be
+used in each pruning or sorting function to retrieve the relevant
+information from the table.</p>
 <div id="useful-functions-and-accessors" class="section level2">
 <h2>Useful Functions and Accessors</h2>
-<p><code>content_table</code> Retrieves a <code>TableTree</code> object’s content table (which contains its summary rows).</p>
-<p><code>tree_children</code> Retrieves a <code>TableTree</code> object’s children (either subtables, rows or possibly a mix thereof, though that should not happen in practice)</p>
-<p><code>row_values</code> Retrieves a <code>TableRow</code> object’s values in the form of a list of length <code>ncol(tt)</code></p>
-<p><code>vapply(row_values(tt), &#39;[[&#39;, i=1, numeric(1))</code> will retrieve the first element from each cell provided <code>tt</code> is a TableRow (and the first element is a numeric value).</p>
-<p><code>obj_name</code> Retrieves the name of an object. Note this can differ from the label that is displayed (if any is) when printing. This will match the element in the path.</p>
-<p><code>obj_label</code> Retrieves the display label of an object. Note this can differ from the name that appears in the path.</p>
+<ul>
+<li><code>cell_values()</code> - Retrieves a named list of a
+<code>TableRow</code> or <code>TableTree</code> object’s values
+<ul>
+<li>accepts both <code>rowpath</code> and <code>colpath</code> to
+restrict which cell values are returned</li>
+</ul></li>
+<li><code>obj_name()</code> - Retrieves the name of an object. Note this
+can differ from the label that is displayed (if any is) when printing.
+This will match the element in the path.</li>
+<li><code>obj_label()</code> - Retrieves the display label of an object.
+Note this can differ from the name that appears in the path.</li>
+<li><code>content_table()</code> - Retrieves a <code>TableTree</code>
+object’s content table (which contains its summary rows).</li>
+<li><code>tree_children()</code> - Retrieves a <code>TableTree</code>
+object’s direct children (either subtables, rows or possibly a mix
+thereof, though that should not happen in practice)</li>
+</ul>
 </div>
 <div id="example-custom-scoring-functions" class="section level2">
 <h2>Example Custom Scoring Functions</h2>
 <div id="sort-by-a-character-score" class="section level3">
 <h3>Sort by a character “score”</h3>
-<p>In this case, for convenience/simplicity, we use the name of the table element but any logic which returns a single string could be used here.</p>
-<p>We sort the ethnicities by alphabetical order (in practice undoing our previous sorting by ethnicity above).</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>silly_name_scorer <span class="ot">=</span> <span class="cf">function</span>(tt) {</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    nm <span class="ot">=</span> <span class="fu">obj_name</span>(tt)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(nm)</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    nm</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(ethsort, <span class="st">&quot;RACE&quot;</span>, silly_name_scorer)</span></code></pre></div>
-<pre><code>[1] &quot;WHITE&quot;
-[1] &quot;BLACK OR AFRICAN AMERICAN&quot;
-[1] &quot;ASIAN&quot;</code></pre>
-<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
-                                F            M            F            M            F            M     
-———————————————————————————————————————————————————————————————————————————————————————————————————————
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
-  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
-  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
-  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
-    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
-    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      35.50        44.00        44.67          NA         38.50        35.00   </code></pre>
-<p><strong>NOTE</strong> generally this would be more appropriately done using the reorder_split_levels function within the layout rather than as a sort postprocessing step, but other character scorers may or may not not map as easily to layouting directives.</p>
+<p>In this case, for convenience/simplicity, we use the name of the
+table element but any logic which returns a single string could be used
+here.</p>
+<p>We sort the ethnicity by alphabetical order (in practice undoing our
+previous sorting by ethnicity above).</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>silly_name_scorer <span class="ot">&lt;-</span> <span class="cf">function</span>(tt) {</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  nm <span class="ot">&lt;-</span> <span class="fu">obj_name</span>(tt)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(nm)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  nm</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(ethsort, <span class="st">&quot;RACE&quot;</span>, silly_name_scorer) <span class="co"># Now, it is sorted alphabetically!</span></span></code></pre></div>
+<pre><code># [1] &quot;WHITE&quot;
+# [1] &quot;BLACK OR AFRICAN AMERICAN&quot;
+# [1] &quot;ASIAN&quot;</code></pre>
+<pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
+#                                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+#   B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+#   A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+#   B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+# WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+#   A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+#     Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   
+#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</code></pre>
+<p><strong>NOTE</strong>: Generally this would be more appropriately
+done using the <code>reorder_split_levels()</code> function within the
+layout rather than as a sort post-processing step, but other character
+scorers may or may not map as easily to layouting directives.</p>
 </div>
 <div id="sort-by-the-percent-difference-in-counts-between-genders-in-arm-c" class="section level3">
-<h3>Sort by the Percent Difference in counts between genders in Arm C</h3>
-<p>We need the F and M percents, only for Arm C (ie columns 5 and 6), differenced.</p>
-<p>We will sort <em><strong>the strata within each ethnicity</strong></em> by the percent difference in counts between males and females in arm C. This is not statistically meaningful at all, and is fact a terrible idea because it reorders the strata seemingly (but not) at random within each race, but illustrates the various things we need to do inside custom sorting functions.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>silly_gender_diffcount <span class="ot">=</span> <span class="cf">function</span>(tt) {</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    ctable <span class="ot">=</span> <span class="fu">content_table</span>(tt) <span class="do">## get summary table at this location</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    crow <span class="ot">=</span> <span class="fu">tree_children</span>(ctable)[[<span class="dv">1</span>]] <span class="do">## get first row in summary table</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    vals <span class="ot">=</span> <span class="fu">row_values</span>(crow)</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="do">## we need to have a better api for specificying location in column space but currently we don&#39;t</span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    mcount <span class="ot">=</span> vals[[<span class="dv">6</span>]][<span class="dv">1</span>]</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    fcount <span class="ot">=</span> vals[[<span class="dv">5</span>]][<span class="dv">1</span>]</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    (mcount <span class="sc">-</span> fcount)<span class="sc">/</span>fcount</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), silly_gender_diffcount)</span></code></pre></div>
-<pre><code>                                   A: Drug X                B: Placebo              C: Combination     
-                                F            M            F            M            F            M     
-———————————————————————————————————————————————————————————————————————————————————————————————————————
-ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
-  B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
-    Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
-  A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
-  C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
-    Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
-BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
-  C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
-    Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
-  A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
-  B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
-    Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
-WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
-  A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
-    Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
-  C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
-    Mean                      35.50        44.00        44.67          NA         38.50        35.00   
-  B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
-    Mean                      37.00        43.67        48.00        36.75        34.33        36.00   </code></pre>
+<h3>Sort by the Percent Difference in Counts Between Genders in Arm
+C</h3>
+<p>We need the F and M percents, only for Arm C (i.e. columns 5 and 6),
+differenced.</p>
+<p>We will sort <em><strong>the strata within each
+ethnicity</strong></em> by the percent difference in counts between
+males and females in arm C.</p>
+<p>Note: this is not statistically meaningful at all, and is in fact a
+terrible idea because it reorders the strata seemingly (but not) at
+random within each race, but illustrates the various things we need to
+do inside custom sorting functions.</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>silly_gender_diffcount <span class="ot">&lt;-</span> <span class="cf">function</span>(tt) {</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="do">## (1st) content row has same name as object (STRATA1 level)</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  rpath <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">obj_name</span>(tt), <span class="st">&quot;@content&quot;</span>, <span class="fu">obj_name</span>(tt))</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="do">## the [1] below is cause these are count (pct%) cells</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="do">## and we only want the count part!</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  mcount <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">cell_values</span>(tt, <span class="at">rowpath =</span> rpath,</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>                               <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;M&quot;</span>)))[<span class="dv">1</span>]</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>  fcount <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">cell_values</span>(tt, <span class="at">rowpath =</span> rpath,</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>                               <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)))[<span class="dv">1</span>]</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  (mcount <span class="sc">-</span> fcount) <span class="sc">/</span> fcount</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), silly_gender_diffcount)</span></code></pre></div>
+<pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
+#                                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————————————————————
+# ASIAN                       44 (62.9%)   35 (68.6%)   37 (66.1%)   31 (62.0%)   40 (65.6%)   44 (64.7%)
+#   B                         16 (22.9%)   8 (15.7%)    13 (23.2%)   16 (32.0%)   10 (16.4%)   12 (17.6%)
+#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   
+#   A                         15 (21.4%)   12 (23.5%)   14 (25.0%)   6 (12.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      30.40        34.42        35.43        30.33        37.40        36.25   
+#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)
+#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38   
+# BLACK OR AFRICAN AMERICAN   18 (25.7%)   10 (19.6%)   12 (21.4%)   12 (24.0%)   13 (21.3%)   14 (20.6%)
+#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) 
+#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50   
+#   A                          5 (7.1%)     1 (2.0%)     5 (8.9%)     2 (4.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      31.20        33.00        28.00        30.00        30.75        36.50   
+#   B                         7 (10.0%)     3 (5.9%)     3 (5.4%)     3 (6.0%)     6 (9.8%)     6 (8.8%) 
+#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   
+# WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)
+#   A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) 
+#     Mean                      34.00        45.00        29.33        33.33        35.00        32.80   
+#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) 
+#     Mean                      35.50        44.00        44.67          NA         38.50        35.00   
+#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) 
+#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00</code></pre>
 </div>
 </div>
 </div>

@@ -2,25 +2,13 @@
 % Please edit documentation in R/tree_accessors.R
 \name{nrow,VTableTree-method}
 \alias{nrow,VTableTree-method}
-\alias{nrow,TableRow-method}
 \alias{ncol,VTableNodeInfo-method}
-\alias{ncol,TableRow-method}
-\alias{ncol,LabelRow-method}
-\alias{ncol,InstantiatedColumnInfo-method}
 \alias{dim,VTableNodeInfo-method}
 \title{Table Dimensions}
 \usage{
 \S4method{nrow}{VTableTree}(x)
 
-\S4method{nrow}{TableRow}(x)
-
 \S4method{ncol}{VTableNodeInfo}(x)
-
-\S4method{ncol}{TableRow}(x)
-
-\S4method{ncol}{LabelRow}(x)
-
-\S4method{ncol}{InstantiatedColumnInfo}(x)
 
 \S4method{dim}{VTableNodeInfo}(x)
 }
@@ -34,10 +22,11 @@ the number of rows (nrow), columns (ncol) or both (dim) of the object.
 Table Dimensions
 }
 \examples{
-tbl <- basic_table() \%>\%
+lyt <- basic_table() \%>\%
   split_cols_by("ARM") \%>\%
-  analyze(c("SEX", "AGE")) \%>\%
-  build_table(ex_adsl)
+  analyze(c("SEX", "AGE"))
+
+tbl <- build_table(lyt, ex_adsl)
 
 dim(tbl)
 nrow(tbl)

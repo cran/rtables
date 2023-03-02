@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Gabriel Becker" />
+
+<meta name="date" content="2023-03-02" />
+
+<title>rtables Advanced Usage</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">rtables Advanced Usage</h1>
+<h4 class="author">Gabriel Becker</h4>
+<h4 class="date">2023-03-02</h4>
+
+
+
+<div id="note" class="section level2">
+<h2>NOTE</h2>
+<p>This vignette is currently under development. Any code or prose which
+appears in a version of this vignette on the <code>main</code> branch of
+the repository will work/be correct, but they likely are not in their
+final form.</p>
+<p>Initialization</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtables)</span></code></pre></div>
+</div>
+<div id="control-splitting-with-provided-function-limited-customization" class="section level2">
+<h2>Control splitting with provided function (limited
+customization)</h2>
+<p>rtables provides an array of functions to control the splitting logic
+without creating an entirely new split functions. By default
+<code>split_*_by</code> facets data based on categorical variable.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(ex_adsl, AGE <span class="sc">&lt;</span> <span class="dv">25</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>d1<span class="sc">$</span>AGE <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(d1<span class="sc">$</span>AGE)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>lyt1 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;AGE&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;SEX&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt1, d1)</span></code></pre></div>
+<pre><code>##                    20   21   23   24
+## ————————————————————————————————————
+## F                  0    2    4    5 
+## M                  1    1    2    3 
+## U                  0    0    0    0 
+## UNDIFFERENTIATED   0    0    0    0</code></pre>
+<p>For continuous variables, the <code>split_*_by_cutfun</code> can be
+leveraged to create categories and the corresponding faceting, when the
+break points are dependent from the data.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sd_cutfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    cutpoints <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">min</span>(x),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mean</span>(x) <span class="sc">-</span> <span class="fu">sd</span>(x),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mean</span>(x) <span class="sc">+</span> <span class="fu">sd</span>(x),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">max</span>(x)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">names</span>(cutpoints) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;Low&quot;</span>, <span class="st">&quot;Medium&quot;</span>, <span class="st">&quot;High&quot;</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    cutpoints</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>lyt1 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by_cutfun</span>(<span class="st">&quot;AGE&quot;</span>, <span class="at">cutfun =</span> sd_cutfun) <span class="sc">%&gt;%</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;SEX&quot;</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt1, ex_adsl)</span></code></pre></div>
+<pre><code>##                    Low   Medium   High
+## ——————————————————————————————————————
+## F                  36     165      21 
+## M                  21     115      30 
+## U                   1      8       0  
+## UNDIFFERENTIATED    0      1       2</code></pre>
+<p>Alternatively, <code>split_*_by_cuts</code> can be used when
+breakpoints are predefined and <code>split_*_by_quartiles</code> when
+the data should be faceted by quantile.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lyt1 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by_cuts</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;AGE&quot;</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">cuts =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">100</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">cutlabels =</span> <span class="fu">c</span>(<span class="st">&quot;0-30 y.o.&quot;</span>, <span class="st">&quot;30-60 y.o.&quot;</span>, <span class="st">&quot;60-100 y.o.&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;SEX&quot;</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt1, ex_adsl)</span></code></pre></div>
+<pre><code>##                    0-30 y.o.   30-60 y.o.   60-100 y.o.
+## ———————————————————————————————————————————————————————
+## F                     71          150            1     
+## M                     48          116            2     
+## U                      2           7             0     
+## UNDIFFERENTIATED       1           2             0</code></pre>
+</div>
+<div id="custom-split-functions" class="section level2">
+<h2>Custom Split Functions</h2>
+<div id="adding-an-overall-column-only-when-the-split-would-already-define-2-facets" class="section level3">
+<h3>Adding an Overall Column Only When The Split Would Already Define 2+
+Facets</h3>
+<p>Our custom split functions can do anything, including conditionally
+applying one or more other existing custom split functions.</p>
+<p>Here we define a function constructor which accepts the variable name
+we want to check, and then return a custom split function that has the
+behavior you want using functions provided by rtables for both
+cases:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>picky_splitter <span class="ot">&lt;-</span> <span class="cf">function</span>(var) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(df, spl, vals, labels, trim) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        orig_vals <span class="ot">&lt;-</span> vals</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="fu">is.null</span>(vals)) {</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>            vec <span class="ot">&lt;-</span> df[[var]]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>            vals <span class="ot">&lt;-</span> <span class="cf">if</span>(<span class="fu">is.factor</span>(vec)) <span class="fu">levels</span>(vec) <span class="cf">else</span> <span class="fu">unique</span>(vec)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="fu">length</span>(vals) <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">do_base_split</span>(<span class="at">spl =</span> spl, <span class="at">df =</span> df, <span class="at">vals =</span> vals, <span class="at">labels =</span> labels, <span class="at">trim =</span> trim)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>            <span class="fu">add_overall_level</span>(<span class="st">&quot;Overall&quot;</span>, <span class="at">label =</span> <span class="st">&quot;All Obs&quot;</span>, <span class="at">first =</span> <span class="cn">FALSE</span>)(<span class="at">df =</span> df, <span class="at">spl =</span> spl,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">vals =</span> orig_vals, <span class="at">trim =</span> trim)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(ex_adsl, ARM <span class="sc">==</span> <span class="st">&quot;A: Drug X&quot;</span>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>d1<span class="sc">$</span>ARM <span class="ot">&lt;-</span> <span class="fu">factor</span>(d1<span class="sc">$</span>ARM)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>lyt1 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>, <span class="at">split_fun =</span> <span class="fu">picky_splitter</span>(<span class="st">&quot;ARM&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span></code></pre></div>
+<p>This gives us the desired behavior in both the one column corner
+case:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt1, d1)</span></code></pre></div>
+<pre><code>##        A: Drug X
+## ————————————————
+## Mean     33.77</code></pre>
+<p>and the standard multi-column case:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt1, ex_adsl)</span></code></pre></div>
+<pre><code>##        A: Drug X   B: Placebo   C: Combination   All Obs
+## ————————————————————————————————————————————————————————
+## Mean     33.77       35.43          35.43         34.88</code></pre>
+<p>Notice we use add_overall_level which is itself a function
+constructor, and then immediately call the constructed function in the
+more-than-one-columns case.</p>
+</div>
+</div>
+<div id="leveraging-.spl_context" class="section level2">
+<h2>Leveraging <code>.spl_context</code></h2>
+<div id="what-is-.spl_context" class="section level3">
+<h3>What Is <code>.spl_context</code>?</h3>
+<p><code>.spl_context</code> (see <code>?spl_context</code>) is a
+mechanism by which the <code>rtables</code> tabulation machinery gives
+custom split, analysis or content (row-group summary) functions
+information about the overarching facet-structure the splits or cells
+they generate will reside in.</p>
+<p>In particular <code>.spl_context</code> ensures that your functions
+know (and thus do computations based on) the following types of
+information:</p>
+<ul>
+<li></li>
+</ul>
+</div>
+<div id="different-formats-for-different-values-within-a-row-split" class="section level3">
+<h3>Different Formats For Different Values Within A Row-Split</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dta_test <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">USUBJID =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">PARAMCD =</span> <span class="fu">rep</span>(<span class="st">&quot;lab&quot;</span>, <span class="dv">6</span> <span class="sc">*</span> <span class="dv">3</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">AVISIT =</span> <span class="fu">rep</span>(<span class="fu">paste0</span>(<span class="st">&quot;V&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="dv">6</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ARM =</span> <span class="fu">rep</span>(LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="fu">rep</span>(<span class="dv">6</span>, <span class="dv">3</span>)),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">AVAL =</span> <span class="fu">c</span>(<span class="dv">9</span><span class="sc">:</span><span class="dv">1</span>, <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">9</span>)),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">CHG =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">9</span>))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>my_afun <span class="ot">&lt;-</span> <span class="cf">function</span>(x, .spl_context) {</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(x))</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    meanval <span class="ot">&lt;-</span> <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    sdval <span class="ot">&lt;-</span> <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="do">## get the split value of the most recent parent</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="do">## (row) split above this analyze</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    val <span class="ot">&lt;-</span> .spl_context[<span class="fu">nrow</span>(.spl_context), <span class="st">&quot;value&quot;</span>]</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="do">## do a silly thing to decide the different format precisiosn</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="do">## your real logic would go here</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    valnum <span class="ot">&lt;-</span> <span class="fu">min</span>(2L, <span class="fu">as.integer</span>(<span class="fu">gsub</span>(<span class="st">&quot;[^[:digit:]]*&quot;</span>, <span class="st">&quot;&quot;</span>, val)))</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    fstringpt <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;xx.&quot;</span>, <span class="fu">strrep</span>(<span class="st">&quot;x&quot;</span>, valnum))</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    fmt_mnsd <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">&quot;%s (%s)&quot;</span>, fstringpt, fstringpt)</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="at">n =</span> n,</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;Mean, SD&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(meanval, sdval),</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">.formats =</span> <span class="fu">c</span>(<span class="at">n =</span> <span class="st">&quot;xx&quot;</span>, <span class="st">&quot;Mean, SD&quot;</span> <span class="ot">=</span> fmt_mnsd))</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AVISIT&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by_multivar</span>(<span class="at">vars =</span> <span class="fu">c</span>(<span class="st">&quot;AVAL&quot;</span>, <span class="st">&quot;CHG&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze_colvars</span>(my_afun)</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt, dta_test)</span></code></pre></div>
+<pre><code>##                          A                         B                 C     
+##                 AVAL           CHG         AVAL         CHG      AVAL   CHG
+## ———————————————————————————————————————————————————————————————————————————
+## V1                                                                         
+##   n               2             2            1           1        0      0 
+##   Mean, SD    7.5 (2.1)     2.5 (2.1)    3.0 (NA)    7.0 (NA)     NA    NA 
+## V2                                                                         
+##   n               2             2            1           1        0      0 
+##   Mean, SD   6.50 (2.12)   3.50 (2.12)   2.00 (NA)   8.00 (NA)    NA    NA 
+## V3                                                                         
+##   n               2             2            1           1        0      0 
+##   Mean, SD   5.50 (2.12)   4.50 (2.12)   1.00 (NA)   9.00 (NA)    NA    NA</code></pre>
+</div>
+<div id="simulating-baseline-comparison-in-row-space" class="section level3">
+<h3>Simulating ‘Baseline Comparison’ In Row Space</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>my_afun <span class="ot">&lt;-</span> <span class="cf">function</span>(x, .var, .spl_context) {</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(x))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    meanval <span class="ot">&lt;-</span> <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    sdval <span class="ot">&lt;-</span> <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="do">## get the split value of the most recent parent</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="do">## (row) split above this analyze</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    val <span class="ot">&lt;-</span> .spl_context[<span class="fu">nrow</span>(.spl_context), <span class="st">&quot;value&quot;</span>]</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="do">## we show it if its not a CHG within V1</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    show_it <span class="ot">&lt;-</span> val <span class="sc">!=</span> <span class="st">&quot;V1&quot;</span> <span class="sc">||</span> .var <span class="sc">!=</span> <span class="st">&quot;CHG&quot;</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="do">## do a silly thing to decide the different format precisiosn</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="do">## your real logic would go here</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    valnum <span class="ot">&lt;-</span> <span class="fu">min</span>(2L, <span class="fu">as.integer</span>(<span class="fu">gsub</span>(<span class="st">&quot;[^[:digit:]]*&quot;</span>, <span class="st">&quot;&quot;</span>, val)))</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    fstringpt <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;xx.&quot;</span>, <span class="fu">strrep</span>(<span class="st">&quot;x&quot;</span>, valnum))</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    fmt_mnsd <span class="ot">&lt;-</span> <span class="cf">if</span>(show_it) <span class="fu">sprintf</span>(<span class="st">&quot;%s (%s)&quot;</span>, fstringpt, fstringpt) <span class="cf">else</span> <span class="st">&quot;xx&quot;</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="at">n =</span> <span class="cf">if</span>(show_it) n, <span class="do">## NULL otherwise</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;Mean, SD&quot;</span> <span class="ot">=</span> <span class="cf">if</span>(show_it) <span class="fu">c</span>(meanval, sdval), <span class="do">## NULL otherwise</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">.formats =</span> <span class="fu">c</span>(<span class="at">n =</span> <span class="st">&quot;xx&quot;</span>, <span class="st">&quot;Mean, SD&quot;</span> <span class="ot">=</span> fmt_mnsd)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AVISIT&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by_multivar</span>(<span class="at">vars =</span> <span class="fu">c</span>(<span class="st">&quot;AVAL&quot;</span>, <span class="st">&quot;CHG&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze_colvars</span>(my_afun)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt, dta_test)</span></code></pre></div>
+<pre><code>##                          A                         B                 C     
+##                 AVAL           CHG         AVAL         CHG      AVAL   CHG
+## ———————————————————————————————————————————————————————————————————————————
+## V1                                                                         
+##   n               2                          1                    0        
+##   Mean, SD    7.5 (2.1)                  3.0 (NA)                 NA       
+## V2                                                                         
+##   n               2             2            1           1        0      0 
+##   Mean, SD   6.50 (2.12)   3.50 (2.12)   2.00 (NA)   8.00 (NA)    NA    NA 
+## V3                                                                         
+##   n               2             2            1           1        0      0 
+##   Mean, SD   5.50 (2.12)   4.50 (2.12)   1.00 (NA)   9.00 (NA)    NA    NA</code></pre>
+<p>We can further simulate the formal modeling of reference row(s) using
+the “extra args” machinery</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>my_afun <span class="ot">&lt;-</span> <span class="cf">function</span>(x, .var, ref_rowgroup, .spl_context) {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(x))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    meanval <span class="ot">&lt;-</span> <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    sdval <span class="ot">&lt;-</span> <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="do">## get the split value of the most recent parent</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="do">## (row) split above this analyze</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    val <span class="ot">&lt;-</span> .spl_context[<span class="fu">nrow</span>(.spl_context), <span class="st">&quot;value&quot;</span>]</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="do">## we show it if its not a CHG within V1</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    show_it <span class="ot">&lt;-</span> val <span class="sc">!=</span> ref_rowgroup <span class="sc">||</span> .var <span class="sc">!=</span> <span class="st">&quot;CHG&quot;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    fmt_mnsd <span class="ot">&lt;-</span> <span class="cf">if</span>(show_it) <span class="st">&quot;xx.x (xx.x)&quot;</span> <span class="cf">else</span> <span class="st">&quot;xx&quot;</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="at">n =</span> <span class="cf">if</span>(show_it) n, <span class="do">## NULL otherwise</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;Mean, SD&quot;</span> <span class="ot">=</span> <span class="cf">if</span>(show_it) <span class="fu">c</span>(meanval, sdval), <span class="do">## NULL otherwise</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">.formats =</span> <span class="fu">c</span>(<span class="at">n =</span> <span class="st">&quot;xx&quot;</span>, <span class="st">&quot;Mean, SD&quot;</span> <span class="ot">=</span> fmt_mnsd)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;AVISIT&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by_multivar</span>(<span class="at">vars =</span> <span class="fu">c</span>(<span class="st">&quot;AVAL&quot;</span>, <span class="st">&quot;CHG&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze_colvars</span>(my_afun, <span class="at">extra_args =</span> <span class="fu">list</span>(<span class="at">ref_rowgroup =</span> <span class="st">&quot;V1&quot;</span>))</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt2, dta_test)</span></code></pre></div>
+<pre><code>##                        A                      B                C     
+##                AVAL         CHG        AVAL       CHG      AVAL   CHG
+## —————————————————————————————————————————————————————————————————————
+## V1                                                                   
+##   n              2                      1                   0        
+##   Mean, SD   7.5 (2.1)               3.0 (NA)               NA       
+## V2                                                                   
+##   n              2           2          1          1        0      0 
+##   Mean, SD   6.5 (2.1)   3.5 (2.1)   2.0 (NA)   8.0 (NA)    NA    NA 
+## V3                                                                   
+##   n              2           2          1          1        0      0 
+##   Mean, SD   5.5 (2.1)   4.5 (2.1)   1.0 (NA)   9.0 (NA)    NA    NA</code></pre>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -10,9 +10,12 @@ label_at_path(tt, path)
 label_at_path(tt, path) <- value
 }
 \arguments{
-\item{tt}{TableTree (or related class). A TableTree object representing a populated table.}
+\item{tt}{TableTree (or related class). A TableTree object representing a
+populated table.}
 
-\item{path}{character. A vector path for a position within the structure of a tabletree. Each element represents a subsequent choice amongst the children of the previous choice.}
+\item{path}{character. A vector path for a position within the structure of a
+tabletree. Each element represents a subsequent choice amongst the children
+of the previous choice.}
 
 \item{value}{The new value}
 }
@@ -42,10 +45,10 @@ lyt <- basic_table() \%>\%
   split_rows_by("COUNTRY", split_fun = keep_split_levels(c("CHN", "USA"))) \%>\%
   analyze("AGE")
 
-tab <- build_table(lyt, DM)
+tbl <- build_table(lyt, DM)
 
-label_at_path(tab, c("COUNTRY", "CHN"))
+label_at_path(tbl, c("COUNTRY", "CHN"))
 
-label_at_path(tab, c("COUNTRY", "USA")) <- "United States"
-tab
+label_at_path(tbl, c("COUNTRY", "USA")) <- "United States"
+tbl
 }

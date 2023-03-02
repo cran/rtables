@@ -2,47 +2,94 @@
 % Please edit documentation in R/split_funs.R
 \name{custom_split_funs}
 \alias{custom_split_funs}
-\title{Custom Split Functions
-
-Split functions provide the work-horse for \code{rtables}'s generalized
-partitioning. These functions accept a (sub)set of incoming data, a split
-object, and return 'splits' of that data.}
+\title{Custom Split Functions}
 \description{
-Custom Split Functions
-
-Split functions provide the work-horse for \code{rtables}'s generalized
-partitioning. These functions accept a (sub)set of incoming data, a split
-object, and return 'splits' of that data.
+Split functions provide the work-horse for \code{rtables}'s
+generalized partitioning. These functions accept a (sub)set of incoming
+data, a split object, and return 'splits' of that data.
 }
 \section{Custom Splitting Function Details}{
 
 
-User-defined custom split functions can perform any type of computation
-on the incoming data provided that they meed the contract for generating
+User-defined custom split functions can perform any type of computation on
+the incoming data provided that they meet the contract for generating
 'splits' of the incoming data 'based on' the split object.
 
 Split functions are functions that accept:
 \describe{
 \item{df}{data.frame of incoming data to be split}
-\item{spl}{a Split object. this is largely an internal detail custom functions will not need to worry about,
-but  \code{obj_name(spl)}, for example, will give the name of the split as it will appear in paths in the resulting table}
-\item{vals}{Any pre-calculated values. If given non-null values, the values returned should match these. Should be NULL in most cases and can likely be ignored}
-\item{labels}{Any pre-calculated value labels. Same as above for \code{values}}
-\item{trim}{If \code{TRUE}, resulting splits that are empty should be removed}
-\item{(Optional) .spl_context}{a data.frame describing previously performed splits which collectively arrived at \code{df}}
+\item{spl}{a Split object. this is largely an internal detail custom
+functions will not need to worry about, but  \code{obj_name(spl)}, for
+example, will give the name of the split as it will appear in paths in the
+resulting table}
+\item{vals}{Any pre-calculated values. If given non-null values, the values
+returned should match these. Should be NULL in most cases and can likely be
+ignored}
+\item{labels}{Any pre-calculated value labels. Same as above for
+\code{values}}
+\item{trim}{If \code{TRUE}, resulting splits that are empty should be
+removed}
+\item{(Optional) .spl_context}{a data.frame describing previously performed
+splits which collectively arrived at \code{df}}
 }
 
-The function must then output a \code{named list} with the following elements:
+The function must then output a \code{named list} with the following
+elements:
 
 \describe{
-\item{values}{The vector of all values corresponding to the splits of \code{df}}
-\item{datasplit}{a list of data.frames representing the groupings of the actual observations from \code{df}.}
-\item{labels}{a character vector giving a string label for each value listed in the \code{values} element above}
-\item{(Optional) extras}{If present, extra arguments to be passed to summary and analysis functions
-whenever they are executed on the corresponding element of \code{datasplit} or a subset thereof}
+\item{values}{The vector of all values corresponding to the splits of
+\code{df}}
+\item{datasplit}{a list of data.frames representing the groupings of the
+actual observations from \code{df}.}
+\item{labels}{a character vector giving a string label for each value listed
+in the \code{values} element above}
+\item{(Optional) extras}{If present, extra arguments are to be passed to summary
+and analysis functions whenever they are executed on the corresponding
+element of \code{datasplit} or a subset thereof}
 }
 
-One way to generate custom splitting functions is to wrap existing split functions and modify either
-the incoming data before they are called, or their outputs.
+One way to generate custom splitting functions is to wrap existing split
+functions and modify either the incoming data before they are called or
+their outputs.
 }
 
+\examples{
+# Example of a picky split function. The number of values in the column variable
+# var decrees if we are going to print also the column with all observation
+# or not.
+
+picky_splitter <- function(var) {
+  # Main layout function
+  function(df, spl, vals, labels, trim) {
+    orig_vals <- vals
+
+    # Check for number of levels if all are selected
+    if (is.null(vals)) {
+      vec <- df[[var]]
+      vals <- unique(vec)
+    }
+
+    # Do a split with or without All obs
+    if (length(vals) == 1) {
+      do_base_split(spl = spl, df = df, vals = vals, labels = labels, trim = trim)
+    } else {
+      fnc_tmp <- add_overall_level("Overall", label = "All Obs", first = FALSE)
+      fnc_tmp(df = df, spl = spl, vals = orig_vals, trim = trim)
+    }
+  }
+}
+
+# Data sub-set
+d1 <- subset(ex_adsl, ARM == "A: Drug X" | (ARM == "B: Placebo" & SEX == "F"))
+d1 <- subset(d1, SEX \%in\% c("M", "F"))
+d1$SEX <- factor(d1$SEX)
+
+# This table uses the number of values in the SEX column to add the overall col or not
+lyt <- basic_table() \%>\%
+  split_cols_by("ARM", split_fun = drop_split_levels) \%>\%
+  split_cols_by("SEX", split_fun = picky_splitter("SEX")) \%>\%
+  analyze("AGE", show_labels = "visible")
+tbl <- build_table(lyt, d1)
+tbl
+
+}

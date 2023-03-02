@@ -2,9 +2,9 @@
 knitr::opts_chunk$set(echo = TRUE)
 
 ## ---- echo=FALSE--------------------------------------------------------------
-knitr::opts_chunk$set(comment = "")
+knitr::opts_chunk$set(comment = "#")
 
-## -----------------------------------------------------------------------------
+## ---- message=FALSE-----------------------------------------------------------
 library(dplyr)
 library(tibble)
 library(rtables)
@@ -22,8 +22,9 @@ df <- tibble(
   mutate(
     c2 = add_subgroup(c1),
     r2 = add_subgroup(r1),
-    y = as.numeric(2*as.numeric(c1) - 3 * as.numeric(r1))
-  ) %>% select(c1, c2, r1, r2, x, y)
+    y = as.numeric(2 * as.numeric(c1) - 3 * as.numeric(r1))
+  ) %>%
+    select(c1, c2, r1, r2, x, y)
 
 df
 
@@ -37,12 +38,14 @@ foo <- prod
 bar <- sum
 zoo <- mean
 
-basic_table() %>%
+lyt <- basic_table() %>%
   split_cols_by("c1") %>%
   analyze("x", function(df) foo(df$x), var_labels = "foo label", format = "xx.xx") %>%
   analyze("x", function(df) bar(df$x), var_labels = "bar label", format = "xx.xx") %>%
-  analyze("x", function(df) zoo(df$x), var_labels = "zoo label", format = "xx.xx") %>%
-  build_table(df)
+  analyze("x", function(df) zoo(df$x), var_labels = "zoo label", format = "xx.xx")
+
+tbl <- build_table(lyt, df)
+tbl
 
 ## -----------------------------------------------------------------------------
 x_A <- df_A$x
@@ -50,15 +53,17 @@ x_B <- df_B$x
 x_C <- df_C$x
 
 ## -----------------------------------------------------------------------------
-basic_table() %>%
+lyt2 <- basic_table() %>%
   split_cols_by("c1") %>%
   analyze("x", foo, var_labels = "foo label", format = "xx.xx") %>%
   analyze("x", bar, var_labels = "bar label", format = "xx.xx") %>%
-  analyze("x", zoo, var_labels = "zoo label", format = "xx.xx") %>%
-  build_table(df)
+  analyze("x", zoo, var_labels = "zoo label", format = "xx.xx")
+
+tbl2 <- build_table(lyt2, df)
+tbl2
 
 ## -----------------------------------------------------------------------------
-basic_table() %>%
+lyt3 <- basic_table() %>%
   split_cols_by("c1") %>%
   analyze("x", function(x) {
     in_rows(
@@ -71,8 +76,10 @@ basic_table() %>%
       "more rows 1" =  rcell(median(x), format = "xx.x"),
       "even more rows 1" = rcell(IQR(x), format = "xx.xx")
     )
-  }, var_labels = "bar label", format = "xx.xx") %>%
-  build_table(df)
+  }, var_labels = "bar label", format = "xx.xx")
+
+tbl3 <- build_table(lyt3, df)
+tbl3
 
 ## -----------------------------------------------------------------------------
 df_UA <- df %>% filter(r1 == "U", c1 == "A")
@@ -113,80 +120,96 @@ matrix(
     foo(df_UC),
     foo(df_VC),
     foo(df_WC)
-  ), 
+  ),
   byrow = FALSE, ncol = 3
 )
 
 ## -----------------------------------------------------------------------------
-basic_table() %>%
+lyt4 <- basic_table() %>%
   split_cols_by("c1") %>%
   split_rows_by("r1") %>%
-  analyze("x", foo) %>%
-  build_table(df)
+  analyze("x", foo)
+
+tbl4 <- build_table(lyt4, df)
+tbl4
 
 ## -----------------------------------------------------------------------------
-basic_table() %>%
+lyt5 <- basic_table() %>%
   split_cols_by("c1") %>%
   split_rows_by("r1") %>%
-  summarize_row_groups(cfun = foo, format = "xx") %>%
-  build_table(df)
+  summarize_row_groups(cfun = foo, format = "xx")
+
+tbl5 <- build_table(lyt5, df)
+tbl5
 
 ## -----------------------------------------------------------------------------
 foo <- function(df, labelstr) {
   rcell(paste(dim(df), collapse = " x "), format = "xx", label = labelstr)
 }
 
-basic_table() %>%
+lyt6 <- basic_table() %>%
   split_cols_by("c1") %>%
   split_rows_by("r1") %>%
-  summarize_row_groups(cfun = foo) %>%
-  build_table(df)
+  summarize_row_groups(cfun = foo)
+
+tbl6 <- build_table(lyt6, df)
+tbl6
 
 ## -----------------------------------------------------------------------------
 foo <- function(df, labelstr) {
   rcell(mean(df$y), label = labelstr, format = "xx.xx")
 }
 
-basic_table() %>%
+lyt7 <- basic_table() %>%
   split_cols_by("c1") %>%
   split_rows_by("r1") %>%
-  summarize_row_groups(cfun = foo) %>%
-  build_table(df)
+  summarize_row_groups(cfun = foo) 
+
+tbl7 <- build_table(lyt7, df)
+tbl7
 
 ## -----------------------------------------------------------------------------
-basic_table() %>%
+lyt8 <- basic_table() %>%
   split_cols_by("c1") %>%
   split_rows_by("r1") %>%
-  analyze("y", afun = mean) %>%
-  build_table(df)
+  analyze("y", afun = mean)
+
+tbl8 <- build_table(lyt8, df)
+tbl8
 
 ## -----------------------------------------------------------------------------
-basic_table() %>%
+lyt9 <- basic_table() %>%
   split_cols_by("c1") %>%
   split_rows_by("r1") %>%
-  analyze("y", afun = function(df) mean(df$y)) %>%
-  build_table(df)
+  analyze("y", afun = function(df) mean(df$y))
+
+tbl9 <- build_table(lyt9, df)
+tbl9
 
 ## -----------------------------------------------------------------------------
-basic_table() %>%
+lyt10 <- basic_table() %>%
   split_cols_by("c1") %>%
   split_rows_by("r1") %>%
-  analyze("y", afun = function(x) mean(x)) %>%
-  build_table(df)
+  analyze("y", afun = function(x) mean(x)) 
+
+tbl10 <- build_table(lyt10, df)
+tbl10
 
 ## -----------------------------------------------------------------------------
-df %>% 
+df %>%
   filter(r1 == "U", r2 == "u1", c1 == "A")
 
 ## -----------------------------------------------------------------------------
-basic_table() %>%
+lyt11 <- basic_table() %>%
   split_cols_by("c1") %>%
   split_rows_by("r1") %>%
   split_rows_by("r2") %>%
   summarize_row_groups(cfun = function(df, labelstr) {
     rcell(mean(df$x), format = "xx.xx", label = paste("mean x for", labelstr))
-  }) %>% 
-  build_table(df)
+  })
+
+tbl11 <- build_table(lyt11, df)
+tbl11
 
 ## -----------------------------------------------------------------------------
 s_mean_sd <- function(x) {
@@ -197,13 +220,15 @@ s_range <- function(x) {
   in_rows("range" = rcell(range(x), format = "xx.xx - xx.xx"))
 }
 
-basic_table() %>%
+lyt12 <- basic_table() %>%
   split_cols_by("c1") %>%
   split_rows_by("r1") %>%
   split_rows_by("r2") %>%
   analyze("x", s_mean_sd, show_labels = "hidden") %>%
-  analyze("x", s_range, show_labels = "hidden") %>%
-  build_table(df)
+  analyze("x", s_range, show_labels = "hidden")
+
+tbl12 <- build_table(lyt12, df)
+tbl12
 
 ## -----------------------------------------------------------------------------
 s_mean_sd <- function(x) {
@@ -218,24 +243,27 @@ s_cfun_2 <- function(df, labelstr) {
   rcell(nrow(df), format = "xx", label = paste(labelstr, "(n)"))
 }
 
-
-basic_table() %>%
+lyt13 <- basic_table() %>%
   split_cols_by("c1") %>%
   split_rows_by("r1") %>%
   split_rows_by("r2") %>%
   summarize_row_groups(cfun = s_cfun_2) %>%
   analyze("x", s_mean_sd, show_labels = "hidden") %>%
-  analyze("x", s_range, show_labels = "hidden") %>%
-  build_table(df)
+  analyze("x", s_range, show_labels = "hidden")
+
+tbl13 <- build_table(lyt13, df)
+tbl13
 
 ## -----------------------------------------------------------------------------
-basic_table() %>%
+lyt14 <- basic_table() %>%
   split_cols_by("c1") %>%
   split_rows_by("r1") %>%
   summarize_row_groups(cfun = s_cfun_2) %>%
   split_rows_by("r2") %>%
   summarize_row_groups(cfun = s_cfun_2) %>%
   analyze("x", s_mean_sd, show_labels = "hidden") %>%
-  analyze("x", s_range, show_labels = "hidden") %>%
-  build_table(df)
+  analyze("x", s_range, show_labels = "hidden")
+
+tbl14 <- build_table(lyt14, df)
+tbl14
 

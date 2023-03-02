@@ -13,19 +13,22 @@ ElementaryTable(
   name = "",
   lev = 1L,
   label = "",
-  labelrow = LabelRow(lev = lev, label = label, vis = !isTRUE(iscontent) &&
-    !is.na(label) && nzchar(label)),
+  labelrow = LabelRow(lev = lev, label = label, vis = !isTRUE(iscontent) && !is.na(label)
+    && nzchar(label)),
   rspans = data.frame(),
   cinfo = NULL,
   iscontent = NA,
   var = NA_character_,
   format = NULL,
+  na_str = NA_character_,
   indent_mod = 0L,
   title = "",
   subtitles = character(),
   main_footer = character(),
   prov_footer = character(),
-  hsep = default_hsep()
+  hsep = default_hsep(),
+  trailing_sep = NA_character_,
+  inset = 0L
 )
 
 TableTree(
@@ -34,44 +37,61 @@ TableTree(
   cont = EmptyElTable,
   lev = 1L,
   label = name,
-  labelrow = LabelRow(lev = lev, label = label, vis = nrow(cont) == 0 && !is.na(label)
-    && nzchar(label)),
+  labelrow = LabelRow(lev = lev, label = label, vis = nrow(cont) == 0 && !is.na(label) &&
+    nzchar(label)),
   rspans = data.frame(),
   iscontent = NA,
   var = NA_character_,
   cinfo = NULL,
   format = NULL,
+  na_str = NA_character_,
   indent_mod = 0L,
   title = "",
   subtitles = character(),
   main_footer = character(),
   prov_footer = character(),
   page_title = NA_character_,
-  hsep = default_hsep()
+  hsep = default_hsep(),
+  trailing_sep = NA_character_,
+  inset = 0L
 )
 }
 \arguments{
 \item{kids}{list. List of direct children.}
 
-\item{name}{character(1). Name of the split/table/row being creatted. Defaults to same as the corresponding llabel, but is not required to be.}
+\item{name}{character(1). Name of the split/table/row being created. Defaults
+to same as the corresponding label, but is not required to be.}
 
-\item{lev}{integer. Nesting level (roughly, indentation level in practical terms).}
+\item{lev}{integer. Nesting level (roughly, indentation level in practical
+terms).}
 
-\item{label}{character(1). A label (not to be confused with the name) for the object/structure.}
+\item{label}{character(1). A label (not to be confused with the name) for the
+object/structure.}
 
-\item{labelrow}{LabelRow. The LabelRow object to assign to this Table. Consructed from \code{label} by default if not specified.}
+\item{labelrow}{LabelRow. The LabelRow object to assign to this Table.
+Constructed from \code{label} by default if not specified.}
 
 \item{rspans}{data.frame. Currently stored but otherwise ignored.}
 
-\item{cinfo}{InstantiatedColumnInfo (or NULL). Column structure for the object being created.}
+\item{cinfo}{InstantiatedColumnInfo (or NULL). Column structure for the
+object being created.}
 
-\item{iscontent}{logical. Is the TableTree/ElementaryTable being constructed the content table for another TableTree.}
+\item{iscontent}{logical. Is the TableTree/ElementaryTable being constructed
+the content table for another TableTree.}
 
 \item{var}{string, variable name}
 
-\item{format}{FormatSpec. Format associated with this split. Formats can be declared via strings (\code{"xx.x"}) or function. In cases such as \code{analyze} calls, they can character vectors or lists of functions.}
+\item{format}{FormatSpec. Format associated with this split. Formats can be
+declared via strings (\code{"xx.x"}) or function. In cases such as
+\code{analyze} calls, they can character vectors or lists of functions.}
 
-\item{indent_mod}{numeric. Modifier for the default indent position for the structure created by this function(subtable, content table, or row) \emph{and all of that structure's children}. Defaults to 0, which corresponds to the unmodified default behavior.}
+\item{na_str}{character(1). String that should be displayed when the value of \code{x} is missing.
+Defaults to \code{"NA"}.}
+
+\item{indent_mod}{numeric. Modifier for the default indent position for the
+structure created by this function(subtable, content table, or row)
+\emph{and all of that structure's children}. Defaults to 0, which
+corresponds to the unmodified default behavior.}
 
 \item{title}{character(1). Main title. Ignored for subtables.}
 
@@ -79,12 +99,24 @@ TableTree(
 
 \item{main_footer}{character. Main global (non-referential) footer materials.}
 
-\item{prov_footer}{character. Provenance-related global footer materials. Generally should not be modified by hand.}
+\item{prov_footer}{character. Provenance-related global footer materials.
+Generally should not be modified by hand.}
 
-\item{hsep}{character(1). Set of character(s) to be repeated as the separator between
-the header and body of the table when rendered as text. Defaults to a connected horrizontal
-line (unicode 2014) in locals that use a UTF charset, and to \code{-} elsewhere (with a
-once per session warning).}
+\item{hsep}{character(1). Set of character(s) to be repeated as the separator
+between the header and body of the table when rendered as text. Defaults to
+a connected horizontal line (unicode 2014) in locals that use a UTF
+charset, and to \code{-} elsewhere (with a once per session warning).}
+
+\item{trailing_sep}{character(1). String which will be used as a section
+divider after the printing of the last row contained in this (sub)-table,
+unless that row is also the last table row to be printed overall, or
+\code{NA_character_} for none (the default). When generated via layouting, this
+would correspond to the \code{section_div} of the split under which this table
+represents a single facet.}
+
+\item{inset}{numeric(1). Number of spaces to inset the table header, table
+body, referential footnotes, and main_footer, as compared to alignment
+of title, subtitle, and provenance footer. Defaults to 0 (no inset).}
 
 \item{cont}{ElementaryTable. Content table.}
 
@@ -99,7 +131,5 @@ TableTree classes
 Table Constructors and Classes
 }
 \author{
-Gabriel Becker
-
 Gabriel Becker
 }

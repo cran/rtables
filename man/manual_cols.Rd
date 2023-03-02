@@ -7,30 +7,32 @@
 manual_cols(..., .lst = list(...))
 }
 \arguments{
-\item{\dots}{One or more vectors of levels to appear
-in the column splace. If more than one set of levels is given, the values of the second are nested within each value of the first, and so on.}
+\item{\dots}{One or more vectors of levels to appear in the column space. If
+more than one set of levels is given, the values of the second are nested
+within each value of the first, and so on.}
 
-\item{.lst}{A list of sets of levels, by default populated via \code{list(...)}.}
+\item{.lst}{A list of sets of levels, by default populated via
+\code{list(...)}.}
 }
 \value{
-An InstantiatedColumnInfo object, suitable for use declaring the column structure for a manually constructed table.
+An InstantiatedColumnInfo object, suitable for use declaring the
+column structure for a manually constructed table.
 }
 \description{
 Manual column declaration
 }
 \examples{
 # simple one level column space
-rows = lapply(1:5, function(i) {
+rows <- lapply(1:5, function(i) {
    DataRow(rep(i, times  = 3))})
-tab = TableTree(kids = rows, cinfo = manual_cols(split = c("a", "b", "c")))
-tab
+tbl <- TableTree(kids = rows, cinfo = manual_cols(split = c("a", "b", "c")))
+tbl
 
 # manually declared nesting
-tab2 = TableTree(kids = list(DataRow(as.list(1:4))),
+tbl2 <- TableTree(kids = list(DataRow(as.list(1:4))),
                  cinfo = manual_cols(Arm = c("Arm A", "Arm B"),
                                      Gender = c("M", "F")))
-
-tab2
+tbl2
 
 }
 \author{

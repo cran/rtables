@@ -1,5 +1,5 @@
 
-do_recursive_replace = function(tab, path, incontent = FALSE, value) {## rows = NULL,
+do_recursive_replace <- function(tab, path, incontent = FALSE, value) {## rows = NULL,
                                 ## cols = NULL, value) {
     ## don't want this in the recursive function
     ## so thats why we have the do_ variant
@@ -13,21 +13,26 @@ do_recursive_replace = function(tab, path, incontent = FALSE, value) {## rows = 
 
 ## different cases we want to support:
 ## 1. Replace entire children for a particular node/position in the tree
-## 2. Replace entire rows at a particular (ElementaryTable) position within the tree
-## 3. Replace specific cell values within a set of row x column positions within an ElementaryTable at a particular position within the tree
+## 2. Replace entire rows at a particular (ElementaryTable) position within the
+##   tree
+## 3. Replace specific cell values within a set of row x column positions within
+##   an ElementaryTable at a particular position within the tree
 ## 3. replace entire content table at a node position
-## 4. replace entire rows within the content table at a particular node position in the tree
-## 5. replace data cell values for specific row/col positions within the content table at a particular position within the tree
+## 4. replace entire rows within the content table at a particular node position
+##   in the tree
+## 5. replace data cell values for specific row/col positions within the content
+##   table at a particular position within the tree
 
-## XXX This is wrong, what happens if a split (or more accurately, value)  happens more than once in the overall tree???
-recursive_replace = function(tab, path, value) { ##incontent = FALSE, rows = NULL, cols = NULL, value) {
+## XXX This is wrong, what happens if a split (or more accurately, value)
+## happens more than once in the overall tree???
+recursive_replace <- function(tab, path, value) { ##incontent = FALSE, rows = NULL, cols = NULL, value) {
     if(length(path) == 0) { ## done recursing
         ## if(is.null(rows) && is.null(cols)) { ## replacing whole subtree a this position
         ##     if(incontent) {
         ##         newkid = tab
         ##         content_table(newkid) = value
         ##     } else
-                newkid = value
+                newkid <- value
             ## newkid has either thee content table
             ## replaced on the old kid or is the new
             ## kid
@@ -46,7 +51,7 @@ recursive_replace = function(tab, path, value) { ##incontent = FALSE, rows = NUL
         ##     }
         ## }
         return(newkid)
-    } else if( path[[1]] == "@content") {
+    } else if(path[[1]] == "@content") {
         ctb <- content_table(tab)
         ctb <- recursive_replace(ctb,
                                  path = path[-1],
@@ -56,27 +61,27 @@ recursive_replace = function(tab, path, value) { ##incontent = FALSE, rows = NUL
         content_table(tab) <- ctb
         tab
     } else {## length(path) > 1, more recursing to do
-        kidel = path[[1]]
+        kidel <- path[[1]]
         ## broken up for debugabiliity, could be a single complex
         ## expression
         ## for now only the last step supports selecting
         ## multiple kids
         stopifnot(length(kidel) == 1,
                   is.character(kidel) || is.factor(kidel))
-        knms = names(tree_children(tab))
+        knms <- names(tree_children(tab))
         if(!(kidel %in% knms))
             stop(sprintf("position element %s not in names of next level children", kidel))
         else if (sum(kidel == knms) > 1)
             stop(sprintf("position element %s appears more than once, not currently supported", kidel))
-        if(is.factor(kidel)) kidel = levels(kidel)[kidel]
-        newkid = recursive_replace(
+        if(is.factor(kidel)) kidel <- levels(kidel)[kidel]
+        newkid <- recursive_replace(
             tree_children(tab)[[kidel]],
             path[-1],
             ## incontent = incontent,
             ## rows = rows,
             ## cols = cols,
             value)
-        tree_children(tab)[[kidel]] = newkid
+        tree_children(tab)[[kidel]] <- newkid
         tab
     }
 }
@@ -106,7 +111,6 @@ col_fnotes_at_path <- function(ctree, path, fnotes) {
     ctree
 }
 
-
 #' Insert Row at Path
 #'
 #' Insert a row into an existing table directly before or directly after an existing
@@ -123,18 +127,22 @@ col_fnotes_at_path <- function(ctree, path, fnotes) {
 #'   split_rows_by("COUNTRY", split_fun = keep_split_levels(c("CHN", "USA"))) %>%
 #'   analyze("AGE")
 #'
-#' tab <- build_table(lyt, DM)
+#' tbl <- build_table(lyt, DM)
 #'
-#' tab2 <- insert_row_at_path(tab, c("COUNTRY", "CHN", "AGE", "Mean"),
+#' tbl2 <- insert_row_at_path(tbl, c("COUNTRY", "CHN", "AGE", "Mean"),
 #'                           rrow("new row", 555))
-#' tab2
-#' tab2 <- insert_row_at_path(tab2, c("COUNTRY", "CHN", "AGE", "Mean"),
+#' tbl2
+#' 
+#' tbl3 <- insert_row_at_path(tbl2, c("COUNTRY", "CHN", "AGE", "Mean"),
 #'                           rrow("new row redux", 888),
 #'                           after = TRUE)
-#' tab2
-#' @seealso DataRow rrow
+#' tbl3
+#' @seealso [DataRow()] [rrow()]
 
-setGeneric("insert_row_at_path",signature = c("tt", "value"),  function(tt, path, value, after = FALSE) standardGeneric("insert_row_at_path"))
+setGeneric("insert_row_at_path", signature = c("tt", "value"),
+           function(tt, path, value, after = FALSE) {
+               standardGeneric("insert_row_at_path")
+           })
 #' @rdname insert_row_at_path
 setMethod("insert_row_at_path", c("VTableTree", "DataRow"),
           function(tt, path, value, after = FALSE) {
@@ -142,11 +150,12 @@ setMethod("insert_row_at_path", c("VTableTree", "DataRow"),
         col_info(value) <- col_info(tt)
     else
         chk_compat_cinfos(tt, value)
-
-    origpath <- path
+    ## retained for debugging
+    origpath <- path # nolint
     idx_row <- tt_at_path(tt, path)
     if(!is(idx_row, "DataRow"))
-        stop("path must resolve fully to a non-content data row. Insertion of rows elsewhere in the tree is not currently supported.")
+        stop("path must resolve fully to a non-content data row. Insertion of ",
+        "rows elsewhere in the tree is not currently supported.")
 
     posnm <- tail(path, 1)
 
@@ -155,8 +164,13 @@ setMethod("insert_row_at_path", c("VTableTree", "DataRow"),
     subtt <- tt_at_path(tt, path)
     kids <- tree_children(subtt)
     ind <- which(names(kids) == posnm)
-    if(length(ind) != 1L)
-        stop("table children do not appear to be named correctly at this path. This should not happen, please contact the maintainer of rtables.") # nocov
+    if(length(ind) != 1L) {
+        ## nocov start
+        stop("table children do not appear to be named correctly at this ",
+        "path. This should not happen, please contact the maintainer of ",
+        "rtables.")
+        ## nocov end
+    }
     if(after)
         ind <- ind + 1
 
@@ -169,8 +183,11 @@ setMethod("insert_row_at_path", c("VTableTree", "DataRow"),
 })
 #' @rdname insert_row_at_path
 setMethod("insert_row_at_path", c("VTableTree", "ANY"),
-          function(tt, path, value)
-    stop("Currently only insertion of DataRow objects is supported. Got object of class ", class(value), ". Please use rrow() or DataRow() to construct your row before insertion."))
+          function(tt, path, value) {
+              stop("Currently only insertion of DataRow objects is supported. Got ",
+                   "object of class ", class(value), ". Please use rrow() or DataRow() ",
+                   "to construct your row before insertion.")
+          })
 
 
 #' Label at Path
@@ -200,12 +217,12 @@ setMethod("insert_row_at_path", c("VTableTree", "ANY"),
 #'   split_rows_by("COUNTRY", split_fun = keep_split_levels(c("CHN", "USA"))) %>%
 #'   analyze("AGE")
 #'
-#' tab <- build_table(lyt, DM)
+#' tbl <- build_table(lyt, DM)
 #'
-#' label_at_path(tab, c("COUNTRY", "CHN"))
+#' label_at_path(tbl, c("COUNTRY", "CHN"))
 #'
-#' label_at_path(tab, c("COUNTRY", "USA")) <- "United States"
-#' tab
+#' label_at_path(tbl, c("COUNTRY", "USA")) <- "United States"
+#' tbl
 #' @export
 label_at_path <- function(tt, path) {
     obj_label(tt_at_path(tt, path))
@@ -232,7 +249,8 @@ label_at_path <- function(tt, path) {
 #' @rdname ttap
 setGeneric("tt_at_path", function(tt, path, ...) standardGeneric("tt_at_path"))
 #' @export
-#' @rdname ttap
+#' @inheritParams tt_at_path
+#' @rdname int_methods
 setMethod("tt_at_path", "VTableTree",
            function(tt, path, ...) {
     stopifnot(is(path, "character"),
@@ -242,7 +260,7 @@ setMethod("tt_at_path", "VTableTree",
         path <- path[-1]
     ## handle pathing that hits the root split by name
     if(identical(obj_name(tt), path[1]))
-        path = path[-1]
+        path <- path[-1]
     cur <- tt
     curpath <- path
     while(length(curpath > 0)) {
@@ -262,9 +280,40 @@ setMethod("tt_at_path", "VTableTree",
 
 #' @export
 #' @rdname ttap
-setGeneric("tt_at_path<-", function(tt, path, ..., value) standardGeneric("tt_at_path<-"))
+#' 
+#' @note Setting `NULL` at a defined path removes the corresponding sub table.
+#' 
+#' @examples 
+#' # Accessing sub table.
+#' lyt <- basic_table() %>%
+#'    split_cols_by("ARM") %>%
+#'    split_rows_by("SEX") %>%
+#'    split_rows_by("BMRKR2") %>%
+#'    analyze("AGE")
+#'
+#' tbl <- build_table(lyt, ex_adsl) %>% prune_table()
+#' sub_tbl <- tt_at_path(tbl, path = c("SEX", "F", "BMRKR2"))
+#'
+#' # Removing sub table.
+#' tbl2 <- tbl
+#' tt_at_path(tbl2, path = c("SEX", "F")) <- NULL
+#' tbl2
+#'
+#' # Setting sub table.
+#' lyt3 <- basic_table() %>%
+#'    split_cols_by("ARM") %>%
+#'    split_rows_by("SEX") %>%
+#'    analyze("BMRKR2")
+#'
+#' tbl3 <- build_table(lyt3, ex_adsl) %>% prune_table()
+#'
+#' tt_at_path(tbl3, path = c("SEX", "F", "BMRKR2")) <- sub_tbl
+#' tbl3
+#'
+setGeneric("tt_at_path<-",
+           function(tt, path, ..., value) standardGeneric("tt_at_path<-"))
 #' @export
-#' @rdname ttap
+#' @rdname int_methods
 setMethod("tt_at_path<-", c(tt = "VTableTree", value = "VTableTree"),
           function(tt, path, ..., value) {
     do_recursive_replace(tt, path = path, value = value)
@@ -272,9 +321,9 @@ setMethod("tt_at_path<-", c(tt = "VTableTree", value = "VTableTree"),
 })
 
 ## this one removes the child at path from the parents list of children,
-## becuase thats how lists behave.
+## because that is how lists behave.
 #' @export
-#' @rdname ttap
+#' @rdname int_methods
 setMethod("tt_at_path<-", c(tt = "VTableTree", value = "NULL"),
           function(tt, path, ..., value) {
     do_recursive_replace(tt, path = path, value = value)
@@ -283,7 +332,7 @@ setMethod("tt_at_path<-", c(tt = "VTableTree", value = "NULL"),
 
 
 #' @export
-#' @rdname ttap
+#' @rdname int_methods
 setMethod("tt_at_path<-", c(tt = "VTableTree", value = "TableRow"),
           function(tt, path, ..., value) {
     stopifnot(is(tt_at_path(tt = tt, path = path), "TableRow"))
@@ -296,103 +345,116 @@ setMethod("tt_at_path<-", c(tt = "VTableTree", value = "TableRow"),
 })
 
 
-
-## setGeneric("replace_rows", function(x, i, value) standardGeneric("replace_rows"))
-## setMethod("replace_rows", c(value = "TableRow"),
-##           function(x, i, value) replace_rows(x, i = i, value = list(value)))
-## setMethod("replace_rows", c(value = "list"),
-##           function(x, i, value) {
-##     if(is.null(i)) {
-##         i = seq_along(tree_children(x))
-##         if(labelrow_visible(x))
-##             i = i[-1]
-##     } else if(is.logical(i)) {
-##         i = which(rep(i, length.out = length(collect_leaves(x, TRUE, TRUE))))
-##     }
-
-##     if(labelrow_visible(x) && 1 %in% i && !are(value, "TableRow") && !is.null(value[[1]]))
-##         stop("attempted to assign values into a LabelRow")
-
-##     if(length(value) != length(i))
-##         value = rep(value, length.out = length(i))
-
-##     if(are(value, "TableRow")) {
-##         newrows =value
-##     } else {
-##         newrows = lapply(i,
-##                          function(ind) {
-##             .tablerow(value[[ind]],
-##                      cinfo = col_info(x),
-##                      klass = class(tree_children(x)[[ind]]),
-##                      )
-##         })
-##     }
-
-##     kids = tree_children(x)
-##     kids[i] = newrows
-##     tree_children(x) = kids
-##     x
-## })
-
-
-
-## setMethod("replace_rows", c(value = "ElementaryTable"),
-##            function(x,i,value) {
-##     stopifnot(identical(col_info(x), col_info(value)))
-##     replace_rows(x, i, tree_children(value))
-## })
-
-
-
-
-
-
-
-#' retrieve and assign elements of a TableTree
+#' Retrieve and assign elements of a `TableTree`
 #'
 #' @rdname brackets
 #'
 #' @param x TableTree
 #' @param i index
 #' @param j index
-#' @param drop logical(1). Should the value in the cell be returned if only one cell is selected by the combination of
-#'   \code{i} and \code{j}. Defaults to \code{FALSE}
+#' @param drop logical(1). Should the value in the cell be returned if one
+#'   cell is selected by the combination of \code{i} and \code{j}. It is not possible
+#'   to return a vector of values. To do so please consider using [cell_values()].
+#'   Defaults to \code{FALSE}.
 #' @param \dots Includes
 #' \describe{
-#' \item{\emph{keep_topleft}}{ logical(1) (\code{[} only) Should the 'top-left' material for the table be
-#'   retained after subsetting. Defaults to \code{NA}, which retains the material if all rows are included (ie
-#'   subsetting was by column), and drops it otherwise.}
-#' \item{\emph{keep_titles}}{logical(1) Should title and non-referential footer information be retained. Defaults to \code{FALSE}}
-#' \item{\emph{reindex_refs}}{logical(1). Should referential footnotes be re-indexed as if the resulting subset is the entire table. Defaults to \code{TRUE}}
+#' \item{\emph{keep_topleft}}{logical(1) (\code{[} only) Should the `top-left`
+#' material for the table be retained after subsetting. Defaults to `TRUE` if 
+#' all rows are included (i.e. subsetting was by column), and drops it otherwise.}
+#' \item{\emph{keep_titles}}{logical(1) Should title information be retained. Defaults to \code{FALSE}.}
+#' \item{\emph{keep_footers}}{logical(1) Should non-referential footer
+#' information be retained. Defaults to \code{keep_titles}.}
+#' \item{\emph{reindex_refs}}{logical(1). Should referential footnotes be
+#' re-indexed as if the resulting subset is the entire table. Defaults to
+#' \code{TRUE}.}
 #' }
 #' @param value Replacement value (list, `TableRow`, or `TableTree`)
-#' @return a \code{TableTree} (or \code{ElementaryTable}) object, unless a single cell was selected with \code{drop=TRUE}, in which case the (possibly multi-valued) fully stripped raw value of the selected cell.
-#' @exportMethod [<-
+#' 
+#' @return a \code{TableTree} (or \code{ElementaryTable}) object, unless a
+#'   single cell was selected with \code{drop=TRUE}, in which case the (possibly
+#'   multi-valued) fully stripped raw value of the selected cell.
+#' 
+#' @details by default, subsetting drops the information about title, subtitle,
+#' main footer, provenance footer, and `topleft`. If only a column is selected 
+#' and all rows are kept, the `topleft` information remains as default. Any 
+#' referential footnote is kept whenever the subset table contains the 
+#' referenced element. 
+#' 
+#' @note subsetting always preserve the original order, even if provided
+#' indexes do not preserve it. If sorting is needed, please consider 
+#' using `sort_at_path()`. Also note that `character` indices are treated as paths,
+#' not vectors of names in both `[` and `[<-`.
+#' 
+#' @seealso Regarding sorting: `sort_at_path()` and how to understand path 
+#' structure: `summarize_row_groups()`, and `summarize_col_groups()`.
 #'
 #' @examples
-#' l <- basic_table() %>%
+#' lyt <- basic_table(title = "Title", 
+#'                    subtitles = c("Sub", "titles"), 
+#'                    prov_footer = "prov footer", 
+#'                    main_footer = "main footer") %>%
 #'    split_cols_by("ARM") %>%
-#'    analyze(c("SEX", "AGE"))
+#'    split_rows_by("SEX") %>%
+#'    analyze(c("AGE"))
 #'
-#' tbl <- build_table(l, DM)
-#'
+#' tbl <- build_table(lyt, DM)
+#' top_left(tbl) <- "Info"
 #' tbl
-#'
+#' 
+#' # As default header, footer, and topleft information is lost
 #' tbl[1, ]
 #' tbl[1:2, 2]
-#'
+#' 
+#' # Also boolean filters can work
+#' tbl[, c(FALSE, TRUE, FALSE)]
+#' 
+#' # If drop = TRUE, the content values are directly retrieved
 #' tbl[2, 1]
 #' tbl[2, 1, drop = TRUE]
-#'
+#' 
+#' # Drop works also if vectors are selected, but not matrices
+#' tbl[, 1, drop = TRUE]
+#' tbl[2, , drop = TRUE]
+#' tbl[1, 1, drop = TRUE] # NULL because it is a label row
+#' tbl[2, 1:2, drop = TRUE] # vectors can be returned only with cell_values()
+#' tbl[1:2, 1:2, drop = TRUE] # no dropping because it is a matrix
+#' 
+#' # If all rows are selected, topleft is kept by default
+#' tbl[, 2]
 #' tbl[, 1]
-#'
+#' 
+#' # It is possible to deselect values
 #' tbl[-2, ]
 #' tbl[, -1]
 #'
+#' # Values can be reassigned
 #' tbl[2, 1] <- rcell(999)
 #' tbl[2, ] <- list(rrow("FFF", 888, 666, 777))
-#' tbl[3, ] <- list(-111, -222, -333)
+#' tbl[6, ] <- list(-111, -222, -333)
 #' tbl
+#' 
+#' # We can keep some information from the original table if we need
+#' tbl[1, 2, keep_titles = TRUE]
+#' tbl[1, 2, keep_footers = TRUE, keep_titles = FALSE]
+#' tbl[1, 2, keep_footers = FALSE, keep_titles = TRUE]
+#' tbl[1, 2, keep_footers = TRUE]
+#' tbl[1, 2, keep_topleft = TRUE]
+#' 
+#' # Keeps the referential footnotes when subset contains them
+#' fnotes_at_path(tbl, rowpath = c("SEX", "M", "AGE", "Mean")) <- "important"
+#' tbl[4, 1]
+#' tbl[2, 1] # None present
+#' 
+#' # We can reindex referential footnotes, so that the new table does not depend
+#' #  on the original one
+#' fnotes_at_path(tbl, rowpath = c("SEX", "U", "AGE", "Mean")) <- "important"
+#' tbl[, 1] # both present
+#' tbl[5:6, 1] # {1} because it has been indexed again
+#' tbl[5:6, 1, reindex_refs = FALSE] # {2} -> not reindexed
+#'
+#' # Note that order can not be changed with subsetting
+#' tbl[c(4, 3, 1), c(3, 1)] # It preserves order and wanted selection
+#' 
 #' @aliases [,VTableTree,logical,logical,ANY-method
 #' [,VTableTree,logical,ANY,ANY-method
 #' [,VTableTree,logical,missing,ANY-method
@@ -400,16 +462,26 @@ setMethod("tt_at_path<-", c(tt = "VTableTree", value = "TableRow"),
 #' [,VTableTree,ANY,missing,ANY-method
 #' [,VTableTree,ANY,character,ANY-method
 #' [,VTableTree,character,ANY,ANY-method
+#' 
+#' @exportMethod [<-
 setMethod("[<-", c("VTableTree", value = "list"),
           function(x, i, j, ...,  value) {
 
 
-    nr = nrow(x)
-    i = .j_to_posj(i, nr)
+    nr <- nrow(x)
+    if(missing(i))
+        i <- seq_len(NROW(x))
+    else if(is(i, "character"))
+        i <- .path_to_pos(i, x)
+    else
+        i <- .j_to_posj(i, nr)
+
     if(missing(j)) {
-        j = seq_along(col_exprs(col_info(x)))
+        j <- seq_along(col_exprs(col_info(x)))
+    } else if(is(j, "character")) {
+        j <- .path_to_pos(j, x, cols = TRUE)
     } else {
-        j = .j_to_posj(j, ncol(x))
+        j <- .j_to_posj(j, ncol(x))
     }
 
     if(length(i) > 1 && length(j) < ncol(x))
@@ -417,25 +489,26 @@ setMethod("[<-", c("VTableTree", value = "list"),
 
     if(are(value, "TableRow"))
 
-        value = rep(value, length.out = length(i))
+        value <- rep(value, length.out = length(i))
     else
-        value = rep(value, length.out = length(i) * length(j))
+        value <- rep(value, length.out = length(i) * length(j))
 
-    counter = 0
+    counter <- 0
     ## this has access to value, i, and j by scoping
-    replace_rowsbynum = function(x, i, valifnone = NULL) {
-        maxi = max(i)
+    replace_rowsbynum <- function(x, i, valifnone = NULL) {
+        maxi <- max(i)
         if(counter >= maxi)
             return(valifnone)
 
         if(labelrow_visible(x)) {
             counter <<- counter + 1
             if(counter %in% i) {
-                nxtval = value[[1]]
+                nxtval <- value[[1]]
                 if(is(nxtval, "LabelRow")) {
-                    tt_labelrow(x) = nxtval
+                    tt_labelrow(x) <- nxtval
                 } else {
-                    stop("can't replace label with value of class", class(nxtval))
+                    stop("can't replace label with value of class",
+                         class(nxtval))
                 }
                 ## we're done with this one move to
                 ## the next
@@ -443,46 +516,46 @@ setMethod("[<-", c("VTableTree", value = "list"),
             }
         }
         if(is(x, "TableTree") && nrow(content_table(x)) > 0) {
-            ctab = content_table(x)
+            ctab <- content_table(x)
 
-            content_table(x) = replace_rowsbynum(ctab, i)
+            content_table(x) <- replace_rowsbynum(ctab, i)
         }
         if(counter >= maxi) { #already done
             return(x)
         }
-        kids = tree_children(x)
+        kids <- tree_children(x)
 
         if(length(kids) > 0) {
             for(pos in seq_along(kids)) {
-                curkid = kids[[pos]]
+                curkid <- kids[[pos]]
                 if(is(curkid, "TableRow")) {
                     counter <<- counter + 1
                     if(counter %in% i) {
-                        nxtval = value[[1]]
+                        nxtval <- value[[1]]
                         if(is(nxtval, class(curkid))) {
                             if(no_colinfo(nxtval) &&
                                length(row_values(nxtval)) == ncol(x)) {
-                                col_info(nxtval) = col_info(x)
+                                col_info(nxtval) <- col_info(x)
                             }
                             stopifnot(identical(col_info(x), col_info(nxtval)))
-                            curkid = nxtval
-                            value = value[-1]
+                            curkid <- nxtval
+                            value <- value[-1]
                         } else {
-                            rvs = row_values(curkid)
-                            rvs[j] = value[1:length(j)]
-                            row_values(curkid) = rvs
-                            value = value[-(1:length(j))]
+                            rvs <- row_values(curkid)
+                            rvs[j] <- value[seq_along(j)]
+                            row_values(curkid) <- rvs
+                            value <- value[-(seq_along(j))]
                         }
-                        kids[[pos]] = curkid
+                        kids[[pos]] <- curkid
                     }
                 } else {
-                    kids[[pos]] = replace_rowsbynum(curkid, i)
+                    kids[[pos]] <- replace_rowsbynum(curkid, i)
                 }
                 if(counter >= maxi)
                     break
             }
         }
-        tree_children(x) = kids
+        tree_children(x) <- kids
         x
     }
     replace_rowsbynum(x, i, ...)
@@ -492,11 +565,9 @@ setMethod("[<-", c("VTableTree", value = "list"),
 #' @rdname brackets
 setMethod("[<-", c("VTableTree", value = "CellValue"),
           function(x, i, j, ...,  value) {
-    x[i = i, j = j, ...] <- unclass(value)
+    x[i = i, j = j, ...] <- list(value)
     x
 })
-
-
 
 ## this is going to be hard :( :( :(
 
@@ -505,67 +576,65 @@ setMethod("[<-", c("VTableTree", value = "CellValue"),
 ## we have two options here: path like we do with rows and positional
 ## in leaf space.
 
-setGeneric("subset_cols", function(tt, j, newcinfo = NULL, keep_topleft = TRUE, keep_titles = TRUE, ...) standardGeneric("subset_cols"))
+setGeneric("subset_cols",
+           function(tt,
+                    j,
+                    newcinfo = NULL,
+                    keep_topleft = TRUE,
+                    keep_titles = TRUE,
+                    keep_footers = keep_titles,
+                    ...) {
+               standardGeneric("subset_cols")
+           })
 
 setMethod("subset_cols", c("TableTree", "numeric"),
-          function(tt, j, newcinfo = NULL, keep_topleft, keep_titles, ...) {
-    j = .j_to_posj(j, ncol(tt))
+          function(tt, j, newcinfo = NULL, 
+                   keep_topleft, keep_titles, keep_footers, ...) {
+    j <- .j_to_posj(j, ncol(tt))
     if(is.null(newcinfo)) {
-        cinfo = col_info(tt)
-        newcinfo = subset_cols(cinfo, j, keep_topleft = keep_topleft, ...)
+        cinfo <- col_info(tt)
+        newcinfo <- subset_cols(cinfo, j, 
+                                keep_topleft = keep_topleft, ...)
     }
     ## topleft taken care of in creation of newcinfo
-    kids = tree_children(tt)
-    newkids = lapply(kids, subset_cols, j= j, newcinfo = newcinfo,  ...)
-    cont = content_table(tt)
-    newcont = subset_cols(cont, j, newcinfo = newcinfo,  ...)
-    tt2 = tt
+    kids <- tree_children(tt)
+    newkids <- lapply(kids, subset_cols, j = j, newcinfo = newcinfo,  ...)
+    cont <- content_table(tt)
+    newcont <- subset_cols(cont, j, newcinfo = newcinfo,  ...)
+    tt2 <- tt
     col_info(tt2) <- newcinfo
     content_table(tt2) <- newcont
     tree_children(tt2) <- newkids
-    tt_labelrow(tt2) = subset_cols(tt_labelrow(tt2), j, newcinfo,  ...)
+    tt_labelrow(tt2) <- subset_cols(tt_labelrow(tt2), j, newcinfo,  ...)
 
-    if(isTRUE(keep_titles)) {
-        main_title(tt2) <- main_title(tt)
-        subtitles(tt2) <- subtitles(tt)
-        main_footer(tt2) <- main_footer(tt)
-        prov_footer(tt2) <- prov_footer(tt)
-
-    } else {
-        main_title(tt2) <- ""
-        subtitles(tt2) <- character()
-    }
-    ## if(keep_topleft)
-    ##     top_left(tt2) <- top_left(tt)
-    ## else
-    ##     top_left(tt2) <- character()
+    tt2 <- .h_copy_titles_footers_topleft(tt2, tt, 
+                                        keep_titles, 
+                                        keep_footers, 
+                                        keep_topleft)
     tt2
 })
 
 setMethod("subset_cols", c("ElementaryTable", "numeric"),
-          function(tt, j, newcinfo = NULL, keep_topleft, keep_titles, ...) {
-    j = .j_to_posj(j, ncol(tt))
+          function(tt, j, newcinfo = NULL, 
+                   keep_topleft, keep_titles, keep_footers, ...) {
+    j <- .j_to_posj(j, ncol(tt))
     if(is.null(newcinfo)) {
-        cinfo = col_info(tt)
-        newcinfo = subset_cols(cinfo, j, keep_topleft = keep_topleft,
-                               keep_titles = keep_titles, ...)
+        cinfo <- col_info(tt)
+        newcinfo <- subset_cols(cinfo, j, keep_topleft = keep_topleft,
+                               keep_titles = keep_titles, 
+                               keep_footers = keep_footers, ...)
     }
     ## topleft handled in creation of newcinfo
-    kids = tree_children(tt)
-    newkids = lapply(kids, subset_cols, j= j, newcinfo = newcinfo,  ...)
-    tt2 = tt
+    kids <- tree_children(tt)
+    newkids <- lapply(kids, subset_cols, j = j, newcinfo = newcinfo, ...)
+    tt2 <- tt
     col_info(tt2) <- newcinfo
     tree_children(tt2) <- newkids
-    tt_labelrow(tt2) = subset_cols(tt_labelrow(tt2), j, newcinfo, ...)
-    if(keep_titles) {
-        main_title(tt2) <- main_title(tt)
-        subtitles(tt2) <- subtitles(tt)
-        main_footer(tt2) <- main_footer(tt)
-        prov_footer(tt2) <- prov_footer(tt)
-
-    }
-    ## if(keep_topleft)
-    ##     top_left(tt2) <- top_left(tt)
+    tt_labelrow(tt2) <- subset_cols(tt_labelrow(tt2), j, newcinfo, ...)
+    tt2 <- .h_copy_titles_footers_topleft(tt2, tt, 
+                                        keep_titles, 
+                                        keep_footers, 
+                                        keep_topleft)
     tt2
 })
 
@@ -574,83 +643,15 @@ setMethod("subset_cols", c("ElementaryTable", "numeric"),
 ## indices into positive ones, given j
 ## and total length
 
-.j_to_posj = function(j, n) {
+.j_to_posj <- function(j, n) {
     ## This will work for logicals, numerics, integers
-    j = seq_len(n)[j]
+    j <- seq_len(n)[j]
     j
 }
 
 
-## .colpath_to_j <- function(path, tt) {
-##     if(length(path) == 0)
-##         stop("got length 0 path")
-
-##     if(length(path) >=1 && identical(path[[1]], "root"))
-##         path <- path[-1]
-
-##     paths <- col_paths(tt)
-##     ret <- rep(TRUE, ncol(tt))
-##     for(i in seq_len(length(path))) {
-##         pi <- path[i]
-##         if(!identical(pi, "*"))
-##             stepi <- vapply(paths,
-##                             function(cpath) {
-##                 length(cpath) < i ||
-##                     identical(cpath[i], pi)
-##             }, TRUE)
-##         ret <- ret & stepi
-##         if(!any(ret))
-##             stop("Column path ", path, " appears to be invalid at step ", pi)
-##     }
-##     j <- which(ret)
-##     j
-## }
-#' @noRd
-#' @param spanfunc is the thing that gets the counts after subsetting
-## should be n_leaves for a column tree structure and NROW for
-## a table tree
-## .colpath_to_j <- function(path, ctree, offset = 0) {
-##      if(length(path) == 0) {
-##         if(is(ctree, "VLeaf"))
-##             ret = offset + 1
-##         else
-##             ret = offset + 1:n_leaves(ctree)
-##         return(ret)
-##     }
-##     ## the columntree is collapsed so we go to the kids and look
-##     ## at their position information which has both split and
-##     ## split value information
-##     kids = tree_children(ctree)
-##     splname = obj_name(tail(pos_splits(kids[[1]]), 1)[[1]])
-##     if(splname != path[1]) {
-##         stop("Path in column space appears to be invalid at step ", path[1])
-##     }
-##     if(length(path) == 1) {
-##         ret = offset + 1:n_leaves(ctree)
-##     } else {
-##         cj <- path[2]
-
-##         nkids = sapply(kids, n_leaves)
-##         kidoffsets = cumsum(nkids) - nkids[1]
-##         if(cj == "*") {
-##             ret = sort(unlist(mapply(.colpath_to_j,
-##                                      MoreArgs = list(path = tail(path, -2)),
-##                                      ctree = kids,
-##                                      offset = offset + kidoffsets,
-##                                      SIMPLIFY=FALSE)))
-##         } else if (cj %in% names(kids)) {
-##             ret = .colpath_to_j(tail(path, -2), ctree = kids[[cj]],
-##                                offset = offset + kidoffsets[which(cj == names(kids))])
-##         } else {
-##             stop("Path in column space appears to be invalid at step ", cj)
-##         }
-##     }
-##     sort(unlist(ret))
-## }
-
-
-path_collapse_sep = "`"
-escape_name_padding = function(x) {
+path_collapse_sep <- "`"
+escape_name_padding <- function(x) {
     ret <- gsub("._[[", "\\._\\[\\[", x, fixed = TRUE)
     ret <- gsub("]]_.", "\\]\\]_\\.", ret, fixed = TRUE)
     ret
@@ -696,104 +697,75 @@ path_to_regex <- function(path) {
     allmatchs
 }
 
-## .path_to_pos <- function(path, fullidx, ctree, spanfunc) {
-##     retidx = fullidx
-##     stopifnot(length(path) > 0)
-##     cj = path[-1]
-##     curcj = path[1]
-##     ##    while(length(cj) >= 0) {
-##     while(length(cj) > 0) {
-##         colcounts = sapply(tree_children(ctree), spanfunc)
-##         cnms <- names(tree_children(ctree))
-##         ## this will ONLY find the first match in the case of duplciated names!!!!
-##         fidx <- match(cj, cnms)
-##         if(anyNA(fidx))
-##             stop("Path element ", cj, "did not match any remaining names [", paste(cnms, collapse = ", "), "]")
-##         ##if(fidx == 1L) {
-##         if(length(fidx) == 1L) {
-##             ## retidx <- retidx[1:colcounts[1]]
-##             retidx <- retidx[1:colcounts[fidx]]
-##         } else {
-##             strtpos <- sum(colcounts[1:fidx]) + 1
-##             retidx <- retidx[strtpos:(strtpos + colcounts[fidx])]
-##         }
-##         ctree <- tree_children(ctree)[[fidx]]
-##         curcj <- cj[1]
-##         cj <- cj[-1]
-##     }
-##     retidx
-## }
-
 ## fix column spans that would be invalid
 ## after some columns are no longer there
-.fix_rowcspans = function(rw, j) {
-    cspans = row_cspans(rw)
-    nc = sum(cspans)
-    j = .j_to_posj(j, nc)
+.fix_rowcspans <- function(rw, j) {
+    cspans <- row_cspans(rw)
+    nc <- sum(cspans)
+    j <- .j_to_posj(j, nc)
     ## this is overly complicated
     ## we need the starting indices
     ## but the first span might not be 1, so
     ## we pad with 1 and then take off the last
-    start = cumsum(c(1,head(cspans, -1)))
-    ends = c(tail(start, -1) -1, nc)
-    res = mapply(function(st, en) {
+    start <- cumsum(c(1, head(cspans, -1)))
+    ends <- c(tail(start, -1) - 1, nc)
+    res <- mapply(function(st, en) {
         sum(j >= st & j <= en)
     }, st = start, en = ends)
-    res = res[res>0]
+    res <- res[res > 0]
     stopifnot(sum(res) == length(j))
     res
 
 }
 
-select_cells_j = function(cells, j) {
+select_cells_j <- function(cells, j) {
     if(length(j) != length(unique(j)))
         stop("duplicate column selections is not currently supported")
-    spans = vapply(cells, function(x) cell_cspan(x),
+    spans <- vapply(cells, function(x) cell_cspan(x),
                    integer(1))
-    inds = rep(seq_along(cells), times = spans)
-    selinds = inds[j]
-    retcells = cells[selinds[!duplicated(selinds)]]
-    newspans = vapply(split(selinds, selinds),
+    inds <- rep(seq_along(cells), times = spans)
+    selinds <- inds[j]
+    retcells <- cells[selinds[!duplicated(selinds)]]
+    newspans <- vapply(split(selinds, selinds),
                       length,
                       integer(1))
 
     mapply(function(cl, sp) {
-        cell_cspan(cl) = sp
+        cell_cspan(cl) <- sp
         cl
-    }, cl = retcells, sp = newspans, SIMPLIFY=FALSE)
+    }, cl = retcells, sp = newspans, SIMPLIFY = FALSE)
 }
 
 setMethod("subset_cols", c("ANY", "character"),
           function(tt, j, newcinfo = NULL, keep_topleft = TRUE, ...) {
-    ##j <- .colpath_to_j(j, coltree(tt))
     j <- .path_to_pos(path = j, tt = tt, cols = TRUE)
     subset_cols(tt, j, newcinfo = newcinfo, keep_topleft = keep_topleft,  ...)
 })
 
 setMethod("subset_cols", c("TableRow", "numeric"),
           function(tt, j, newcinfo = NULL, keep_topleft = TRUE,  ...) {
-    j = .j_to_posj(j, ncol(tt))
+    j <- .j_to_posj(j, ncol(tt))
     if(is.null(newcinfo)) {
-        cinfo = col_info(tt)
-        newcinfo = subset_cols(cinfo, j, keep_topleft = keep_topleft,  ...)
+        cinfo <- col_info(tt)
+        newcinfo <- subset_cols(cinfo, j, keep_topleft = keep_topleft,  ...)
     }
-    tt2 = tt
-    row_cells(tt2) =  select_cells_j(row_cells(tt2), j)
+    tt2 <- tt
+    row_cells(tt2) <-  select_cells_j(row_cells(tt2), j)
 
     if(length(row_cspans(tt2)) > 0)
-        row_cspans(tt2) = .fix_rowcspans(tt2, j)
-    col_info(tt2) = newcinfo
+        row_cspans(tt2) <- .fix_rowcspans(tt2, j)
+    col_info(tt2) <- newcinfo
     tt2
 })
 
 setMethod("subset_cols", c("LabelRow", "numeric"),
           function(tt, j, newcinfo = NULL, keep_topleft = TRUE, ...) {
-    j = .j_to_posj(j, ncol(tt))
+    j <- .j_to_posj(j, ncol(tt))
     if(is.null(newcinfo)) {
-        cinfo = col_info(tt)
-        newcinfo = subset_cols(cinfo, j, keep_topleft = keep_topleft, ...)
+        cinfo <- col_info(tt)
+        newcinfo <- subset_cols(cinfo, j, keep_topleft = keep_topleft, ...)
     }
-    col_info(tt) = newcinfo
+    col_info(tt) <- newcinfo
     tt
 })
 
@@ -819,28 +791,28 @@ setMethod("subset_cols", c("InstantiatedColumnInfo", "numeric"),
 
 setMethod("subset_cols", c("LayoutColTree", "numeric"),
           function(tt, j, newcinfo = NULL, ...) {
-    lst = collect_leaves(tt)
-    j = .j_to_posj(j, length(lst))
+    lst <- collect_leaves(tt)
+    j <- .j_to_posj(j, length(lst))
 
     ## j has only non-negative values from
     ## this point on
-    counter = 0
-    prune_children = function(x, j) {
-        kids = tree_children(x)
-        newkids = kids
+    counter <- 0
+    prune_children <- function(x, j) {
+        kids <- tree_children(x)
+        newkids <- kids
          for(i in seq_along(newkids)) {
             if(is(newkids[[i]], "LayoutColLeaf")) {
                 counter <<- counter + 1
                 if(!(counter %in% j))
-                    newkids[[i]] = list() ## NULL removes the position entirely
+                    newkids[[i]] <- list() ## NULL removes the position entirely
             } else {
-                newkids[[i]] = prune_children(newkids[[i]], j)
+                newkids[[i]] <- prune_children(newkids[[i]], j)
             }
         }
 
-        newkids = newkids[sapply(newkids, function(thing) length(thing) > 0)]
-        if(length(newkids) > 0){
-            tree_children(x) = newkids
+        newkids <- newkids[sapply(newkids, function(thing) length(thing) > 0)]
+        if(length(newkids) > 0) {
+            tree_children(x) <- newkids
             x
         } else {
             list()
@@ -853,11 +825,16 @@ setMethod("subset_cols", c("LayoutColTree", "numeric"),
 
 
 ## label rows ARE included in the count
-subset_by_rownum = function(tt, i, keep_topleft = NA, keep_titles = TRUE, ... ) {
+subset_by_rownum <- function(tt,
+                             i,
+                             keep_topleft = FALSE,
+                             keep_titles = TRUE,
+                             keep_footers = keep_titles, 
+                             ...) {
     stopifnot(is(tt, "VTableNodeInfo"))
-    counter = 0
-    nr = nrow(tt)
-    i = .j_to_posj(i, nr)
+    counter <- 0
+    nr <- nrow(tt)
+    i <- .j_to_posj(i, nr)
     if(length(i) == 0) {
         ret <- TableTree(cinfo = col_info(tt))
         if(isTRUE(keep_topleft))
@@ -865,8 +842,8 @@ subset_by_rownum = function(tt, i, keep_topleft = NA, keep_titles = TRUE, ... ) 
         return(ret)
     }
 
-    prune_rowsbynum = function(x, i, valifnone = NULL) {
-        maxi = max(i)
+    prune_rowsbynum <- function(x, i, valifnone = NULL) {
+        maxi <- max(i)
         if(counter > maxi)
             return(valifnone)
 
@@ -879,37 +856,37 @@ subset_by_rownum = function(tt, i, keep_topleft = NA, keep_titles = TRUE, ... ) 
                 ## the value of the label but
                 ## that shold really probably change)
                 labelrow_visible(x) <- FALSE
-                ## labelrow_visible(x) <- "hidden"
-            }
+             }
         }
         if(is(x, "TableTree") && nrow(content_table(x)) > 0) {
-            ctab = content_table(x)
+            ctab <- content_table(x)
 
-            content_table(x) = prune_rowsbynum(ctab, i,
-                                               valifnone = ElementaryTable(cinfo = col_info(ctab), iscontent = TRUE))
+            content_table(x) <- prune_rowsbynum(ctab, i,
+                                                valifnone = ElementaryTable(cinfo = col_info(ctab), 
+                                                                            iscontent = TRUE))
         }
-        kids = tree_children(x)
+        kids <- tree_children(x)
         if(counter > maxi) { #already done
-            kids = list()
+            kids <- list()
         } else if(length(kids) > 0) {
             for(pos in seq_along(kids)) {
                 if(is(kids[[pos]], "TableRow")) {
                     counter <<- counter + 1
                     if(!(counter %in% i)) {
-                        kids[[pos]] = list()
+                        kids[[pos]] <- list()
                     }
                 } else {
-                    kids[[pos]] = prune_rowsbynum(kids[[pos]], i, list())
+                    kids[[pos]] <- prune_rowsbynum(kids[[pos]], i, list())
                 }
             }
-            kids = kids[sapply(kids, function(x) NROW(x) > 0)]
+            kids <- kids[sapply(kids, function(x) NROW(x) > 0)]
         }
         if(length(kids) == 0 &&
            NROW(content_table(x)) == 0 &&
-           !labelrow_visible(x))
+           !labelrow_visible(x)) {
             return(valifnone)
-        else {
-            tree_children(x) = kids
+        } else {
+            tree_children(x) <- kids
             x
         }
         ## ## if(length(kids) == 0) {
@@ -923,14 +900,11 @@ subset_by_rownum = function(tt, i, keep_topleft = NA, keep_titles = TRUE, ... ) 
         ## }
     }
     ret <- prune_rowsbynum(tt, i)
-    if(isTRUE(keep_topleft))
-        top_left(ret) <- top_left(tt)
-    if(isTRUE(keep_titles) || (isTRUE(keep_topleft) && is.na(keep_titles))) {
-        main_title(ret) <- main_title(tt)
-        subtitles(ret) <- subtitles(tt)
-        main_footer(ret) <- main_footer(tt)
-        prov_footer(ret) <- prov_footer(tt)
-    }
+    
+    ret <- .h_copy_titles_footers_topleft(ret, tt, 
+                                        keep_titles, 
+                                        keep_footers, 
+                                        keep_topleft)
 
     ret
 }
@@ -941,9 +915,9 @@ subset_by_rownum = function(tt, i, keep_topleft = NA, keep_titles = TRUE, ... ) 
 #' @aliases [,VTableTree,logical,logical-method
 setMethod("[", c("VTableTree", "logical", "logical"),
           function(x, i, j, ..., drop = FALSE) {
-    i = .j_to_posj(i, nrow(x))
-    j = .j_to_posj(j, ncol(x))
-    x[i,j, ..., drop = drop]
+    i <- .j_to_posj(i, nrow(x))
+    j <- .j_to_posj(j, ncol(x))
+    x[i, j, ..., drop = drop]
 })
 
 #' @exportMethod [
@@ -951,8 +925,8 @@ setMethod("[", c("VTableTree", "logical", "logical"),
 #' @aliases [,VTableTree,logical,ANY-method
 setMethod("[", c("VTableTree", "logical", "ANY"),
           function(x, i, j, ..., drop = FALSE) {
-    i = .j_to_posj(i, nrow(x))
-    x[i,j, ..., drop = drop]
+    i <- .j_to_posj(i, nrow(x))
+    x[i, j, ..., drop = drop]
 })
 
 #' @exportMethod [
@@ -960,9 +934,9 @@ setMethod("[", c("VTableTree", "logical", "ANY"),
 #' @aliases [,VTableTree,logical,missing-method
 setMethod("[", c("VTableTree", "logical", "missing"),
           function(x, i, j, ..., drop = FALSE) {
-    j = seq_len(ncol(x))
-    i = .j_to_posj(i, nrow(x))
-    x[i,j, ..., drop = drop]
+    j <- seq_len(ncol(x))
+    i <- .j_to_posj(i, nrow(x))
+    x[i, j, ..., drop = drop]
 })
 
 #' @exportMethod [
@@ -970,8 +944,8 @@ setMethod("[", c("VTableTree", "logical", "missing"),
 #' @aliases [,VTableTree,ANY,logical-method
 setMethod("[", c("VTableTree", "ANY", "logical"),
           function(x, i, j, ..., drop = FALSE) {
-    j = .j_to_posj(j, ncol(x))
-    x[i,j, ..., drop = drop]
+    j <- .j_to_posj(j, ncol(x))
+    x[i, j, ..., drop = drop]
 })
 
 #' @exportMethod [
@@ -979,8 +953,8 @@ setMethod("[", c("VTableTree", "ANY", "logical"),
 #' @aliases [,VTableTree,ANY,missing-method
 setMethod("[", c("VTableTree", "ANY", "missing"),
           function(x, i, j, ..., drop = FALSE) {
-    j = seq_len(ncol(x))
-    x[i = i,j = j, ..., drop = drop]
+    j <- seq_len(ncol(x))
+    x[i = i, j = j, ..., drop = drop]
 })
 
 #' @exportMethod [
@@ -989,8 +963,8 @@ setMethod("[", c("VTableTree", "ANY", "missing"),
 
 setMethod("[", c("VTableTree", "missing", "ANY"),
           function(x, i, j, ..., drop = FALSE) {
-    i = seq_len(nrow(x))
-    x[i = i,j = j, ..., drop = drop]
+    i <- seq_len(nrow(x))
+    x[i = i, j = j, ..., drop = drop]
 })
 
 
@@ -1002,7 +976,7 @@ setMethod("[", c("VTableTree", "ANY", "character"),
           function(x, i, j, ..., drop = FALSE) {
     ##j <- .colpath_to_j(j, coltree(x))
     j <- .path_to_pos(path = j, tt = x, cols = TRUE)
-    x[i = i,j = j, ..., drop = drop]
+    x[i = i, j = j, ..., drop = drop]
 })
 
 #' @exportMethod [
@@ -1012,7 +986,7 @@ setMethod("[", c("VTableTree", "character", "ANY"),
           function(x, i, j, ..., drop = FALSE) {
     ##i <- .path_to_pos(i, seq_len(nrow(x)), x, NROW)
     i <- .path_to_pos(i, x)
-    x[i = i,j = j, ..., drop = drop]
+    x[i = i, j = j, ..., drop = drop]
 })
 
 ## to avoid dispatch ambiguity. Not necessary, possibly not a good idea at all
@@ -1034,8 +1008,8 @@ setMethod("[", c("VTableTree", "character", "character"),
 #' @aliases [,VTableTree,missing,numeric-method
 setMethod("[", c("VTableTree", "missing", "numeric"),
           function(x, i, j, ..., drop = FALSE) {
-    i = seq_len(nrow(x))
-    x[i,j, ..., drop = drop]
+    i <- seq_len(nrow(x))
+    x[i, j, ..., drop = drop]
 })
 
 
@@ -1046,36 +1020,51 @@ setMethod("[", c("VTableTree", "numeric", "numeric"),
           function(x, i, j, ..., drop = FALSE) {
     ## have to do it this way because we can't add an argument since we don't
     ## own the generic declaration
-    keep_topleft <- list(...)[["keep_topleft"]] ## returns NULL if not presesnt
+    keep_topleft <- list(...)[["keep_topleft"]] %||% NA
     keep_titles <- list(...)[["keep_titles"]] %||% FALSE
+    keep_footers <- list(...)[["keep_footers"]] %||% keep_titles
     reindex_refs <- list(...)[["reindex_refs"]] %||% TRUE
-    if(is.null(keep_topleft))
-        keep_topleft <- NA
-
+    
     nr <- nrow(x)
     nc <- ncol(x)
     i <- .j_to_posj(i, nr)
     j <- .j_to_posj(j, nc)
 
     ##  if(!missing(i) && length(i) < nr) {
-    if(length(i) < nr) { ## already populated by .j_to_posj
+    if(length(i) < nr) {## already populated by .j_to_posj
         keep_topleft <- isTRUE(keep_topleft)
-        x <- subset_by_rownum(x, i, keep_topleft = keep_topleft, keep_titles = keep_titles)
-    } else {
-        keep_topleft <- !identical(FALSE, keep_topleft)
+        x <- subset_by_rownum(x, i,
+                              keep_topleft = keep_topleft,
+                              keep_titles = keep_titles,
+                              keep_footers = keep_footers)
+    } else if (is.na(keep_topleft)) {
+        keep_topleft <- TRUE
     }
+    
     ##  if(!missing(j) && length(j) < nc)
     if(length(j) < nc)
-        x <- subset_cols(x, j, keep_topleft = keep_topleft, keep_titles = keep_titles)
+        x <- subset_cols(x, j,
+                         keep_topleft = keep_topleft,
+                         keep_titles = keep_titles,
+                         keep_footers = keep_footers)
 
-    if(length(j) == 1L &&
-       length(i) == 1L &&
-       drop) {
-        rw <- collect_leaves(x, TRUE, TRUE)[[1]]
-        if(is(rw, "LabelRow"))
-            x <- NULL
-        else
-            x <- row_values(rw)[[1]]
+    # Dropping everything
+    if (drop) {
+        if (length(j) == 1L && length(i) == 1L) {
+            rw <- collect_leaves(x, TRUE, TRUE)[[1]]
+            if (is(rw, "LabelRow")) {
+                warning("The value selected with drop = TRUE belongs ",
+                        "to a label row. NULL will be returned")
+                x <- NULL
+            } else {
+                x <- row_values(rw)[[1]]
+            }
+        } else {
+            warning("Trying to drop more than one subsetted value. ",
+                    "We support this only with accessor function `cell_values()`. ",
+                    "No drop will be done at this time.")
+            drop <- FALSE
+        }
     }
     if(!drop) {
         if(!keep_topleft)
@@ -1085,50 +1074,6 @@ setMethod("[", c("VTableTree", "numeric", "numeric"),
     }
     x
 })
-
-#' @exportMethod [[
-#' @rdname brackets
-
-setMethod("[[", c("VTableTree", "list", "ANY"),
-          function(x, i, j, ...) {
-
-    subtree = x
-    nms = i
-    while(length(nms) > 0 && is(subtree, "VTableTree")) {
-        nm = nms[[1]]
-        nms = nms[-1]
-        ## support the name[2] type pathing
-        ## XXX should we just modify the names
-        ## so the actual name is name[2] instead?
-        stopifnot(is(nm, "character"))
-        nm = strsplit(nm, "[][]")[[1]]
-        if(length(nm) > 1)
-            pos = as.integer(nm[2])
-        else
-            pos = 1L
-        nm = nm[1]
-        kids = tree_children(subtree)
-        chosen = which(sapply(kids, obj_name) == nm)[pos]
-        subtree = kids[[chosen]]
-    }
-    ## we have row selections
-    if(length(nms)) {
-        stop("stop being so clever. row selection in path subsetting not supported yet")
-    }
-    if(!missing(j))
-        subtree = subset_cols(subtree, j)
-    if(is(subtree, "TableRow"))
-        subtree = TableTree(list(subtree), cinfo = col_info(subtree))
-    subtree
-
-
-})
-
-extract_colvals = function(tt, j) {
-
-
-
-}
 
 #' @importFrom utils compareVersion
 
@@ -1143,7 +1088,7 @@ setMethod("tail", "VTableTree",
 
 setGeneric("head", head)
 setMethod("head", "VTableTree",
-          function(x, n= 6L, ...) {
+          function(x, n = 6L, ...) {
     head.matrix(x, n)
 }
 )
@@ -1153,54 +1098,66 @@ setMethod("head", "VTableTree",
 #' @rdname cell_values
 #'
 #' @inheritParams gen_args
-#' @param rowpath character. Path in row-split space to the desired row(s). Can include \code{"@content"}.
-#' @param colpath character. Path in column-split space to the desired column(s). Can include \code{"*"}.
-#' @param omit_labrows logical(1). Should label rows underneath \code{rowpath} be omitted
-#' (\code{TRUE}, the default), or return empty lists of cell "values" (\code{FALSE}).
+#' @param rowpath character. Path in row-split space to the desired row(s). Can
+#'   include \code{"@content"}.
+#' @param colpath character. Path in column-split space to the desired
+#'   column(s). Can include \code{"*"}.
+#' @param omit_labrows logical(1). Should label rows underneath \code{rowpath}
+#'   be omitted (\code{TRUE}, the default), or return empty lists of cell
+#'   "values" (\code{FALSE}).
 #'
-#' @return for \code{cell_values}, a \emph{list} (regardless of the type of value the cells hold).
-#' if \code{rowpath} defines a path to a single row, \code{cell_values} returns the list of cell values
-#' for that row, otherwise a list of such lists, one for each row captured underneath \code{rowpath}.
-#' This occurs after subsetting to \code{colpath} has occured.
+#' @return for \code{cell_values}, a \emph{list} (regardless of the type of
+#'   value the cells hold). if \code{rowpath} defines a path to a single row,
+#'   \code{cell_values} returns the list of cell values for that row, otherwise
+#'   a list of such lists, one for each row captured underneath \code{rowpath}.
+#'   This occurs after subsetting to \code{colpath} has occurred.
 #'
-#' For \code{value_at} the "unwrapped" value of a single cell, or an error, if the combination of
-#' \code{rowpath} and \code{colpath} do not define the location of a single cell in \code{tt}.
+#'   For \code{value_at} the "unwrapped" value of a single cell, or an error, if
+#'   the combination of \code{rowpath} and \code{colpath} do not define the
+#'   location of a single cell in \code{tt}.
 #'
-#' @note \code{cell_values} will return a single cell's value wrapped in a list. Use \code{value_at}
-#' to recieve the "bare" cell value.
+#' @note \code{cell_values} will return a single cell's value wrapped in a list.
+#'   Use \code{value_at} to receive the "bare" cell value.
 #'
 #' @export
 #'
 #' @examples
-#'  l <- basic_table() %>% split_cols_by("ARM") %>%
-#'    split_cols_by("SEX") %>%
-#'    split_rows_by("RACE") %>%
-#'    summarize_row_groups() %>%
-#'    split_rows_by("STRATA1") %>%
-#'    analyze("AGE")
+#' lyt <- basic_table() %>% 
+#'   split_cols_by("ARM") %>%
+#'   split_cols_by("SEX") %>%
+#'   split_rows_by("RACE") %>%
+#'   summarize_row_groups() %>%
+#'   split_rows_by("STRATA1") %>%
+#'   analyze("AGE")
 #'
 #' library(dplyr) ## for mutate
-#' tbl <- build_table(l, DM %>% mutate(SEX = droplevels(SEX), RACE = droplevels(RACE)))
+#' tbl <- build_table(lyt, DM %>%
+#'     mutate(SEX = droplevels(SEX), RACE = droplevels(RACE)))
 #'
 #' row_paths_summary(tbl)
 #' col_paths_summary(tbl)
 #'
-#' cell_values(tbl, c("RACE", "ASIAN", "STRATA1", "B"), c("ARM", "A: Drug X", "SEX", "F"))
+#' cell_values(tbl, c("RACE", "ASIAN", "STRATA1", "B"),
+#'             c("ARM", "A: Drug X", "SEX", "F"))
 #'
 #' # it's also possible to access multiple values by being less specific
-#' cell_values(tbl, c("RACE", "ASIAN", "STRATA1"), c("ARM", "A: Drug X", "SEX", "F"))
+#' cell_values(tbl, c("RACE", "ASIAN", "STRATA1"),
+#'             c("ARM", "A: Drug X", "SEX", "F"))
 #' cell_values(tbl, c("RACE", "ASIAN"), c("ARM", "A: Drug X", "SEX", "M"))
 #'
 #'
 #' ## any arm, male columns from the ASIAN content (ie summary) row
-#' cell_values(tbl, c("RACE", "ASIAN", "@content"), c("ARM", "B: Placebo", "SEX", "M"))
-#' cell_values(tbl, c("RACE", "ASIAN", "@content"), c("ARM", "*", "SEX", "M"))
+#' cell_values(tbl, c("RACE", "ASIAN", "@content"),
+#'             c("ARM", "B: Placebo", "SEX", "M"))
+#' cell_values(tbl, c("RACE", "ASIAN", "@content"),
+#'             c("ARM", "*", "SEX", "M"))
 #'
 #' ## all columns
 #' cell_values(tbl,  c("RACE", "ASIAN", "STRATA1", "B"))
 #'
 #' ## all columns for the Combination arm
-#' cell_values(tbl,  c("RACE", "ASIAN", "STRATA1", "B"), c("ARM", "C: Combination"))
+#' cell_values(tbl,  c("RACE", "ASIAN", "STRATA1", "B"),
+#'             c("ARM", "C: Combination"))
 #'
 #' cvlist <- cell_values(tbl, c("RACE", "ASIAN", "STRATA1", "B", "AGE", "Mean"),
 #'                       c("ARM", "B: Placebo", "SEX", "M"))
@@ -1212,23 +1169,25 @@ setGeneric("cell_values", function(tt, rowpath = NULL, colpath = NULL, omit_labr
 #'@rdname cell_values
 #' @exportMethod cell_values
 setMethod("cell_values", "VTableTree",
-          function(tt, rowpath, colpath = NULL, omit_labrows = TRUE){
-    .inner_cell_value(tt, rowpath = rowpath, colpath = colpath, omit_labrows = omit_labrows, value_at = FALSE)
+          function(tt, rowpath, colpath = NULL, omit_labrows = TRUE) {
+    .inner_cell_value(tt, rowpath = rowpath, colpath = colpath,
+                      omit_labrows = omit_labrows, value_at = FALSE)
 })
 
 #'@rdname cell_values
 #' @exportMethod cell_values
 setMethod("cell_values", "TableRow",
-          function(tt, rowpath, colpath = NULL, omit_labrows = TRUE){
+          function(tt, rowpath, colpath = NULL, omit_labrows = TRUE) {
     if(!is.null(rowpath))
        stop("cell_values on TableRow objects must have NULL rowpath")
-    .inner_cell_value(tt, rowpath = rowpath, colpath = colpath, omit_labrows = omit_labrows, value_at = FALSE)
+    .inner_cell_value(tt, rowpath = rowpath, colpath = colpath,
+                       omit_labrows = omit_labrows, value_at = FALSE)
 })
 
 #'@rdname cell_values
 #' @exportMethod cell_values
 setMethod("cell_values", "LabelRow",
-          function(tt, rowpath, colpath = NULL, omit_labrows = TRUE){
+          function(tt, rowpath, colpath = NULL, omit_labrows = TRUE) {
     stop("calling cell_values on LabelRow is not meaningful")
 })
 
@@ -1241,29 +1200,35 @@ setGeneric("value_at", function(tt, rowpath = NULL, colpath = NULL)
 #'@rdname cell_values
 #' @exportMethod value_at
 setMethod("value_at", "VTableTree",
-          function(tt, rowpath, colpath = NULL){
-    .inner_cell_value(tt, rowpath = rowpath, colpath = colpath, omit_labrows = FALSE, value_at = TRUE)
+          function(tt, rowpath, colpath = NULL) {
+    .inner_cell_value(tt, rowpath = rowpath, colpath = colpath,
+                      omit_labrows = FALSE, value_at = TRUE)
 })
 
 #'@rdname cell_values
 #' @exportMethod value_at
 setMethod("value_at", "TableRow",
-          function(tt, rowpath, colpath = NULL){
-    .inner_cell_value(tt, rowpath = rowpath, colpath = colpath, omit_labrows = FALSE, value_at = TRUE)
+          function(tt, rowpath, colpath = NULL) {
+    .inner_cell_value(tt, rowpath = rowpath, colpath = colpath,
+                      omit_labrows = FALSE, value_at = TRUE)
 })
 
 
 #'@rdname cell_values
 #' @exportMethod value_at
 setMethod("value_at", "LabelRow",
-          function(tt, rowpath, colpath = NULL){
+          function(tt, rowpath, colpath = NULL) {
     stop("calling value_at for LabelRow objects is not meaningful")
 })
 
 
 
-.inner_cell_value <- function(tt, rowpath, colpath = NULL, omit_labrows = TRUE, value_at = FALSE){
-    if(is.null(rowpath))
+.inner_cell_value <- function(tt,
+                              rowpath,
+                              colpath = NULL,
+                              omit_labrows = TRUE,
+                              value_at = FALSE) {
+    if (is.null(rowpath))
         subtree <- tt
     else
         subtree <- tt_at_path(tt, rowpath)
@@ -1274,12 +1239,129 @@ setMethod("value_at", "LabelRow",
     if(value_at && (ncol(subtree) != 1 || length(rows) != 1))
         stop("Combination of rowpath and colpath does not select individual cell.\n",
              "  To retrieve more than one cell value at a time use cell_values().", call. = FALSE)
-    if(length(rows)== 1) {
+    if(length(rows) == 1) {
         ret <- row_values(rows[[1]])
         if(value_at && ncol(subtree) == 1)
             ret <- ret[[1]]
         ret
-    } else
+    } else {
         lapply(rows, row_values)
-
+    }
 }
+
+# Helper function to copy or not header, footer, and topleft information
+.h_copy_titles_footers_topleft <- function(new, 
+                                           old, 
+                                           keep_titles, 
+                                           keep_footers, 
+                                           keep_topleft,
+                                           reindex_refs = FALSE) {
+    ## Please note that the standard adopted come from an empty table
+    empt_tbl <- rtable(" ")
+    
+    # titles
+    if(isTRUE(keep_titles)) {
+        main_title(new) <- main_title(old)
+        subtitles(new) <- subtitles(old)
+        
+    } else {
+        main_title(new) <-  main_title(empt_tbl)
+        subtitles(new) <- subtitles(empt_tbl)
+    }
+    
+    # fnotes
+    if (isTRUE(keep_footers)) {
+        main_footer(new) <- main_footer(old)
+        prov_footer(new) <- prov_footer(old)
+    } else {
+        main_footer(new) <- main_footer(empt_tbl)
+        prov_footer(new) <- prov_footer(empt_tbl)
+    }
+    
+    # topleft
+    if (isTRUE(keep_topleft))
+        top_left(new) <- top_left(old)
+    else
+        top_left(new) <- top_left(empt_tbl)
+    
+    # reindex references
+    if(reindex_refs)
+        new <- update_ref_indexing(new)
+    
+    new
+}
+
+#' Head and tail methods
+#' @inheritParams utils::head
+#' @param keep_topleft logical(1). If `TRUE` (the default),
+#' top_left material for the table will be carried over to the
+#' subset.
+#' @param keep_titles logical(1).  If `TRUE` (the default),
+#' all title material for the table will be carried over to the
+#' subset.
+#' @param keep_footers logical(1). If `TRUE`, all footer material for the table
+#' will be carried over to the subset. It defaults to `keep_titles`.
+#' @param reindex_refs logical(1). Defaults to `FALSE`. If `TRUE`,
+#' referential footnotes will be reindexed for the subset.
+#' @docType methods
+#' @export
+#' @rdname head_tail
+setGeneric("head")
+#' @docType methods
+#' @export
+#' @rdname head_tail
+setMethod("head", "VTableTree",
+          function(x, n = 6, ..., keep_topleft = TRUE,
+                   keep_titles = TRUE,
+                   keep_footers = keep_titles,
+                   ## FALSE because this is a glance
+                   ## more often than a subset op
+                   reindex_refs = FALSE) {
+              
+    ## default
+    res <- callNextMethod()
+    res <- .h_copy_titles_footers_topleft(old = x, new = res,
+              keep_topleft = keep_topleft,
+              keep_titles = keep_titles,
+              keep_footers = keep_footers,
+              reindex_refs = reindex_refs)
+    res
+})
+
+#' @docType methods
+#' @export
+#' @rdname head_tail
+setGeneric("tail")
+#' @docType methods
+#' @export
+#' @rdname head_tail
+setMethod("tail", "VTableTree",
+          function(x, n = 6, ..., keep_topleft = TRUE,
+                   keep_titles = TRUE,
+                   keep_footers = keep_titles,
+                   ## FALSE because this is a glance
+                   ## more often than a subset op
+                   reindex_refs = FALSE) {
+    res <- callNextMethod()
+    res <- .h_copy_titles_footers_topleft(old = x, new = res,
+                     keep_topleft = keep_topleft,
+                     keep_titles = keep_titles,
+                     keep_footers = keep_footers,
+                     reindex_refs = reindex_refs)
+    res
+})
+
+
+#' @rdname brackets
+#' @name bracket_subsetting
+#' @export
+#' @usage
+#' x[i, j, ...]
+base::`[`
+
+#' @rdname brackets
+#' @export
+#' @usage
+#' x[i, j, ...] <- value
+base::`[<-`
+

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Gabriel Becker and Adrian Waddell" />
+
+<meta name="date" content="2023-03-02" />
+
+<title>Titles, Footers, and Referential Footnotes</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Titles, Footers, and Referential
+Footnotes</h1>
+<h4 class="author">Gabriel Becker and Adrian Waddell</h4>
+<h4 class="date">2023-03-02</h4>
+
+
+
+<style type="text/css">
+.reveal .r code {
+white-space: pre;
+}
+</style>
+<div id="titles-and-non-referential-footer-materials" class="section level1">
+<h1>Titles and Non-Referential Footer Materials</h1>
+<p>An <code>rtables</code> table can be annotated with three types of
+header (title) information, as well as three types of footer
+information.</p>
+<p>Header information comes in two forms that are specified directly
+(main title and subtitles), as well as one that is populated
+automatically as necessary (page title, which we will see in the next
+section).</p>
+<p>Similarly, footer materials come with two directly specified
+components: main footer and provenance footer, in addition to one that
+is computed when necessary: referential footnotes.</p>
+<p><code>basic_table()</code> accepts the values for each static title
+and footer element during layout construction:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, DM)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">export_as_txt</span>(tbl, <span class="at">paginate =</span> <span class="cn">TRUE</span>, <span class="at">page_break =</span> <span class="st">&quot;</span><span class="sc">\n\n\n</span><span class="st">&quot;</span>))</span></code></pre></div>
+<pre><code># Study XXXXXXXX
+# subtitle YYYYYYYYYY
+# subtitle2 ZZZZZZZZZ
+# 
+# ——————————————————————————————————————————————————
+#            A: Drug X   B: Placebo   C: Combination
+# ——————————————————————————————————————————————————
+# F                                                 
+#   A                                               
+#     mean     30.9         32.9           36.0     
+#   B                                               
+#     mean     34.9         32.9           34.4     
+#   C                                               
+#     mean     35.2         36.0           34.3     
+# M                                                 
+#   A                                               
+#     mean     35.1         31.1           35.6     
+#   B                                               
+#     mean     36.6         32.1           34.4     
+#   C                                               
+#     mean     37.4         32.8           32.8     
+# ——————————————————————————————————————————————————
+# 
+# Analysis was done using cool methods that are correct
+# 
+# file: /path/to/stuff/that/lives/there HASH:1ac41b242a</code></pre>
+</div>
+<div id="page-by-splitting" class="section level1">
+<h1>Page-by splitting</h1>
+<p>We often want to split tables based on the values of one or more
+variables (e.g., lab measurement) and then paginate <em>separately
+within each of those table subsections</em>. In <code>rtables</code> we
+do this via <em>page by</em> row splits.</p>
+<p>Row splits can be declared page by splits by setting
+<code>page_by = TRUE</code> in the <code>split_rows_by*()</code> call,
+as below.</p>
+<p>When page by splits are present, page titles are generated
+automatically by appending the split value (typically a factor level,
+though it need not be), to the <code>page_prefix</code>, separated by a
+<code>:</code>. By default, <code>page_prefix</code> is name of the
+variable being split.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">page_by =</span> <span class="cn">TRUE</span>, <span class="at">page_prefix =</span> <span class="st">&quot;Patient Subset - Gender&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, DM)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">export_as_txt</span>(tbl2, <span class="at">paginate =</span> <span class="cn">TRUE</span>, <span class="at">page_break =</span> <span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">~~~~ Page Break ~~~~</span><span class="sc">\n\n</span><span class="st">&quot;</span>))</span></code></pre></div>
+<pre><code># Study XXXXXXXX
+# subtitle YYYYYYYYYY
+# subtitle2 ZZZZZZZZZ
+# Patient Subset - Gender: F
+# 
+# ——————————————————————————————————————————————————
+#            A: Drug X   B: Placebo   C: Combination
+# ——————————————————————————————————————————————————
+# A                                                 
+#   mean       30.9         32.9           36.0     
+# B                                                 
+#   mean       34.9         32.9           34.4     
+# C                                                 
+#   mean       35.2         36.0           34.3     
+# ——————————————————————————————————————————————————
+# 
+# Analysis was done using cool methods that are correct
+# 
+# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
+# 
+# 
+# ~~~~ Page Break ~~~~
+# 
+# Study XXXXXXXX
+# subtitle YYYYYYYYYY
+# subtitle2 ZZZZZZZZZ
+# Patient Subset - Gender: M
+# 
+# ——————————————————————————————————————————————————
+#            A: Drug X   B: Placebo   C: Combination
+# ——————————————————————————————————————————————————
+# A                                                 
+#   mean       35.1         31.1           35.6     
+# B                                                 
+#   mean       36.6         32.1           34.4     
+# C                                                 
+#   mean       37.4         32.8           32.8     
+# ——————————————————————————————————————————————————
+# 
+# Analysis was done using cool methods that are correct
+# 
+# file: /path/to/stuff/that/lives/there HASH:1ac41b242a</code></pre>
+<p>Page by row splits can be nested, but only within other page_by
+splits, they cannot be nested within traditional row splits. In this
+case, a page title for each page by split will be present on every
+resulting page, as seen below:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">page_by =</span> <span class="cn">TRUE</span>, <span class="at">page_prefix =</span> <span class="st">&quot;Patient Subset - Gender&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="at">page_by =</span> <span class="cn">TRUE</span>, <span class="at">page_prefix =</span> <span class="st">&quot;Stratification - Strata&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt3, DM)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">export_as_txt</span>(tbl3, <span class="at">paginate =</span> <span class="cn">TRUE</span>, <span class="at">page_break =</span> <span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">~~~~ Page Break ~~~~</span><span class="sc">\n\n</span><span class="st">&quot;</span>))</span></code></pre></div>
+<pre><code># Study XXXXXXXX
+# subtitle YYYYYYYYYY
+# subtitle2 ZZZZZZZZZ
+# Patient Subset - Gender: F
+# Stratification - Strata: A
+# 
+# ——————————————————————————————————————————————————
+#            A: Drug X   B: Placebo   C: Combination
+# ——————————————————————————————————————————————————
+# mean         30.9         32.9           36.0     
+# ——————————————————————————————————————————————————
+# 
+# Analysis was done using cool methods that are correct
+# 
+# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
+# 
+# 
+# ~~~~ Page Break ~~~~
+# 
+# Study XXXXXXXX
+# subtitle YYYYYYYYYY
+# subtitle2 ZZZZZZZZZ
+# Patient Subset - Gender: F
+# Stratification - Strata: B
+# 
+# ——————————————————————————————————————————————————
+#            A: Drug X   B: Placebo   C: Combination
+# ——————————————————————————————————————————————————
+# mean         34.9         32.9           34.4     
+# ——————————————————————————————————————————————————
+# 
+# Analysis was done using cool methods that are correct
+# 
+# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
+# 
+# 
+# ~~~~ Page Break ~~~~
+# 
+# Study XXXXXXXX
+# subtitle YYYYYYYYYY
+# subtitle2 ZZZZZZZZZ
+# Patient Subset - Gender: F
+# Stratification - Strata: C
+# 
+# ——————————————————————————————————————————————————
+#            A: Drug X   B: Placebo   C: Combination
+# ——————————————————————————————————————————————————
+# mean         35.2         36.0           34.3     
+# ——————————————————————————————————————————————————
+# 
+# Analysis was done using cool methods that are correct
+# 
+# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
+# 
+# 
+# ~~~~ Page Break ~~~~
+# 
+# Study XXXXXXXX
+# subtitle YYYYYYYYYY
+# subtitle2 ZZZZZZZZZ
+# Patient Subset - Gender: M
+# Stratification - Strata: A
+# 
+# ——————————————————————————————————————————————————
+#            A: Drug X   B: Placebo   C: Combination
+# ——————————————————————————————————————————————————
+# mean         35.1         31.1           35.6     
+# ——————————————————————————————————————————————————
+# 
+# Analysis was done using cool methods that are correct
+# 
+# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
+# 
+# 
+# ~~~~ Page Break ~~~~
+# 
+# Study XXXXXXXX
+# subtitle YYYYYYYYYY
+# subtitle2 ZZZZZZZZZ
+# Patient Subset - Gender: M
+# Stratification - Strata: B
+# 
+# ——————————————————————————————————————————————————
+#            A: Drug X   B: Placebo   C: Combination
+# ——————————————————————————————————————————————————
+# mean         36.6         32.1           34.4     
+# ——————————————————————————————————————————————————
+# 
+# Analysis was done using cool methods that are correct
+# 
+# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
+# 
+# 
+# ~~~~ Page Break ~~~~
+# 
+# Study XXXXXXXX
+# subtitle YYYYYYYYYY
+# subtitle2 ZZZZZZZZZ
+# Patient Subset - Gender: M
+# Stratification - Strata: C
+# 
+# ——————————————————————————————————————————————————
+#            A: Drug X   B: Placebo   C: Combination
+# ——————————————————————————————————————————————————
+# mean         37.4         32.8           32.8     
+# ——————————————————————————————————————————————————
+# 
+# Analysis was done using cool methods that are correct
+# 
+# file: /path/to/stuff/that/lives/there HASH:1ac41b242a</code></pre>
+</div>
+<div id="referential-footnotes" class="section level1">
+<h1>Referential Footnotes</h1>
+<p>Referential footnotes are footnotes associated with a particular
+component of a table: a column, a row, or a cell. They can be added
+during tabulation via analysis functions, but they can also be added
+post-hoc once a table is created.</p>
+<p>They are rendered as a number within curly braces within the table
+body, row, or column labels, followed by a message associated with that
+number printed below the table during rendering.</p>
+<div id="adding-cell--and-analysis-row-referential-footnotes-at-tabulation-time" class="section level2">
+<h2>Adding Cell- and Analysis-row Referential Footnotes At Tabulation
+Time</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>afun <span class="ot">&lt;-</span> <span class="cf">function</span>(df, .var, .spl_context) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    val <span class="ot">&lt;-</span> .spl_context<span class="sc">$</span>value[<span class="fu">NROW</span>(.spl_context)]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    rw_fnotes <span class="ot">&lt;-</span>  <span class="cf">if</span>(val <span class="sc">==</span> <span class="st">&quot;C&quot;</span>) <span class="fu">list</span>(<span class="st">&quot;This is strata level C for these patients&quot;</span>) <span class="cf">else</span> <span class="fu">list</span>()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    cl_fnotes <span class="ot">&lt;-</span> <span class="cf">if</span>(val <span class="sc">==</span> <span class="st">&quot;B&quot;</span> <span class="sc">&amp;&amp;</span> df[<span class="dv">1</span>, <span class="st">&quot;ARM&quot;</span>, <span class="at">drop =</span> <span class="cn">TRUE</span>] <span class="sc">==</span> <span class="st">&quot;C: Combination&quot;</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">list</span>(<span class="st">&quot;these Strata B patients got the drug combination&quot;</span>) <span class="cf">else</span> <span class="fu">list</span>()</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="at">mean =</span> <span class="fu">mean</span>(df[[.var]]),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">.row_footnotes =</span> rw_fnotes,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">.cell_footnotes =</span> cl_fnotes,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">.formats =</span> <span class="fu">c</span>(<span class="at">mean =</span> <span class="st">&quot;xx.x&quot;</span>))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>                   <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">page_by =</span> <span class="cn">TRUE</span>, <span class="at">page_prefix =</span> <span class="st">&quot;Patient Subset - Gender&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, afun, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, DM)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">export_as_txt</span>(tbl, <span class="at">paginate =</span> <span class="cn">TRUE</span>, <span class="at">page_break =</span> <span class="st">&quot;</span><span class="sc">\n\n\n</span><span class="st">&quot;</span>))</span></code></pre></div>
+<pre><code># Study XXXXXXXX
+# subtitle YYYYYYYYYY
+# subtitle2 ZZZZZZZZZ
+# Patient Subset - Gender: F
+# 
+# ——————————————————————————————————————————————————————
+#                A: Drug X   B: Placebo   C: Combination
+# ——————————————————————————————————————————————————————
+# A                                                     
+#   mean           30.9         32.9           36.0     
+# B                                                     
+#   mean           34.9         32.9         34.4 {1}   
+# C                                                     
+#   mean {2}       35.2         36.0           34.3     
+# ——————————————————————————————————————————————————————
+# 
+# {1} - these Strata B patients got the drug combination
+# {2} - This is strata level C for these patients
+# ——————————————————————————————————————————————————————
+# 
+# Analysis was done using cool methods that are correct
+# 
+# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
+# 
+# 
+# 
+# Study XXXXXXXX
+# subtitle YYYYYYYYYY
+# subtitle2 ZZZZZZZZZ
+# Patient Subset - Gender: M
+# 
+# ——————————————————————————————————————————————————————
+#                A: Drug X   B: Placebo   C: Combination
+# ——————————————————————————————————————————————————————
+# A                                                     
+#   mean           35.1         31.1           35.6     
+# B                                                     
+#   mean           36.6         32.1         34.4 {3}   
+# C                                                     
+#   mean {4}       37.4         32.8           32.8     
+# ——————————————————————————————————————————————————————
+# 
+# {3} - these Strata B patients got the drug combination
+# {4} - This is strata level C for these patients
+# ——————————————————————————————————————————————————————
+# 
+# Analysis was done using cool methods that are correct
+# 
+# file: /path/to/stuff/that/lives/there HASH:1ac41b242a</code></pre>
+<p>We note that typically the type of footnote added within the analysis
+function would be dependent on the computations done to calculate the
+cell value(s), e.g., a model not converging. We simply use context
+information as an illustrative proxy for that.</p>
+<p>The procedure for adding footnotes to content (summary row) rows or
+cells is identical to the above, when done within a content
+function.</p>
+</div>
+<div id="annotating-an-existing-table-with-referential-footnotes" class="section level2">
+<h2>Annotating an Existing Table with Referential Footnotes</h2>
+<p>In addition to inserting referential footnotes at tabulation time
+within our analysis functions, we can also annotate our tables with them
+post-hoc.</p>
+<p>This is also the only way to add footnotes to <strong>column</strong>
+labels, as those cannot be controlled within an analysis or content
+function.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## from ?tolower example slightly modified</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>.simpleCap <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(x) <span class="sc">&gt;</span> <span class="dv">1</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(<span class="fu">sapply</span>(x, .simpleCap))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    s <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(<span class="fu">tolower</span>(x), <span class="st">&quot; &quot;</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span>(<span class="fu">toupper</span>(<span class="fu">substring</span>(s, <span class="dv">1</span>, <span class="dv">1</span>)), <span class="fu">substring</span>(s, <span class="dv">2</span>),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">sep =</span> <span class="st">&quot;&quot;</span>, <span class="at">collapse =</span> <span class="st">&quot; &quot;</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>adsl2 <span class="ot">&lt;-</span> ex_adsl <span class="sc">%&gt;%</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>) <span class="sc">&amp;</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>           RACE <span class="sc">%in%</span> (<span class="fu">levels</span>(RACE)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])) <span class="sc">%&gt;%</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="do">## we trim the level names here solely due to space considerations</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">ethnicity =</span> <span class="fu">.simpleCap</span>(<span class="fu">gsub</span>(<span class="st">&quot;(.*)OR.*&quot;</span>, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">1&quot;</span>, RACE)),</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>           <span class="at">RACE =</span> <span class="fu">factor</span>(RACE))</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>, <span class="at">labels_var =</span> <span class="st">&quot;ethnicity&quot;</span>,</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>                  <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>))</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, adsl2)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>tbl2</span></code></pre></div>
+<pre><code>#                    A: Drug X                B: Placebo              C: Combination     
+#                 F            M            F            M            F            M     
+# ———————————————————————————————————————————————————————————————————————————————————————
+# Asian       41 (53.9%)   25 (54.3%)   36 (52.2%)   30 (60.0%)   39 (60.9%)   32 (57.1%)
+#   AGE                                                                                  
+#     Mean      31.22        34.60        35.06        38.63        36.44        37.66   
+#   STRATA1                                                                              
+#     A           11           10           14           10           11           7     
+#     B           11           9            15           7            11           14    
+#     C           19           6            7            13           17           11    
+# Black       18 (23.7%)   12 (26.1%)   16 (23.2%)   12 (24.0%)   14 (21.9%)   14 (25.0%)
+#   AGE                                                                                  
+#     Mean      34.06        34.58        33.88        36.33        33.21        34.21   
+#   STRATA1                                                                              
+#     A           5            2            5            6            3            7     
+#     B           6            5            3            4            4            4     
+#     C           7            5            8            2            7            3     
+# White       17 (22.4%)   9 (19.6%)    17 (24.6%)   8 (16.0%)    11 (17.2%)   10 (17.9%)
+#   AGE                                                                                  
+#     Mean      34.12        40.00        32.41        34.62        33.00        30.80   
+#   STRATA1                                                                              
+#     A           5            3            3            3            3            5     
+#     B           5            4            8            4            5            2     
+#     C           7            2            6            1            3            3</code></pre>
+<p>We do this with the <code>fnotes_at_path&lt;-</code> function which
+accepts a row path, a column path, and a value for the full set of
+footnotes for the defined locations (<code>NULL</code> or a
+<code>character</code> vector).</p>
+<p>A non-<code>NULL</code> row path with a <code>NULL</code> column path
+specifies the footnote(s) should be attached to the row, while
+<code>NULL</code> row path with non-<code>NULL</code> column path
+indicates they go with the column. Both being non-<code>NULL</code>
+indicates a cell (and must resolve to an individual cell).</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fnotes_at_path</span>(tbl2, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>)) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hi&quot;</span>, <span class="st">&quot;there&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>tbl2</span></code></pre></div>
+<pre><code>#                       A: Drug X                B: Placebo              C: Combination     
+#                    F            M            F            M            F            M     
+# ——————————————————————————————————————————————————————————————————————————————————————————
+# Asian {1, 2}   41 (53.9%)   25 (54.3%)   36 (52.2%)   30 (60.0%)   39 (60.9%)   32 (57.1%)
+#   AGE                                                                                     
+#     Mean         31.22        34.60        35.06        38.63        36.44        37.66   
+#   STRATA1                                                                                 
+#     A              11           10           14           10           11           7     
+#     B              11           9            15           7            11           14    
+#     C              19           6            7            13           17           11    
+# Black          18 (23.7%)   12 (26.1%)   16 (23.2%)   12 (24.0%)   14 (21.9%)   14 (25.0%)
+#   AGE                                                                                     
+#     Mean         34.06        34.58        33.88        36.33        33.21        34.21   
+#   STRATA1                                                                                 
+#     A              5            2            5            6            3            7     
+#     B              6            5            3            4            4            4     
+#     C              7            5            8            2            7            3     
+# White          17 (22.4%)   9 (19.6%)    17 (24.6%)   8 (16.0%)    11 (17.2%)   10 (17.9%)
+#   AGE                                                                                     
+#     Mean         34.12        40.00        32.41        34.62        33.00        30.80   
+#   STRATA1                                                                                 
+#     A              5            3            3            3            3            5     
+#     B              5            4            8            4            5            2     
+#     C              7            2            6            1            3            3     
+# ——————————————————————————————————————————————————————————————————————————————————————————
+# 
+# {1} - hi
+# {2} - there
+# ——————————————————————————————————————————————————————————————————————————————————————————</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fnotes_at_path</span>(tbl2, <span class="at">rowpath =</span> <span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;B: Placebo&quot;</span>)) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;this is a placebo&quot;</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>tbl2</span></code></pre></div>
+<pre><code>#                       A: Drug X              B: Placebo {1}            C: Combination     
+#                    F            M            F            M            F            M     
+# ——————————————————————————————————————————————————————————————————————————————————————————
+# Asian {2, 3}   41 (53.9%)   25 (54.3%)   36 (52.2%)   30 (60.0%)   39 (60.9%)   32 (57.1%)
+#   AGE                                                                                     
+#     Mean         31.22        34.60        35.06        38.63        36.44        37.66   
+#   STRATA1                                                                                 
+#     A              11           10           14           10           11           7     
+#     B              11           9            15           7            11           14    
+#     C              19           6            7            13           17           11    
+# Black          18 (23.7%)   12 (26.1%)   16 (23.2%)   12 (24.0%)   14 (21.9%)   14 (25.0%)
+#   AGE                                                                                     
+#     Mean         34.06        34.58        33.88        36.33        33.21        34.21   
+#   STRATA1                                                                                 
+#     A              5            2            5            6            3            7     
+#     B              6            5            3            4            4            4     
+#     C              7            5            8            2            7            3     
+# White          17 (22.4%)   9 (19.6%)    17 (24.6%)   8 (16.0%)    11 (17.2%)   10 (17.9%)
+#   AGE                                                                                     
+#     Mean         34.12        40.00        32.41        34.62        33.00        30.80   
+#   STRATA1                                                                                 
+#     A              5            3            3            3            3            5     
+#     B              5            4            8            4            5            2     
+#     C              7            2            6            1            3            3     
+# ——————————————————————————————————————————————————————————————————————————————————————————
+# 
+# {1} - this is a placebo
+# {2} - hi
+# {3} - there
+# ——————————————————————————————————————————————————————————————————————————————————————————</code></pre>
+<p>Note to step into a content row we must add that to the path, even
+though we didn’t need it to put a footnote on the full row.</p>
+<p>Currently, content rows by default are named with the <em>label</em>
+rather than <em>name</em> of the corresponding facet. This is reflected
+in the output of, e.g., <code>row_paths_summary</code>.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">row_paths_summary</span>(tbl2)</span></code></pre></div>
+<pre><code># rowname      node_class    path                                            
+# ———————————————————————————————————————————————————————————————————————————
+# Asian        ContentRow    RACE, ASIAN, @content, Asian                    
+#   AGE        LabelRow      RACE, ASIAN, AGE                                
+#     Mean     DataRow       RACE, ASIAN, AGE, Mean                          
+#   STRATA1    LabelRow      RACE, ASIAN, STRATA1                            
+#     A        DataRow       RACE, ASIAN, STRATA1, A                         
+#     B        DataRow       RACE, ASIAN, STRATA1, B                         
+#     C        DataRow       RACE, ASIAN, STRATA1, C                         
+# Black        ContentRow    RACE, BLACK OR AFRICAN AMERICAN, @content, Black
+#   AGE        LabelRow      RACE, BLACK OR AFRICAN AMERICAN, AGE            
+#     Mean     DataRow       RACE, BLACK OR AFRICAN AMERICAN, AGE, Mean      
+#   STRATA1    LabelRow      RACE, BLACK OR AFRICAN AMERICAN, STRATA1        
+#     A        DataRow       RACE, BLACK OR AFRICAN AMERICAN, STRATA1, A     
+#     B        DataRow       RACE, BLACK OR AFRICAN AMERICAN, STRATA1, B     
+#     C        DataRow       RACE, BLACK OR AFRICAN AMERICAN, STRATA1, C     
+# White        ContentRow    RACE, WHITE, @content, White                    
+#   AGE        LabelRow      RACE, WHITE, AGE                                
+#     Mean     DataRow       RACE, WHITE, AGE, Mean                          
+#   STRATA1    LabelRow      RACE, WHITE, STRATA1                            
+#     A        DataRow       RACE, WHITE, STRATA1, A                         
+#     B        DataRow       RACE, WHITE, STRATA1, B                         
+#     C        DataRow       RACE, WHITE, STRATA1, C</code></pre>
+<p>So we can add our footnotes to the cell like so:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fnotes_at_path</span>(tbl2,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">rowpath =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;@content&quot;</span>, <span class="st">&quot;Asian&quot;</span>),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;B: Placebo&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)) <span class="ot">&lt;-</span> <span class="st">&quot;These asian women got placebo treatments&quot;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>tbl2</span></code></pre></div>
+<pre><code>#                       A: Drug X                B: Placebo {1}              C: Combination     
+#                    F            M              F              M            F            M     
+# ——————————————————————————————————————————————————————————————————————————————————————————————
+# Asian {2, 3}   41 (53.9%)   25 (54.3%)   36 (52.2%) {4}   30 (60.0%)   39 (60.9%)   32 (57.1%)
+#   AGE                                                                                         
+#     Mean         31.22        34.60          35.06          38.63        36.44        37.66   
+#   STRATA1                                                                                     
+#     A              11           10             14             10           11           7     
+#     B              11           9              15             7            11           14    
+#     C              19           6              7              13           17           11    
+# Black          18 (23.7%)   12 (26.1%)     16 (23.2%)     12 (24.0%)   14 (21.9%)   14 (25.0%)
+#   AGE                                                                                         
+#     Mean         34.06        34.58          33.88          36.33        33.21        34.21   
+#   STRATA1                                                                                     
+#     A              5            2              5              6            3            7     
+#     B              6            5              3              4            4            4     
+#     C              7            5              8              2            7            3     
+# White          17 (22.4%)   9 (19.6%)      17 (24.6%)     8 (16.0%)    11 (17.2%)   10 (17.9%)
+#   AGE                                                                                         
+#     Mean         34.12        40.00          32.41          34.62        33.00        30.80   
+#   STRATA1                                                                                     
+#     A              5            3              3              3            3            5     
+#     B              5            4              8              4            5            2     
+#     C              7            2              6              1            3            3     
+# ——————————————————————————————————————————————————————————————————————————————————————————————
+# 
+# {1} - this is a placebo
+# {2} - hi
+# {3} - there
+# {4} - These asian women got placebo treatments
+# ——————————————————————————————————————————————————————————————————————————————————————————————</code></pre>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
