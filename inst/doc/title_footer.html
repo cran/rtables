@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2023-03-02" />
+<meta name="date" content="2023-05-19" />
 
 <title>Titles, Footers, and Referential Footnotes</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Titles, Footers, and Referential
 Footnotes</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2023-03-02</h4>
+<h4 class="date">2023-05-19</h4>
 
 
 
@@ -432,40 +432,24 @@ variable being split.</p>
 <pre><code># Study XXXXXXXX
 # subtitle YYYYYYYYYY
 # subtitle2 ZZZZZZZZZ
-# Patient Subset - Gender: F
 # 
 # ——————————————————————————————————————————————————
 #            A: Drug X   B: Placebo   C: Combination
 # ——————————————————————————————————————————————————
-# A                                                 
-#   mean       30.9         32.9           36.0     
-# B                                                 
-#   mean       34.9         32.9           34.4     
-# C                                                 
-#   mean       35.2         36.0           34.3     
-# ——————————————————————————————————————————————————
-# 
-# Analysis was done using cool methods that are correct
-# 
-# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
-# 
-# 
-# ~~~~ Page Break ~~~~
-# 
-# Study XXXXXXXX
-# subtitle YYYYYYYYYY
-# subtitle2 ZZZZZZZZZ
-# Patient Subset - Gender: M
-# 
-# ——————————————————————————————————————————————————
-#            A: Drug X   B: Placebo   C: Combination
-# ——————————————————————————————————————————————————
-# A                                                 
-#   mean       35.1         31.1           35.6     
-# B                                                 
-#   mean       36.6         32.1           34.4     
-# C                                                 
-#   mean       37.4         32.8           32.8     
+# F                                                 
+#   A                                               
+#     mean     30.9         32.9           36.0     
+#   B                                               
+#     mean     34.9         32.9           34.4     
+#   C                                               
+#     mean     35.2         36.0           34.3     
+# M                                                 
+#   A                                               
+#     mean     35.1         31.1           35.6     
+#   B                                               
+#     mean     36.6         32.1           34.4     
+#   C                                               
+#     mean     37.4         32.8           32.8     
 # ——————————————————————————————————————————————————
 # 
 # Analysis was done using cool methods that are correct
@@ -489,108 +473,24 @@ resulting page, as seen below:</p>
 <pre><code># Study XXXXXXXX
 # subtitle YYYYYYYYYY
 # subtitle2 ZZZZZZZZZ
-# Patient Subset - Gender: F
-# Stratification - Strata: A
 # 
 # ——————————————————————————————————————————————————
 #            A: Drug X   B: Placebo   C: Combination
 # ——————————————————————————————————————————————————
-# mean         30.9         32.9           36.0     
-# ——————————————————————————————————————————————————
-# 
-# Analysis was done using cool methods that are correct
-# 
-# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
-# 
-# 
-# ~~~~ Page Break ~~~~
-# 
-# Study XXXXXXXX
-# subtitle YYYYYYYYYY
-# subtitle2 ZZZZZZZZZ
-# Patient Subset - Gender: F
-# Stratification - Strata: B
-# 
-# ——————————————————————————————————————————————————
-#            A: Drug X   B: Placebo   C: Combination
-# ——————————————————————————————————————————————————
-# mean         34.9         32.9           34.4     
-# ——————————————————————————————————————————————————
-# 
-# Analysis was done using cool methods that are correct
-# 
-# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
-# 
-# 
-# ~~~~ Page Break ~~~~
-# 
-# Study XXXXXXXX
-# subtitle YYYYYYYYYY
-# subtitle2 ZZZZZZZZZ
-# Patient Subset - Gender: F
-# Stratification - Strata: C
-# 
-# ——————————————————————————————————————————————————
-#            A: Drug X   B: Placebo   C: Combination
-# ——————————————————————————————————————————————————
-# mean         35.2         36.0           34.3     
-# ——————————————————————————————————————————————————
-# 
-# Analysis was done using cool methods that are correct
-# 
-# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
-# 
-# 
-# ~~~~ Page Break ~~~~
-# 
-# Study XXXXXXXX
-# subtitle YYYYYYYYYY
-# subtitle2 ZZZZZZZZZ
-# Patient Subset - Gender: M
-# Stratification - Strata: A
-# 
-# ——————————————————————————————————————————————————
-#            A: Drug X   B: Placebo   C: Combination
-# ——————————————————————————————————————————————————
-# mean         35.1         31.1           35.6     
-# ——————————————————————————————————————————————————
-# 
-# Analysis was done using cool methods that are correct
-# 
-# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
-# 
-# 
-# ~~~~ Page Break ~~~~
-# 
-# Study XXXXXXXX
-# subtitle YYYYYYYYYY
-# subtitle2 ZZZZZZZZZ
-# Patient Subset - Gender: M
-# Stratification - Strata: B
-# 
-# ——————————————————————————————————————————————————
-#            A: Drug X   B: Placebo   C: Combination
-# ——————————————————————————————————————————————————
-# mean         36.6         32.1           34.4     
-# ——————————————————————————————————————————————————
-# 
-# Analysis was done using cool methods that are correct
-# 
-# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
-# 
-# 
-# ~~~~ Page Break ~~~~
-# 
-# Study XXXXXXXX
-# subtitle YYYYYYYYYY
-# subtitle2 ZZZZZZZZZ
-# Patient Subset - Gender: M
-# Stratification - Strata: C
-# 
-# ——————————————————————————————————————————————————
-#            A: Drug X   B: Placebo   C: Combination
-# ——————————————————————————————————————————————————
-# mean         37.4         32.8           32.8     
+# F                                                 
+#   A                                               
+#     mean     30.9         32.9           36.0     
+#   B                                               
+#     mean     34.9         32.9           34.4     
+#   C                                               
+#     mean     35.2         36.0           34.3     
+# M                                                 
+#   A                                               
+#     mean     35.1         31.1           35.6     
+#   B                                               
+#     mean     36.6         32.1           34.4     
+#   C                                               
+#     mean     37.4         32.8           32.8     
 # ——————————————————————————————————————————————————
 # 
 # Analysis was done using cool methods that are correct
@@ -635,45 +535,28 @@ Time</h2>
 <pre><code># Study XXXXXXXX
 # subtitle YYYYYYYYYY
 # subtitle2 ZZZZZZZZZ
-# Patient Subset - Gender: F
 # 
 # ——————————————————————————————————————————————————————
 #                A: Drug X   B: Placebo   C: Combination
 # ——————————————————————————————————————————————————————
-# A                                                     
-#   mean           30.9         32.9           36.0     
-# B                                                     
-#   mean           34.9         32.9         34.4 {1}   
-# C                                                     
-#   mean {2}       35.2         36.0           34.3     
+# F                                                     
+#   A                                                   
+#     mean         30.9         32.9           36.0     
+#   B                                                   
+#     mean         34.9         32.9         34.4 {1}   
+#   C                                                   
+#     mean {2}     35.2         36.0           34.3     
+# M                                                     
+#   A                                                   
+#     mean         35.1         31.1           35.6     
+#   B                                                   
+#     mean         36.6         32.1         34.4 {3}   
+#   C                                                   
+#     mean {4}     37.4         32.8           32.8     
 # ——————————————————————————————————————————————————————
 # 
 # {1} - these Strata B patients got the drug combination
 # {2} - This is strata level C for these patients
-# ——————————————————————————————————————————————————————
-# 
-# Analysis was done using cool methods that are correct
-# 
-# file: /path/to/stuff/that/lives/there HASH:1ac41b242a
-# 
-# 
-# 
-# Study XXXXXXXX
-# subtitle YYYYYYYYYY
-# subtitle2 ZZZZZZZZZ
-# Patient Subset - Gender: M
-# 
-# ——————————————————————————————————————————————————————
-#                A: Drug X   B: Placebo   C: Combination
-# ——————————————————————————————————————————————————————
-# A                                                     
-#   mean           35.1         31.1           35.6     
-# B                                                     
-#   mean           36.6         32.1         34.4 {3}   
-# C                                                     
-#   mean {4}       37.4         32.8           32.8     
-# ——————————————————————————————————————————————————————
-# 
 # {3} - these Strata B patients got the drug combination
 # {4} - This is strata level C for these patients
 # ——————————————————————————————————————————————————————

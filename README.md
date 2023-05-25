@@ -36,7 +36,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 Issues](https://img.shields.io/github/issues-raw/insightsengineering/rtables?color=red&label=open%20issues)](https://github.com/insightsengineering/rtables/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
 [![CRAN
-Version](https://CRAN.R-project.org/package=rtables)](https://CRAN.R-project.org/package=rtables/)
+Version](https://www.r-pkg.org/badges/version/rtables)](https://CRAN.R-project.org/package=rtables)
 [![Current
 Version](https://img.shields.io/github/r-package/v/insightsengineering/rtables/main?color=purple&label=Development%20Version)](https://github.com/insightsengineering/rtables/tree/main)
 <!-- end badges -->
@@ -75,8 +75,8 @@ further advances remain under active development.
 
 ## Installation
 
-`rtables` is now available on CRAN and you can install the latest
-released version with:
+`rtables` is available on CRAN and you can install the latest released
+version with:
 
 ``` r
 install.packages("rtables")
@@ -95,12 +95,12 @@ order to be able to install from GitHub.
 
 Packaged releases (both those on CRAN and those between official CRAN
 releases) can be found in the [releases
-list](https://github.com/insightsengineering/rtables/releases)
+list](https://github.com/insightsengineering/rtables/releases).
 
 ## Usage
 
-We first begin with a demographic table alike example and then show the
-creation of a more complex table.
+We first demonstrate with a demographic table-like example and then show
+the creation of a more complex table.
 
 ``` r
 library(rtables)

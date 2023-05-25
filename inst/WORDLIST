@@ -39,6 +39,7 @@ comparead
 compat
 constr
 Controling
+cpp
 CRAN's
 cre
 ctb
@@ -142,6 +143,8 @@ rbound
 rcell
 rcells
 reindexed
+Repo
+repo
 repped
 responder
 Resync
@@ -160,9 +163,7 @@ rrows
 RStudio
 rtable
 rtablel
-RTF
 rtf
-rtfs
 sabanes
 Sabanés
 Saibah
@@ -171,6 +172,7 @@ sha
 showmethods
 sortable
 spl
+SplitValue
 SplitVector
 spotcheck
 sprintf

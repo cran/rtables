@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2023-03-02" />
+<meta name="date" content="2023-05-19" />
 
 <title>Introduction to rtables</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introduction to rtables</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2023-03-02</h4>
+<h4 class="date">2023-05-19</h4>
 
 
 
@@ -575,32 +575,19 @@ declared via <code>page_by = TRUE</code> within a call to
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, df)</span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">export_as_txt</span>(tbl, <span class="at">page_type =</span> <span class="st">&quot;letter&quot;</span>,</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">page_break =</span> <span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">~~~~~~ Page Break ~~~~~~</span><span class="sc">\n\n</span><span class="st">&quot;</span>))</span></code></pre></div>
-<pre><code># 
-# country: CAN
-# 
-# ————————————————————————————————————————
-#                Arm A           Arm B    
+<pre><code>#                Arm A           Arm B    
 #            Female   Male   Female   Male
 # ————————————————————————————————————————
-# Left                                    
-#   mean      38.9    40.4    40.3    37.7
-# Right                                   
-#   mean      36.6    40.2    40.2    40.6
-# 
-# 
-# ~~~~~~ Page Break ~~~~~~
-# 
-# 
-# country: USA
-# 
-# ————————————————————————————————————————
-#                Arm A           Arm B    
-#            Female   Male   Female   Male
-# ————————————————————————————————————————
-# Left                                    
-#   mean      40.4    39.7    39.2    40.1
-# Right                                   
-#   mean      36.9    39.8    38.5    39.0</code></pre>
+# CAN                                     
+#   Left                                  
+#     mean    38.9    40.4    40.3    37.7
+#   Right                                 
+#     mean    36.6    40.2    40.2    40.6
+# USA                                     
+#   Left                                  
+#     mean    40.4    39.7    39.2    40.1
+#   Right                                 
+#     mean    36.9    39.8    38.5    39.0</code></pre>
 <p>We go into more detail on page-by splits and how to control the
 page-group specific titles in the Title and footer vignette.</p>
 <p>Note that if you print or render a table without pagination, the

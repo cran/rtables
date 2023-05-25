@@ -203,6 +203,20 @@ test_that("Custom functions in multivar splits work", {
 
     expect_equal(ncol(tab), 7)
 
+    uneven_row_splfun <- function(df, spl, vals = NULL, labels = NULL, trim = FALSE) {
+        ret <- do_base_split(spl, df, vals, labels, trim)
+        if (NROW(df) < 125) ret <- lapply(ret, function(x) x[1])
+        ret
+    }
+
+    lyt <- basic_table() %>%
+        split_rows_by("ARM") %>%
+        split_rows_by_multivar(c("SEX", "STRATA1"), split_fun = uneven_row_splfun) %>%
+        summarize_row_groups()
+
+    tab2 <- build_table(lyt, DM)
+
+    expect_equal(nrow(tab2), 10)
 })
 
 test_that("add_overall_level works", {
@@ -236,6 +250,18 @@ test_that("add_overall_level works", {
                      cell_values(tab2)[[1]][[1]])
 })
 
+test_that("split_rows_by_multivar works", {
+    lyt <- basic_table() %>%
+        split_rows_by_multivar(c("SEX", "STRATA1")) %>%
+        summarize_row_groups()
+
+    tbl1 <- build_table(lyt, DM)
+
+    expect_identical(
+        cell_values(tbl1),
+        list(SEX.SEX = list(`all obs` = c(356, 1)), STRATA1.STRATA1 = list(`all obs` = c(356, 1)))
+    )
+})
 
 test_that("make_split_fun works", {
 
@@ -315,4 +341,35 @@ test_that("make_split_fun works", {
                  cell_values(tbl4b, pths[[3]])[[1]][[1]])
     expect_equal(30,
                  cell_values(tbl4b, pths[[5]])[[1]][[1]])
+})
+
+test_that("spl_variable works", {
+    
+    rem_lev_facet <- function(torem) {
+        function(df, spl, vals, labels, ...) {
+            var <- spl_variable(spl)
+            expect_identical(var, "ARM")
+            vec <- df[[var]]
+            bad <- vec == torem
+            df <- df[!bad,]
+            levs <- if(is.character(vec)) unique(vec) else levels(vec)
+            df[[var]] <- factor(as.character(vec[!bad]), levels = setdiff(levs, torem))
+            df
+        }
+    }
+    
+    mysplitfun <- make_split_fun(pre = list(rem_lev_facet("A: Drug X")))
+    
+    lyt <- basic_table(show_colcounts = TRUE) %>%
+        split_cols_by("ARM", split_fun = mysplitfun) %>%
+        analyze("AGE")
+    tbl <- expect_silent(build_table(lyt, DM))
+    expect_equal(ncol(tbl), 2L)
+    
+    lyt <- basic_table(show_colcounts = TRUE) %>%
+        split_cols_by_multivar(c("ARM", "SEX"), split_fun = mysplitfun) %>%
+        analyze("AGE")
+    
+    expect_error(build_table(lyt, DM),
+                 "Split class MultiVarSplit not associated with a single variable")
 })
