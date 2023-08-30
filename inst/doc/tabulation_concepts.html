@@ -354,28 +354,28 @@ white-space: pre;
 for table creation. Much of the theory also holds true when using other
 table packages. For this vignette we will use the following
 packages:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtables)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(rtables)</span></code></pre></div>
 <p>The data we use is the following, created with random number
 generators:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>add_subgroup <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">paste0</span>(<span class="fu">tolower</span>(x), <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="fu">length</span>(x), <span class="cn">TRUE</span>))</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">c1 =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>), <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>)),</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">r1 =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;U&quot;</span>, <span class="st">&quot;V&quot;</span>, <span class="st">&quot;W&quot;</span>), <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;U&quot;</span>, <span class="st">&quot;V&quot;</span>, <span class="st">&quot;W&quot;</span>))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">c2 =</span> <span class="fu">add_subgroup</span>(c1),</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">r2 =</span> <span class="fu">add_subgroup</span>(r1),</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">as.numeric</span>(<span class="dv">2</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(c1) <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(r1))</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(c1, c2, r1, r2, x, y)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>add_subgroup <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">paste0</span>(<span class="fu">tolower</span>(x), <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="fu">length</span>(x), <span class="cn">TRUE</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="at">c1 =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>), <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>)),</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="at">r1 =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;U&quot;</span>, <span class="st">&quot;V&quot;</span>, <span class="st">&quot;W&quot;</span>), <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;U&quot;</span>, <span class="st">&quot;V&quot;</span>, <span class="st">&quot;W&quot;</span>))</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>    <span class="at">c2 =</span> <span class="fu">add_subgroup</span>(c1),</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>    <span class="at">r2 =</span> <span class="fu">add_subgroup</span>(r1),</span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">as.numeric</span>(<span class="dv">2</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(c1) <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(r1))</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>    <span class="fu">select</span>(c1, c2, r1, r2, x, y)</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>df</span></code></pre></div>
 <pre><code># # A tibble: 100 × 6
 #    c1    c2    r1    r2         x     y
 #    &lt;fct&gt; &lt;chr&gt; &lt;fct&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;
@@ -404,24 +404,24 @@ bar_label        bar(df_A)  bar(df_B)  bar(df_C)
 zoo_label        zoo(df_A)  zoo(df_B)  zoo(df_C)</code></pre>
 <p>The data passed to the analysis functions are a subset defined by the
 respective column and:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df_A <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(c1 <span class="sc">==</span> <span class="st">&quot;A&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_B <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(c1 <span class="sc">==</span> <span class="st">&quot;B&quot;</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_C <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>df_A <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(c1 <span class="sc">==</span> <span class="st">&quot;A&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>df_B <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(c1 <span class="sc">==</span> <span class="st">&quot;B&quot;</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>df_C <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span></code></pre></div>
 <p>Let’s do this on the concrete data with <code>analyze()</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> prod</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>bar <span class="ot">&lt;-</span> sum</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>zoo <span class="ot">&lt;-</span> mean</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, <span class="cf">function</span>(df) <span class="fu">foo</span>(df<span class="sc">$</span>x), <span class="at">var_labels =</span> <span class="st">&quot;foo label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, <span class="cf">function</span>(df) <span class="fu">bar</span>(df<span class="sc">$</span>x), <span class="at">var_labels =</span> <span class="st">&quot;bar label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, <span class="cf">function</span>(df) <span class="fu">zoo</span>(df<span class="sc">$</span>x), <span class="at">var_labels =</span> <span class="st">&quot;zoo label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, df)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>foo <span class="ot">&lt;-</span> prod</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>bar <span class="ot">&lt;-</span> sum</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>zoo <span class="ot">&lt;-</span> mean</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, <span class="cf">function</span>(df) <span class="fu">foo</span>(df<span class="sc">$</span>x), <span class="at">var_labels =</span> <span class="st">&quot;foo label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, <span class="cf">function</span>(df) <span class="fu">bar</span>(df<span class="sc">$</span>x), <span class="at">var_labels =</span> <span class="st">&quot;bar label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, <span class="cf">function</span>(df) <span class="fu">zoo</span>(df<span class="sc">$</span>x), <span class="at">var_labels =</span> <span class="st">&quot;zoo label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, df)</span></code></pre></div>
 <pre><code># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.
 #   occured at (row) path: root</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tbl</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>tbl</span></code></pre></div>
 <pre><code>#                A       B       C  
 # ——————————————————————————————————
 # foo label                         
@@ -438,25 +438,25 @@ foo_label        foo(x_A)  foo(x_B)  foo(x_C)
 bar_label        bar(x_A)  bar(x_B)  bar(x_C)
 zoo_label        zoo(x_A)  zoo(x_B)  zoo(x_C)</code></pre>
 <p>where:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>x_A <span class="ot">&lt;-</span> df_A<span class="sc">$</span>x</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>x_B <span class="ot">&lt;-</span> df_B<span class="sc">$</span>x</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x_C <span class="ot">&lt;-</span> df_C<span class="sc">$</span>x</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>x_A <span class="ot">&lt;-</span> df_A<span class="sc">$</span>x</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>x_B <span class="ot">&lt;-</span> df_B<span class="sc">$</span>x</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>x_C <span class="ot">&lt;-</span> df_C<span class="sc">$</span>x</span></code></pre></div>
 <p>The function passed to <code>afun</code> is evaluated using argument
 matching. If <code>afun</code> has an argument <code>x</code> the
 analysis variable specified in <code>vars</code> in
 <code>analyze()</code> is passed to the function, and if
 <code>afun</code> has an argument <code>df</code> then a subset of the
 dataset is passed to <code>afun</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, foo, <span class="at">var_labels =</span> <span class="st">&quot;foo label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, bar, <span class="at">var_labels =</span> <span class="st">&quot;bar label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, zoo, <span class="at">var_labels =</span> <span class="st">&quot;zoo label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, df)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, foo, <span class="at">var_labels =</span> <span class="st">&quot;foo label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, bar, <span class="at">var_labels =</span> <span class="st">&quot;bar label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, zoo, <span class="at">var_labels =</span> <span class="st">&quot;zoo label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, df)</span></code></pre></div>
 <pre><code># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.
 #   occured at (row) path: root</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tbl2</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>tbl2</span></code></pre></div>
 <pre><code>#              A       B       C  
 # ————————————————————————————————
 # foo label                       
@@ -467,25 +467,25 @@ dataset is passed to <code>afun</code>:</p>
 #   zoo       0.05   0.13    0.18</code></pre>
 <p>Note that it is also possible that a function returns multiple rows
 with <code>in_rows()</code>:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, <span class="cf">function</span>(x) {</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;row 1&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">mean</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>),</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;row 2&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">sd</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.xxx&quot;</span>)</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">var_labels =</span> <span class="st">&quot;foo label&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, <span class="cf">function</span>(x) {</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;more rows 1&quot;</span> <span class="ot">=</span>  <span class="fu">rcell</span>(<span class="fu">median</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>),</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;even more rows 1&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">IQR</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">var_labels =</span> <span class="st">&quot;bar label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt3, df)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, <span class="cf">function</span>(x) {</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>      <span class="st">&quot;row 1&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">mean</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>      <span class="st">&quot;row 2&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">sd</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.xxx&quot;</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>    )</span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>  }, <span class="at">var_labels =</span> <span class="st">&quot;foo label&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, <span class="cf">function</span>(x) {</span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a>      <span class="st">&quot;more rows 1&quot;</span> <span class="ot">=</span>  <span class="fu">rcell</span>(<span class="fu">median</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>),</span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>      <span class="st">&quot;even more rows 1&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">IQR</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a>    )</span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a>  }, <span class="at">var_labels =</span> <span class="st">&quot;bar label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a>tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt3, df)</span></code></pre></div>
 <pre><code># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.
 #   occured at (row) path: root</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tbl3</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>tbl3</span></code></pre></div>
 <pre><code>#                        A       B       C  
 # ——————————————————————————————————————————
 # foo label                                 
@@ -506,70 +506,70 @@ V        foo(df_VA)  foo(df_VB)  foo(df_VC)
 W        foo(df_WA)  foo(df_WB)  foo(df_WC)</code></pre>
 <p>where <code>df_*</code> are subsets of <code>df</code> as
 follows:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df_UA <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;U&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;A&quot;</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>df_VA <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;V&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;A&quot;</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>df_WA <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;W&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;A&quot;</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>df_UB <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;U&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;B&quot;</span>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>df_VB <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;V&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;B&quot;</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>df_WB <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;W&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>df_UC <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;U&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>df_VC <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;V&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>df_WC <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;W&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>df_UA <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;U&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;A&quot;</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>df_VA <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;V&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;A&quot;</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>df_WA <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;W&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;A&quot;</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>df_UB <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;U&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;B&quot;</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>df_VB <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;V&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;B&quot;</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>df_WB <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;W&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>df_UC <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;U&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a>df_VC <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;V&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>df_WC <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;W&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span></code></pre></div>
 <p>further note that <code>df_*</code> are of the same class as
 <code>df</code>, i.e. <code>tibble</code>s. Hence <code>foo</code>
 aggregates the subset of our data to a cell value.</p>
 <p>Given a function <code>foo</code> (ignore the <code>...</code> for
 now):</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>(df, <span class="at">labelstr =</span> <span class="st">&quot;&quot;</span>, ...) {</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(<span class="fu">dim</span>(df), <span class="at">collapse =</span> <span class="st">&quot; x &quot;</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>(df, <span class="at">labelstr =</span> <span class="st">&quot;&quot;</span>, ...) {</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>  <span class="fu">paste</span>(<span class="fu">dim</span>(df), <span class="at">collapse =</span> <span class="st">&quot; x &quot;</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>}</span></code></pre></div>
 <p>we can start calculating the cell values individually:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">foo</span>(df_UA)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">foo</span>(df_UA)</span></code></pre></div>
 <pre><code># [1] &quot;17 x 6&quot;</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">foo</span>(df_VA)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">foo</span>(df_VA)</span></code></pre></div>
 <pre><code># [1] &quot;9 x 6&quot;</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">foo</span>(df_WA)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">foo</span>(df_WA)</span></code></pre></div>
 <pre><code># [1] &quot;14 x 6&quot;</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">foo</span>(df_UB)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">foo</span>(df_UB)</span></code></pre></div>
 <pre><code># [1] &quot;13 x 6&quot;</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">foo</span>(df_VB)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">foo</span>(df_VB)</span></code></pre></div>
 <pre><code># [1] &quot;15 x 6&quot;</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">foo</span>(df_WB)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">foo</span>(df_WB)</span></code></pre></div>
 <pre><code># [1] &quot;11 x 6&quot;</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">foo</span>(df_UC)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">foo</span>(df_UC)</span></code></pre></div>
 <pre><code># [1] &quot;10 x 6&quot;</code></pre>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">foo</span>(df_VC)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">foo</span>(df_VC)</span></code></pre></div>
 <pre><code># [1] &quot;5 x 6&quot;</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">foo</span>(df_WC)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">foo</span>(df_WC)</span></code></pre></div>
 <pre><code># [1] &quot;11 x 6&quot;</code></pre>
 <p>Now we are still missing the table structure:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foo</span>(df_UA),</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foo</span>(df_VA),</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foo</span>(df_WA),</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foo</span>(df_UB),</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foo</span>(df_VB),</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foo</span>(df_WB),</span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foo</span>(df_UC),</span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foo</span>(df_VC),</span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foo</span>(df_WC)</span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">FALSE</span>, <span class="at">ncol =</span> <span class="dv">3</span></span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">matrix</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a>    <span class="fu">foo</span>(df_UA),</span>
+<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a>    <span class="fu">foo</span>(df_VA),</span>
+<span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a>    <span class="fu">foo</span>(df_WA),</span>
+<span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a>    <span class="fu">foo</span>(df_UB),</span>
+<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a>    <span class="fu">foo</span>(df_VB),</span>
+<span id="cb41-8"><a href="#cb41-8" tabindex="-1"></a>    <span class="fu">foo</span>(df_WB),</span>
+<span id="cb41-9"><a href="#cb41-9" tabindex="-1"></a>    <span class="fu">foo</span>(df_UC),</span>
+<span id="cb41-10"><a href="#cb41-10" tabindex="-1"></a>    <span class="fu">foo</span>(df_VC),</span>
+<span id="cb41-11"><a href="#cb41-11" tabindex="-1"></a>    <span class="fu">foo</span>(df_WC)</span>
+<span id="cb41-12"><a href="#cb41-12" tabindex="-1"></a>  ),</span>
+<span id="cb41-13"><a href="#cb41-13" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">FALSE</span>, <span class="at">ncol =</span> <span class="dv">3</span></span>
+<span id="cb41-14"><a href="#cb41-14" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>#      [,1]     [,2]     [,3]    
 # [1,] &quot;17 x 6&quot; &quot;13 x 6&quot; &quot;10 x 6&quot;
 # [2,] &quot;9 x 6&quot;  &quot;15 x 6&quot; &quot;5 x 6&quot; 
 # [3,] &quot;14 x 6&quot; &quot;11 x 6&quot; &quot;11 x 6&quot;</code></pre>
 <p>In <code>rtables</code> this type of tabulation is done with
 <code>layouts</code>:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>lyt4 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, foo)</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>tbl4 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt4, df)</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>tbl4</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>lyt4 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb43-4"><a href="#cb43-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, foo)</span>
+<span id="cb43-5"><a href="#cb43-5" tabindex="-1"></a></span>
+<span id="cb43-6"><a href="#cb43-6" tabindex="-1"></a>tbl4 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt4, df)</span>
+<span id="cb43-7"><a href="#cb43-7" tabindex="-1"></a>tbl4</span></code></pre></div>
 <pre><code>#           A        B        C   
 # ————————————————————————————————
 # U                               
@@ -580,13 +580,13 @@ now):</p>
 #   foo   14 x 6   6 x 6    11 x 6</code></pre>
 <p>or if we would not want to see the <code>foo</code> label we would
 have to use:</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>lyt5 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> foo, <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>)</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>tbl5 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt5, df)</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>tbl5</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a>lyt5 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> foo, <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>)</span>
+<span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="#cb45-6" tabindex="-1"></a>tbl5 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt5, df)</span>
+<span id="cb45-7"><a href="#cb45-7" tabindex="-1"></a>tbl5</span></code></pre></div>
 <pre><code>#      A        B        C   
 # ———————————————————————————
 #    17 x 6   13 x 6   10 x 6
@@ -595,17 +595,17 @@ have to use:</p>
 <p>but now the row labels have disappeared. This is because
 <code>cfun</code> needs to define its row label. So let’s redefine
 <code>foo</code>:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>(df, labelstr) {</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rcell</span>(<span class="fu">paste</span>(<span class="fu">dim</span>(df), <span class="at">collapse =</span> <span class="st">&quot; x &quot;</span>), <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>, <span class="at">label =</span> labelstr)</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>lyt6 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> foo)</span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>tbl6 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt6, df)</span>
-<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>tbl6</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>(df, labelstr) {</span>
+<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a>  <span class="fu">rcell</span>(<span class="fu">paste</span>(<span class="fu">dim</span>(df), <span class="at">collapse =</span> <span class="st">&quot; x &quot;</span>), <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>, <span class="at">label =</span> labelstr)</span>
+<span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a>}</span>
+<span id="cb47-4"><a href="#cb47-4" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="#cb47-5" tabindex="-1"></a>lyt6 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb47-6"><a href="#cb47-6" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb47-7"><a href="#cb47-7" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb47-8"><a href="#cb47-8" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> foo)</span>
+<span id="cb47-9"><a href="#cb47-9" tabindex="-1"></a></span>
+<span id="cb47-10"><a href="#cb47-10" tabindex="-1"></a>tbl6 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt6, df)</span>
+<span id="cb47-11"><a href="#cb47-11" tabindex="-1"></a>tbl6</span></code></pre></div>
 <pre><code>#       A        B        C   
 # ————————————————————————————
 # U   17 x 6   13 x 6   10 x 6
@@ -614,17 +614,17 @@ have to use:</p>
 <div id="calculating-the-mean" class="section level3">
 <h3>Calculating the Mean</h3>
 <p>Now let’s calculate the mean of <code>df$y</code> for pattern I:</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>(df, labelstr) {</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rcell</span>(<span class="fu">mean</span>(df<span class="sc">$</span>y), <span class="at">label =</span> labelstr, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>lyt7 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> foo) </span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>tbl7 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt7, df)</span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>tbl7</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>(df, labelstr) {</span>
+<span id="cb49-2"><a href="#cb49-2" tabindex="-1"></a>  <span class="fu">rcell</span>(<span class="fu">mean</span>(df<span class="sc">$</span>y), <span class="at">label =</span> labelstr, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" tabindex="-1"></a>}</span>
+<span id="cb49-4"><a href="#cb49-4" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="#cb49-5" tabindex="-1"></a>lyt7 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb49-6"><a href="#cb49-6" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb49-7"><a href="#cb49-7" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb49-8"><a href="#cb49-8" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> foo) </span>
+<span id="cb49-9"><a href="#cb49-9" tabindex="-1"></a></span>
+<span id="cb49-10"><a href="#cb49-10" tabindex="-1"></a>tbl7 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt7, df)</span>
+<span id="cb49-11"><a href="#cb49-11" tabindex="-1"></a>tbl7</span></code></pre></div>
 <pre><code>#       A       B       C  
 # —————————————————————————
 # U   -1.00   1.00    3.00 
@@ -633,13 +633,13 @@ have to use:</p>
 <p>Note that <code>foo</code> has the variable information hard-encoded
 in the function body. Let’s try some alternatives returning to
 <code>analyze()</code>:</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>lyt8 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;y&quot;</span>, <span class="at">afun =</span> mean)</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>tbl8 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt8, df)</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>tbl8</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" tabindex="-1"></a>lyt8 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb51-3"><a href="#cb51-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb51-4"><a href="#cb51-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;y&quot;</span>, <span class="at">afun =</span> mean)</span>
+<span id="cb51-5"><a href="#cb51-5" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" tabindex="-1"></a>tbl8 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt8, df)</span>
+<span id="cb51-7"><a href="#cb51-7" tabindex="-1"></a>tbl8</span></code></pre></div>
 <pre><code>#          A    B    C 
 # —————————————————————
 # U                    
@@ -651,13 +651,13 @@ in the function body. Let’s try some alternatives returning to
 <p>Note that the subset of the <code>y</code> variable is passed as the
 <code>x</code> argument to <code>mean()</code>. We could also get the
 <code>data.frame</code> instead of the variable:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>lyt9 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;y&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(df) <span class="fu">mean</span>(df<span class="sc">$</span>y))</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>tbl9 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt9, df)</span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>tbl9</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" tabindex="-1"></a>lyt9 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="#cb53-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb53-3"><a href="#cb53-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb53-4"><a href="#cb53-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;y&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(df) <span class="fu">mean</span>(df<span class="sc">$</span>y))</span>
+<span id="cb53-5"><a href="#cb53-5" tabindex="-1"></a></span>
+<span id="cb53-6"><a href="#cb53-6" tabindex="-1"></a>tbl9 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt9, df)</span>
+<span id="cb53-7"><a href="#cb53-7" tabindex="-1"></a>tbl9</span></code></pre></div>
 <pre><code>#       A    B    C 
 # ——————————————————
 # U                 
@@ -667,13 +667,13 @@ in the function body. Let’s try some alternatives returning to
 # W                 
 #   y   -7   -5   -3</code></pre>
 <p>which is in contrast to:</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>lyt10 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;y&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(x) <span class="fu">mean</span>(x)) </span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>tbl10 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt10, df)</span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>tbl10</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a>lyt10 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb55-2"><a href="#cb55-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb55-3"><a href="#cb55-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb55-4"><a href="#cb55-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;y&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(x) <span class="fu">mean</span>(x)) </span>
+<span id="cb55-5"><a href="#cb55-5" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" tabindex="-1"></a>tbl10 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt10, df)</span>
+<span id="cb55-7"><a href="#cb55-7" tabindex="-1"></a>tbl10</span></code></pre></div>
 <pre><code>#       A    B    C 
 # ——————————————————
 # U                 
@@ -705,24 +705,24 @@ W
 <p>where <code>&lt;&gt;</code> represents the data that is represented
 by the cell. So for the cell <code>U &gt; u1, A</code> we would have the
 subset:</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;U&quot;</span>, r2 <span class="sc">==</span> <span class="st">&quot;u1&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;A&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a>  <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;U&quot;</span>, r2 <span class="sc">==</span> <span class="st">&quot;u1&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;A&quot;</span>)</span></code></pre></div>
 <pre><code># # A tibble: 2 × 6
 #   c1    c2    r1    r2        x     y
 #   &lt;fct&gt; &lt;chr&gt; &lt;fct&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
 # 1 A     a2    U     u1    1.12     -1
 # 2 A     a1    U     u1    0.594    -1</code></pre>
 <p>and so on. We can get this table as follows:</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>lyt11 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r2&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> <span class="cf">function</span>(df, labelstr) {</span>
-<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rcell</span>(<span class="fu">mean</span>(df<span class="sc">$</span>x), <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>, <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">&quot;mean x for&quot;</span>, labelstr))</span>
-<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>tbl11 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt11, df)</span>
-<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>tbl11</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a>lyt11 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb60-3"><a href="#cb60-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb60-4"><a href="#cb60-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r2&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb60-5"><a href="#cb60-5" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> <span class="cf">function</span>(df, labelstr) {</span>
+<span id="cb60-6"><a href="#cb60-6" tabindex="-1"></a>    <span class="fu">rcell</span>(<span class="fu">mean</span>(df<span class="sc">$</span>x), <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>, <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">&quot;mean x for&quot;</span>, labelstr))</span>
+<span id="cb60-7"><a href="#cb60-7" tabindex="-1"></a>  })</span>
+<span id="cb60-8"><a href="#cb60-8" tabindex="-1"></a></span>
+<span id="cb60-9"><a href="#cb60-9" tabindex="-1"></a>tbl11 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt11, df)</span>
+<span id="cb60-10"><a href="#cb60-10" tabindex="-1"></a>tbl11</span></code></pre></div>
 <pre><code>#                     A       B       C  
 # ———————————————————————————————————————
 # U                                      
@@ -738,22 +738,22 @@ subset:</p>
 #   mean x for w3   0.56    0.69    -0.39
 #   mean x for w2   -1.99   -0.10   0.53</code></pre>
 <p>or, if we wanted to calculate two summaries per row split:</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>s_mean_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">in_rows</span>(<span class="st">&quot;mean (sd)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>))</span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>s_range <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">in_rows</span>(<span class="st">&quot;range&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">range</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.xx - xx.xx&quot;</span>))</span>
-<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>lyt12 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r2&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_mean_sd, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_range, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>)</span>
-<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a>tbl12 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt12, df)</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a>s_mean_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb62-2"><a href="#cb62-2" tabindex="-1"></a>  <span class="fu">in_rows</span>(<span class="st">&quot;mean (sd)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>))</span>
+<span id="cb62-3"><a href="#cb62-3" tabindex="-1"></a>}</span>
+<span id="cb62-4"><a href="#cb62-4" tabindex="-1"></a></span>
+<span id="cb62-5"><a href="#cb62-5" tabindex="-1"></a>s_range <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb62-6"><a href="#cb62-6" tabindex="-1"></a>  <span class="fu">in_rows</span>(<span class="st">&quot;range&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">range</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.xx - xx.xx&quot;</span>))</span>
+<span id="cb62-7"><a href="#cb62-7" tabindex="-1"></a>}</span>
+<span id="cb62-8"><a href="#cb62-8" tabindex="-1"></a></span>
+<span id="cb62-9"><a href="#cb62-9" tabindex="-1"></a>lyt12 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb62-10"><a href="#cb62-10" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb62-11"><a href="#cb62-11" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb62-12"><a href="#cb62-12" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r2&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb62-13"><a href="#cb62-13" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_mean_sd, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb62-14"><a href="#cb62-14" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_range, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>)</span>
+<span id="cb62-15"><a href="#cb62-15" tabindex="-1"></a></span>
+<span id="cb62-16"><a href="#cb62-16" tabindex="-1"></a>tbl12 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt12, df)</span></code></pre></div>
 <pre><code># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.
 #   occured at (row) path: r1[U]-&gt;r2[u3]</code></pre>
 <pre><code># Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
@@ -774,7 +774,7 @@ subset:</p>
 #   occured at (row) path: r1[W]-&gt;r2[w3]</code></pre>
 <pre><code># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.
 #   occured at (row) path: r1[W]-&gt;r2[w2]</code></pre>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>tbl12</span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" tabindex="-1"></a>tbl12</span></code></pre></div>
 <pre><code>#                       A              B              C      
 # ———————————————————————————————————————————————————————————
 # U                                                          
@@ -891,27 +891,27 @@ Further, a <code>cfun</code> must also have the <code>labelstr</code>
 argument which is the split level. This way, the <code>cfun</code> can
 define its own row name. In order to get the table above we can use the
 layout framework as follows:</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>s_mean_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">in_rows</span>(<span class="st">&quot;mean (sd)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>))</span>
-<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>s_range <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">in_rows</span>(<span class="st">&quot;range&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">range</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.xx - xx.xx&quot;</span>))</span>
-<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a>s_cfun_2 <span class="ot">&lt;-</span> <span class="cf">function</span>(df, labelstr) {</span>
-<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rcell</span>(<span class="fu">nrow</span>(df), <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>, <span class="at">label =</span> <span class="fu">paste</span>(labelstr, <span class="st">&quot;(n)&quot;</span>))</span>
-<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb78-12"><a href="#cb78-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-13"><a href="#cb78-13" aria-hidden="true" tabindex="-1"></a>lyt13 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb78-15"><a href="#cb78-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb78-16"><a href="#cb78-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r2&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb78-17"><a href="#cb78-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> s_cfun_2) <span class="sc">%&gt;%</span></span>
-<span id="cb78-18"><a href="#cb78-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_mean_sd, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb78-19"><a href="#cb78-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_range, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>)</span>
-<span id="cb78-20"><a href="#cb78-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-21"><a href="#cb78-21" aria-hidden="true" tabindex="-1"></a>tbl13 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt13, df)</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" tabindex="-1"></a>s_mean_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb78-2"><a href="#cb78-2" tabindex="-1"></a>  <span class="fu">in_rows</span>(<span class="st">&quot;mean (sd)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>))</span>
+<span id="cb78-3"><a href="#cb78-3" tabindex="-1"></a>}</span>
+<span id="cb78-4"><a href="#cb78-4" tabindex="-1"></a></span>
+<span id="cb78-5"><a href="#cb78-5" tabindex="-1"></a>s_range <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb78-6"><a href="#cb78-6" tabindex="-1"></a>  <span class="fu">in_rows</span>(<span class="st">&quot;range&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">range</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.xx - xx.xx&quot;</span>))</span>
+<span id="cb78-7"><a href="#cb78-7" tabindex="-1"></a>}</span>
+<span id="cb78-8"><a href="#cb78-8" tabindex="-1"></a></span>
+<span id="cb78-9"><a href="#cb78-9" tabindex="-1"></a>s_cfun_2 <span class="ot">&lt;-</span> <span class="cf">function</span>(df, labelstr) {</span>
+<span id="cb78-10"><a href="#cb78-10" tabindex="-1"></a>  <span class="fu">rcell</span>(<span class="fu">nrow</span>(df), <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>, <span class="at">label =</span> <span class="fu">paste</span>(labelstr, <span class="st">&quot;(n)&quot;</span>))</span>
+<span id="cb78-11"><a href="#cb78-11" tabindex="-1"></a>}</span>
+<span id="cb78-12"><a href="#cb78-12" tabindex="-1"></a></span>
+<span id="cb78-13"><a href="#cb78-13" tabindex="-1"></a>lyt13 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb78-14"><a href="#cb78-14" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb78-15"><a href="#cb78-15" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb78-16"><a href="#cb78-16" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r2&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb78-17"><a href="#cb78-17" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> s_cfun_2) <span class="sc">%&gt;%</span></span>
+<span id="cb78-18"><a href="#cb78-18" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_mean_sd, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb78-19"><a href="#cb78-19" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_range, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>)</span>
+<span id="cb78-20"><a href="#cb78-20" tabindex="-1"></a></span>
+<span id="cb78-21"><a href="#cb78-21" tabindex="-1"></a>tbl13 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt13, df)</span></code></pre></div>
 <pre><code># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.
 #   occured at (row) path: r1[U]-&gt;r2[u3]</code></pre>
 <pre><code># Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
@@ -932,7 +932,7 @@ layout framework as follows:</p>
 #   occured at (row) path: r1[W]-&gt;r2[w3]</code></pre>
 <pre><code># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.
 #   occured at (row) path: r1[W]-&gt;r2[w2]</code></pre>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>tbl13</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" tabindex="-1"></a>tbl13</span></code></pre></div>
 <pre><code>#                       A              B              C      
 # ———————————————————————————————————————————————————————————
 # U                                                          
@@ -967,16 +967,16 @@ layout framework as follows:</p>
 #     range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</code></pre>
 <p>In the same manner, if we want content rows for the <code>r1</code>
 split we can do it at as follows:</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>lyt14 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> s_cfun_2) <span class="sc">%&gt;%</span></span>
-<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r2&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> s_cfun_2) <span class="sc">%&gt;%</span></span>
-<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_mean_sd, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_range, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>)</span>
-<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb92-10"><a href="#cb92-10" aria-hidden="true" tabindex="-1"></a>tbl14 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt14, df)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" tabindex="-1"></a>lyt14 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb92-2"><a href="#cb92-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-3"><a href="#cb92-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-4"><a href="#cb92-4" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> s_cfun_2) <span class="sc">%&gt;%</span></span>
+<span id="cb92-5"><a href="#cb92-5" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r2&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-6"><a href="#cb92-6" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> s_cfun_2) <span class="sc">%&gt;%</span></span>
+<span id="cb92-7"><a href="#cb92-7" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_mean_sd, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-8"><a href="#cb92-8" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, s_range, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>)</span>
+<span id="cb92-9"><a href="#cb92-9" tabindex="-1"></a></span>
+<span id="cb92-10"><a href="#cb92-10" tabindex="-1"></a>tbl14 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt14, df)</span></code></pre></div>
 <pre><code># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.
 #   occured at (row) path: r1[U]-&gt;r2[u3]</code></pre>
 <pre><code># Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
@@ -997,7 +997,7 @@ split we can do it at as follows:</p>
 #   occured at (row) path: r1[W]-&gt;r2[w3]</code></pre>
 <pre><code># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.
 #   occured at (row) path: r1[W]-&gt;r2[w2]</code></pre>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>tbl14</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" tabindex="-1"></a>tbl14</span></code></pre></div>
 <pre><code>#                       A              B              C      
 # ———————————————————————————————————————————————————————————
 # U (n)                17              13             10     

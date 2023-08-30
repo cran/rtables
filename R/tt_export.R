@@ -8,9 +8,9 @@ NULL
 #'
 #' This function creates a flat tabular file of cell values and
 #' corresponding paths via \code{\link{path_enriched_df}}. I then
-#' writes that data.frame out as a tsv file.
+#' writes that data.frame out as a `tsv` file.
 #'
-#' By default (ie when \code{value_func} is not specified,
+#' By default (i.e. when \code{value_func} is not specified,
 #' List columns where at least one value has length > 1 are collapsed
 #' to character vectors by collapsing the list element with \code{"|"}.
 #'
@@ -66,7 +66,7 @@ collapse_values <- function(colvals) {
     vapply(colvals, paste, "", collapse = .collapse_char)
 }
 
-#' Transform TableTree object to Path-Enriched data.frame
+#' Transform `TableTree` object to Path-Enriched data.frame
 #'
 #' @inheritParams gen_args
 #' @param path_fun function. Function to transform paths into single-string
@@ -98,6 +98,134 @@ path_enriched_df <- function(tt, path_fun = collapse_path, value_fun = collapse_
     preppaths <- path_fun(rdf[rdf$node_class != "LabelRow", ]$path)
     cbind.data.frame(row_path = preppaths, cvs)
 
+}
+
+do_label_row <- function(rdfrow, maxlen) {
+    pth <- rdfrow$path[[1]]
+    c(as.list(pth), replicate(maxlen - length(pth), list(NA_character_)), list(row_num = rdfrow$abs_rownumber, content = FALSE, node_class = rdfrow$node_class))
+}
+
+
+make_result_df_md_colnames <- function(maxlen) {
+    spllen <- floor((maxlen - 2) / 2)
+    ret <- character()
+    if(spllen > 0 )
+        ret <- paste(c("spl_var", "spl_value"), rep(seq_len(spllen), rep(2, spllen)), sep = "_")
+    ret <- c(ret, c("avar_name", "row_name", "row_num", "is_group_summary", "node_class"))
+}
+
+
+do_content_row <- function(rdfrow, maxlen) {
+    pth <- rdfrow$path[[1]]
+
+    contpos <- which(pth == "@content")
+
+    seq_before <- seq_len(contpos - 1)
+
+    ret <- c(as.list(pth[seq_before]), replicate(maxlen - contpos, list(NA_character_)),
+      list(tail(pth, 1)),
+      list(row_num = rdfrow$abs_rownumber, content = TRUE, node_class = rdfrow$node_class))
+}
+
+do_data_row <- function(rdfrow, maxlen) {
+
+    pth <- rdfrow$path[[1]]
+    pthlen <- length(pth)
+    ## odd means we have a multi-analsysis step in the path, we dont' want that in the result data frame
+    if(pthlen %% 2 == 1) {
+        pth <- pth[-1*(pthlen - 2)]
+    }
+    c(as.list(pth[seq_len(pthlen - 2)]),
+      replicate(maxlen - pthlen, list(NA_character_)),
+      as.list(tail(pth, 2)),
+      list(row_num = rdfrow$abs_rownumber, content = FALSE, node_class = rdfrow$node_class))
+
+
+}
+
+
+handle_rdf_row <- function(rdfrow, maxlen) {
+    nclass <- rdfrow$node_class
+    if(rdfrow$path[[1]][1] == "root") {
+        rdfrow$path[[1]] <- rdfrow$path[[1]][-1]
+        maxlen <- maxlen - 1
+    }
+    ret <- switch(nclass,
+           LabelRow = do_label_row(rdfrow, maxlen),
+           ContentRow = do_content_row(rdfrow, maxlen),
+           DataRow = do_data_row(rdfrow, maxlen),
+           stop("Unrecognized node type in row dataframe, unable to generate result data frame")
+           )
+    setNames(ret, make_result_df_md_colnames(maxlen))
+}
+
+
+#' Result Data Frame Specifications
+#'
+#' @return a named list of result data frame extraction functions by "specification"
+#' @export
+#' @examples
+#' result_df_specs()
+result_df_specs <- function() {
+   list(v0_experimental = result_df_v0_experimental)
+}
+
+lookup_result_df_specfun <- function(spec) {
+    if(!(spec %in% names(result_df_specs())))
+        stop("unrecognized result data frame specification: ",
+             spec,
+             "If that specification is correct you may  need to update your version of rtables")
+    result_df_specs()[[spec]]
+}
+
+result_df_v0_experimental <- function(tt) {
+
+    raw_cvals <- cell_values(tt)
+    ## if the table has one row and multiple columns, sometimes the cell values returns a list of the cell values
+    ## rather than a list of length 1 reprsenting the single row. This is bad but may not be changable
+    ## at this point.
+    if(nrow(tt) == 1 && length(raw_cvals) > 1)
+        raw_cvals <- list(raw_cvals)
+    cellvals <- as.data.frame(do.call(rbind, raw_cvals))
+    row.names(cellvals) <- NULL
+    rdf <- make_row_df(tt)
+    df <- cbind(rdf[rdf$node_class != "LabelRow",
+                    c("name", "label", "abs_rownumber", "path", "reprint_inds", "node_class")],
+                cellvals)
+    maxlen <- max(lengths(df$path))
+    metadf <- do.call(rbind.data.frame, lapply(seq_len(NROW(df)), function(ii) handle_rdf_row(df[ii,], maxlen = maxlen)))
+    cbind(metadf[metadf$node_class != "LabelRow",],
+          cellvals)
+}
+
+#' Generate a Result Data Frame
+#'
+#' @param tt `VTableTree`. The table.
+#' @param spec character(1). The specification to use to
+#' extract the result data frame. See details
+#' @param ... Passed to spec-specific result data frame conversion function.
+#'
+#' @details Result data frame specifications may differ in the exact information they include and
+#' the form in which they represent it. Specifications whose names end in "_experimental"
+#' are subject to change without notice, but specifications without the "_experimental"
+#' suffix will remain available \emph{including any bugs in their construction} indefinitely.
+#'
+#' @note This function may eventually be migrated to a separate package, and so should
+#' not be called via `::`
+#' @export
+#' @examples
+#'
+#' lyt <- basic_table() %>%
+#'     split_cols_by("ARM") %>%
+#'     split_rows_by("STRATA1") %>%
+#'   analyze(c("AGE", "BMRKR2"))
+#'
+#' tbl <- build_table(lyt, ex_adsl)
+#' as_result_df(tbl)
+as_result_df <- function(tt, spec = "v0_experimental", ...) {
+
+    result_df_fun <- lookup_result_df_specfun(spec)
+    result_df_fun(tt, ...)
 }
 
 .split_colwidths <- function(ptabs, nctot, colwidths) {
@@ -232,15 +360,15 @@ formatters::export_as_txt
 ## }
 
 
-#' Create a FlexTable object representing an rtables TableTree
+#' Create a `FlexTable` object representing an `rtables` `TableTree`
 #'
 #' @inheritParams gen_args
 #' @param paginate logical(1). Should \code{tt} be paginated and exported as
-#'   multiple flextables. Defaults to \code{FALSE}
+#'   multiple `flextables`. Defaults to \code{FALSE}
 #' @inheritParams paginate_table
 #' @param total_width numeric(1). Total width in inches for the resulting
-#'   flextable(s). Defaults to 5.
-#' @return a flextable object
+#'   `flextable(s)`. Defaults to 5.
+#' @return a `flextable` object
 #' @export
 #' @examples
 #' analysisfun <- function(x, ...) {

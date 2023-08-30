@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2023-05-19" />
+<meta name="date" content="2023-08-30" />
 
 <title>Subsetting and Manipulating Table Contents</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Subsetting and Manipulating Table
 Contents</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2023-05-19</h4>
+<h4 class="date">2023-08-30</h4>
 
 
 
@@ -360,16 +360,16 @@ of a different vignette.</p>
 <p>In this vignette we show some methods to subset tables and to extract
 cell values.</p>
 <p>We will use the following table for illustrative purposes:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>))</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, ex_adsl <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>tbl</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, ex_adsl <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>tbl</span></code></pre></div>
 <pre><code>#             A: Drug X   B: Placebo   C: Combination
 # ———————————————————————————————————————————————————
 # F                                                  
@@ -424,21 +424,21 @@ treated as paths, not vectors of names in both <code>[</code> and
 first argument are the row indices and the second argument the column
 indices. Alternatively logical subsetting can be used. The indices are
 based on visible rows and not on the tree structure. So:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">1</span>, <span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>tbl[<span class="dv">1</span>, <span class="dv">1</span>]</span></code></pre></div>
 <pre><code>#     A: Drug X
 # —————————————
 # F</code></pre>
 <p>is a table with an empty cell because the first row is a label row.
 We need to access a cell with actual cell data:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">3</span>, <span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>tbl[<span class="dv">3</span>, <span class="dv">1</span>]</span></code></pre></div>
 <pre><code>#        A: Drug X
 # ————————————————
 # Mean     32.76</code></pre>
 <p>To retrieve the value, we use <code>drop = TRUE</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">3</span>, <span class="dv">1</span>, drop <span class="ot">=</span> <span class="cn">TRUE</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>tbl[<span class="dv">3</span>, <span class="dv">1</span>, drop <span class="ot">=</span> <span class="cn">TRUE</span>]</span></code></pre></div>
 <pre><code># [1] 32.75949</code></pre>
 <p>One can access multiple rows and columns:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>tbl[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span></code></pre></div>
 <pre><code>#            A: Drug X   B: Placebo
 # —————————————————————————————————
 # F                                
@@ -446,7 +446,7 @@ We need to access a cell with actual cell data:</p>
 #     Mean     32.76       34.12</code></pre>
 <p>Note that we do not repeat label rows for descending children,
 e.g.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>, ]</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>tbl[<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>, ]</span></code></pre></div>
 <pre><code>#           A: Drug X   B: Placebo   C: Combination
 # —————————————————————————————————————————————————
 # AGE                                              
@@ -457,7 +457,7 @@ order to repeat content/label information, one should use the pagination
 feature. Please read the related vignette.</p>
 <p>Character indices are interpreted as paths (see below), NOT elements
 to be matched against <code>names(tbl)</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>tbl[,<span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>tbl[,<span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>)]</span></code></pre></div>
 <pre><code>#             A: Drug X
 # —————————————————————
 # F                    
@@ -479,24 +479,24 @@ to be matched against <code>names(tbl)</code>:</p>
 <p>As standard no additional information is kept after subsetting. Here,
 we show with a more complete table how it is still possible to keep the
 (possibly) relevant information.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">top_left</span>(tbl) <span class="ot">&lt;-</span> <span class="st">&quot;SEX&quot;</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">main_title</span>(tbl) <span class="ot">&lt;-</span> <span class="st">&quot;Table 1&quot;</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">subtitles</span>(tbl) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Authors:&quot;</span>, <span class="st">&quot; - Abcd Zabcd&quot;</span>, <span class="st">&quot; - Cde Zbcd&quot;</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">main_footer</span>(tbl) <span class="ot">&lt;-</span> <span class="st">&quot;Please regard this table as an example of smart subsetting&quot;</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">prov_footer</span>(tbl) <span class="ot">&lt;-</span> <span class="st">&quot;Do remember where you read this though&quot;</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">fnotes_at_path</span>(tbl, <span class="at">rowpath =</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;Mean&quot;</span>), </span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>)) <span class="ot">&lt;-</span> <span class="st">&quot;Very important mean&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">top_left</span>(tbl) <span class="ot">&lt;-</span> <span class="st">&quot;SEX&quot;</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">main_title</span>(tbl) <span class="ot">&lt;-</span> <span class="st">&quot;Table 1&quot;</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="fu">subtitles</span>(tbl) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Authors:&quot;</span>, <span class="st">&quot; - Abcd Zabcd&quot;</span>, <span class="st">&quot; - Cde Zbcd&quot;</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="fu">main_footer</span>(tbl) <span class="ot">&lt;-</span> <span class="st">&quot;Please regard this table as an example of smart subsetting&quot;</span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="fu">prov_footer</span>(tbl) <span class="ot">&lt;-</span> <span class="st">&quot;Do remember where you read this though&quot;</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="fu">fnotes_at_path</span>(tbl, <span class="at">rowpath =</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;Mean&quot;</span>), </span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>               <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>)) <span class="ot">&lt;-</span> <span class="st">&quot;Very important mean&quot;</span></span></code></pre></div>
 <p>Normal subsetting loses all the information showed above.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">3</span>, <span class="dv">3</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>tbl[<span class="dv">3</span>, <span class="dv">3</span>]</span></code></pre></div>
 <pre><code>#        C: Combination
 # —————————————————————
 # Mean       35.20</code></pre>
 <p>If all the rows are kept, top left information is also kept. This can
 be also imposed by adding <code>keep_topleft = TRUE</code> to the
 subsetting as follows:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tbl[, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>tbl[, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]</span></code></pre></div>
 <pre><code># SEX         B: Placebo   C: Combination
 # ———————————————————————————————————————
 # F                                      
@@ -513,7 +513,7 @@ subsetting as follows:</p>
 #     A           19             20      
 #     B           17             21      
 #     C           19             19</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">3</span>, keep_topleft <span class="ot">=</span> <span class="cn">TRUE</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>tbl[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">3</span>, keep_topleft <span class="ot">=</span> <span class="cn">TRUE</span>]</span></code></pre></div>
 <pre><code># SEX        C: Combination
 # —————————————————————————
 # F                        
@@ -524,7 +524,7 @@ referential footnote will appear. Please consider reading relevant
 vignette about <a href="https://insightsengineering.github.io/rtables/main/articles/title_footer.html#referential-footnotes">referential
 footnotes</a>. In case of subsetting, the referential footnotes are by
 default indexed again, as if the produced table is a new one.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">10</span>, <span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>tbl[<span class="dv">10</span>, <span class="dv">1</span>]</span></code></pre></div>
 <pre><code>#        A: Drug X
 # ————————————————
 # Mean   35.57 {1}
@@ -532,13 +532,13 @@ default indexed again, as if the produced table is a new one.</p>
 # 
 # {1} - Very important mean
 # ————————————————</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">col_paths_summary</span>(tbl) <span class="co"># Use these to find the right path to value or label</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">col_paths_summary</span>(tbl) <span class="co"># Use these to find the right path to value or label</span></span></code></pre></div>
 <pre><code># label             path               
 # —————————————————————————————————————
 # A: Drug X         ARM, A: Drug X     
 # B: Placebo        ARM, B: Placebo    
 # C: Combination    ARM, C: Combination</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">row_paths_summary</span>(tbl) <span class="co">#</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">row_paths_summary</span>(tbl) <span class="co">#</span></span></code></pre></div>
 <pre><code># rowname      node_class    path              
 # —————————————————————————————————————————————
 # F            LabelRow      SEX, F            
@@ -555,9 +555,9 @@ default indexed again, as if the produced table is a new one.</p>
 #     A        DataRow       SEX, M, STRATA1, A
 #     B        DataRow       SEX, M, STRATA1, B
 #     C        DataRow       SEX, M, STRATA1, C</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To select column value, use `NULL` for `rowpath`</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fnotes_at_path</span>(tbl, <span class="at">rowpath =</span> <span class="cn">NULL</span>, <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>)) <span class="ot">&lt;-</span> <span class="st">&quot;Interesting&quot;</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">3</span>, <span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co"># To select column value, use `NULL` for `rowpath`</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">fnotes_at_path</span>(tbl, <span class="at">rowpath =</span> <span class="cn">NULL</span>, <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>)) <span class="ot">&lt;-</span> <span class="st">&quot;Interesting&quot;</span></span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>tbl[<span class="dv">3</span>, <span class="dv">1</span>]</span></code></pre></div>
 <pre><code>#        A: Drug X {1}
 # ————————————————————
 # Mean       32.76    
@@ -565,10 +565,10 @@ default indexed again, as if the produced table is a new one.</p>
 # 
 # {1} - Interesting
 # ————————————————————</code></pre>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reindexing of {2} as {1}</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fnotes_at_path</span>(tbl, <span class="at">rowpath =</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;Mean&quot;</span>), </span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">colpath =</span> <span class="cn">NULL</span>) <span class="ot">&lt;-</span> <span class="st">&quot;THIS mean&quot;</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>tbl <span class="co"># {1}, {2}, and {3} are present</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="co"># reindexing of {2} as {1}</span></span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a><span class="fu">fnotes_at_path</span>(tbl, <span class="at">rowpath =</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;Mean&quot;</span>), </span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a>               <span class="at">colpath =</span> <span class="cn">NULL</span>) <span class="ot">&lt;-</span> <span class="st">&quot;THIS mean&quot;</span></span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>tbl <span class="co"># {1}, {2}, and {3} are present</span></span></code></pre></div>
 <pre><code># Table 1
 # Authors:
 #  - Abcd Zabcd
@@ -601,7 +601,7 @@ default indexed again, as if the produced table is a new one.</p>
 # Please regard this table as an example of smart subsetting
 # 
 # Do remember where you read this though</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">10</span>, <span class="dv">2</span>] <span class="co"># only {1} which was previously {2}</span></span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a>tbl[<span class="dv">10</span>, <span class="dv">2</span>] <span class="co"># only {1} which was previously {2}</span></span></code></pre></div>
 <pre><code>#            B: Placebo
 # —————————————————————
 # Mean {1}     37.44   
@@ -612,7 +612,7 @@ default indexed again, as if the produced table is a new one.</p>
 <p>Similar to what we have used to keep top left information, we can
 specify to keep more information from the original table. As a standard
 the foot notes are always present if the titles are kept.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, keep_titles <span class="ot">=</span> <span class="cn">TRUE</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a>tbl[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, keep_titles <span class="ot">=</span> <span class="cn">TRUE</span>]</span></code></pre></div>
 <pre><code># Table 1
 # Authors:
 #  - Abcd Zabcd
@@ -629,7 +629,7 @@ the foot notes are always present if the titles are kept.</p>
 # Please regard this table as an example of smart subsetting
 # 
 # Do remember where you read this though</code></pre>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, keep_titles <span class="ot">=</span> <span class="cn">FALSE</span>, keep_footers <span class="ot">=</span> <span class="cn">TRUE</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a>tbl[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, keep_titles <span class="ot">=</span> <span class="cn">FALSE</span>, keep_footers <span class="ot">=</span> <span class="cn">TRUE</span>]</span></code></pre></div>
 <pre><code>#            B: Placebo   C: Combination
 # ——————————————————————————————————————
 # F                                     
@@ -640,8 +640,8 @@ the foot notes are always present if the titles are kept.</p>
 # Please regard this table as an example of smart subsetting
 # 
 # Do remember where you read this though</code></pre>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Referential footnotes are not influenced by `keep_footers = FALSE`</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>tbl[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, keep_titles <span class="ot">=</span> <span class="cn">TRUE</span>, keep_footers <span class="ot">=</span> <span class="cn">FALSE</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="co"># Referential footnotes are not influenced by `keep_footers = FALSE`</span></span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a>tbl[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, keep_titles <span class="ot">=</span> <span class="cn">TRUE</span>, keep_footers <span class="ot">=</span> <span class="cn">FALSE</span>]</span></code></pre></div>
 <pre><code># Table 1
 # Authors:
 #  - Abcd Zabcd
@@ -673,16 +673,16 @@ steps into a position’s content (or row group summary) table.</p>
 <code>row_paths_summary()</code>, and <code>col_paths_summary()</code>,
 functions, or as a portion of the more general
 <code>make_row_df()</code> function output.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>)) </span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, ex_adsl <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>) <span class="sc">&amp;</span></span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>                                             RACE <span class="sc">%in%</span> (<span class="fu">levels</span>(RACE)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])))</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>tbl2</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
+<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
+<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a>    <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>)) </span>
+<span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, ex_adsl <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>) <span class="sc">&amp;</span></span>
+<span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a>                                             RACE <span class="sc">%in%</span> (<span class="fu">levels</span>(RACE)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])))</span>
+<span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a>tbl2</span></code></pre></div>
 <pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
 #                                 F            M            F            M            F            M     
 # ———————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -708,7 +708,7 @@ functions, or as a portion of the more general
 #     B                           5            4            8            4            5            2     
 #     C                           7            2            6            1            3            3</code></pre>
 <p>So the column paths are as follows:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">col_paths_summary</span>(tbl2)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="fu">col_paths_summary</span>(tbl2)</span></code></pre></div>
 <pre><code># label             path                       
 # —————————————————————————————————————————————
 # A: Drug X         ARM, A: Drug X             
@@ -721,7 +721,7 @@ functions, or as a portion of the more general
 #   F               ARM, C: Combination, SEX, F
 #   M               ARM, C: Combination, SEX, M</code></pre>
 <p>and the row paths are as follows:</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">row_paths_summary</span>(tbl2)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a><span class="fu">row_paths_summary</span>(tbl2)</span></code></pre></div>
 <pre><code># rowname                      node_class    path                                                                
 # ———————————————————————————————————————————————————————————————————————————————————————————————————————————————
 # ASIAN                        ContentRow    RACE, ASIAN, @content, ASIAN                                        
@@ -747,7 +747,7 @@ functions, or as a portion of the more general
 #     C                        DataRow       RACE, WHITE, STRATA1, C</code></pre>
 <p>To get a semantically meaningful subset of our table, then, we can
 use <code>[</code> (or <code>tt_at_path()</code> which underlies it)</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>tbl2[<span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a>tbl2[<span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>)]</span></code></pre></div>
 <pre><code>#                 C: Combination     
 #                 F            M     
 # ———————————————————————————————————
@@ -762,11 +762,11 @@ use <code>[</code> (or <code>tt_at_path()</code> which underlies it)</p>
 <code>value_at()</code> convenience function, which takes a pair of row
 and column paths which resolve together to an individual cell,
 e.g. average age for Asian female patients in arm A:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">value_at</span>(tbl2, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;AGE&quot;</span>,  <span class="st">&quot;Mean&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="fu">value_at</span>(tbl2, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;AGE&quot;</span>,  <span class="st">&quot;Mean&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>))</span></code></pre></div>
 <pre><code># [1] 31.21951</code></pre>
 <p>You can also request information from non-cell specific paths with
 the <code>cell_values()</code> function:</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cell_values</span>(tbl2, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;Mean&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="fu">cell_values</span>(tbl2, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;Mean&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>))</span></code></pre></div>
 <pre><code># $`A: Drug X.F`
 # [1] 31.21951
 # 
@@ -774,7 +774,7 @@ the <code>cell_values()</code> function:</p>
 # [1] 34.6</code></pre>
 <p>Note the return value of <code>cell_values()</code> is always a list
 even if you specify a path to a cell:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cell_values</span>(tbl2, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;AGE&quot;</span>,  <span class="st">&quot;Mean&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a><span class="fu">cell_values</span>(tbl2, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;AGE&quot;</span>,  <span class="st">&quot;Mean&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>))</span></code></pre></div>
 <pre><code># $`A: Drug X.F`
 # [1] 31.21951</code></pre>
 </div>

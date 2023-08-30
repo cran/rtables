@@ -12,7 +12,7 @@
 
 <meta name="author" content="Davide Garolini, Abinaya Yogasekaram, and Gabriel Becker" />
 
-<meta name="date" content="2023-05-19" />
+<meta name="date" content="2023-08-30" />
 
 <title>Customizing Appearance</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Customizing Appearance</h1>
 <h4 class="author">Davide Garolini, Abinaya Yogasekaram, and Gabriel
 Becker</h4>
-<h4 class="date">2023-05-19</h4>
+<h4 class="date">2023-08-30</h4>
 
 
 
@@ -355,51 +355,62 @@ white-space: pre;
 <p>In this vignette, we describe the various ways we can modify and
 customize the appearance of <code>rtables</code>.</p>
 <p>Loading the package:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
 <div id="rows-and-cell-values-alignments" class="section level3">
 <h3>Rows and cell values alignments</h3>
 <p>It is possible to align the content by assigning <code>&quot;left&quot;</code>,
 <code>&quot;center&quot;</code> (default), and <code>&quot;right&quot;</code> to
 <code>.aligns</code> and <code>align</code> arguments in
-<code>in_rows()</code> and <code>rcell()</code>, respectively.</p>
+<code>in_rows()</code> and <code>rcell()</code>, respectively. It is
+also possible to use <code>decimal</code>, <code>dec_right</code>, and
+<code>dec_left</code> for decimal alignments. The first takes all
+numerical values and aligns the decimal character <code>.</code> in
+every value of the column that has <code>align = &quot;decimal&quot;</code>. Also
+numberic without decimal values are aligned according to an imaginary
+<code>.</code> if specified as such. <code>dec_left</code> and
+<code>dec_right</code> behave similarly, with the difference that if the
+column present empty spaces at left or right, it pushes values towards
+left or right taking the one value that has most decimal characters, if
+right, or non-decimal values if left. For more details, please read the
+related documentation page <code>help(&quot;decimal_align&quot;)</code>.</p>
 <p>Please consider using <code>?in_rows</code> and <code>?rcell</code>
 for further clarifications on the two arguments, and use
-<code>rtables_aligns()</code> to see all available alignment
-options.</p>
+<code>formatters::list_valid_aligns()</code> to see all available
+alignment options.</p>
 <p>In the following we show two simplified examples that use
 <code>align</code> and <code>.aligns</code>, respectively.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In rcell we use align.</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="cf">function</span>(x) {</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">left =</span> <span class="fu">rcell</span>(<span class="st">&quot;l&quot;</span>, <span class="at">align =</span> <span class="st">&quot;left&quot;</span>),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">right =</span> <span class="fu">rcell</span>(<span class="st">&quot;r&quot;</span>, <span class="at">align =</span> <span class="st">&quot;right&quot;</span>),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">center =</span> <span class="fu">rcell</span>(<span class="st">&quot;c&quot;</span>, <span class="at">align =</span> <span class="st">&quot;center&quot;</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, DM)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>tbl</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># In rcell we use align.</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="cf">function</span>(x) {</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>      <span class="at">left =</span> <span class="fu">rcell</span>(<span class="st">&quot;l&quot;</span>, <span class="at">align =</span> <span class="st">&quot;left&quot;</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>      <span class="at">right =</span> <span class="fu">rcell</span>(<span class="st">&quot;r&quot;</span>, <span class="at">align =</span> <span class="st">&quot;right&quot;</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>      <span class="at">center =</span> <span class="fu">rcell</span>(<span class="st">&quot;c&quot;</span>, <span class="at">align =</span> <span class="st">&quot;center&quot;</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>    )</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  })</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, DM)</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>tbl</span></code></pre></div>
 <pre><code>#          all obs
 # ————————————————
 # left     l      
 # right          r
 # center      c</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In in_rows, we use .aligns. This can either set the general value or the</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   single values (see NB).</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="cf">function</span>(x) {</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">left =</span> <span class="fu">rcell</span>(<span class="st">&quot;l&quot;</span>),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">right =</span> <span class="fu">rcell</span>(<span class="st">&quot;r&quot;</span>),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">center =</span> <span class="fu">rcell</span>(<span class="st">&quot;c&quot;</span>),</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">.aligns =</span> <span class="fu">c</span>(<span class="st">&quot;right&quot;</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="co"># NB: .aligns = c(&quot;right&quot;, &quot;left&quot;, &quot;center&quot;)</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, DM)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>tbl2</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># In in_rows, we use .aligns. This can either set the general value or the</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#   single values (see NB).</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="cf">function</span>(x) {</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>      <span class="at">left =</span> <span class="fu">rcell</span>(<span class="st">&quot;l&quot;</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>      <span class="at">right =</span> <span class="fu">rcell</span>(<span class="st">&quot;r&quot;</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>      <span class="at">center =</span> <span class="fu">rcell</span>(<span class="st">&quot;c&quot;</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>      <span class="at">.aligns =</span> <span class="fu">c</span>(<span class="st">&quot;right&quot;</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>    ) <span class="co"># NB: .aligns = c(&quot;right&quot;, &quot;left&quot;, &quot;center&quot;)</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  })</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, DM)</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>tbl2</span></code></pre></div>
 <pre><code>#          all obs
 # ————————————————
 # left           l
@@ -407,25 +418,25 @@ options.</p>
 # center         c</code></pre>
 <p>These concepts can be well applied to any clinical table as shown in
 the following, more complex, example.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="cf">function</span>(x) {</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.numeric</span>(x)) {</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">in_rows</span>(</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;mean&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">mean</span>(x)),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;sd&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">sd</span>(x)),</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">.formats =</span> <span class="fu">c</span>(<span class="st">&quot;xx.x&quot;</span>), <span class="at">.aligns =</span> <span class="st">&quot;left&quot;</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">is.factor</span>(x)) {</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rcell</span>(<span class="fu">length</span>(<span class="fu">unique</span>(x)), <span class="at">align =</span> <span class="st">&quot;right&quot;</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;Unsupported type&quot;</span>)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">na_str =</span> <span class="st">&quot;NE&quot;</span>)</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt3, ex_adsl)</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>tbl3</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="cf">function</span>(x) {</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.numeric</span>(x)) {</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>      <span class="fu">in_rows</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>        <span class="st">&quot;mean&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">mean</span>(x)),</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>        <span class="st">&quot;sd&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">sd</span>(x)),</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>        <span class="at">.formats =</span> <span class="fu">c</span>(<span class="st">&quot;xx.x&quot;</span>), <span class="at">.aligns =</span> <span class="st">&quot;left&quot;</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>      )</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">is.factor</span>(x)) {</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>      <span class="fu">rcell</span>(<span class="fu">length</span>(<span class="fu">unique</span>(x)), <span class="at">align =</span> <span class="st">&quot;right&quot;</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;Unsupported type&quot;</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>    }</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  }, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">na_str =</span> <span class="st">&quot;NE&quot;</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt3, ex_adsl)</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>tbl3</span></code></pre></div>
 <pre><code>#                    A: Drug X   B: Placebo   C: Combination
 # ——————————————————————————————————————————————————————————
 # F                                                         
@@ -462,13 +473,13 @@ with the <code>append_topleft</code> function, and during
 post-processing using the <code>top_left()</code> function. Note:
 Indenting is automatically added <code>label_pos = &quot;topleft&quot;</code>.</p>
 <p>Within the layout initializer:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">append_topleft</span>(<span class="st">&quot;New top_left material here&quot;</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">append_topleft</span>(<span class="st">&quot;New top_left material here&quot;</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM)</span></code></pre></div>
 <pre><code># New top_left material here   A: Drug X   B: Placebo   C: Combination
 # ————————————————————————————————————————————————————————————————————
 # A                                                                   
@@ -479,13 +490,13 @@ Indenting is automatically added <code>label_pos = &quot;topleft&quot;</code>.</
 #   Mean                         36.34       34.45          33.54</code></pre>
 <p>Specify label position using the <code>split_rows</code> function.
 Notice the position of <code>STRATA1</code> and <code>SEX</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="at">label_pos =</span> <span class="st">&quot;topleft&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">label_pos =</span> <span class="st">&quot;topleft&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="at">label_pos =</span> <span class="st">&quot;topleft&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">label_pos =</span> <span class="st">&quot;topleft&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM)</span></code></pre></div>
 <pre><code># STRATA1                                                     
 #   SEX                A: Drug X   B: Placebo   C: Combination
 # ————————————————————————————————————————————————————————————
@@ -517,28 +528,28 @@ Notice the position of <code>STRATA1</code> and <code>SEX</code>.</p>
 #   UNDIFFERENTIATED                                          
 #     Mean                NA           NA             NA</code></pre>
 <p>Post-processing using the <code>top_left()</code> function:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="cf">function</span>(x) {</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.numeric</span>(x)) {</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">in_rows</span>(</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;mean&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">mean</span>(x)),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;sd&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">sd</span>(x)),</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">.formats =</span> <span class="fu">c</span>(<span class="st">&quot;xx.x&quot;</span>), <span class="at">.aligns =</span> <span class="st">&quot;left&quot;</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">is.factor</span>(x)) {</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rcell</span>(<span class="fu">length</span>(<span class="fu">unique</span>(x)), <span class="at">align =</span> <span class="st">&quot;right&quot;</span>)</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;Unsupported type&quot;</span>)</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">na_str =</span> <span class="st">&quot;NE&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(ex_adsl)</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding top-left material</span></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="fu">top_left</span>(lyt) <span class="ot">&lt;-</span> <span class="st">&quot;New top-left material here&quot;</span></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>lyt</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="cf">function</span>(x) {</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.numeric</span>(x)) {</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>      <span class="fu">in_rows</span>(</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>        <span class="st">&quot;mean&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">mean</span>(x)),</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>        <span class="st">&quot;sd&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">sd</span>(x)),</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>        <span class="at">.formats =</span> <span class="fu">c</span>(<span class="st">&quot;xx.x&quot;</span>), <span class="at">.aligns =</span> <span class="st">&quot;left&quot;</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>      )</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">is.factor</span>(x)) {</span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>      <span class="fu">rcell</span>(<span class="fu">length</span>(<span class="fu">unique</span>(x)), <span class="at">align =</span> <span class="st">&quot;right&quot;</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;Unsupported type&quot;</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>    }</span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a>  }, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">na_str =</span> <span class="st">&quot;NE&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a>  <span class="fu">build_table</span>(ex_adsl)</span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co"># Adding top-left material</span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="fu">top_left</span>(lyt) <span class="ot">&lt;-</span> <span class="st">&quot;New top-left material here&quot;</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a>lyt</span></code></pre></div>
 <pre><code># New top-left material here   A: Drug X   B: Placebo   C: Combination
 # ————————————————————————————————————————————————————————————————————
 # F                                                                   
@@ -574,46 +585,46 @@ materials. This can be modified within the layout initializer
 <code>basic_table()</code> using the <code>inset</code> argument or
 during post-processing with <code>table_inset()</code>.</p>
 <p>Using the layout initializer:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">inset =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">inset =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM)</span></code></pre></div>
 <pre><code>#             all obs
 #      ——————————————
 #      Mean    34.22</code></pre>
 <p>Using the post-processing function:</p>
 <p>Without inset -</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, DM)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>tbl</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, DM)</span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>tbl</span></code></pre></div>
 <pre><code>#        all obs
 # ——————————————
 # Mean    34.22</code></pre>
 <p>With an inset of 5 characters -</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table_inset</span>(tbl) <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>tbl</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">table_inset</span>(tbl) <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>tbl</span></code></pre></div>
 <pre><code>#             all obs
 #      ——————————————
 #      Mean    34.22</code></pre>
 <p>Below is an example with a table produced for clinical data. Compare
 the inset of the table and main footer between the two tables.</p>
 <p>Without inset -</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>analysisfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...) {</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="at">row1 =</span> <span class="dv">5</span>,</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">row2 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.row_footnotes =</span> <span class="fu">list</span>(<span class="at">row1 =</span> <span class="st">&quot;row 1 rfn&quot;</span>),</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">.cell_footnotes =</span> <span class="fu">list</span>(<span class="at">row2 =</span> <span class="st">&quot;row 2 cfn&quot;</span>))</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">title =</span> <span class="st">&quot;Title says Whaaaat&quot;</span>, <span class="at">subtitles =</span> <span class="st">&quot;Oh, ok.&quot;</span>,</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">main_footer =</span> <span class="st">&quot;ha HA! Footer!&quot;</span>, <span class="at">prov_footer =</span> <span class="st">&quot;provenaaaaance&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> analysisfun)</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span>  <span class="fu">build_table</span>(lyt, ex_adsl)</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>analysisfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...) {</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="at">row1 =</span> <span class="dv">5</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>            <span class="at">row2 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>            <span class="at">.row_footnotes =</span> <span class="fu">list</span>(<span class="at">row1 =</span> <span class="st">&quot;row 1 rfn&quot;</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>            <span class="at">.cell_footnotes =</span> <span class="fu">list</span>(<span class="at">row2 =</span> <span class="st">&quot;row 2 cfn&quot;</span>))</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>    }</span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">title =</span> <span class="st">&quot;Title says Whaaaat&quot;</span>, <span class="at">subtitles =</span> <span class="st">&quot;Oh, ok.&quot;</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>                   <span class="at">main_footer =</span> <span class="st">&quot;ha HA! Footer!&quot;</span>, <span class="at">prov_footer =</span> <span class="st">&quot;provenaaaaance&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> analysisfun)</span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a>result <span class="ot">&lt;-</span>  <span class="fu">build_table</span>(lyt, ex_adsl)</span>
+<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a>result</span></code></pre></div>
 <pre><code># Title says Whaaaat
 # Oh, ok.
 # 
@@ -638,8 +649,8 @@ the inset of the table and main footer between the two tables.</p>
 subtitles, page titles), or provenance footer materials. Inset settings
 is applied to top-left materials, referential footnotes main footer
 materials and any horizontal dividers.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table_inset</span>(result) <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">table_inset</span>(result) <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>result</span></code></pre></div>
 <pre><code># Title says Whaaaat
 # Oh, ok.
 # 
@@ -666,7 +677,7 @@ materials and any horizontal dividers.</p>
 separation between column headers and the table. Horizontal separation
 applies when:</p>
 <ol style="list-style-type: decimal">
-<li>separating title + subtitles from the column labels + topleft
+<li>separating title + subtitles from the column labels + top left
 materials,</li>
 <li>column labels + top left material from row labels + cells,</li>
 <li>row labels + cells from footer content, and</li>
@@ -674,20 +685,20 @@ materials,</li>
 something on both sides of the divider.</li>
 </ol>
 <p>Below, we replace the default line with “=”.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;Species&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_colcounts</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Petal.Width&quot;</span>), <span class="cf">function</span>(x) {</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">mean_sd =</span> <span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)),</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">var =</span> <span class="fu">var</span>(x),</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">min_max =</span> <span class="fu">range</span>(x),</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">.formats =</span> <span class="fu">c</span>(<span class="st">&quot;xx.xx (xx.xx)&quot;</span>, <span class="st">&quot;xx.xxx&quot;</span>, <span class="st">&quot;xx.x - xx.x&quot;</span>),</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">.labels =</span> <span class="fu">c</span>(<span class="st">&quot;Mean (sd)&quot;</span>, <span class="st">&quot;Variance&quot;</span>, <span class="st">&quot;Min - Max&quot;</span>)</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(iris, <span class="at">hsep =</span> <span class="st">&quot;=&quot;</span>)</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>tbl</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;Species&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>  <span class="fu">add_colcounts</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Petal.Width&quot;</span>), <span class="cf">function</span>(x) {</span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>      <span class="at">mean_sd =</span> <span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)),</span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>      <span class="at">var =</span> <span class="fu">var</span>(x),</span>
+<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a>      <span class="at">min_max =</span> <span class="fu">range</span>(x),</span>
+<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a>      <span class="at">.formats =</span> <span class="fu">c</span>(<span class="st">&quot;xx.xx (xx.xx)&quot;</span>, <span class="st">&quot;xx.xxx&quot;</span>, <span class="st">&quot;xx.x - xx.x&quot;</span>),</span>
+<span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a>      <span class="at">.labels =</span> <span class="fu">c</span>(<span class="st">&quot;Mean (sd)&quot;</span>, <span class="st">&quot;Variance&quot;</span>, <span class="st">&quot;Min - Max&quot;</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a>    )</span>
+<span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
+<span id="cb24-13"><a href="#cb24-13" tabindex="-1"></a>  <span class="fu">build_table</span>(iris, <span class="at">hsep =</span> <span class="st">&quot;=&quot;</span>)</span>
+<span id="cb24-14"><a href="#cb24-14" tabindex="-1"></a>tbl</span></code></pre></div>
 <pre><code>#                  setosa      versicolor     virginica 
 #                  (N=50)        (N=50)        (N=50)   
 # ======================================================
@@ -706,16 +717,16 @@ something on both sides of the divider.</li>
 every group defined by a split instruction. Note, a trailing divider at
 the end of the table is never printed.</p>
 <p>Below, a “+” is repeated and used as a section divider.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;Species&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">head</span>(<span class="fu">names</span>(iris), <span class="sc">-</span><span class="dv">1</span>), <span class="at">afun =</span> <span class="cf">function</span>(x) {</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;mean / sd&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>),</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;range&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">diff</span>(<span class="fu">range</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">section_div =</span> <span class="st">&quot;+&quot;</span>)</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt, iris)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;Species&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">head</span>(<span class="fu">names</span>(iris), <span class="sc">-</span><span class="dv">1</span>), <span class="at">afun =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>      <span class="st">&quot;mean / sd&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>),</span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>      <span class="st">&quot;range&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">diff</span>(<span class="fu">range</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>    )</span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>  }, <span class="at">section_div =</span> <span class="st">&quot;+&quot;</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a><span class="fu">build_table</span>(lyt, iris)</span></code></pre></div>
 <pre><code>#                  setosa      versicolor     virginica 
 # ——————————————————————————————————————————————————————
 # Sepal.Length                                          
@@ -734,16 +745,16 @@ the end of the table is never printed.</p>
 #   mean / sd    0.25 (0.11)   1.33 (0.20)   2.03 (0.27)
 #   range           0.50          0.80          1.10</code></pre>
 <p>Section dividers can be set to ” ” to create a blank line.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;Species&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">head</span>(<span class="fu">names</span>(iris), <span class="sc">-</span><span class="dv">1</span>), <span class="at">afun =</span> <span class="cf">function</span>(x) {</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;mean / sd&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>),</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;range&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">diff</span>(<span class="fu">range</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">section_div =</span> <span class="st">&quot; &quot;</span>)</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt, iris)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;Species&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="fu">head</span>(<span class="fu">names</span>(iris), <span class="sc">-</span><span class="dv">1</span>), <span class="at">afun =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>      <span class="st">&quot;mean / sd&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>),</span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a>      <span class="st">&quot;range&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">diff</span>(<span class="fu">range</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a>    )</span>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>  }, <span class="at">section_div =</span> <span class="st">&quot; &quot;</span>)</span>
+<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="fu">build_table</span>(lyt, iris)</span></code></pre></div>
 <pre><code>#                  setosa      versicolor     virginica 
 # ——————————————————————————————————————————————————————
 # Sepal.Length                                          
@@ -764,13 +775,13 @@ the end of the table is never printed.</p>
 <p>Separation characters can be specified for different row splits.
 However, only one will be printed if they “pile up” next to each
 other.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>, <span class="at">section_div =</span> <span class="st">&quot;=&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="at">section_div =</span> <span class="st">&quot;~&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">var_labels =</span> <span class="st">&quot;Age&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>, <span class="at">section_div =</span> <span class="st">&quot;=&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="at">section_div =</span> <span class="st">&quot;~&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">var_labels =</span> <span class="st">&quot;Age&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM)</span></code></pre></div>
 <pre><code>#                                             A: Drug X   B: Placebo   C: Combination
 # ———————————————————————————————————————————————————————————————————————————————————
 # ASIAN                                                                              
@@ -860,17 +871,17 @@ indent value can be supplied with the <code>indent_mod</code> argument
 within a split function to modify this default. Compare the indenting of
 the tables below:</p>
 <p>Default Indent -</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">basic_table</span>(</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(DM)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="fu">basic_table</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
+<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a>  <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
+<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
+<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a>  <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span></span>
+<span id="cb32-6"><a href="#cb32-6" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-7"><a href="#cb32-7" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-8"><a href="#cb32-8" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-9"><a href="#cb32-9" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-10"><a href="#cb32-10" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-11"><a href="#cb32-11" tabindex="-1"></a>  <span class="fu">build_table</span>(DM)</span></code></pre></div>
 <pre><code># Study XXXXXXXX
 # subtitle YYYYYYYYYY
 # subtitle2 ZZZZZZZZZ
@@ -912,17 +923,17 @@ the tables below:</p>
 # 
 # file: /path/to/stuff/that/lives/there HASH:1ac41b242a</code></pre>
 <p>Modified indent -</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">basic_table</span>(</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(DM)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">basic_table</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>  <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>  <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span></span>
+<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-8"><a href="#cb34-8" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-9"><a href="#cb34-9" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-10"><a href="#cb34-10" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-11"><a href="#cb34-11" tabindex="-1"></a>  <span class="fu">build_table</span>(DM)</span></code></pre></div>
 <pre><code># Study XXXXXXXX
 # subtitle YYYYYYYYYY
 # subtitle2 ZZZZZZZZZ
@@ -980,13 +991,13 @@ The <code>child_label</code> argument can force labels to be visible in
 addition to content rows but we cannot hide or move the content
 rows.</p>
 <p>Notice the placement of the “AGE” label in this example:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="at">var =</span> <span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">show_labels =</span> <span class="st">&quot;default&quot;</span>)</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM) </span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="at">var =</span> <span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">show_labels =</span> <span class="st">&quot;default&quot;</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM) </span></code></pre></div>
 <pre><code>#               A: Drug X          B: Placebo       C: Combination 
 #                (N=121)            (N=106)            (N=129)     
 # —————————————————————————————————————————————————————————————————
@@ -1008,13 +1019,13 @@ rows.</p>
 there is only one variable being analyzed at the same level of nesting.
 Override this by setting the <code>show_labels</code> argument as
 “visible”.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="at">var =</span> <span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels, <span class="at">child_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="fu">build_table</span>(lyt2, DM) </span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="at">var =</span> <span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels, <span class="at">child_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-5"><a href="#cb38-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" tabindex="-1"></a><span class="fu">build_table</span>(lyt2, DM) </span></code></pre></div>
 <pre><code>#               A: Drug X          B: Placebo       C: Combination 
 #                (N=121)            (N=106)            (N=129)     
 # —————————————————————————————————————————————————————————————————
@@ -1040,19 +1051,19 @@ Override this by setting the <code>show_labels</code> argument as
 modifying label visibility:</p>
 <p>Label order will mirror the order of <code>split_rows_by</code>
 calls. If the labels of any subgroups should be hidden, the
-<code>label_pos</code> arugment should be set to hidden.</p>
+<code>label_pos</code> argument should be set to hidden.</p>
 <p>“SEX” label position is hidden -</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">basic_table</span>(</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels, <span class="at">label_pos =</span> <span class="st">&quot;visible&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="at">label_pos =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(DM)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="fu">basic_table</span>(</span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a>  <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
+<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
+<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a>  <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span></span>
+<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels, <span class="at">label_pos =</span> <span class="st">&quot;visible&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="at">label_pos =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-11"><a href="#cb40-11" tabindex="-1"></a>  <span class="fu">build_table</span>(DM)</span></code></pre></div>
 <pre><code># Study XXXXXXXX
 # subtitle YYYYYYYYYY
 # subtitle2 ZZZZZZZZZ
@@ -1081,17 +1092,17 @@ calls. If the labels of any subgroups should be hidden, the
 # 
 # file: /path/to/stuff/that/lives/there HASH:1ac41b242a</code></pre>
 <p>“SEX” label position is with the top-left materials -</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">basic_table</span>(</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels, <span class="at">label_pos =</span> <span class="st">&quot;topleft&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="at">label_pos =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">build_table</span>(DM)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="fu">basic_table</span>(</span>
+<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
+<span id="cb42-3"><a href="#cb42-3" tabindex="-1"></a>  <span class="at">subtitles =</span> <span class="fu">c</span>(<span class="st">&quot;subtitle YYYYYYYYYY&quot;</span>, <span class="st">&quot;subtitle2 ZZZZZZZZZ&quot;</span>),</span>
+<span id="cb42-4"><a href="#cb42-4" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="st">&quot;Analysis was done using cool methods that are correct&quot;</span>,</span>
+<span id="cb42-5"><a href="#cb42-5" tabindex="-1"></a>  <span class="at">prov_footer =</span> <span class="st">&quot;file: /path/to/stuff/that/lives/there HASH:1ac41b242a&quot;</span></span>
+<span id="cb42-6"><a href="#cb42-6" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb42-7"><a href="#cb42-7" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb42-8"><a href="#cb42-8" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> drop_split_levels, <span class="at">label_pos =</span> <span class="st">&quot;topleft&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb42-9"><a href="#cb42-9" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="at">label_pos =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb42-10"><a href="#cb42-10" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb42-11"><a href="#cb42-11" tabindex="-1"></a>  <span class="fu">build_table</span>(DM)</span></code></pre></div>
 <pre><code># Study XXXXXXXX
 # subtitle YYYYYYYYYY
 # subtitle2 ZZZZZZZZZ
@@ -1127,26 +1138,26 @@ titles/footers.</p>
 <p>This is demonstrated using the sample data and table below. In this
 section we aim to render this table with a reduced width since the table
 has very wide contents in several cells, labels, and titles/footers.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>trimmed_data <span class="ot">&lt;-</span> ex_adsl <span class="sc">%&gt;%</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(RACE <span class="sc">%in%</span> <span class="fu">levels</span>(RACE)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(trimmed_data<span class="sc">$</span>ARM)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Incredibly long column name to be wrapped&quot;</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(trimmed_data<span class="sc">$</span>ARM)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;This_column_name_should_be_split_somewhere&quot;</span></span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>wide_tbl <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(</span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Title that is too long and also needs to be wrapped to a smaller width&quot;</span>,</span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitles =</span> <span class="st">&quot;Subtitle that is also long and also needs to be wrapped to a smaller width&quot;</span>,</span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">main_footer =</span> <span class="st">&quot;Footnote that is wider than expected for this table.&quot;</span>,</span>
-<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">prov_footer =</span> <span class="st">&quot;Provenance footer material that is also wider than expected for this table.&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
-<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;EOSDY&quot;</span>),</span>
-<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">na_str =</span> <span class="st">&quot;Very long cell contents to_be_wrapped_and_splitted&quot;</span>,</span>
-<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">inclNAs =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">build_table</span>(trimmed_data)</span>
-<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>wide_tbl</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a>trimmed_data <span class="ot">&lt;-</span> ex_adsl <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a>    <span class="fu">filter</span>(SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a>    <span class="fu">filter</span>(RACE <span class="sc">%in%</span> <span class="fu">levels</span>(RACE)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span>
+<span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" tabindex="-1"></a><span class="fu">levels</span>(trimmed_data<span class="sc">$</span>ARM)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Incredibly long column name to be wrapped&quot;</span></span>
+<span id="cb44-6"><a href="#cb44-6" tabindex="-1"></a><span class="fu">levels</span>(trimmed_data<span class="sc">$</span>ARM)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;This_column_name_should_be_split_somewhere&quot;</span></span>
+<span id="cb44-7"><a href="#cb44-7" tabindex="-1"></a></span>
+<span id="cb44-8"><a href="#cb44-8" tabindex="-1"></a>wide_tbl <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(</span>
+<span id="cb44-9"><a href="#cb44-9" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Title that is too long and also needs to be wrapped to a smaller width&quot;</span>,</span>
+<span id="cb44-10"><a href="#cb44-10" tabindex="-1"></a>    <span class="at">subtitles =</span> <span class="st">&quot;Subtitle that is also long and also needs to be wrapped to a smaller width&quot;</span>,</span>
+<span id="cb44-11"><a href="#cb44-11" tabindex="-1"></a>    <span class="at">main_footer =</span> <span class="st">&quot;Footnote that is wider than expected for this table.&quot;</span>,</span>
+<span id="cb44-12"><a href="#cb44-12" tabindex="-1"></a>    <span class="at">prov_footer =</span> <span class="st">&quot;Provenance footer material that is also wider than expected for this table.&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-13"><a href="#cb44-13" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-14"><a href="#cb44-14" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
+<span id="cb44-15"><a href="#cb44-15" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;EOSDY&quot;</span>),</span>
+<span id="cb44-16"><a href="#cb44-16" tabindex="-1"></a>            <span class="at">na_str =</span> <span class="st">&quot;Very long cell contents to_be_wrapped_and_splitted&quot;</span>,</span>
+<span id="cb44-17"><a href="#cb44-17" tabindex="-1"></a>            <span class="at">inclNAs =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-18"><a href="#cb44-18" tabindex="-1"></a>    <span class="fu">build_table</span>(trimmed_data)</span>
+<span id="cb44-19"><a href="#cb44-19" tabindex="-1"></a></span>
+<span id="cb44-20"><a href="#cb44-20" tabindex="-1"></a>wide_tbl</span></code></pre></div>
 <pre><code># Title that is too long and also needs to be wrapped to a smaller width
 # Subtitle that is also long and also needs to be wrapped to a smaller width
 # 
@@ -1200,9 +1211,9 @@ continued on the following line. By default there are 3 spaces
 separating each of the columns in the rendered table but this can be
 customized via the <code>col_gap</code> argument to
 <code>toString()</code> if further width customization is desired.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>result_wrap_cells <span class="ot">&lt;-</span> <span class="fu">toString</span>(wide_tbl, <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>))</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>matrix_wrap_cells <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">strsplit</span>(result_wrap_cells, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)[[<span class="dv">1</span>]], <span class="at">ncol =</span> <span class="dv">1</span>)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>matrix_wrap_cells</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a>result_wrap_cells <span class="ot">&lt;-</span> <span class="fu">toString</span>(wide_tbl, <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>))</span>
+<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a>matrix_wrap_cells <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">strsplit</span>(result_wrap_cells, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)[[<span class="dv">1</span>]], <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a>matrix_wrap_cells</span></code></pre></div>
 <pre><code>#       [,1]                                                                         
 #  [1,] &quot;Title that is too long and also needs to be wrapped to a smaller width&quot;     
 #  [2,] &quot;Subtitle that is also long and also needs to be wrapped to a smaller width&quot; 
@@ -1261,12 +1272,12 @@ for titles/footers. The four <code>export_as_*</code> functions and
 the same two arguments. In the following code, we set
 <code>max_width = 43</code> so that the rendered table and all of its
 annotations have a maximum width of 43 characters.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>result_wrap_cells_tf <span class="ot">&lt;-</span> <span class="fu">toString</span>(wide_tbl,</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>),</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">tf_wrap =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">max_width =</span> <span class="dv">43</span>)</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>matrix_wrap_cells_tf <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">strsplit</span>(result_wrap_cells_tf, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)[[<span class="dv">1</span>]], <span class="at">ncol =</span> <span class="dv">1</span>)</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>matrix_wrap_cells_tf</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a>result_wrap_cells_tf <span class="ot">&lt;-</span> <span class="fu">toString</span>(wide_tbl,</span>
+<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>                                 <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>),</span>
+<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a>                                 <span class="at">tf_wrap =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a>                                 <span class="at">max_width =</span> <span class="dv">43</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a>matrix_wrap_cells_tf <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">strsplit</span>(result_wrap_cells_tf, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)[[<span class="dv">1</span>]], <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" tabindex="-1"></a>matrix_wrap_cells_tf</span></code></pre></div>
 <pre><code>#       [,1]                                         
 #  [1,] &quot;Title that is too long and also needs to be&quot;
 #  [2,] &quot;wrapped to a smaller width&quot;                 

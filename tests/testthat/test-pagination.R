@@ -29,9 +29,56 @@ test_that("Page by splitting works", {
             split_rows_by("ARM", page_by = TRUE) %>%
             analyze("AGE")},
         "page_by splits cannot be nested within non-page_by splits")
+
+    lyt2 <- basic_table(title = "main title",
+                        subtitles = "subtitle",
+                        main_footer = "main footer",
+                        prov_footer = "provenance footer") %>%
+        split_cols_by("ARM") %>%
+        split_cols_by("SEX", split_fun = keep_split_levels(c("F", "M"))) %>%
+        split_rows_by("STRATA1", split_fun = keep_split_levels(c("A", "B")), page_by = TRUE, page_prefix = "Stratum") %>%
+        split_rows_by("RACE", split_fun = keep_split_levels(c("ASIAN", "WHITE"))) %>%
+        summarize_row_groups() %>%
+        analyze("AGE", afun = function(x, ...) in_rows("mean (sd)" = rcell(c(mean(x), sd(x)), format = "xx.x (xx.x)"),
+                                                 "range" = rcell(range(x), format = "xx.x - xx.x")))
+
+    tbl2 <- build_table(lyt2, ex_adsl)
+
+    ttlst2 <- paginate_table(tbl2, lpp = 16, cpp = 55)
+    expect_equal(length(ttlst2),
+                 8)
+    txt <- export_as_txt(tbl2, lpp = 16, cpp = 55)
+    expect_true(grepl("Stratum: B", txt))
 })
 
+test_that("export_as_txt prints split level header correctly when using page_by", {
+  # single level in page_by split
+  tbl <- basic_table() %>%
+    split_rows_by("PARAMCD", labels_var = "PARAMCD", split_label = "aaa",
+                  label_pos = "topleft",
+                  split_fun = drop_split_levels, page_by = TRUE) %>%
+    split_rows_by("AVISIT", label_pos = "topleft",
+                  split_fun = keep_split_levels("SCREENING")) %>%
+    analyze("AVAL") %>%
+    build_table(ex_adlb[ex_adlb$PARAMCD == "ALT",])
+  tbl_txt <- tbl %>% export_as_txt(lpp = 100)
 
+  expect_true(grepl("^\naaa: ALT", tbl_txt))
+
+  # multiple levels in page_by split
+  tbl <- basic_table() %>%
+    split_rows_by("PARAMCD", labels_var = "PARAMCD", split_label = "aaa",
+                  label_pos = "topleft",
+                  split_fun = drop_split_levels, page_by = TRUE) %>%
+    split_rows_by("AVISIT", label_pos = "topleft",
+                  split_fun = keep_split_levels("SCREENING")) %>%
+    analyze("AVAL") %>%
+    build_table(ex_adlb[ex_adlb$PARAMCD != "IGA",])
+  tbl_txt <- tbl %>% export_as_txt(lpp = 100)
+  
+  expect_true(grepl("^\naaa: ALT", tbl_txt))
+  expect_true(grepl("\naaa: CRP", tbl_txt))
+})
 
 test_that("vertical and horizontal pagination work", {
 
@@ -50,7 +97,7 @@ test_that("vertical and horizontal pagination work", {
     ## colheader takes up 2, repeated across vert pag
     ## all columns take up 7 (4 for content + 3 for cols sep)
 
-    ## should be one col per page, ie 6 pages
+    ## should be one col per page, i.e. 6 pages
     hpag1 <- paginate_table(simple_tbl, lpp = 80, cpp = 17)
     expect_equal(rep(1, 6),
                  sapply(hpag1, ncol))

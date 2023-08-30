@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2023-05-19" />
+<meta name="date" content="2023-08-30" />
 
 <title>Comparison with dplyr Tabulation</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Comparison with dplyr Tabulation</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2023-05-19</h4>
+<h4 class="date">2023-08-30</h4>
 
 
 
@@ -370,35 +370,35 @@ in this vignette.</p>
 <p>If you know a more elegant way of deriving the table content with
 <code>dplyr</code> please let us know and we will update the
 vignette.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
 <p>Here is the table and data used in the <a href="https://insightsengineering.github.io/rtables/main/articles/introduction.html"><code>introduction</code></a>
 vignette:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">400</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">arm =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;Arm A&quot;</span>, <span class="st">&quot;Arm B&quot;</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Arm A&quot;</span>, <span class="st">&quot;Arm B&quot;</span>)),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">country =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;CAN&quot;</span>, <span class="st">&quot;USA&quot;</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">55</span>, .<span class="dv">45</span>)), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;CAN&quot;</span>, <span class="st">&quot;USA&quot;</span>)),</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">gender =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>)),</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">handed =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;Left&quot;</span>, <span class="st">&quot;Right&quot;</span>), n, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">6</span>, .<span class="dv">4</span>), <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Left&quot;</span>, <span class="st">&quot;Right&quot;</span>)),</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">rchisq</span>(n, <span class="dv">30</span>) <span class="sc">+</span> <span class="dv">10</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight =</span> <span class="dv">35</span> <span class="sc">*</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> .<span class="dv">5</span>) <span class="sc">+</span> <span class="fu">ifelse</span>(gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>, <span class="dv">140</span>, <span class="dv">180</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;arm&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;gender&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;country&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;handed&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;age&quot;</span>, <span class="at">afun =</span> mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, df)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>tbl</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">400</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="at">arm =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;Arm A&quot;</span>, <span class="st">&quot;Arm B&quot;</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Arm A&quot;</span>, <span class="st">&quot;Arm B&quot;</span>)),</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="at">country =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;CAN&quot;</span>, <span class="st">&quot;USA&quot;</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">55</span>, .<span class="dv">45</span>)), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;CAN&quot;</span>, <span class="st">&quot;USA&quot;</span>)),</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="at">gender =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>)),</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  <span class="at">handed =</span> <span class="fu">factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;Left&quot;</span>, <span class="st">&quot;Right&quot;</span>), n, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">6</span>, .<span class="dv">4</span>), <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Left&quot;</span>, <span class="st">&quot;Right&quot;</span>)),</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">rchisq</span>(n, <span class="dv">30</span>) <span class="sc">+</span> <span class="dv">10</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>  <span class="at">weight =</span> <span class="dv">35</span> <span class="sc">*</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> .<span class="dv">5</span>) <span class="sc">+</span> <span class="fu">ifelse</span>(gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>, <span class="dv">140</span>, <span class="dv">180</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>)</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;arm&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;gender&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;country&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;handed&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;age&quot;</span>, <span class="at">afun =</span> mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, df)</span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a>tbl</span></code></pre></div>
 <pre><code>#                     Arm A                     Arm B         
 #              Female        Male        Female        Male   
 #              (N=96)      (N=105)       (N=92)      (N=107)  
@@ -420,12 +420,12 @@ vignette:</p>
 and 2 have content cells, see the <a href="https://insightsengineering.github.io/rtables/main/articles/introduction.html"><code>introduction</code></a>
 vignette). Cell 3,1 contains the mean age for left handed &amp; female
 Canadians in “Arm A”:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>age[df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>age[df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>])</span></code></pre></div>
 <pre><code># [1] 38.86979</code></pre>
 <p>or with <code>dplyr</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span>, arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span>, gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>, handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span>, arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span>, gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>, handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
 <pre><code># # A tibble: 1 × 1
 #   mean_age
 #      &lt;dbl&gt;
@@ -433,10 +433,10 @@ Canadians in “Arm A”:</p>
 <p>Further, <code>dplyr</code> gives us other verbs to easily get the
 average age of left handed Canadians for each group defined by the 4
 columns:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender) <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span>, handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span>, handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
 <pre><code># `summarise()` has grouped output by &#39;arm&#39;. You can override using the `.groups`
 # argument.</code></pre>
 <pre><code># # A tibble: 4 × 3
@@ -448,12 +448,12 @@ columns:</p>
 # 3 Arm B Female     40.3
 # 4 Arm B Male       37.7</code></pre>
 <p>We can further get to all the average age cell values with:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>average_age <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender, country, handed) <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>average_age <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender, country, handed) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span></code></pre></div>
 <pre><code># `summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can
 # override using the `.groups` argument.</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>average_age</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>average_age</span></code></pre></div>
 <pre><code># # A tibble: 16 × 5
 # # Groups:   arm, gender, country [8]
 #    arm   gender country handed mean_age
@@ -476,15 +476,15 @@ columns:</p>
 # 16 Arm B Male   USA     Right      39.0</code></pre>
 <p>In <code>rtable</code> syntax, we need the following code to get to
 the same content:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;arm&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;gender&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;country&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;handed&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;age&quot;</span>, <span class="at">afun =</span> mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, df)</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>tbl</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;arm&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;gender&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;country&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;handed&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;age&quot;</span>, <span class="at">afun =</span> mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, df)</span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>tbl</span></code></pre></div>
 <pre><code>#                Arm A           Arm B    
 #            Female   Male   Female   Male
 # ————————————————————————————————————————
@@ -514,16 +514,16 @@ to combine</p>
 <p>We first focus on the count and percentage information for handedness
 within each country (for each arm-gender pair), along with the analysis
 row mean values:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>c_h_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender, country, handed) <span class="sc">%&gt;%</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(age), <span class="at">c_h_count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="do">## we need the sum below to *not* be by country, so that we&#39;re dividing by the column counts</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>(country) <span class="sc">%&gt;%</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># now the `handed` grouping has been removed, therefore we can calculate percent now:</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">n_col =</span> <span class="fu">sum</span>(c_h_count), <span class="at">c_h_percent =</span> c_h_count <span class="sc">/</span> n_col)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>c_h_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender, country, handed) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(age), <span class="at">c_h_count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>    <span class="do">## we need the sum below to *not* be by country, so that we&#39;re dividing by the column counts</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>    <span class="fu">ungroup</span>(country) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>  <span class="co"># now the `handed` grouping has been removed, therefore we can calculate percent now:</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">n_col =</span> <span class="fu">sum</span>(c_h_count), <span class="at">c_h_percent =</span> c_h_count <span class="sc">/</span> n_col)</span></code></pre></div>
 <pre><code># `summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can
 # override using the `.groups` argument.</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>c_h_df</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>c_h_df</span></code></pre></div>
 <pre><code># # A tibble: 16 × 8
 # # Groups:   arm, gender [4]
 #    arm   gender country handed  mean c_h_count n_col c_h_percent
@@ -547,14 +547,14 @@ row mean values:</p>
 <p>which has 16 rows (cells) like the <code>average_age</code> data
 frame defined above. Next, we will derive the group information for
 countries:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>c_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender, country) <span class="sc">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">c_count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># now the `handed` grouping has been removed, therefore we can calculate percent now:</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">n_col =</span> <span class="fu">sum</span>(c_count), <span class="at">c_percent =</span> c_count <span class="sc">/</span> n_col)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>c_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender, country) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">c_count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>  <span class="co"># now the `handed` grouping has been removed, therefore we can calculate percent now:</span></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">n_col =</span> <span class="fu">sum</span>(c_count), <span class="at">c_percent =</span> c_count <span class="sc">/</span> n_col)</span></code></pre></div>
 <pre><code># `summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;. You can override using the
 # `.groups` argument.</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>c_df</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>c_df</span></code></pre></div>
 <pre><code># # A tibble: 8 × 6
 # # Groups:   arm, gender [4]
 #   arm   gender country c_count n_col c_percent
@@ -570,7 +570,7 @@ countries:</p>
 <p>Finally, we <code>left_join()</code> the two levels of summary to get
 a data.frame containing the full set of values which make up the body of
 our table (note, however, they are not in the same order):</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>full_dplyr <span class="ot">&lt;-</span> <span class="fu">left_join</span>(c_h_df, c_df) <span class="sc">%&gt;%</span> ungroup</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>full_dplyr <span class="ot">&lt;-</span> <span class="fu">left_join</span>(c_h_df, c_df) <span class="sc">%&gt;%</span> ungroup</span></code></pre></div>
 <pre><code># Joining with `by = join_by(arm, gender, country, n_col)`</code></pre>
 <p>Alternatively, we could calculate only the counts in
 <code>c_h_df</code>, and use <code>mutate()</code> after the
@@ -581,17 +581,17 @@ requiring the explicit <code>ungroup()</code>, but it prevents each
 level of summarization from being a self-contained set of
 computations.</p>
 <p>The <code>rtables</code> call in contrast is:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;arm&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;gender&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;country&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;handed&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;age&quot;</span>, <span class="at">afun =</span> mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, df)</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>tbl</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;arm&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;gender&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;country&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;handed&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;age&quot;</span>, <span class="at">afun =</span> mean, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, df)</span>
+<span id="cb27-11"><a href="#cb27-11" tabindex="-1"></a>tbl</span></code></pre></div>
 <pre><code>#                     Arm A                     Arm B         
 #              Female        Male        Female        Male   
 #              (N=96)      (N=105)       (N=92)      (N=107)  
@@ -606,31 +606,31 @@ computations.</p>
 #     mean      40.4         39.7         39.2         40.1   
 #   Right    17 (17.7%)   22 (21.0%)   21 (22.8%)   20 (18.7%)
 #     mean      36.9         39.8         38.5         39.0</code></pre>
-<p>We can now spotcheck that the values are the same</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>frm_rtables_h <span class="ot">&lt;-</span> <span class="fu">cell_values</span>(tbl, <span class="at">rowpath =</span> <span class="fu">c</span>(<span class="st">&quot;country&quot;</span>, <span class="st">&quot;CAN&quot;</span>, <span class="st">&quot;handed&quot;</span>, <span class="st">&quot;Right&quot;</span>, <span class="st">&quot;@content&quot;</span>),</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;arm&quot;</span>, <span class="st">&quot;Arm B&quot;</span>, <span class="st">&quot;gender&quot;</span>, <span class="st">&quot;Female&quot;</span>))[[<span class="dv">1</span>]]</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>frm_rtables_h</span></code></pre></div>
+<p>We can now spot check that the values are the same</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>frm_rtables_h <span class="ot">&lt;-</span> <span class="fu">cell_values</span>(tbl, <span class="at">rowpath =</span> <span class="fu">c</span>(<span class="st">&quot;country&quot;</span>, <span class="st">&quot;CAN&quot;</span>, <span class="st">&quot;handed&quot;</span>, <span class="st">&quot;Right&quot;</span>, <span class="st">&quot;@content&quot;</span>),</span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>                             <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;arm&quot;</span>, <span class="st">&quot;Arm B&quot;</span>, <span class="st">&quot;gender&quot;</span>, <span class="st">&quot;Female&quot;</span>))[[<span class="dv">1</span>]]</span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>frm_rtables_h</span></code></pre></div>
 <pre><code># [1] 20.0000000  0.2173913</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>frm_dplyr_h <span class="ot">&lt;-</span>  full_dplyr <span class="sc">%&gt;%</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span> <span class="sc">&amp;</span> handed <span class="sc">==</span> <span class="st">&quot;Right&quot;</span> <span class="sc">&amp;</span> arm <span class="sc">==</span> <span class="st">&quot;Arm B&quot;</span> <span class="sc">&amp;</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>           gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(c_h_count, c_h_percent)</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>frm_dplyr_h</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>frm_dplyr_h <span class="ot">&lt;-</span>  full_dplyr <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>    <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span> <span class="sc">&amp;</span> handed <span class="sc">==</span> <span class="st">&quot;Right&quot;</span> <span class="sc">&amp;</span> arm <span class="sc">==</span> <span class="st">&quot;Arm B&quot;</span> <span class="sc">&amp;</span></span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a>           gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a>    <span class="fu">select</span>(c_h_count, c_h_percent)</span>
+<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a>frm_dplyr_h</span></code></pre></div>
 <pre><code># # A tibble: 1 × 2
 #   c_h_count c_h_percent
 #       &lt;int&gt;       &lt;dbl&gt;
 # 1        20       0.217</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>frm_rtables_c <span class="ot">&lt;-</span>  <span class="fu">cell_values</span>(tbl, <span class="at">rowpath =</span> <span class="fu">c</span>(<span class="st">&quot;country&quot;</span>, <span class="st">&quot;CAN&quot;</span>, <span class="st">&quot;@content&quot;</span>),</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;arm&quot;</span>, <span class="st">&quot;Arm A&quot;</span>, <span class="st">&quot;gender&quot;</span>, <span class="st">&quot;Male&quot;</span>))[[<span class="dv">1</span>]]</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>frm_rtables_c</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>frm_rtables_c <span class="ot">&lt;-</span>  <span class="fu">cell_values</span>(tbl, <span class="at">rowpath =</span> <span class="fu">c</span>(<span class="st">&quot;country&quot;</span>, <span class="st">&quot;CAN&quot;</span>, <span class="st">&quot;@content&quot;</span>),</span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>                              <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;arm&quot;</span>, <span class="st">&quot;Arm A&quot;</span>, <span class="st">&quot;gender&quot;</span>, <span class="st">&quot;Male&quot;</span>))[[<span class="dv">1</span>]]</span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a>frm_rtables_c</span></code></pre></div>
 <pre><code># [1] 64.0000000  0.6095238</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>frm_dplyr_c <span class="ot">&lt;-</span> full_dplyr <span class="sc">%&gt;%</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span> <span class="sc">&amp;</span> arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">&quot;Male&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(c_count, c_percent)</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>frm_dplyr_c</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>frm_dplyr_c <span class="ot">&lt;-</span> full_dplyr <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>    <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span> <span class="sc">&amp;</span> arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span> <span class="sc">&amp;</span> gender <span class="sc">==</span> <span class="st">&quot;Male&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a>    <span class="fu">select</span>(c_count, c_percent)</span>
+<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a>frm_dplyr_c</span></code></pre></div>
 <pre><code># # A tibble: 2 × 2
 #   c_count c_percent
 #     &lt;int&gt;     &lt;dbl&gt;
