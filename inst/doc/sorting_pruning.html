@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker, Adrian Waddell and Davide Garolini" />
 
-<meta name="date" content="2023-08-30" />
+<meta name="date" content="2023-12-07" />
 
 <title>Pruning and Sorting Tables</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Pruning and Sorting Tables</h1>
 <h4 class="author">Gabriel Becker, Adrian Waddell and Davide
 Garolini</h4>
-<h4 class="date">2023-08-30</h4>
+<h4 class="date">2023-12-07</h4>
 
 
 
@@ -721,12 +721,13 @@ definition, below:</p>
 <pre><code># function (tt) 
 # {
 #     ctab &lt;- content_table(tt)
-#     if (NROW(ctab) == 0) 
+#     if (NROW(ctab) == 0) {
 #         stop(&quot;cont_n_allcols score function used at subtable [&quot;, 
 #             obj_name(tt), &quot;] that has no content table.&quot;)
+#     }
 #     sum(sapply(row_values(tree_children(ctab)[[1]]), function(cv) cv[1]))
 # }
-# &lt;bytecode: 0x5633fb0ea4a8&gt;
+# &lt;bytecode: 0x55c867577400&gt;
 # &lt;environment: namespace:rtables&gt;</code></pre>
 <p>Therefore, a fundamental difference between pruning and sorting is
 that sorting occurs at particular places in the table, as defined by a
@@ -1095,13 +1096,14 @@ proceed.</p>
 # {
 #     function(tt) {
 #         ctab &lt;- content_table(tt)
-#         if (NROW(ctab) == 0) 
+#         if (NROW(ctab) == 0) {
 #             stop(&quot;cont_n_allcols score function used at subtable [&quot;, 
 #                 obj_name(tt), &quot;] that has no content table.&quot;)
+#         }
 #         row_values(tree_children(ctab)[[1]])[[j]][1]
 #     }
 # }
-# &lt;bytecode: 0x5633fc281598&gt;
+# &lt;bytecode: 0x55c8606d6a98&gt;
 # &lt;environment: namespace:rtables&gt;</code></pre>
 <p>We see that a similar function to <code>cont_n_allcols()</code> is
 wrapped by one that allows a parameter <code>j</code> to be used to
@@ -1113,8 +1115,7 @@ column we want to sort.</p>
 <span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a>    <span class="fu">unlist</span>(<span class="fu">cell_values</span>(tt, <span class="at">colpath =</span> colpath), <span class="at">use.names =</span> <span class="cn">FALSE</span>)[<span class="dv">1</span>] <span class="co"># Modified to lose the list names</span></span>
 <span id="cb46-5"><a href="#cb46-5" tabindex="-1"></a>  }</span>
 <span id="cb46-6"><a href="#cb46-6" tabindex="-1"></a>}</span>
-<span id="cb46-7"><a href="#cb46-7" tabindex="-1"></a><span class="fu">sort_at_path</span>(tbl, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;AGE&quot;</span>),</span>
-<span id="cb46-8"><a href="#cb46-8" tabindex="-1"></a>             <span class="fu">scorefun_onecol</span>(<span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>)))</span></code></pre></div>
+<span id="cb46-7"><a href="#cb46-7" tabindex="-1"></a><span class="fu">sort_at_path</span>(tbl, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;AGE&quot;</span>), <span class="fu">scorefun_onecol</span>(<span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>)))</span></code></pre></div>
 <pre><code>#                             A: Drug X    B: Placebo   C: Combination
 # ————————————————————————————————————————————————————————————————————
 # ASIAN                       79 (65.3%)   68 (64.2%)     84 (65.1%)  
@@ -1157,8 +1158,7 @@ nested within larger splits:</p>
 # —————————————————————————————————————————————————————————
 # median   32.0    35.0   33.0    31.0     35.0      32.0  
 # mean     33.7    36.5   33.8    32.1     34.9      34.3</code></pre>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="fu">sort_at_path</span>(tbl, <span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>),</span>
-<span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a>             <span class="fu">scorefun_onecol</span>(<span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;B: Placebo&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="fu">sort_at_path</span>(tbl, <span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>), <span class="fu">scorefun_onecol</span>(<span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;B: Placebo&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span></code></pre></div>
 <pre><code>#           A: Drug X      B: Placebo      C: Combination  
 #            F      M       F       M        F         M   
 # —————————————————————————————————————————————————————————
@@ -1263,14 +1263,20 @@ do inside custom sorting functions.</p>
 <span id="cb55-3"><a href="#cb55-3" tabindex="-1"></a>  rpath <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">obj_name</span>(tt), <span class="st">&quot;@content&quot;</span>, <span class="fu">obj_name</span>(tt))</span>
 <span id="cb55-4"><a href="#cb55-4" tabindex="-1"></a>  <span class="do">## the [1] below is cause these are count (pct%) cells</span></span>
 <span id="cb55-5"><a href="#cb55-5" tabindex="-1"></a>  <span class="do">## and we only want the count part!</span></span>
-<span id="cb55-6"><a href="#cb55-6" tabindex="-1"></a>  mcount <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">cell_values</span>(tt, <span class="at">rowpath =</span> rpath,</span>
-<span id="cb55-7"><a href="#cb55-7" tabindex="-1"></a>                               <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;M&quot;</span>)))[<span class="dv">1</span>]</span>
-<span id="cb55-8"><a href="#cb55-8" tabindex="-1"></a>  fcount <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">cell_values</span>(tt, <span class="at">rowpath =</span> rpath,</span>
-<span id="cb55-9"><a href="#cb55-9" tabindex="-1"></a>                               <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)))[<span class="dv">1</span>]</span>
-<span id="cb55-10"><a href="#cb55-10" tabindex="-1"></a>  (mcount <span class="sc">-</span> fcount) <span class="sc">/</span> fcount</span>
-<span id="cb55-11"><a href="#cb55-11" tabindex="-1"></a>}</span>
-<span id="cb55-12"><a href="#cb55-12" tabindex="-1"></a></span>
-<span id="cb55-13"><a href="#cb55-13" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), silly_gender_diffcount)</span></code></pre></div>
+<span id="cb55-6"><a href="#cb55-6" tabindex="-1"></a>  mcount <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">cell_values</span>(</span>
+<span id="cb55-7"><a href="#cb55-7" tabindex="-1"></a>    tt,</span>
+<span id="cb55-8"><a href="#cb55-8" tabindex="-1"></a>    <span class="at">rowpath =</span> rpath,</span>
+<span id="cb55-9"><a href="#cb55-9" tabindex="-1"></a>    <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;M&quot;</span>)</span>
+<span id="cb55-10"><a href="#cb55-10" tabindex="-1"></a>  ))[<span class="dv">1</span>]</span>
+<span id="cb55-11"><a href="#cb55-11" tabindex="-1"></a>  fcount <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">cell_values</span>(</span>
+<span id="cb55-12"><a href="#cb55-12" tabindex="-1"></a>    tt,</span>
+<span id="cb55-13"><a href="#cb55-13" tabindex="-1"></a>    <span class="at">rowpath =</span> rpath,</span>
+<span id="cb55-14"><a href="#cb55-14" tabindex="-1"></a>    <span class="at">colpath =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)</span>
+<span id="cb55-15"><a href="#cb55-15" tabindex="-1"></a>  ))[<span class="dv">1</span>]</span>
+<span id="cb55-16"><a href="#cb55-16" tabindex="-1"></a>  (mcount <span class="sc">-</span> fcount) <span class="sc">/</span> fcount</span>
+<span id="cb55-17"><a href="#cb55-17" tabindex="-1"></a>}</span>
+<span id="cb55-18"><a href="#cb55-18" tabindex="-1"></a></span>
+<span id="cb55-19"><a href="#cb55-19" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), silly_gender_diffcount)</span></code></pre></div>
 <pre><code>#                                    A: Drug X                B: Placebo              C: Combination     
 #                                 F            M            F            M            F            M     
 # ———————————————————————————————————————————————————————————————————————————————————————————————————————

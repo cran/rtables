@@ -12,7 +12,7 @@
 
 <meta name="author" content="Davide Garolini, Abinaya Yogasekaram, and Gabriel Becker" />
 
-<meta name="date" content="2023-08-30" />
+<meta name="date" content="2023-12-07" />
 
 <title>Customizing Appearance</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Customizing Appearance</h1>
 <h4 class="author">Davide Garolini, Abinaya Yogasekaram, and Gabriel
 Becker</h4>
-<h4 class="date">2023-08-30</h4>
+<h4 class="date">2023-12-07</h4>
 
 
 
@@ -612,19 +612,23 @@ during post-processing with <code>table_inset()</code>.</p>
 the inset of the table and main footer between the two tables.</p>
 <p>Without inset -</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>analysisfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...) {</span>
-<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="at">row1 =</span> <span class="dv">5</span>,</span>
-<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>            <span class="at">row2 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>            <span class="at">.row_footnotes =</span> <span class="fu">list</span>(<span class="at">row1 =</span> <span class="st">&quot;row 1 rfn&quot;</span>),</span>
-<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>            <span class="at">.cell_footnotes =</span> <span class="fu">list</span>(<span class="at">row2 =</span> <span class="st">&quot;row 2 cfn&quot;</span>))</span>
-<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>    }</span>
-<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">title =</span> <span class="st">&quot;Title says Whaaaat&quot;</span>, <span class="at">subtitles =</span> <span class="st">&quot;Oh, ok.&quot;</span>,</span>
-<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>                   <span class="at">main_footer =</span> <span class="st">&quot;ha HA! Footer!&quot;</span>, <span class="at">prov_footer =</span> <span class="st">&quot;provenaaaaance&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> analysisfun)</span>
-<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a></span>
-<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a>result <span class="ot">&lt;-</span>  <span class="fu">build_table</span>(lyt, ex_adsl)</span>
-<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a>result</span></code></pre></div>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>    <span class="at">row1 =</span> <span class="dv">5</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>    <span class="at">row2 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>    <span class="at">.row_footnotes =</span> <span class="fu">list</span>(<span class="at">row1 =</span> <span class="st">&quot;row 1 rfn&quot;</span>),</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>    <span class="at">.cell_footnotes =</span> <span class="fu">list</span>(<span class="at">row2 =</span> <span class="st">&quot;row 2 cfn&quot;</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>  )</span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>}</span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(</span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Title says Whaaaat&quot;</span>, <span class="at">subtitles =</span> <span class="st">&quot;Oh, ok.&quot;</span>,</span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="st">&quot;ha HA! Footer!&quot;</span>, <span class="at">prov_footer =</span> <span class="st">&quot;provenaaaaance&quot;</span></span>
+<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> analysisfun)</span>
+<span id="cb20-16"><a href="#cb20-16" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, ex_adsl)</span>
+<span id="cb20-18"><a href="#cb20-18" tabindex="-1"></a>result</span></code></pre></div>
 <pre><code># Title says Whaaaat
 # Oh, ok.
 # 
@@ -632,13 +636,11 @@ the inset of the table and main footer between the two tables.</p>
 #            A: Drug X   B: Placebo   C: Combination
 # ——————————————————————————————————————————————————
 # row1 {1}       5           5              5       
-# row2       1, 2 {2}     1, 2 {3}       1, 2 {4}   
+# row2       1, 2 {2}     1, 2 {2}       1, 2 {2}   
 # ——————————————————————————————————————————————————
 # 
 # {1} - row 1 rfn
 # {2} - row 2 cfn
-# {3} - row 2 cfn
-# {4} - row 2 cfn
 # ——————————————————————————————————————————————————
 # 
 # ha HA! Footer!
@@ -658,13 +660,11 @@ materials and any horizontal dividers.</p>
 #                 A: Drug X   B: Placebo   C: Combination
 #      ——————————————————————————————————————————————————
 #      row1 {1}       5           5              5       
-#      row2       1, 2 {2}     1, 2 {3}       1, 2 {4}   
+#      row2       1, 2 {2}     1, 2 {2}       1, 2 {2}   
 #      ——————————————————————————————————————————————————
 # 
 #      {1} - row 1 rfn
 #      {2} - row 2 cfn
-#      {3} - row 2 cfn
-#      {4} - row 2 cfn
 #      ——————————————————————————————————————————————————
 # 
 #      ha HA! Footer!
@@ -731,18 +731,22 @@ the end of the table is never printed.</p>
 # ——————————————————————————————————————————————————————
 # Sepal.Length                                          
 #   mean / sd    5.01 (0.35)   5.94 (0.52)   6.59 (0.64)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #   range           1.50          2.10          3.00    
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Sepal.Width                                           
 #   mean / sd    3.43 (0.38)   2.77 (0.31)   2.97 (0.32)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #   range           2.10          1.40          1.60    
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Petal.Length                                          
 #   mean / sd    1.46 (0.17)   4.26 (0.47)   5.55 (0.55)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #   range           0.90          2.10          2.40    
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Petal.Width                                           
 #   mean / sd    0.25 (0.11)   1.33 (0.20)   2.03 (0.27)
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #   range           0.50          0.80          1.10</code></pre>
 <p>Section dividers can be set to ” ” to create a blank line.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -759,18 +763,22 @@ the end of the table is never printed.</p>
 # ——————————————————————————————————————————————————————
 # Sepal.Length                                          
 #   mean / sd    5.01 (0.35)   5.94 (0.52)   6.59 (0.64)
+#                                                       
 #   range           1.50          2.10          3.00    
 #                                                       
 # Sepal.Width                                           
 #   mean / sd    3.43 (0.38)   2.77 (0.31)   2.97 (0.32)
+#                                                       
 #   range           2.10          1.40          1.60    
 #                                                       
 # Petal.Length                                          
 #   mean / sd    1.46 (0.17)   4.26 (0.47)   5.55 (0.55)
+#                                                       
 #   range           0.90          2.10          2.40    
 #                                                       
 # Petal.Width                                           
 #   mean / sd    0.25 (0.11)   1.33 (0.20)   2.03 (0.27)
+#                                                       
 #   range           0.50          0.80          1.10</code></pre>
 <p>Separation characters can be specified for different row splits.
 However, only one will be printed if they “pile up” next to each
@@ -997,7 +1005,7 @@ rows.</p>
 <span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">show_labels =</span> <span class="st">&quot;default&quot;</span>)</span>
 <span id="cb36-6"><a href="#cb36-6" tabindex="-1"></a></span>
-<span id="cb36-7"><a href="#cb36-7" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM) </span></code></pre></div>
+<span id="cb36-7"><a href="#cb36-7" tabindex="-1"></a><span class="fu">build_table</span>(lyt, DM)</span></code></pre></div>
 <pre><code>#               A: Drug X          B: Placebo       C: Combination 
 #                (N=121)            (N=106)            (N=129)     
 # —————————————————————————————————————————————————————————————————
@@ -1025,7 +1033,7 @@ Override this by setting the <code>show_labels</code> argument as
 <span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb38-5"><a href="#cb38-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, mean, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
 <span id="cb38-6"><a href="#cb38-6" tabindex="-1"></a></span>
-<span id="cb38-7"><a href="#cb38-7" tabindex="-1"></a><span class="fu">build_table</span>(lyt2, DM) </span></code></pre></div>
+<span id="cb38-7"><a href="#cb38-7" tabindex="-1"></a><span class="fu">build_table</span>(lyt2, DM)</span></code></pre></div>
 <pre><code>#               A: Drug X          B: Placebo       C: Combination 
 #                (N=121)            (N=106)            (N=129)     
 # —————————————————————————————————————————————————————————————————
@@ -1139,25 +1147,28 @@ titles/footers.</p>
 section we aim to render this table with a reduced width since the table
 has very wide contents in several cells, labels, and titles/footers.</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a>trimmed_data <span class="ot">&lt;-</span> ex_adsl <span class="sc">%&gt;%</span></span>
-<span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a>    <span class="fu">filter</span>(SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a>    <span class="fu">filter</span>(RACE <span class="sc">%in%</span> <span class="fu">levels</span>(RACE)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span>
+<span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a>  <span class="fu">filter</span>(SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a>  <span class="fu">filter</span>(RACE <span class="sc">%in%</span> <span class="fu">levels</span>(RACE)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span>
 <span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a></span>
 <span id="cb44-5"><a href="#cb44-5" tabindex="-1"></a><span class="fu">levels</span>(trimmed_data<span class="sc">$</span>ARM)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Incredibly long column name to be wrapped&quot;</span></span>
 <span id="cb44-6"><a href="#cb44-6" tabindex="-1"></a><span class="fu">levels</span>(trimmed_data<span class="sc">$</span>ARM)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;This_column_name_should_be_split_somewhere&quot;</span></span>
 <span id="cb44-7"><a href="#cb44-7" tabindex="-1"></a></span>
 <span id="cb44-8"><a href="#cb44-8" tabindex="-1"></a>wide_tbl <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(</span>
-<span id="cb44-9"><a href="#cb44-9" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Title that is too long and also needs to be wrapped to a smaller width&quot;</span>,</span>
-<span id="cb44-10"><a href="#cb44-10" tabindex="-1"></a>    <span class="at">subtitles =</span> <span class="st">&quot;Subtitle that is also long and also needs to be wrapped to a smaller width&quot;</span>,</span>
-<span id="cb44-11"><a href="#cb44-11" tabindex="-1"></a>    <span class="at">main_footer =</span> <span class="st">&quot;Footnote that is wider than expected for this table.&quot;</span>,</span>
-<span id="cb44-12"><a href="#cb44-12" tabindex="-1"></a>    <span class="at">prov_footer =</span> <span class="st">&quot;Provenance footer material that is also wider than expected for this table.&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb44-13"><a href="#cb44-13" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb44-14"><a href="#cb44-14" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
-<span id="cb44-15"><a href="#cb44-15" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;EOSDY&quot;</span>),</span>
-<span id="cb44-16"><a href="#cb44-16" tabindex="-1"></a>            <span class="at">na_str =</span> <span class="st">&quot;Very long cell contents to_be_wrapped_and_splitted&quot;</span>,</span>
-<span id="cb44-17"><a href="#cb44-17" tabindex="-1"></a>            <span class="at">inclNAs =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb44-18"><a href="#cb44-18" tabindex="-1"></a>    <span class="fu">build_table</span>(trimmed_data)</span>
-<span id="cb44-19"><a href="#cb44-19" tabindex="-1"></a></span>
-<span id="cb44-20"><a href="#cb44-20" tabindex="-1"></a>wide_tbl</span></code></pre></div>
+<span id="cb44-9"><a href="#cb44-9" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Title that is too long and also needs to be wrapped to a smaller width&quot;</span>,</span>
+<span id="cb44-10"><a href="#cb44-10" tabindex="-1"></a>  <span class="at">subtitles =</span> <span class="st">&quot;Subtitle that is also long and also needs to be wrapped to a smaller width&quot;</span>,</span>
+<span id="cb44-11"><a href="#cb44-11" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="st">&quot;Footnote that is wider than expected for this table.&quot;</span>,</span>
+<span id="cb44-12"><a href="#cb44-12" tabindex="-1"></a>  <span class="at">prov_footer =</span> <span class="st">&quot;Provenance footer material that is also wider than expected for this table.&quot;</span></span>
+<span id="cb44-13"><a href="#cb44-13" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-14"><a href="#cb44-14" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-15"><a href="#cb44-15" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
+<span id="cb44-16"><a href="#cb44-16" tabindex="-1"></a>  <span class="fu">analyze</span>(</span>
+<span id="cb44-17"><a href="#cb44-17" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;EOSDY&quot;</span>),</span>
+<span id="cb44-18"><a href="#cb44-18" tabindex="-1"></a>    <span class="at">na_str =</span> <span class="st">&quot;Very long cell contents to_be_wrapped_and_splitted&quot;</span>,</span>
+<span id="cb44-19"><a href="#cb44-19" tabindex="-1"></a>    <span class="at">inclNAs =</span> <span class="cn">TRUE</span></span>
+<span id="cb44-20"><a href="#cb44-20" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb44-21"><a href="#cb44-21" tabindex="-1"></a>  <span class="fu">build_table</span>(trimmed_data)</span>
+<span id="cb44-22"><a href="#cb44-22" tabindex="-1"></a></span>
+<span id="cb44-23"><a href="#cb44-23" tabindex="-1"></a>wide_tbl</span></code></pre></div>
 <pre><code># Title that is too long and also needs to be wrapped to a smaller width
 # Subtitle that is also long and also needs to be wrapped to a smaller width
 # 
@@ -1222,8 +1233,8 @@ customized via the <code>col_gap</code> argument to
 #  [5,] &quot;             Incredib   This_col           &quot;                                
 #  [6,] &quot;             ly long    umn_name           &quot;                                
 #  [7,] &quot;              column    _should_           &quot;                                
-#  [8,] &quot;             name to    be_split           &quot;                                
-#  [9,] &quot;                be      _somewhe   C: Combi&quot;                                
+#  [8,] &quot;               name     be_split           &quot;                                
+#  [9,] &quot;              to be     _somewhe   C: Combi&quot;                                
 # [10,] &quot;             wrapped       re       nation &quot;                                
 # [11,] &quot;———————————————————————————————————————————&quot;                                
 # [12,] &quot;ASIAN                                      &quot;                                
@@ -1272,12 +1283,14 @@ for titles/footers. The four <code>export_as_*</code> functions and
 the same two arguments. In the following code, we set
 <code>max_width = 43</code> so that the rendered table and all of its
 annotations have a maximum width of 43 characters.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a>result_wrap_cells_tf <span class="ot">&lt;-</span> <span class="fu">toString</span>(wide_tbl,</span>
-<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>                                 <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>),</span>
-<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a>                                 <span class="at">tf_wrap =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a>                                 <span class="at">max_width =</span> <span class="dv">43</span>)</span>
-<span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a>matrix_wrap_cells_tf <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">strsplit</span>(result_wrap_cells_tf, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)[[<span class="dv">1</span>]], <span class="at">ncol =</span> <span class="dv">1</span>)</span>
-<span id="cb48-6"><a href="#cb48-6" tabindex="-1"></a>matrix_wrap_cells_tf</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a>result_wrap_cells_tf <span class="ot">&lt;-</span> <span class="fu">toString</span>(</span>
+<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>  wide_tbl,</span>
+<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a>  <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>),</span>
+<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a>  <span class="at">tf_wrap =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a>  <span class="at">max_width =</span> <span class="dv">43</span></span>
+<span id="cb48-6"><a href="#cb48-6" tabindex="-1"></a>)</span>
+<span id="cb48-7"><a href="#cb48-7" tabindex="-1"></a>matrix_wrap_cells_tf <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">strsplit</span>(result_wrap_cells_tf, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)[[<span class="dv">1</span>]], <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb48-8"><a href="#cb48-8" tabindex="-1"></a>matrix_wrap_cells_tf</span></code></pre></div>
 <pre><code>#       [,1]                                         
 #  [1,] &quot;Title that is too long and also needs to be&quot;
 #  [2,] &quot;wrapped to a smaller width&quot;                 
@@ -1288,8 +1301,8 @@ annotations have a maximum width of 43 characters.</p>
 #  [7,] &quot;             Incredib   This_col           &quot;
 #  [8,] &quot;             ly long    umn_name           &quot;
 #  [9,] &quot;              column    _should_           &quot;
-# [10,] &quot;             name to    be_split           &quot;
-# [11,] &quot;                be      _somewhe   C: Combi&quot;
+# [10,] &quot;               name     be_split           &quot;
+# [11,] &quot;              to be     _somewhe   C: Combi&quot;
 # [12,] &quot;             wrapped       re       nation &quot;
 # [13,] &quot;———————————————————————————————————————————&quot;
 # [14,] &quot;ASIAN                                      &quot;

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2023-08-30" />
+<meta name="date" content="2023-12-07" />
 
 <title>Example Clinical Trials Tables</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Example Clinical Trials Tables</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2023-08-30</h4>
+<h4 class="date">2023-12-07</h4>
 
 
 
@@ -379,7 +379,7 @@ population subsets (encoded in the columns).</p>
 <p>One feature of <code>analyze()</code> that we have not introduced in
 the previous vignette is that the analysis function <code>afun</code>
 can specify multiple rows with the <code>in_rows()</code> function:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>ADSL <span class="ot">&lt;-</span> ex_adsl  <span class="co"># Example ADSL dataset</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>ADSL <span class="ot">&lt;-</span> ex_adsl <span class="co"># Example ADSL dataset</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -746,7 +746,7 @@ has to be set to <code>FALSE</code> in <code>analyze()</code> call:</p>
 <span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="at">var =</span> <span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">labels_var =</span> <span class="st">&quot;lbl_sex&quot;</span>, <span class="at">split_fun =</span> drop_split_levels, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, s_summary, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;BMRKR2&quot;</span>, s_summary, <span class="at">nested =</span> <span class="cn">FALSE</span>,  <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;BMRKR2&quot;</span>, s_summary, <span class="at">nested =</span> <span class="cn">FALSE</span>, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
 <span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a></span>
 <span id="cb29-7"><a href="#cb29-7" tabindex="-1"></a>tbl5 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt5, ADSL_M_F_l)</span>
 <span id="cb29-8"><a href="#cb29-8" tabindex="-1"></a>tbl5</span></code></pre></div>
@@ -785,13 +785,17 @@ missing data to the <code>AGE</code> variable:</p>
 <span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a></span>
 <span id="cb31-10"><a href="#cb31-10" tabindex="-1"></a>lyt6 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb31-11"><a href="#cb31-11" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="at">var =</span> <span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb31-12"><a href="#cb31-12" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">labels_var =</span> <span class="st">&quot;lbl_sex&quot;</span>,</span>
-<span id="cb31-13"><a href="#cb31-13" tabindex="-1"></a>                <span class="at">split_fun =</span> drop_split_levels, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb31-14"><a href="#cb31-14" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, s_summary) <span class="sc">%&gt;%</span></span>
-<span id="cb31-15"><a href="#cb31-15" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;BMRKR2&quot;</span>, s_summary, <span class="at">nested =</span> <span class="cn">FALSE</span>,  <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
-<span id="cb31-16"><a href="#cb31-16" tabindex="-1"></a></span>
-<span id="cb31-17"><a href="#cb31-17" tabindex="-1"></a>tbl6 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt6, <span class="fu">filter</span>(ADSL_NA, SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span>
-<span id="cb31-18"><a href="#cb31-18" tabindex="-1"></a>tbl6</span></code></pre></div>
+<span id="cb31-12"><a href="#cb31-12" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(</span>
+<span id="cb31-13"><a href="#cb31-13" tabindex="-1"></a>    <span class="st">&quot;SEX&quot;</span>,</span>
+<span id="cb31-14"><a href="#cb31-14" tabindex="-1"></a>    <span class="at">labels_var =</span> <span class="st">&quot;lbl_sex&quot;</span>,</span>
+<span id="cb31-15"><a href="#cb31-15" tabindex="-1"></a>    <span class="at">split_fun =</span> drop_split_levels,</span>
+<span id="cb31-16"><a href="#cb31-16" tabindex="-1"></a>    <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span></span>
+<span id="cb31-17"><a href="#cb31-17" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb31-18"><a href="#cb31-18" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, s_summary) <span class="sc">%&gt;%</span></span>
+<span id="cb31-19"><a href="#cb31-19" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;BMRKR2&quot;</span>, s_summary, <span class="at">nested =</span> <span class="cn">FALSE</span>, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
+<span id="cb31-20"><a href="#cb31-20" tabindex="-1"></a></span>
+<span id="cb31-21"><a href="#cb31-21" tabindex="-1"></a>tbl6 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt6, <span class="fu">filter</span>(ADSL_NA, SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span>
+<span id="cb31-22"><a href="#cb31-22" tabindex="-1"></a>tbl6</span></code></pre></div>
 <pre><code>#                 A: Drug X      B: Placebo     C: Combination
 #                  (N=130)         (N=132)         (N=126)    
 # ————————————————————————————————————————————————————————————
@@ -817,9 +821,9 @@ for example:</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>lyt7 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="at">var =</span> <span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">labels_var =</span> <span class="st">&quot;lbl_sex&quot;</span>, <span class="at">split_fun =</span> drop_split_levels) <span class="sc">%&gt;%</span></span>
-<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>()  <span class="sc">%&gt;%</span></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, s_summary) <span class="sc">%&gt;%</span></span>
-<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;BMRKR2&quot;</span>, <span class="at">afun =</span> s_summary, <span class="at">nested =</span> <span class="cn">FALSE</span>,  <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;BMRKR2&quot;</span>, <span class="at">afun =</span> s_summary, <span class="at">nested =</span> <span class="cn">FALSE</span>, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
 <span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a></span>
 <span id="cb33-8"><a href="#cb33-8" tabindex="-1"></a>tbl7 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt7, <span class="fu">filter</span>(ADSL_NA, SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span>
 <span id="cb33-9"><a href="#cb33-9" tabindex="-1"></a>tbl7</span></code></pre></div>
@@ -862,9 +866,9 @@ same table as above:</p>
 <span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a>      <span class="fu">rcell</span>(<span class="fu">nrow</span>(df) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>),</span>
 <span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a>      <span class="at">.labels =</span> labelstr</span>
 <span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a>    )</span>
-<span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a>  })  <span class="sc">%&gt;%</span></span>
+<span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
 <span id="cb35-10"><a href="#cb35-10" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, s_summary) <span class="sc">%&gt;%</span></span>
-<span id="cb35-11"><a href="#cb35-11" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;BEP01FL&quot;</span>, <span class="at">afun =</span> s_summary, <span class="at">nested =</span> <span class="cn">FALSE</span>,  <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
+<span id="cb35-11"><a href="#cb35-11" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;BEP01FL&quot;</span>, <span class="at">afun =</span> s_summary, <span class="at">nested =</span> <span class="cn">FALSE</span>, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
 <span id="cb35-12"><a href="#cb35-12" tabindex="-1"></a></span>
 <span id="cb35-13"><a href="#cb35-13" tabindex="-1"></a>tbl8 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt8, <span class="fu">filter</span>(ADSL_NA, SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span>
 <span id="cb35-14"><a href="#cb35-14" tabindex="-1"></a>tbl8</span></code></pre></div>
@@ -897,10 +901,10 @@ from splitting) and hence it could be modified:</p>
 <span id="cb37-3"><a href="#cb37-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">labels_var =</span> <span class="st">&quot;lbl_sex&quot;</span>, <span class="at">split_fun =</span> drop_split_levels, <span class="at">child_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb37-4"><a href="#cb37-4" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> <span class="cf">function</span>(df, labelstr, .N_col, ...) {</span>
 <span id="cb37-5"><a href="#cb37-5" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
-<span id="cb37-6"><a href="#cb37-6" tabindex="-1"></a>       <span class="fu">rcell</span>(<span class="fu">nrow</span>(df) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>),</span>
-<span id="cb37-7"><a href="#cb37-7" tabindex="-1"></a>       <span class="at">.labels =</span> <span class="fu">paste0</span>(labelstr, <span class="st">&quot;: count (perc.)&quot;</span>)</span>
+<span id="cb37-6"><a href="#cb37-6" tabindex="-1"></a>      <span class="fu">rcell</span>(<span class="fu">nrow</span>(df) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>),</span>
+<span id="cb37-7"><a href="#cb37-7" tabindex="-1"></a>      <span class="at">.labels =</span> <span class="fu">paste0</span>(labelstr, <span class="st">&quot;: count (perc.)&quot;</span>)</span>
 <span id="cb37-8"><a href="#cb37-8" tabindex="-1"></a>    )</span>
-<span id="cb37-9"><a href="#cb37-9" tabindex="-1"></a>  })  <span class="sc">%&gt;%</span></span>
+<span id="cb37-9"><a href="#cb37-9" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
 <span id="cb37-10"><a href="#cb37-10" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, s_summary) <span class="sc">%&gt;%</span></span>
 <span id="cb37-11"><a href="#cb37-11" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;BEP01FL&quot;</span>, s_summary, <span class="at">nested =</span> <span class="cn">FALSE</span>, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
 <span id="cb37-12"><a href="#cb37-12" tabindex="-1"></a></span>
@@ -1054,31 +1058,34 @@ but rather generate a dataset on the fly (see <a href="https://github.com/waddel
 <span id="cb48-27"><a href="#cb48-27" tabindex="-1"></a>  <span class="at">AGE =</span> <span class="dv">20</span> <span class="sc">+</span> <span class="fu">rbinom</span>(N_pop, <span class="at">size =</span> <span class="dv">40</span>, <span class="at">prob =</span> <span class="fl">0.7</span>)</span>
 <span id="cb48-28"><a href="#cb48-28" tabindex="-1"></a>)</span>
 <span id="cb48-29"><a href="#cb48-29" tabindex="-1"></a></span>
-<span id="cb48-30"><a href="#cb48-30" tabindex="-1"></a>l.adae <span class="ot">&lt;-</span> <span class="fu">mapply</span>(ADSL2<span class="sc">$</span>USUBJID,</span>
-<span id="cb48-31"><a href="#cb48-31" tabindex="-1"></a>                 ADSL2<span class="sc">$</span>ARM,</span>
-<span id="cb48-32"><a href="#cb48-32" tabindex="-1"></a>                 ADSL2<span class="sc">$</span>SEX,</span>
-<span id="cb48-33"><a href="#cb48-33" tabindex="-1"></a>                 ADSL2<span class="sc">$</span>AGE,</span>
-<span id="cb48-34"><a href="#cb48-34" tabindex="-1"></a>                 <span class="at">FUN =</span> <span class="cf">function</span>(id, arm, sex, age) {</span>
-<span id="cb48-35"><a href="#cb48-35" tabindex="-1"></a>  n_ae <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">25</span>, <span class="dv">1</span>, <span class="at">prob =</span> <span class="cf">if</span> (arm <span class="sc">==</span> <span class="st">&quot;ARM A&quot;</span>) weightsA <span class="cf">else</span> weightsB)</span>
-<span id="cb48-36"><a href="#cb48-36" tabindex="-1"></a>  i <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(lookup)), <span class="at">size =</span> n_ae, <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">10</span>)) <span class="sc">/</span> <span class="dv">16</span>)</span>
-<span id="cb48-37"><a href="#cb48-37" tabindex="-1"></a>  lookup[i, ] <span class="sc">%&gt;%</span></span>
-<span id="cb48-38"><a href="#cb48-38" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb48-39"><a href="#cb48-39" tabindex="-1"></a>      <span class="at">AESEQ =</span> <span class="fu">seq_len</span>(<span class="fu">n</span>()),</span>
-<span id="cb48-40"><a href="#cb48-40" tabindex="-1"></a>      <span class="at">USUBJID =</span> id, <span class="at">ARM =</span> arm, <span class="at">SEX =</span> sex, <span class="at">AGE =</span> age</span>
-<span id="cb48-41"><a href="#cb48-41" tabindex="-1"></a>    )</span>
-<span id="cb48-42"><a href="#cb48-42" tabindex="-1"></a>}, <span class="at">SIMPLIFY =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb48-43"><a href="#cb48-43" tabindex="-1"></a></span>
-<span id="cb48-44"><a href="#cb48-44" tabindex="-1"></a>ADAE2 <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, l.adae)</span>
-<span id="cb48-45"><a href="#cb48-45" tabindex="-1"></a>ADAE2 <span class="ot">&lt;-</span> ADAE2 <span class="sc">%&gt;%</span></span>
-<span id="cb48-46"><a href="#cb48-46" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb48-47"><a href="#cb48-47" tabindex="-1"></a>    <span class="at">ARM =</span> <span class="fu">factor</span>(ARM, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;ARM A&quot;</span>, <span class="st">&quot;ARM B&quot;</span>)),</span>
-<span id="cb48-48"><a href="#cb48-48" tabindex="-1"></a>    <span class="at">AEDECOD =</span> <span class="fu">as.factor</span>(AEDECOD),</span>
-<span id="cb48-49"><a href="#cb48-49" tabindex="-1"></a>    <span class="at">AEBODSYS =</span> <span class="fu">as.factor</span>(AEBODSYS),</span>
-<span id="cb48-50"><a href="#cb48-50" tabindex="-1"></a>    <span class="at">AETOXGR =</span> <span class="fu">factor</span>(AETOXGR, <span class="at">levels =</span> <span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span>
-<span id="cb48-51"><a href="#cb48-51" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb48-52"><a href="#cb48-52" tabindex="-1"></a>  <span class="fu">select</span>(USUBJID, ARM, AGE, SEX, AESEQ, AEDECOD, AEBODSYS, AETOXGR)</span>
-<span id="cb48-53"><a href="#cb48-53" tabindex="-1"></a></span>
-<span id="cb48-54"><a href="#cb48-54" tabindex="-1"></a>ADAE2</span></code></pre></div>
+<span id="cb48-30"><a href="#cb48-30" tabindex="-1"></a>l.adae <span class="ot">&lt;-</span> <span class="fu">mapply</span>(</span>
+<span id="cb48-31"><a href="#cb48-31" tabindex="-1"></a>  ADSL2<span class="sc">$</span>USUBJID,</span>
+<span id="cb48-32"><a href="#cb48-32" tabindex="-1"></a>  ADSL2<span class="sc">$</span>ARM,</span>
+<span id="cb48-33"><a href="#cb48-33" tabindex="-1"></a>  ADSL2<span class="sc">$</span>SEX,</span>
+<span id="cb48-34"><a href="#cb48-34" tabindex="-1"></a>  ADSL2<span class="sc">$</span>AGE,</span>
+<span id="cb48-35"><a href="#cb48-35" tabindex="-1"></a>  <span class="at">FUN =</span> <span class="cf">function</span>(id, arm, sex, age) {</span>
+<span id="cb48-36"><a href="#cb48-36" tabindex="-1"></a>    n_ae <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">25</span>, <span class="dv">1</span>, <span class="at">prob =</span> <span class="cf">if</span> (arm <span class="sc">==</span> <span class="st">&quot;ARM A&quot;</span>) weightsA <span class="cf">else</span> weightsB)</span>
+<span id="cb48-37"><a href="#cb48-37" tabindex="-1"></a>    i <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(lookup)), <span class="at">size =</span> n_ae, <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">10</span>)) <span class="sc">/</span> <span class="dv">16</span>)</span>
+<span id="cb48-38"><a href="#cb48-38" tabindex="-1"></a>    lookup[i, ] <span class="sc">%&gt;%</span></span>
+<span id="cb48-39"><a href="#cb48-39" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb48-40"><a href="#cb48-40" tabindex="-1"></a>        <span class="at">AESEQ =</span> <span class="fu">seq_len</span>(<span class="fu">n</span>()),</span>
+<span id="cb48-41"><a href="#cb48-41" tabindex="-1"></a>        <span class="at">USUBJID =</span> id, <span class="at">ARM =</span> arm, <span class="at">SEX =</span> sex, <span class="at">AGE =</span> age</span>
+<span id="cb48-42"><a href="#cb48-42" tabindex="-1"></a>      )</span>
+<span id="cb48-43"><a href="#cb48-43" tabindex="-1"></a>  },</span>
+<span id="cb48-44"><a href="#cb48-44" tabindex="-1"></a>  <span class="at">SIMPLIFY =</span> <span class="cn">FALSE</span></span>
+<span id="cb48-45"><a href="#cb48-45" tabindex="-1"></a>)</span>
+<span id="cb48-46"><a href="#cb48-46" tabindex="-1"></a></span>
+<span id="cb48-47"><a href="#cb48-47" tabindex="-1"></a>ADAE2 <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, l.adae)</span>
+<span id="cb48-48"><a href="#cb48-48" tabindex="-1"></a>ADAE2 <span class="ot">&lt;-</span> ADAE2 <span class="sc">%&gt;%</span></span>
+<span id="cb48-49"><a href="#cb48-49" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb48-50"><a href="#cb48-50" tabindex="-1"></a>    <span class="at">ARM =</span> <span class="fu">factor</span>(ARM, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;ARM A&quot;</span>, <span class="st">&quot;ARM B&quot;</span>)),</span>
+<span id="cb48-51"><a href="#cb48-51" tabindex="-1"></a>    <span class="at">AEDECOD =</span> <span class="fu">as.factor</span>(AEDECOD),</span>
+<span id="cb48-52"><a href="#cb48-52" tabindex="-1"></a>    <span class="at">AEBODSYS =</span> <span class="fu">as.factor</span>(AEBODSYS),</span>
+<span id="cb48-53"><a href="#cb48-53" tabindex="-1"></a>    <span class="at">AETOXGR =</span> <span class="fu">factor</span>(AETOXGR, <span class="at">levels =</span> <span class="fu">as.character</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span>
+<span id="cb48-54"><a href="#cb48-54" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb48-55"><a href="#cb48-55" tabindex="-1"></a>  <span class="fu">select</span>(USUBJID, ARM, AGE, SEX, AESEQ, AEDECOD, AEBODSYS, AETOXGR)</span>
+<span id="cb48-56"><a href="#cb48-56" tabindex="-1"></a></span>
+<span id="cb48-57"><a href="#cb48-57" tabindex="-1"></a>ADAE2</span></code></pre></div>
 <pre><code># # A tibble: 3,118 × 8
 #    USUBJID ARM     AGE SEX   AESEQ AEDECOD               AEBODSYS        AETOXGR
 #      &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt; &lt;chr&gt; &lt;int&gt; &lt;fct&gt;                 &lt;fct&gt;           &lt;fct&gt;  
@@ -1100,10 +1107,9 @@ but rather generate a dataset on the fly (see <a href="https://github.com/waddel
 <span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
 <span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a>    <span class="st">&quot;Total number of patients with at least one event&quot;</span> <span class="ot">=</span></span>
 <span id="cb50-4"><a href="#cb50-4" tabindex="-1"></a>      <span class="fu">rcell</span>(<span class="fu">length</span>(<span class="fu">unique</span>(x)) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>),</span>
-<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a></span>
-<span id="cb50-6"><a href="#cb50-6" tabindex="-1"></a>    <span class="st">&quot;Total number of events&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">length</span>(x), <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>)</span>
-<span id="cb50-7"><a href="#cb50-7" tabindex="-1"></a>  )</span>
-<span id="cb50-8"><a href="#cb50-8" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a>    <span class="st">&quot;Total number of events&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">length</span>(x), <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" tabindex="-1"></a>  )</span>
+<span id="cb50-7"><a href="#cb50-7" tabindex="-1"></a>}</span></code></pre></div>
 <p>So, for a population of <code>5</code> patients where</p>
 <ul>
 <li>one patient has 2 <code>AE</code>s</li>
@@ -1164,7 +1170,7 @@ to <code>build_table()</code>, though specifying an
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a>adae_soc_lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb57-2"><a href="#cb57-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb57-3"><a href="#cb57-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;USUBJID&quot;</span>, s_events_patients) <span class="sc">%&gt;%</span></span>
-<span id="cb57-4"><a href="#cb57-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEBODSYS&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">nested =</span> <span class="cn">FALSE</span>)  <span class="sc">%&gt;%</span></span>
+<span id="cb57-4"><a href="#cb57-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEBODSYS&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">nested =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb57-5"><a href="#cb57-5" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="st">&quot;USUBJID&quot;</span>, <span class="at">cfun =</span> s_events_patients)</span>
 <span id="cb57-6"><a href="#cb57-6" tabindex="-1"></a></span>
 <span id="cb57-7"><a href="#cb57-7" tabindex="-1"></a>adae_soc_tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(adae_soc_lyt, ADAE2, <span class="at">alt_counts_df =</span> ADSL2)</span>
@@ -1192,7 +1198,7 @@ factor is to create the count table per level (using
 <code>rtab_inner</code>):</p>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a>adae_soc_lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb59-3"><a href="#cb59-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEBODSYS&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">1</span>)  <span class="sc">%&gt;%</span></span>
+<span id="cb59-3"><a href="#cb59-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEBODSYS&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb59-4"><a href="#cb59-4" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="st">&quot;USUBJID&quot;</span>, <span class="at">cfun =</span> s_events_patients) <span class="sc">%&gt;%</span></span>
 <span id="cb59-5"><a href="#cb59-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AEDECOD&quot;</span>, <span class="at">indent_mod =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
 <span id="cb59-6"><a href="#cb59-6" tabindex="-1"></a></span>
@@ -1265,19 +1271,18 @@ counts the total number of events and not the number of subjects for one
 or more events for a particular term. To get the correct table we need
 to write a custom analysis function:</p>
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a>table_count_once_per_id <span class="ot">&lt;-</span> <span class="cf">function</span>(df, <span class="at">termvar =</span> <span class="st">&quot;AEDECOD&quot;</span>, <span class="at">idvar =</span> <span class="st">&quot;USUBJID&quot;</span>) {</span>
-<span id="cb61-2"><a href="#cb61-2" tabindex="-1"></a></span>
-<span id="cb61-3"><a href="#cb61-3" tabindex="-1"></a>  x <span class="ot">&lt;-</span> df[[termvar]]</span>
-<span id="cb61-4"><a href="#cb61-4" tabindex="-1"></a>  id <span class="ot">&lt;-</span> df[[idvar]]</span>
-<span id="cb61-5"><a href="#cb61-5" tabindex="-1"></a></span>
-<span id="cb61-6"><a href="#cb61-6" tabindex="-1"></a>  counts <span class="ot">&lt;-</span> <span class="fu">table</span>(x[<span class="sc">!</span><span class="fu">duplicated</span>(id)])</span>
-<span id="cb61-7"><a href="#cb61-7" tabindex="-1"></a></span>
-<span id="cb61-8"><a href="#cb61-8" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
-<span id="cb61-9"><a href="#cb61-9" tabindex="-1"></a>    <span class="at">.list =</span> <span class="fu">as.vector</span>(counts),</span>
-<span id="cb61-10"><a href="#cb61-10" tabindex="-1"></a>    <span class="at">.labels =</span> <span class="fu">names</span>(counts)</span>
-<span id="cb61-11"><a href="#cb61-11" tabindex="-1"></a>  )</span>
-<span id="cb61-12"><a href="#cb61-12" tabindex="-1"></a>}</span>
-<span id="cb61-13"><a href="#cb61-13" tabindex="-1"></a></span>
-<span id="cb61-14"><a href="#cb61-14" tabindex="-1"></a><span class="fu">table_count_once_per_id</span>(ADAE2)</span></code></pre></div>
+<span id="cb61-2"><a href="#cb61-2" tabindex="-1"></a>  x <span class="ot">&lt;-</span> df[[termvar]]</span>
+<span id="cb61-3"><a href="#cb61-3" tabindex="-1"></a>  id <span class="ot">&lt;-</span> df[[idvar]]</span>
+<span id="cb61-4"><a href="#cb61-4" tabindex="-1"></a></span>
+<span id="cb61-5"><a href="#cb61-5" tabindex="-1"></a>  counts <span class="ot">&lt;-</span> <span class="fu">table</span>(x[<span class="sc">!</span><span class="fu">duplicated</span>(id)])</span>
+<span id="cb61-6"><a href="#cb61-6" tabindex="-1"></a></span>
+<span id="cb61-7"><a href="#cb61-7" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
+<span id="cb61-8"><a href="#cb61-8" tabindex="-1"></a>    <span class="at">.list =</span> <span class="fu">as.vector</span>(counts),</span>
+<span id="cb61-9"><a href="#cb61-9" tabindex="-1"></a>    <span class="at">.labels =</span> <span class="fu">names</span>(counts)</span>
+<span id="cb61-10"><a href="#cb61-10" tabindex="-1"></a>  )</span>
+<span id="cb61-11"><a href="#cb61-11" tabindex="-1"></a>}</span>
+<span id="cb61-12"><a href="#cb61-12" tabindex="-1"></a></span>
+<span id="cb61-13"><a href="#cb61-13" tabindex="-1"></a><span class="fu">table_count_once_per_id</span>(ADAE2)</span></code></pre></div>
 <pre><code># RowsVerticalSection (in_rows) object print method:
 # ----------------------------
 #                         row_name formatted_cell indent_mod
@@ -1307,7 +1312,7 @@ to write a custom analysis function:</p>
 <p>So the desired <code>AE</code> table is:</p>
 <div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a>adae_soc_lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb63-2"><a href="#cb63-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb63-3"><a href="#cb63-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEBODSYS&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">1</span>)  <span class="sc">%&gt;%</span></span>
+<span id="cb63-3"><a href="#cb63-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEBODSYS&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb63-4"><a href="#cb63-4" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="st">&quot;USUBJID&quot;</span>, <span class="at">cfun =</span> s_events_patients) <span class="sc">%&gt;%</span></span>
 <span id="cb63-5"><a href="#cb63-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AEDECOD&quot;</span>, <span class="at">afun =</span> table_count_once_per_id, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>, <span class="at">indent_mod =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
 <span id="cb63-6"><a href="#cb63-6" tabindex="-1"></a></span>
@@ -1377,7 +1382,7 @@ This can be added with an initial <code>analyze()</code> call.</p>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a>adae_soc_lyt4 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb65-2"><a href="#cb65-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb65-3"><a href="#cb65-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;USUBJID&quot;</span>, <span class="at">afun =</span> s_events_patients) <span class="sc">%&gt;%</span></span>
-<span id="cb65-4"><a href="#cb65-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEBODSYS&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">1</span>, <span class="at">section_div =</span> <span class="st">&quot;&quot;</span>)  <span class="sc">%&gt;%</span></span>
+<span id="cb65-4"><a href="#cb65-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEBODSYS&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">1</span>, <span class="at">section_div =</span> <span class="st">&quot;&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb65-5"><a href="#cb65-5" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="st">&quot;USUBJID&quot;</span>, <span class="at">cfun =</span> s_events_patients) <span class="sc">%&gt;%</span></span>
 <span id="cb65-6"><a href="#cb65-6" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AEDECOD&quot;</span>, table_count_once_per_id, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>, <span class="at">indent_mod =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
 <span id="cb65-7"><a href="#cb65-7" tabindex="-1"></a></span>
@@ -1507,9 +1512,9 @@ the “overall” groups with a custom split function.</p>
 <span id="cb69-14"><a href="#cb69-14" tabindex="-1"></a>  id_sel <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">duplicated</span>(id)</span>
 <span id="cb69-15"><a href="#cb69-15" tabindex="-1"></a></span>
 <span id="cb69-16"><a href="#cb69-16" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
-<span id="cb69-17"><a href="#cb69-17" tabindex="-1"></a>      <span class="st">&quot;--Any Grade--&quot;</span> <span class="ot">=</span> <span class="fu">sum</span>(id_sel),</span>
-<span id="cb69-18"><a href="#cb69-18" tabindex="-1"></a>      <span class="at">.list =</span>  <span class="fu">as.list</span>(<span class="fu">table</span>(grade[id_sel]))</span>
-<span id="cb69-19"><a href="#cb69-19" tabindex="-1"></a>    )</span>
+<span id="cb69-17"><a href="#cb69-17" tabindex="-1"></a>    <span class="st">&quot;--Any Grade--&quot;</span> <span class="ot">=</span> <span class="fu">sum</span>(id_sel),</span>
+<span id="cb69-18"><a href="#cb69-18" tabindex="-1"></a>    <span class="at">.list =</span> <span class="fu">as.list</span>(<span class="fu">table</span>(grade[id_sel]))</span>
+<span id="cb69-19"><a href="#cb69-19" tabindex="-1"></a>  )</span>
 <span id="cb69-20"><a href="#cb69-20" tabindex="-1"></a>}</span>
 <span id="cb69-21"><a href="#cb69-21" tabindex="-1"></a></span>
 <span id="cb69-22"><a href="#cb69-22" tabindex="-1"></a><span class="fu">table_count_grade_once_per_id</span>(ex_adae, <span class="at">grade_levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code></pre></div>
@@ -1526,19 +1531,25 @@ the “overall” groups with a custom split function.</p>
 already been introduced so far:</p>
 <div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" tabindex="-1"></a>adae_grade_lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb71-2"><a href="#cb71-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb71-3"><a href="#cb71-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AETOXGR&quot;</span>,</span>
-<span id="cb71-4"><a href="#cb71-4" tabindex="-1"></a>          <span class="at">afun =</span> table_count_grade_once_per_id,</span>
-<span id="cb71-5"><a href="#cb71-5" tabindex="-1"></a>          <span class="at">extra_args =</span> <span class="fu">list</span>(<span class="at">grade_levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>),</span>
-<span id="cb71-6"><a href="#cb71-6" tabindex="-1"></a>          <span class="at">var_labels =</span> <span class="st">&quot;- Any adverse events -&quot;</span>, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb71-7"><a href="#cb71-7" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEBODSYS&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb71-8"><a href="#cb71-8" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> table_count_grade_once_per_id, <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb71-9"><a href="#cb71-9" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEDECOD&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">indent_mod =</span> <span class="sc">-</span><span class="dv">2</span>)  <span class="sc">%&gt;%</span></span>
-<span id="cb71-10"><a href="#cb71-10" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AETOXGR&quot;</span>,</span>
-<span id="cb71-11"><a href="#cb71-11" tabindex="-1"></a>          <span class="at">afun =</span> table_count_grade_once_per_id,</span>
-<span id="cb71-12"><a href="#cb71-12" tabindex="-1"></a>          <span class="at">extra_args =</span> <span class="fu">list</span>(<span class="at">grade_levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>)</span>
-<span id="cb71-13"><a href="#cb71-13" tabindex="-1"></a></span>
-<span id="cb71-14"><a href="#cb71-14" tabindex="-1"></a>adae_grade_tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(adae_grade_lyt, ADAE2, <span class="at">alt_counts_df =</span> ADSL2)</span>
-<span id="cb71-15"><a href="#cb71-15" tabindex="-1"></a>adae_grade_tbl</span></code></pre></div>
+<span id="cb71-3"><a href="#cb71-3" tabindex="-1"></a>  <span class="fu">analyze</span>(</span>
+<span id="cb71-4"><a href="#cb71-4" tabindex="-1"></a>    <span class="st">&quot;AETOXGR&quot;</span>,</span>
+<span id="cb71-5"><a href="#cb71-5" tabindex="-1"></a>    <span class="at">afun =</span> table_count_grade_once_per_id,</span>
+<span id="cb71-6"><a href="#cb71-6" tabindex="-1"></a>    <span class="at">extra_args =</span> <span class="fu">list</span>(<span class="at">grade_levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>),</span>
+<span id="cb71-7"><a href="#cb71-7" tabindex="-1"></a>    <span class="at">var_labels =</span> <span class="st">&quot;- Any adverse events -&quot;</span>,</span>
+<span id="cb71-8"><a href="#cb71-8" tabindex="-1"></a>    <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span></span>
+<span id="cb71-9"><a href="#cb71-9" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb71-10"><a href="#cb71-10" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEBODSYS&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb71-11"><a href="#cb71-11" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> table_count_grade_once_per_id, <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>, <span class="at">indent_mod =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb71-12"><a href="#cb71-12" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;AEDECOD&quot;</span>, <span class="at">child_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">indent_mod =</span> <span class="sc">-</span><span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb71-13"><a href="#cb71-13" tabindex="-1"></a>  <span class="fu">analyze</span>(</span>
+<span id="cb71-14"><a href="#cb71-14" tabindex="-1"></a>    <span class="st">&quot;AETOXGR&quot;</span>,</span>
+<span id="cb71-15"><a href="#cb71-15" tabindex="-1"></a>    <span class="at">afun =</span> table_count_grade_once_per_id,</span>
+<span id="cb71-16"><a href="#cb71-16" tabindex="-1"></a>    <span class="at">extra_args =</span> <span class="fu">list</span>(<span class="at">grade_levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>),</span>
+<span id="cb71-17"><a href="#cb71-17" tabindex="-1"></a>    <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span></span>
+<span id="cb71-18"><a href="#cb71-18" tabindex="-1"></a>  )</span>
+<span id="cb71-19"><a href="#cb71-19" tabindex="-1"></a></span>
+<span id="cb71-20"><a href="#cb71-20" tabindex="-1"></a>adae_grade_tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(adae_grade_lyt, ADAE2, <span class="at">alt_counts_df =</span> ADSL2)</span>
+<span id="cb71-21"><a href="#cb71-21" tabindex="-1"></a>adae_grade_tbl</span></code></pre></div>
 <pre><code>#                                                      ARM A     ARM B 
 #                                                     (N=146)   (N=154)
 # —————————————————————————————————————————————————————————————————————
@@ -1900,22 +1911,25 @@ parts:</p>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" tabindex="-1"></a>ADRS_BESRSPI <span class="ot">&lt;-</span> ex_adrs <span class="sc">%&gt;%</span></span>
 <span id="cb73-2"><a href="#cb73-2" tabindex="-1"></a>  <span class="fu">filter</span>(PARAMCD <span class="sc">==</span> <span class="st">&quot;BESRSPI&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb73-3"><a href="#cb73-3" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb73-4"><a href="#cb73-4" tabindex="-1"></a>      <span class="at">rsp =</span> <span class="fu">factor</span>(AVALC <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;CR&quot;</span>, <span class="st">&quot;PR&quot;</span>),</span>
-<span id="cb73-5"><a href="#cb73-5" tabindex="-1"></a>                   <span class="at">levels =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Responders&quot;</span>, <span class="st">&quot;Non-Responders&quot;</span>)),</span>
-<span id="cb73-6"><a href="#cb73-6" tabindex="-1"></a>      <span class="at">is_rsp =</span> (rsp <span class="sc">==</span> <span class="st">&quot;Responders&quot;</span>)</span>
-<span id="cb73-7"><a href="#cb73-7" tabindex="-1"></a>  )</span>
-<span id="cb73-8"><a href="#cb73-8" tabindex="-1"></a></span>
-<span id="cb73-9"><a href="#cb73-9" tabindex="-1"></a>s_proportion <span class="ot">&lt;-</span> <span class="cf">function</span>(x, .N_col) {</span>
-<span id="cb73-10"><a href="#cb73-10" tabindex="-1"></a>  <span class="fu">in_rows</span>(<span class="at">.list =</span> <span class="fu">lapply</span>(<span class="fu">as.list</span>(<span class="fu">table</span>(x)),</span>
-<span id="cb73-11"><a href="#cb73-11" tabindex="-1"></a>                         <span class="cf">function</span>(xi) <span class="fu">rcell</span>(xi <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx%)&quot;</span>)))</span>
-<span id="cb73-12"><a href="#cb73-12" tabindex="-1"></a>}</span>
-<span id="cb73-13"><a href="#cb73-13" tabindex="-1"></a></span>
-<span id="cb73-14"><a href="#cb73-14" tabindex="-1"></a>rsp_lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb73-15"><a href="#cb73-15" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARMCD&quot;</span>, <span class="at">ref_group =</span> <span class="st">&quot;ARM A&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb73-16"><a href="#cb73-16" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;rsp&quot;</span>, s_proportion, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>)</span>
-<span id="cb73-17"><a href="#cb73-17" tabindex="-1"></a></span>
-<span id="cb73-18"><a href="#cb73-18" tabindex="-1"></a>rsp_tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(rsp_lyt, ADRS_BESRSPI)</span>
-<span id="cb73-19"><a href="#cb73-19" tabindex="-1"></a>rsp_tbl</span></code></pre></div>
+<span id="cb73-4"><a href="#cb73-4" tabindex="-1"></a>    <span class="at">rsp =</span> <span class="fu">factor</span>(AVALC <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;CR&quot;</span>, <span class="st">&quot;PR&quot;</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Responders&quot;</span>, <span class="st">&quot;Non-Responders&quot;</span>)),</span>
+<span id="cb73-5"><a href="#cb73-5" tabindex="-1"></a>    <span class="at">is_rsp =</span> (rsp <span class="sc">==</span> <span class="st">&quot;Responders&quot;</span>)</span>
+<span id="cb73-6"><a href="#cb73-6" tabindex="-1"></a>  )</span>
+<span id="cb73-7"><a href="#cb73-7" tabindex="-1"></a></span>
+<span id="cb73-8"><a href="#cb73-8" tabindex="-1"></a>s_proportion <span class="ot">&lt;-</span> <span class="cf">function</span>(x, .N_col) {</span>
+<span id="cb73-9"><a href="#cb73-9" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
+<span id="cb73-10"><a href="#cb73-10" tabindex="-1"></a>    <span class="at">.list =</span> <span class="fu">lapply</span>(</span>
+<span id="cb73-11"><a href="#cb73-11" tabindex="-1"></a>      <span class="fu">as.list</span>(<span class="fu">table</span>(x)),</span>
+<span id="cb73-12"><a href="#cb73-12" tabindex="-1"></a>      <span class="cf">function</span>(xi) <span class="fu">rcell</span>(xi <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx%)&quot;</span>)</span>
+<span id="cb73-13"><a href="#cb73-13" tabindex="-1"></a>    )</span>
+<span id="cb73-14"><a href="#cb73-14" tabindex="-1"></a>  )</span>
+<span id="cb73-15"><a href="#cb73-15" tabindex="-1"></a>}</span>
+<span id="cb73-16"><a href="#cb73-16" tabindex="-1"></a></span>
+<span id="cb73-17"><a href="#cb73-17" tabindex="-1"></a>rsp_lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb73-18"><a href="#cb73-18" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARMCD&quot;</span>, <span class="at">ref_group =</span> <span class="st">&quot;ARM A&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb73-19"><a href="#cb73-19" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;rsp&quot;</span>, s_proportion, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>)</span>
+<span id="cb73-20"><a href="#cb73-20" tabindex="-1"></a></span>
+<span id="cb73-21"><a href="#cb73-21" tabindex="-1"></a>rsp_tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(rsp_lyt, ADRS_BESRSPI)</span>
+<span id="cb73-22"><a href="#cb73-22" tabindex="-1"></a>rsp_tbl</span></code></pre></div>
 <pre><code>#                       ARM A            ARM B             ARM C     
 #                      (N=134)          (N=134)           (N=132)    
 # ———————————————————————————————————————————————————————————————————
@@ -1930,51 +1944,62 @@ the table.</p>
 comparison vs. control group. Let’s start with the analysis
 function:</p>
 <div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" tabindex="-1"></a>s_unstrat_resp <span class="ot">&lt;-</span> <span class="cf">function</span>(x, .ref_group, .in_ref_col) {</span>
-<span id="cb75-2"><a href="#cb75-2" tabindex="-1"></a></span>
-<span id="cb75-3"><a href="#cb75-3" tabindex="-1"></a>  <span class="cf">if</span> (.in_ref_col) {</span>
-<span id="cb75-4"><a href="#cb75-4" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">in_rows</span>(</span>
-<span id="cb75-5"><a href="#cb75-5" tabindex="-1"></a>        <span class="st">&quot;Difference in Response Rates (%)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">numeric</span>(<span class="dv">0</span>)),</span>
-<span id="cb75-6"><a href="#cb75-6" tabindex="-1"></a>        <span class="st">&quot;95% CI (Wald, with correction)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">numeric</span>(<span class="dv">0</span>)),</span>
-<span id="cb75-7"><a href="#cb75-7" tabindex="-1"></a>        <span class="st">&quot;p-value (Chi-Squared Test)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">numeric</span>(<span class="dv">0</span>)),</span>
-<span id="cb75-8"><a href="#cb75-8" tabindex="-1"></a>        <span class="st">&quot;Odds Ratio (95% CI)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">numeric</span>(<span class="dv">0</span>))</span>
-<span id="cb75-9"><a href="#cb75-9" tabindex="-1"></a>    ))</span>
-<span id="cb75-10"><a href="#cb75-10" tabindex="-1"></a>  }</span>
-<span id="cb75-11"><a href="#cb75-11" tabindex="-1"></a></span>
-<span id="cb75-12"><a href="#cb75-12" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">prop.test</span>(</span>
-<span id="cb75-13"><a href="#cb75-13" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="fu">sum</span>(x), <span class="fu">sum</span>(.ref_group)),</span>
-<span id="cb75-14"><a href="#cb75-14" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">c</span>(<span class="fu">length</span>(x), <span class="fu">length</span>(.ref_group)),</span>
-<span id="cb75-15"><a href="#cb75-15" tabindex="-1"></a>    <span class="at">correct =</span> <span class="cn">FALSE</span></span>
-<span id="cb75-16"><a href="#cb75-16" tabindex="-1"></a>  )</span>
-<span id="cb75-17"><a href="#cb75-17" tabindex="-1"></a></span>
-<span id="cb75-18"><a href="#cb75-18" tabindex="-1"></a>  fit_glm <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">glm</span>(</span>
-<span id="cb75-19"><a href="#cb75-19" tabindex="-1"></a>    <span class="at">formula =</span> rsp <span class="sc">~</span> group,</span>
-<span id="cb75-20"><a href="#cb75-20" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">data.frame</span>(</span>
-<span id="cb75-21"><a href="#cb75-21" tabindex="-1"></a>      <span class="at">rsp =</span> <span class="fu">c</span>(.ref_group, x),</span>
-<span id="cb75-22"><a href="#cb75-22" tabindex="-1"></a>      <span class="at">group =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;ref&quot;</span>, <span class="st">&quot;x&quot;</span>), <span class="at">times =</span> <span class="fu">c</span>(<span class="fu">length</span>(.ref_group), <span class="fu">length</span>(x))), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;ref&quot;</span>, <span class="st">&quot;x&quot;</span>))</span>
-<span id="cb75-23"><a href="#cb75-23" tabindex="-1"></a>    ),</span>
-<span id="cb75-24"><a href="#cb75-24" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
-<span id="cb75-25"><a href="#cb75-25" tabindex="-1"></a>  )</span>
-<span id="cb75-26"><a href="#cb75-26" tabindex="-1"></a></span>
-<span id="cb75-27"><a href="#cb75-27" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
-<span id="cb75-28"><a href="#cb75-28" tabindex="-1"></a>      <span class="st">&quot;Difference in Response Rates (%)&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>((<span class="fu">mean</span>(x) <span class="sc">-</span> <span class="fu">mean</span>(.ref_group)) <span class="sc">*</span> <span class="dv">100</span>,</span>
-<span id="cb75-29"><a href="#cb75-29" tabindex="-1"></a>                                                         .in_ref_col, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>) ,</span>
-<span id="cb75-30"><a href="#cb75-30" tabindex="-1"></a>      <span class="st">&quot;95% CI (Wald, with correction)&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(fit<span class="sc">$</span>conf.int <span class="sc">*</span> <span class="dv">100</span>,</span>
-<span id="cb75-31"><a href="#cb75-31" tabindex="-1"></a>                                                       .in_ref_col, <span class="at">format =</span> <span class="st">&quot;(xx.xx, xx.xx)&quot;</span>),</span>
-<span id="cb75-32"><a href="#cb75-32" tabindex="-1"></a>      <span class="st">&quot;p-value (Chi-Squared Test)&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(fit<span class="sc">$</span>p.value,</span>
-<span id="cb75-33"><a href="#cb75-33" tabindex="-1"></a>                                                   .in_ref_col, <span class="at">format =</span> <span class="st">&quot;x.xxxx | (&lt;0.0001)&quot;</span>),</span>
-<span id="cb75-34"><a href="#cb75-34" tabindex="-1"></a>      <span class="st">&quot;Odds Ratio (95% CI)&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(<span class="fu">c</span>(</span>
-<span id="cb75-35"><a href="#cb75-35" tabindex="-1"></a>          <span class="fu">exp</span>(stats<span class="sc">::</span><span class="fu">coef</span>(fit_glm)[<span class="sc">-</span><span class="dv">1</span>]),</span>
-<span id="cb75-36"><a href="#cb75-36" tabindex="-1"></a>          <span class="fu">exp</span>(stats<span class="sc">::</span><span class="fu">confint.default</span>(fit_glm, <span class="at">level =</span> .<span class="dv">95</span>)[<span class="sc">-</span><span class="dv">1</span>, , <span class="at">drop =</span> <span class="cn">FALSE</span>])</span>
-<span id="cb75-37"><a href="#cb75-37" tabindex="-1"></a>      ),</span>
-<span id="cb75-38"><a href="#cb75-38" tabindex="-1"></a>      .in_ref_col, <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx - xx.xx)&quot;</span>)</span>
-<span id="cb75-39"><a href="#cb75-39" tabindex="-1"></a>  )</span>
-<span id="cb75-40"><a href="#cb75-40" tabindex="-1"></a>}</span>
-<span id="cb75-41"><a href="#cb75-41" tabindex="-1"></a></span>
-<span id="cb75-42"><a href="#cb75-42" tabindex="-1"></a><span class="fu">s_unstrat_resp</span>(</span>
-<span id="cb75-43"><a href="#cb75-43" tabindex="-1"></a>  <span class="at">x =</span> ADRS_BESRSPI <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ARM <span class="sc">==</span> <span class="st">&quot;A: Drug X&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(is_rsp),</span>
-<span id="cb75-44"><a href="#cb75-44" tabindex="-1"></a>  <span class="at">.ref_group =</span> ADRS_BESRSPI <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ARM <span class="sc">==</span> <span class="st">&quot;B: Placebo&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(is_rsp),</span>
-<span id="cb75-45"><a href="#cb75-45" tabindex="-1"></a>  <span class="at">.in_ref_col =</span> <span class="cn">FALSE</span></span>
-<span id="cb75-46"><a href="#cb75-46" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb75-2"><a href="#cb75-2" tabindex="-1"></a>  <span class="cf">if</span> (.in_ref_col) {</span>
+<span id="cb75-3"><a href="#cb75-3" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">in_rows</span>(</span>
+<span id="cb75-4"><a href="#cb75-4" tabindex="-1"></a>      <span class="st">&quot;Difference in Response Rates (%)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">numeric</span>(<span class="dv">0</span>)),</span>
+<span id="cb75-5"><a href="#cb75-5" tabindex="-1"></a>      <span class="st">&quot;95% CI (Wald, with correction)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">numeric</span>(<span class="dv">0</span>)),</span>
+<span id="cb75-6"><a href="#cb75-6" tabindex="-1"></a>      <span class="st">&quot;p-value (Chi-Squared Test)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">numeric</span>(<span class="dv">0</span>)),</span>
+<span id="cb75-7"><a href="#cb75-7" tabindex="-1"></a>      <span class="st">&quot;Odds Ratio (95% CI)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">numeric</span>(<span class="dv">0</span>))</span>
+<span id="cb75-8"><a href="#cb75-8" tabindex="-1"></a>    ))</span>
+<span id="cb75-9"><a href="#cb75-9" tabindex="-1"></a>  }</span>
+<span id="cb75-10"><a href="#cb75-10" tabindex="-1"></a></span>
+<span id="cb75-11"><a href="#cb75-11" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">prop.test</span>(</span>
+<span id="cb75-12"><a href="#cb75-12" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="fu">sum</span>(x), <span class="fu">sum</span>(.ref_group)),</span>
+<span id="cb75-13"><a href="#cb75-13" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">c</span>(<span class="fu">length</span>(x), <span class="fu">length</span>(.ref_group)),</span>
+<span id="cb75-14"><a href="#cb75-14" tabindex="-1"></a>    <span class="at">correct =</span> <span class="cn">FALSE</span></span>
+<span id="cb75-15"><a href="#cb75-15" tabindex="-1"></a>  )</span>
+<span id="cb75-16"><a href="#cb75-16" tabindex="-1"></a></span>
+<span id="cb75-17"><a href="#cb75-17" tabindex="-1"></a>  fit_glm <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">glm</span>(</span>
+<span id="cb75-18"><a href="#cb75-18" tabindex="-1"></a>    <span class="at">formula =</span> rsp <span class="sc">~</span> group,</span>
+<span id="cb75-19"><a href="#cb75-19" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">data.frame</span>(</span>
+<span id="cb75-20"><a href="#cb75-20" tabindex="-1"></a>      <span class="at">rsp =</span> <span class="fu">c</span>(.ref_group, x),</span>
+<span id="cb75-21"><a href="#cb75-21" tabindex="-1"></a>      <span class="at">group =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;ref&quot;</span>, <span class="st">&quot;x&quot;</span>), <span class="at">times =</span> <span class="fu">c</span>(<span class="fu">length</span>(.ref_group), <span class="fu">length</span>(x))), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;ref&quot;</span>, <span class="st">&quot;x&quot;</span>))</span>
+<span id="cb75-22"><a href="#cb75-22" tabindex="-1"></a>    ),</span>
+<span id="cb75-23"><a href="#cb75-23" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
+<span id="cb75-24"><a href="#cb75-24" tabindex="-1"></a>  )</span>
+<span id="cb75-25"><a href="#cb75-25" tabindex="-1"></a></span>
+<span id="cb75-26"><a href="#cb75-26" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
+<span id="cb75-27"><a href="#cb75-27" tabindex="-1"></a>    <span class="st">&quot;Difference in Response Rates (%)&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(</span>
+<span id="cb75-28"><a href="#cb75-28" tabindex="-1"></a>      (<span class="fu">mean</span>(x) <span class="sc">-</span> <span class="fu">mean</span>(.ref_group)) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb75-29"><a href="#cb75-29" tabindex="-1"></a>      .in_ref_col,</span>
+<span id="cb75-30"><a href="#cb75-30" tabindex="-1"></a>      <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span></span>
+<span id="cb75-31"><a href="#cb75-31" tabindex="-1"></a>    ),</span>
+<span id="cb75-32"><a href="#cb75-32" tabindex="-1"></a>    <span class="st">&quot;95% CI (Wald, with correction)&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(</span>
+<span id="cb75-33"><a href="#cb75-33" tabindex="-1"></a>      fit<span class="sc">$</span>conf.int <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb75-34"><a href="#cb75-34" tabindex="-1"></a>      .in_ref_col,</span>
+<span id="cb75-35"><a href="#cb75-35" tabindex="-1"></a>      <span class="at">format =</span> <span class="st">&quot;(xx.xx, xx.xx)&quot;</span></span>
+<span id="cb75-36"><a href="#cb75-36" tabindex="-1"></a>    ),</span>
+<span id="cb75-37"><a href="#cb75-37" tabindex="-1"></a>    <span class="st">&quot;p-value (Chi-Squared Test)&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(</span>
+<span id="cb75-38"><a href="#cb75-38" tabindex="-1"></a>      fit<span class="sc">$</span>p.value,</span>
+<span id="cb75-39"><a href="#cb75-39" tabindex="-1"></a>      .in_ref_col,</span>
+<span id="cb75-40"><a href="#cb75-40" tabindex="-1"></a>      <span class="at">format =</span> <span class="st">&quot;x.xxxx | (&lt;0.0001)&quot;</span></span>
+<span id="cb75-41"><a href="#cb75-41" tabindex="-1"></a>    ),</span>
+<span id="cb75-42"><a href="#cb75-42" tabindex="-1"></a>    <span class="st">&quot;Odds Ratio (95% CI)&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(</span>
+<span id="cb75-43"><a href="#cb75-43" tabindex="-1"></a>      <span class="fu">c</span>(</span>
+<span id="cb75-44"><a href="#cb75-44" tabindex="-1"></a>        <span class="fu">exp</span>(stats<span class="sc">::</span><span class="fu">coef</span>(fit_glm)[<span class="sc">-</span><span class="dv">1</span>]),</span>
+<span id="cb75-45"><a href="#cb75-45" tabindex="-1"></a>        <span class="fu">exp</span>(stats<span class="sc">::</span><span class="fu">confint.default</span>(fit_glm, <span class="at">level =</span> .<span class="dv">95</span>)[<span class="sc">-</span><span class="dv">1</span>, , <span class="at">drop =</span> <span class="cn">FALSE</span>])</span>
+<span id="cb75-46"><a href="#cb75-46" tabindex="-1"></a>      ),</span>
+<span id="cb75-47"><a href="#cb75-47" tabindex="-1"></a>      .in_ref_col,</span>
+<span id="cb75-48"><a href="#cb75-48" tabindex="-1"></a>      <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx - xx.xx)&quot;</span></span>
+<span id="cb75-49"><a href="#cb75-49" tabindex="-1"></a>    )</span>
+<span id="cb75-50"><a href="#cb75-50" tabindex="-1"></a>  )</span>
+<span id="cb75-51"><a href="#cb75-51" tabindex="-1"></a>}</span>
+<span id="cb75-52"><a href="#cb75-52" tabindex="-1"></a></span>
+<span id="cb75-53"><a href="#cb75-53" tabindex="-1"></a><span class="fu">s_unstrat_resp</span>(</span>
+<span id="cb75-54"><a href="#cb75-54" tabindex="-1"></a>  <span class="at">x =</span> ADRS_BESRSPI <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ARM <span class="sc">==</span> <span class="st">&quot;A: Drug X&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(is_rsp),</span>
+<span id="cb75-55"><a href="#cb75-55" tabindex="-1"></a>  <span class="at">.ref_group =</span> ADRS_BESRSPI <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ARM <span class="sc">==</span> <span class="st">&quot;B: Placebo&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(is_rsp),</span>
+<span id="cb75-56"><a href="#cb75-56" tabindex="-1"></a>  <span class="at">.in_ref_col =</span> <span class="cn">FALSE</span></span>
+<span id="cb75-57"><a href="#cb75-57" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code># RowsVerticalSection (in_rows) object print method:
 # ----------------------------
 #                           row_name     formatted_cell indent_mod
@@ -1991,11 +2016,14 @@ function:</p>
 <div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" tabindex="-1"></a>rsp_lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb77-2"><a href="#cb77-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARMCD&quot;</span>, <span class="at">ref_group =</span> <span class="st">&quot;ARM A&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb77-3"><a href="#cb77-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;rsp&quot;</span>, s_proportion, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb77-4"><a href="#cb77-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;is_rsp&quot;</span>, s_unstrat_resp, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>,</span>
-<span id="cb77-5"><a href="#cb77-5" tabindex="-1"></a>          <span class="at">var_labels =</span> <span class="st">&quot;Unstratified Response Analysis&quot;</span>)</span>
-<span id="cb77-6"><a href="#cb77-6" tabindex="-1"></a></span>
-<span id="cb77-7"><a href="#cb77-7" tabindex="-1"></a>rsp_tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(rsp_lyt2, ADRS_BESRSPI)</span>
-<span id="cb77-8"><a href="#cb77-8" tabindex="-1"></a>rsp_tbl2</span></code></pre></div>
+<span id="cb77-4"><a href="#cb77-4" tabindex="-1"></a>  <span class="fu">analyze</span>(</span>
+<span id="cb77-5"><a href="#cb77-5" tabindex="-1"></a>    <span class="st">&quot;is_rsp&quot;</span>, s_unstrat_resp,</span>
+<span id="cb77-6"><a href="#cb77-6" tabindex="-1"></a>    <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>,</span>
+<span id="cb77-7"><a href="#cb77-7" tabindex="-1"></a>    <span class="at">var_labels =</span> <span class="st">&quot;Unstratified Response Analysis&quot;</span></span>
+<span id="cb77-8"><a href="#cb77-8" tabindex="-1"></a>  )</span>
+<span id="cb77-9"><a href="#cb77-9" tabindex="-1"></a></span>
+<span id="cb77-10"><a href="#cb77-10" tabindex="-1"></a>rsp_tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(rsp_lyt2, ADRS_BESRSPI)</span>
+<span id="cb77-11"><a href="#cb77-11" tabindex="-1"></a>rsp_tbl2</span></code></pre></div>
 <pre><code>#                                           ARM A              ARM B                ARM C       
 #                                          (N=134)            (N=134)              (N=132)      
 # ——————————————————————————————————————————————————————————————————————————————————————————————
@@ -2029,18 +2057,20 @@ as we did for the binary response table above.</p>
 <div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" tabindex="-1"></a>rsp_lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb81-2"><a href="#cb81-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARMCD&quot;</span>, <span class="at">ref_group =</span> <span class="st">&quot;ARM A&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb81-3"><a href="#cb81-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;rsp&quot;</span>, s_proportion, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb81-4"><a href="#cb81-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;is_rsp&quot;</span>, s_unstrat_resp,</span>
-<span id="cb81-5"><a href="#cb81-5" tabindex="-1"></a>          <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">var_labels =</span> <span class="st">&quot;Unstratified Response Analysis&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb81-6"><a href="#cb81-6" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(</span>
-<span id="cb81-7"><a href="#cb81-7" tabindex="-1"></a>    <span class="at">var =</span> <span class="st">&quot;AVALC&quot;</span>,</span>
-<span id="cb81-8"><a href="#cb81-8" tabindex="-1"></a>    <span class="at">split_fun =</span> <span class="fu">reorder_split_levels</span>(<span class="at">neworder =</span> <span class="fu">c</span>(<span class="st">&quot;CR&quot;</span>, <span class="st">&quot;PR&quot;</span>, <span class="st">&quot;SD&quot;</span>, <span class="st">&quot;NON CR/PD&quot;</span>, <span class="st">&quot;PD&quot;</span>, <span class="st">&quot;NE&quot;</span>), <span class="at">drlevels =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb81-9"><a href="#cb81-9" tabindex="-1"></a>    <span class="at">nested =</span> <span class="cn">FALSE</span></span>
-<span id="cb81-10"><a href="#cb81-10" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb81-11"><a href="#cb81-11" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb81-12"><a href="#cb81-12" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AVALC&quot;</span>, <span class="at">afun =</span> s_prop)</span>
-<span id="cb81-13"><a href="#cb81-13" tabindex="-1"></a></span>
-<span id="cb81-14"><a href="#cb81-14" tabindex="-1"></a>rsp_tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(rsp_lyt3, ADRS_BESRSPI)</span>
-<span id="cb81-15"><a href="#cb81-15" tabindex="-1"></a>rsp_tbl3</span></code></pre></div>
+<span id="cb81-4"><a href="#cb81-4" tabindex="-1"></a>  <span class="fu">analyze</span>(</span>
+<span id="cb81-5"><a href="#cb81-5" tabindex="-1"></a>    <span class="st">&quot;is_rsp&quot;</span>, s_unstrat_resp,</span>
+<span id="cb81-6"><a href="#cb81-6" tabindex="-1"></a>    <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">var_labels =</span> <span class="st">&quot;Unstratified Response Analysis&quot;</span></span>
+<span id="cb81-7"><a href="#cb81-7" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb81-8"><a href="#cb81-8" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(</span>
+<span id="cb81-9"><a href="#cb81-9" tabindex="-1"></a>    <span class="at">var =</span> <span class="st">&quot;AVALC&quot;</span>,</span>
+<span id="cb81-10"><a href="#cb81-10" tabindex="-1"></a>    <span class="at">split_fun =</span> <span class="fu">reorder_split_levels</span>(<span class="at">neworder =</span> <span class="fu">c</span>(<span class="st">&quot;CR&quot;</span>, <span class="st">&quot;PR&quot;</span>, <span class="st">&quot;SD&quot;</span>, <span class="st">&quot;NON CR/PD&quot;</span>, <span class="st">&quot;PD&quot;</span>, <span class="st">&quot;NE&quot;</span>), <span class="at">drlevels =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb81-11"><a href="#cb81-11" tabindex="-1"></a>    <span class="at">nested =</span> <span class="cn">FALSE</span></span>
+<span id="cb81-12"><a href="#cb81-12" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb81-13"><a href="#cb81-13" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb81-14"><a href="#cb81-14" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AVALC&quot;</span>, <span class="at">afun =</span> s_prop)</span>
+<span id="cb81-15"><a href="#cb81-15" tabindex="-1"></a></span>
+<span id="cb81-16"><a href="#cb81-16" tabindex="-1"></a>rsp_tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(rsp_lyt3, ADRS_BESRSPI)</span>
+<span id="cb81-17"><a href="#cb81-17" tabindex="-1"></a>rsp_tbl3</span></code></pre></div>
 <pre><code>#                                           ARM A              ARM B                ARM C       
 #                                          (N=134)            (N=134)              (N=132)      
 # ——————————————————————————————————————————————————————————————————————————————————————————————
@@ -2061,13 +2091,13 @@ as we did for the binary response table above.</p>
 and remove the CI for <code>NE</code> we could do that as follows:</p>
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" tabindex="-1"></a>rsp_label <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb83-2"><a href="#cb83-2" tabindex="-1"></a>  rsp_full_label <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb83-3"><a href="#cb83-3" tabindex="-1"></a>    <span class="at">CR          =</span> <span class="st">&quot;Complete Response (CR)&quot;</span>,</span>
-<span id="cb83-4"><a href="#cb83-4" tabindex="-1"></a>    <span class="at">PR          =</span> <span class="st">&quot;Partial Response (PR)&quot;</span>,</span>
-<span id="cb83-5"><a href="#cb83-5" tabindex="-1"></a>    <span class="at">SD          =</span> <span class="st">&quot;Stable Disease (SD)&quot;</span>,</span>
+<span id="cb83-3"><a href="#cb83-3" tabindex="-1"></a>    <span class="at">CR =</span> <span class="st">&quot;Complete Response (CR)&quot;</span>,</span>
+<span id="cb83-4"><a href="#cb83-4" tabindex="-1"></a>    <span class="at">PR =</span> <span class="st">&quot;Partial Response (PR)&quot;</span>,</span>
+<span id="cb83-5"><a href="#cb83-5" tabindex="-1"></a>    <span class="at">SD =</span> <span class="st">&quot;Stable Disease (SD)&quot;</span>,</span>
 <span id="cb83-6"><a href="#cb83-6" tabindex="-1"></a>    <span class="st">`</span><span class="at">NON CR/PD</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&quot;Non-CR or Non-PD (NON CR/PD)&quot;</span>,</span>
-<span id="cb83-7"><a href="#cb83-7" tabindex="-1"></a>    <span class="at">PD          =</span> <span class="st">&quot;Progressive Disease (PD)&quot;</span>,</span>
-<span id="cb83-8"><a href="#cb83-8" tabindex="-1"></a>    <span class="at">NE          =</span> <span class="st">&quot;Not Evaluable (NE)&quot;</span>,</span>
-<span id="cb83-9"><a href="#cb83-9" tabindex="-1"></a>    <span class="at">Missing     =</span> <span class="st">&quot;Missing&quot;</span>,</span>
+<span id="cb83-7"><a href="#cb83-7" tabindex="-1"></a>    <span class="at">PD =</span> <span class="st">&quot;Progressive Disease (PD)&quot;</span>,</span>
+<span id="cb83-8"><a href="#cb83-8" tabindex="-1"></a>    <span class="at">NE =</span> <span class="st">&quot;Not Evaluable (NE)&quot;</span>,</span>
+<span id="cb83-9"><a href="#cb83-9" tabindex="-1"></a>    <span class="at">Missing =</span> <span class="st">&quot;Missing&quot;</span>,</span>
 <span id="cb83-10"><a href="#cb83-10" tabindex="-1"></a>    <span class="st">`</span><span class="at">NE/Missing</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&quot;Missing or unevaluable&quot;</span></span>
 <span id="cb83-11"><a href="#cb83-11" tabindex="-1"></a>  )</span>
 <span id="cb83-12"><a href="#cb83-12" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">all</span>(x <span class="sc">%in%</span> <span class="fu">names</span>(rsp_full_label)))</span>
@@ -2078,23 +2108,25 @@ and remove the CI for <code>NE</code> we could do that as follows:</p>
 <span id="cb83-17"><a href="#cb83-17" tabindex="-1"></a>rsp_lyt4 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb83-18"><a href="#cb83-18" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARMCD&quot;</span>, <span class="at">ref_group =</span> <span class="st">&quot;ARM A&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb83-19"><a href="#cb83-19" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;rsp&quot;</span>, s_proportion, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb83-20"><a href="#cb83-20" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;is_rsp&quot;</span>, s_unstrat_resp,</span>
-<span id="cb83-21"><a href="#cb83-21" tabindex="-1"></a>          <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">var_labels =</span> <span class="st">&quot;Unstratified Response Analysis&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb83-22"><a href="#cb83-22" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(</span>
-<span id="cb83-23"><a href="#cb83-23" tabindex="-1"></a>    <span class="at">var =</span> <span class="st">&quot;AVALC&quot;</span>,</span>
-<span id="cb83-24"><a href="#cb83-24" tabindex="-1"></a>    <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;CR&quot;</span>, <span class="st">&quot;PR&quot;</span>, <span class="st">&quot;SD&quot;</span>, <span class="st">&quot;PD&quot;</span>), <span class="at">reorder =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb83-25"><a href="#cb83-25" tabindex="-1"></a>    <span class="at">nested =</span> <span class="cn">FALSE</span></span>
-<span id="cb83-26"><a href="#cb83-26" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb83-27"><a href="#cb83-27" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> <span class="cf">function</span>(df, labelstr, .N_col) {</span>
-<span id="cb83-28"><a href="#cb83-28" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="fu">nrow</span>(df) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">.formats =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>, <span class="at">.labels =</span> <span class="fu">rsp_label</span>(labelstr))</span>
-<span id="cb83-29"><a href="#cb83-29" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
-<span id="cb83-30"><a href="#cb83-30" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AVALC&quot;</span>, <span class="at">afun =</span> s_prop) <span class="sc">%&gt;%</span></span>
-<span id="cb83-31"><a href="#cb83-31" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AVALC&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(x, .N_col) {</span>
-<span id="cb83-32"><a href="#cb83-32" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="fu">rcell</span>(<span class="fu">sum</span>(x <span class="sc">==</span> <span class="st">&quot;NE&quot;</span>) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx%)&quot;</span>), <span class="at">.labels =</span> <span class="fu">rsp_label</span>(<span class="st">&quot;NE&quot;</span>))</span>
-<span id="cb83-33"><a href="#cb83-33" tabindex="-1"></a>  }, <span class="at">nested =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb83-34"><a href="#cb83-34" tabindex="-1"></a></span>
-<span id="cb83-35"><a href="#cb83-35" tabindex="-1"></a>rsp_tbl4 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(rsp_lyt4, ADRS_BESRSPI)</span>
-<span id="cb83-36"><a href="#cb83-36" tabindex="-1"></a>rsp_tbl4</span></code></pre></div>
+<span id="cb83-20"><a href="#cb83-20" tabindex="-1"></a>  <span class="fu">analyze</span>(</span>
+<span id="cb83-21"><a href="#cb83-21" tabindex="-1"></a>    <span class="st">&quot;is_rsp&quot;</span>, s_unstrat_resp,</span>
+<span id="cb83-22"><a href="#cb83-22" tabindex="-1"></a>    <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>, <span class="at">var_labels =</span> <span class="st">&quot;Unstratified Response Analysis&quot;</span></span>
+<span id="cb83-23"><a href="#cb83-23" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb83-24"><a href="#cb83-24" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(</span>
+<span id="cb83-25"><a href="#cb83-25" tabindex="-1"></a>    <span class="at">var =</span> <span class="st">&quot;AVALC&quot;</span>,</span>
+<span id="cb83-26"><a href="#cb83-26" tabindex="-1"></a>    <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;CR&quot;</span>, <span class="st">&quot;PR&quot;</span>, <span class="st">&quot;SD&quot;</span>, <span class="st">&quot;PD&quot;</span>), <span class="at">reorder =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb83-27"><a href="#cb83-27" tabindex="-1"></a>    <span class="at">nested =</span> <span class="cn">FALSE</span></span>
+<span id="cb83-28"><a href="#cb83-28" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb83-29"><a href="#cb83-29" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> <span class="cf">function</span>(df, labelstr, .N_col) {</span>
+<span id="cb83-30"><a href="#cb83-30" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="fu">nrow</span>(df) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">.formats =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>, <span class="at">.labels =</span> <span class="fu">rsp_label</span>(labelstr))</span>
+<span id="cb83-31"><a href="#cb83-31" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
+<span id="cb83-32"><a href="#cb83-32" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AVALC&quot;</span>, <span class="at">afun =</span> s_prop) <span class="sc">%&gt;%</span></span>
+<span id="cb83-33"><a href="#cb83-33" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AVALC&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(x, .N_col) {</span>
+<span id="cb83-34"><a href="#cb83-34" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="fu">rcell</span>(<span class="fu">sum</span>(x <span class="sc">==</span> <span class="st">&quot;NE&quot;</span>) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx%)&quot;</span>), <span class="at">.labels =</span> <span class="fu">rsp_label</span>(<span class="st">&quot;NE&quot;</span>))</span>
+<span id="cb83-35"><a href="#cb83-35" tabindex="-1"></a>  }, <span class="at">nested =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb83-36"><a href="#cb83-36" tabindex="-1"></a></span>
+<span id="cb83-37"><a href="#cb83-37" tabindex="-1"></a>rsp_tbl4 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(rsp_lyt4, ADRS_BESRSPI)</span>
+<span id="cb83-38"><a href="#cb83-38" tabindex="-1"></a>rsp_tbl4</span></code></pre></div>
 <pre><code>#                                           ARM A              ARM B                ARM C       
 #                                          (N=134)            (N=134)              (N=132)      
 # ——————————————————————————————————————————————————————————————————————————————————————————————
@@ -2138,13 +2170,13 @@ the data to be used in the construction of this table.</p>
 <div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
 <span id="cb85-2"><a href="#cb85-2" tabindex="-1"></a></span>
 <span id="cb85-3"><a href="#cb85-3" tabindex="-1"></a>adtte <span class="ot">&lt;-</span> ex_adaette <span class="sc">%&gt;%</span></span>
-<span id="cb85-4"><a href="#cb85-4" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(PARAMCD <span class="sc">==</span> <span class="st">&quot;AETTE2&quot;</span>, SAFFL <span class="sc">==</span> <span class="st">&quot;Y&quot;</span>)</span>
+<span id="cb85-4"><a href="#cb85-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(PARAMCD <span class="sc">==</span> <span class="st">&quot;AETTE2&quot;</span>, SAFFL <span class="sc">==</span> <span class="st">&quot;Y&quot;</span>)</span>
 <span id="cb85-5"><a href="#cb85-5" tabindex="-1"></a></span>
 <span id="cb85-6"><a href="#cb85-6" tabindex="-1"></a><span class="co"># Add censoring to data for example</span></span>
 <span id="cb85-7"><a href="#cb85-7" tabindex="-1"></a>adtte[adtte<span class="sc">$</span>AVAL <span class="sc">&gt;</span> <span class="fl">1.0</span>, ] <span class="ot">&lt;-</span> adtte[adtte<span class="sc">$</span>AVAL <span class="sc">&gt;</span> <span class="fl">1.0</span>, ] <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">AVAL =</span> <span class="fl">1.0</span>, <span class="at">CNSR =</span> <span class="dv">1</span>)</span>
 <span id="cb85-8"><a href="#cb85-8" tabindex="-1"></a></span>
 <span id="cb85-9"><a href="#cb85-9" tabindex="-1"></a>adtte2 <span class="ot">&lt;-</span> adtte <span class="sc">%&gt;%</span></span>
-<span id="cb85-10"><a href="#cb85-10" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">CNSDTDSC =</span> <span class="fu">ifelse</span>(CNSDTDSC <span class="sc">==</span> <span class="st">&quot;&quot;</span>, <span class="st">&quot;__none__&quot;</span>, CNSDTDSC))</span></code></pre></div>
+<span id="cb85-10"><a href="#cb85-10" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CNSDTDSC =</span> <span class="fu">ifelse</span>(CNSDTDSC <span class="sc">==</span> <span class="st">&quot;&quot;</span>, <span class="st">&quot;__none__&quot;</span>, CNSDTDSC))</span></code></pre></div>
 <p>The <code>adtte</code> dataset will be used in preparing the models
 while the <code>adtte2</code> dataset handles missing values in the
 “Censor Date Description” column and will be used to produce the final
@@ -2153,18 +2185,19 @@ table. We add censoring into the data for example purposes.</p>
 which prints the overall unique subject counts and percentages within
 the data.</p>
 <div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" tabindex="-1"></a>a_count_subjs <span class="ot">&lt;-</span> <span class="cf">function</span>(x, .N_col) {</span>
-<span id="cb86-2"><a href="#cb86-2" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="st">&quot;Subjects with Adverse Events n (%)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">length</span>(<span class="fu">unique</span>(x)) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col),</span>
-<span id="cb86-3"><a href="#cb86-3" tabindex="-1"></a>                                                         <span class="at">format =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>))</span>
-<span id="cb86-4"><a href="#cb86-4" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb86-2"><a href="#cb86-2" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
+<span id="cb86-3"><a href="#cb86-3" tabindex="-1"></a>    <span class="st">&quot;Subjects with Adverse Events n (%)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">length</span>(<span class="fu">unique</span>(x)) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>)</span>
+<span id="cb86-4"><a href="#cb86-4" tabindex="-1"></a>  )</span>
+<span id="cb86-5"><a href="#cb86-5" tabindex="-1"></a>}</span></code></pre></div>
 <p>Then an analysis function is created to generate the counts of
 censored subjects for each level of a factor variable in the dataset. In
 this case the <code>cnsr_counter</code> function will be applied with
 the <code>CNSDTDSC</code> variable which contains a censor date
 description for each censored subject.</p>
 <div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" tabindex="-1"></a>cnsr_counter <span class="ot">&lt;-</span> <span class="cf">function</span>(df, .var, .N_col) {</span>
-<span id="cb87-2"><a href="#cb87-2" tabindex="-1"></a>    x <span class="ot">&lt;-</span> df[<span class="sc">!</span><span class="fu">duplicated</span>(df<span class="sc">$</span>USUBJID), .var]</span>
-<span id="cb87-3"><a href="#cb87-3" tabindex="-1"></a>    x <span class="ot">&lt;-</span> x[x <span class="sc">!=</span> <span class="st">&quot;__none__&quot;</span>]</span>
-<span id="cb87-4"><a href="#cb87-4" tabindex="-1"></a>    <span class="fu">lapply</span>(<span class="fu">table</span>(x), <span class="cf">function</span>(xi) <span class="fu">rcell</span>(xi <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>))</span>
+<span id="cb87-2"><a href="#cb87-2" tabindex="-1"></a>  x <span class="ot">&lt;-</span> df[<span class="sc">!</span><span class="fu">duplicated</span>(df<span class="sc">$</span>USUBJID), .var]</span>
+<span id="cb87-3"><a href="#cb87-3" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x[x <span class="sc">!=</span> <span class="st">&quot;__none__&quot;</span>]</span>
+<span id="cb87-4"><a href="#cb87-4" tabindex="-1"></a>  <span class="fu">lapply</span>(<span class="fu">table</span>(x), <span class="cf">function</span>(xi) <span class="fu">rcell</span>(xi <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>))</span>
 <span id="cb87-5"><a href="#cb87-5" tabindex="-1"></a>}</span></code></pre></div>
 <p>This function generates counts and fractions of unique subjects
 corresponding to each factor level, excluding missing values (uncensored
@@ -2180,25 +2213,27 @@ confidence intervals, and p-values comparing against the reference group
 <div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" tabindex="-1"></a>cph <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(AVAL, CNSR <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">~</span> ACTARM <span class="sc">+</span> STRATA1, <span class="at">ties =</span> <span class="st">&quot;exact&quot;</span>, <span class="at">data =</span> adtte)</span>
 <span id="cb88-2"><a href="#cb88-2" tabindex="-1"></a></span>
 <span id="cb88-3"><a href="#cb88-3" tabindex="-1"></a>a_cph <span class="ot">&lt;-</span> <span class="cf">function</span>(df, .var, .in_ref_col, .ref_full, full_cox_fit) {</span>
-<span id="cb88-4"><a href="#cb88-4" tabindex="-1"></a>    <span class="cf">if</span> (.in_ref_col) {</span>
-<span id="cb88-5"><a href="#cb88-5" tabindex="-1"></a>        ret <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">3</span>, <span class="fu">list</span>(<span class="fu">rcell</span>(<span class="cn">NULL</span>)))</span>
-<span id="cb88-6"><a href="#cb88-6" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb88-7"><a href="#cb88-7" tabindex="-1"></a>        curtrt <span class="ot">&lt;-</span> df[[.var]][<span class="dv">1</span>]</span>
-<span id="cb88-8"><a href="#cb88-8" tabindex="-1"></a>        coefs <span class="ot">&lt;-</span> <span class="fu">coef</span>(full_cox_fit)</span>
-<span id="cb88-9"><a href="#cb88-9" tabindex="-1"></a>        sel_pos <span class="ot">&lt;-</span> <span class="fu">grep</span>(curtrt, <span class="fu">names</span>(coefs), <span class="at">fixed =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb88-10"><a href="#cb88-10" tabindex="-1"></a>        hrval <span class="ot">&lt;-</span> <span class="fu">exp</span>(coefs[sel_pos])</span>
-<span id="cb88-11"><a href="#cb88-11" tabindex="-1"></a>        sdf <span class="ot">&lt;-</span> <span class="fu">survdiff</span>(<span class="fu">Surv</span>(AVAL, CNSR <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">~</span> ACTARM <span class="sc">+</span> STRATA1,</span>
-<span id="cb88-12"><a href="#cb88-12" tabindex="-1"></a>                        <span class="at">data =</span> <span class="fu">rbind</span>(df, .ref_full))</span>
-<span id="cb88-13"><a href="#cb88-13" tabindex="-1"></a>        pval <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(sdf<span class="sc">$</span>chisq, <span class="fu">length</span>(sdf<span class="sc">$</span>n) <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">/</span> <span class="dv">2</span></span>
-<span id="cb88-14"><a href="#cb88-14" tabindex="-1"></a>        ci_val <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">unlist</span>(<span class="fu">confint</span>(full_cox_fit)[sel_pos, ]))</span>
-<span id="cb88-15"><a href="#cb88-15" tabindex="-1"></a>        ret <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">rcell</span>(hrval, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>),</span>
-<span id="cb88-16"><a href="#cb88-16" tabindex="-1"></a>                    <span class="fu">rcell</span>(ci_val, <span class="at">format =</span> <span class="st">&quot;(xx.x, xx.x)&quot;</span>),</span>
-<span id="cb88-17"><a href="#cb88-17" tabindex="-1"></a>                    <span class="fu">rcell</span>(pval, <span class="at">format =</span> <span class="st">&quot;x.xxxx | (&lt;0.0001)&quot;</span>))</span>
-<span id="cb88-18"><a href="#cb88-18" tabindex="-1"></a>    }</span>
-<span id="cb88-19"><a href="#cb88-19" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="at">.list =</span> ret, <span class="at">.names =</span> <span class="fu">c</span>(<span class="st">&quot;Hazard ratio&quot;</span>,</span>
-<span id="cb88-20"><a href="#cb88-20" tabindex="-1"></a>                                    <span class="st">&quot;95% confidence interval&quot;</span>,</span>
-<span id="cb88-21"><a href="#cb88-21" tabindex="-1"></a>                                    <span class="st">&quot;p-value (one-sided stratified log rank)&quot;</span>))</span>
-<span id="cb88-22"><a href="#cb88-22" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb88-4"><a href="#cb88-4" tabindex="-1"></a>  <span class="cf">if</span> (.in_ref_col) {</span>
+<span id="cb88-5"><a href="#cb88-5" tabindex="-1"></a>    ret <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">3</span>, <span class="fu">list</span>(<span class="fu">rcell</span>(<span class="cn">NULL</span>)))</span>
+<span id="cb88-6"><a href="#cb88-6" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb88-7"><a href="#cb88-7" tabindex="-1"></a>    curtrt <span class="ot">&lt;-</span> df[[.var]][<span class="dv">1</span>]</span>
+<span id="cb88-8"><a href="#cb88-8" tabindex="-1"></a>    coefs <span class="ot">&lt;-</span> <span class="fu">coef</span>(full_cox_fit)</span>
+<span id="cb88-9"><a href="#cb88-9" tabindex="-1"></a>    sel_pos <span class="ot">&lt;-</span> <span class="fu">grep</span>(curtrt, <span class="fu">names</span>(coefs), <span class="at">fixed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb88-10"><a href="#cb88-10" tabindex="-1"></a>    hrval <span class="ot">&lt;-</span> <span class="fu">exp</span>(coefs[sel_pos])</span>
+<span id="cb88-11"><a href="#cb88-11" tabindex="-1"></a>    sdf <span class="ot">&lt;-</span> <span class="fu">survdiff</span>(<span class="fu">Surv</span>(AVAL, CNSR <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">~</span> ACTARM <span class="sc">+</span> STRATA1, <span class="at">data =</span> <span class="fu">rbind</span>(df, .ref_full))</span>
+<span id="cb88-12"><a href="#cb88-12" tabindex="-1"></a>    pval <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(sdf<span class="sc">$</span>chisq, <span class="fu">length</span>(sdf<span class="sc">$</span>n) <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb88-13"><a href="#cb88-13" tabindex="-1"></a>    ci_val <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">unlist</span>(<span class="fu">confint</span>(full_cox_fit)[sel_pos, ]))</span>
+<span id="cb88-14"><a href="#cb88-14" tabindex="-1"></a>    ret <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb88-15"><a href="#cb88-15" tabindex="-1"></a>      <span class="fu">rcell</span>(hrval, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>),</span>
+<span id="cb88-16"><a href="#cb88-16" tabindex="-1"></a>      <span class="fu">rcell</span>(ci_val, <span class="at">format =</span> <span class="st">&quot;(xx.x, xx.x)&quot;</span>),</span>
+<span id="cb88-17"><a href="#cb88-17" tabindex="-1"></a>      <span class="fu">rcell</span>(pval, <span class="at">format =</span> <span class="st">&quot;x.xxxx | (&lt;0.0001)&quot;</span>)</span>
+<span id="cb88-18"><a href="#cb88-18" tabindex="-1"></a>    )</span>
+<span id="cb88-19"><a href="#cb88-19" tabindex="-1"></a>  }</span>
+<span id="cb88-20"><a href="#cb88-20" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
+<span id="cb88-21"><a href="#cb88-21" tabindex="-1"></a>    <span class="at">.list =</span> ret,</span>
+<span id="cb88-22"><a href="#cb88-22" tabindex="-1"></a>    <span class="at">.names =</span> <span class="fu">c</span>(<span class="st">&quot;Hazard ratio&quot;</span>, <span class="st">&quot;95% confidence interval&quot;</span>, <span class="st">&quot;p-value (one-sided stratified log rank)&quot;</span>)</span>
+<span id="cb88-23"><a href="#cb88-23" tabindex="-1"></a>  )</span>
+<span id="cb88-24"><a href="#cb88-24" tabindex="-1"></a>}</span></code></pre></div>
 <p>The fourth and final analysis function, <code>a_tte</code>, generates
 a time to first adverse event table with three rows corresponding to
 Median, 95% Confidence Interval, and Min Max respectively. First a
@@ -2207,49 +2242,54 @@ using the <code>survfit()</code> and <code>Surv()</code> functions from
 the <code>survival</code> package. This table is then given as input to
 <code>a_tte</code> which produces the table of time to first adverse
 event consisting of the previously mentioned summary statistics.</p>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" tabindex="-1"></a>surv_tbl <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">summary</span>(<span class="fu">survfit</span>(<span class="fu">Surv</span>(AVAL, CNSR <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">~</span> ACTARM,</span>
-<span id="cb89-2"><a href="#cb89-2" tabindex="-1"></a>                                          <span class="at">data =</span> adtte, <span class="at">conf.type =</span> <span class="st">&quot;log-log&quot;</span>))<span class="sc">$</span>table) <span class="sc">%&gt;%</span></span>
-<span id="cb89-3"><a href="#cb89-3" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">ACTARM =</span> <span class="fu">factor</span>(<span class="fu">gsub</span>(<span class="st">&quot;ACTARM=&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="fu">row.names</span>(.)),</span>
-<span id="cb89-4"><a href="#cb89-4" tabindex="-1"></a>                                  <span class="at">levels =</span> <span class="fu">levels</span>(adtte<span class="sc">$</span>ACTARM)),</span>
-<span id="cb89-5"><a href="#cb89-5" tabindex="-1"></a>                  <span class="at">ind =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb89-6"><a href="#cb89-6" tabindex="-1"></a></span>
-<span id="cb89-7"><a href="#cb89-7" tabindex="-1"></a>a_tte <span class="ot">&lt;-</span> <span class="cf">function</span>(df, .var,  kp_table) {</span>
-<span id="cb89-8"><a href="#cb89-8" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">grep</span>(df[[.var]][<span class="dv">1</span>], <span class="fu">row.names</span>(kp_table), <span class="at">fixed =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb89-9"><a href="#cb89-9" tabindex="-1"></a>    minmax <span class="ot">&lt;-</span> <span class="fu">range</span>(df[[<span class="st">&quot;AVAL&quot;</span>]])</span>
-<span id="cb89-10"><a href="#cb89-10" tabindex="-1"></a>    mm_val_str <span class="ot">&lt;-</span> <span class="fu">format_value</span>(minmax, <span class="at">format =</span> <span class="st">&quot;xx.x, xx.x&quot;</span>)</span>
-<span id="cb89-11"><a href="#cb89-11" tabindex="-1"></a>    rowfn <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb89-12"><a href="#cb89-12" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">all</span>(df<span class="sc">$</span>CNSR[df<span class="sc">$</span>AVAL <span class="sc">==</span> minmax[<span class="dv">2</span>]])) {</span>
-<span id="cb89-13"><a href="#cb89-13" tabindex="-1"></a>        mm_val_str <span class="ot">&lt;-</span> <span class="fu">paste0</span>(mm_val_str, <span class="st">&quot;*&quot;</span>)</span>
-<span id="cb89-14"><a href="#cb89-14" tabindex="-1"></a>        rowfn <span class="ot">&lt;-</span> <span class="st">&quot;* indicates censoring&quot;</span></span>
-<span id="cb89-15"><a href="#cb89-15" tabindex="-1"></a>    }</span>
-<span id="cb89-16"><a href="#cb89-16" tabindex="-1"></a>    <span class="fu">in_rows</span>(<span class="at">Median =</span> kp_table[ind, <span class="st">&quot;median&quot;</span>, <span class="at">drop =</span> <span class="cn">TRUE</span>],</span>
-<span id="cb89-17"><a href="#cb89-17" tabindex="-1"></a>            <span class="st">&quot;95% confidence interval&quot;</span> <span class="ot">=</span> <span class="fu">unlist</span>(kp_table[ind, <span class="fu">c</span>(<span class="st">&quot;0.95LCL&quot;</span>, <span class="st">&quot;0.95UCL&quot;</span>)]),</span>
-<span id="cb89-18"><a href="#cb89-18" tabindex="-1"></a>            <span class="st">&quot;Min Max&quot;</span> <span class="ot">=</span> mm_val_str,</span>
-<span id="cb89-19"><a href="#cb89-19" tabindex="-1"></a>            <span class="at">.formats =</span> <span class="fu">c</span>(<span class="st">&quot;xx.xx&quot;</span>,</span>
-<span id="cb89-20"><a href="#cb89-20" tabindex="-1"></a>                         <span class="st">&quot;xx.xx - xx.xx&quot;</span>,</span>
-<span id="cb89-21"><a href="#cb89-21" tabindex="-1"></a>                         <span class="st">&quot;xx&quot;</span>),</span>
-<span id="cb89-22"><a href="#cb89-22" tabindex="-1"></a>            <span class="at">.row_footnotes =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="cn">NULL</span>, rowfn))</span>
-<span id="cb89-23"><a href="#cb89-23" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" tabindex="-1"></a>surv_tbl <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(</span>
+<span id="cb89-2"><a href="#cb89-2" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="fu">survfit</span>(<span class="fu">Surv</span>(AVAL, CNSR <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">~</span> ACTARM, <span class="at">data =</span> adtte, <span class="at">conf.type =</span> <span class="st">&quot;log-log&quot;</span>))<span class="sc">$</span>table</span>
+<span id="cb89-3"><a href="#cb89-3" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb89-4"><a href="#cb89-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb89-5"><a href="#cb89-5" tabindex="-1"></a>    <span class="at">ACTARM =</span> <span class="fu">factor</span>(<span class="fu">gsub</span>(<span class="st">&quot;ACTARM=&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="fu">row.names</span>(.)), <span class="at">levels =</span> <span class="fu">levels</span>(adtte<span class="sc">$</span>ACTARM)),</span>
+<span id="cb89-6"><a href="#cb89-6" tabindex="-1"></a>    <span class="at">ind =</span> <span class="cn">FALSE</span></span>
+<span id="cb89-7"><a href="#cb89-7" tabindex="-1"></a>  )</span>
+<span id="cb89-8"><a href="#cb89-8" tabindex="-1"></a></span>
+<span id="cb89-9"><a href="#cb89-9" tabindex="-1"></a>a_tte <span class="ot">&lt;-</span> <span class="cf">function</span>(df, .var, kp_table) {</span>
+<span id="cb89-10"><a href="#cb89-10" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> <span class="fu">grep</span>(df[[.var]][<span class="dv">1</span>], <span class="fu">row.names</span>(kp_table), <span class="at">fixed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb89-11"><a href="#cb89-11" tabindex="-1"></a>  minmax <span class="ot">&lt;-</span> <span class="fu">range</span>(df[[<span class="st">&quot;AVAL&quot;</span>]])</span>
+<span id="cb89-12"><a href="#cb89-12" tabindex="-1"></a>  mm_val_str <span class="ot">&lt;-</span> <span class="fu">format_value</span>(minmax, <span class="at">format =</span> <span class="st">&quot;xx.x, xx.x&quot;</span>)</span>
+<span id="cb89-13"><a href="#cb89-13" tabindex="-1"></a>  rowfn <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb89-14"><a href="#cb89-14" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">all</span>(df<span class="sc">$</span>CNSR[df<span class="sc">$</span>AVAL <span class="sc">==</span> minmax[<span class="dv">2</span>]])) {</span>
+<span id="cb89-15"><a href="#cb89-15" tabindex="-1"></a>    mm_val_str <span class="ot">&lt;-</span> <span class="fu">paste0</span>(mm_val_str, <span class="st">&quot;*&quot;</span>)</span>
+<span id="cb89-16"><a href="#cb89-16" tabindex="-1"></a>    rowfn <span class="ot">&lt;-</span> <span class="st">&quot;* indicates censoring&quot;</span></span>
+<span id="cb89-17"><a href="#cb89-17" tabindex="-1"></a>  }</span>
+<span id="cb89-18"><a href="#cb89-18" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
+<span id="cb89-19"><a href="#cb89-19" tabindex="-1"></a>    <span class="at">Median =</span> kp_table[ind, <span class="st">&quot;median&quot;</span>, <span class="at">drop =</span> <span class="cn">TRUE</span>],</span>
+<span id="cb89-20"><a href="#cb89-20" tabindex="-1"></a>    <span class="st">&quot;95% confidence interval&quot;</span> <span class="ot">=</span> <span class="fu">unlist</span>(kp_table[ind, <span class="fu">c</span>(<span class="st">&quot;0.95LCL&quot;</span>, <span class="st">&quot;0.95UCL&quot;</span>)]),</span>
+<span id="cb89-21"><a href="#cb89-21" tabindex="-1"></a>    <span class="st">&quot;Min Max&quot;</span> <span class="ot">=</span> mm_val_str,</span>
+<span id="cb89-22"><a href="#cb89-22" tabindex="-1"></a>    <span class="at">.formats =</span> <span class="fu">c</span>(<span class="st">&quot;xx.xx&quot;</span>, <span class="st">&quot;xx.xx - xx.xx&quot;</span>, <span class="st">&quot;xx&quot;</span>),</span>
+<span id="cb89-23"><a href="#cb89-23" tabindex="-1"></a>    <span class="at">.row_footnotes =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="cn">NULL</span>, rowfn)</span>
+<span id="cb89-24"><a href="#cb89-24" tabindex="-1"></a>  )</span>
+<span id="cb89-25"><a href="#cb89-25" tabindex="-1"></a>}</span></code></pre></div>
 <p>Additionally, the <code>a_tte</code> function creates a referential
 footnote within the table to indicate where censoring occurred in the
 data.</p>
 <p>Now we are able to use these four analysis functions to build our
 time to event analysis table.</p>
 <div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb90-2"><a href="#cb90-2" tabindex="-1"></a>    <span class="do">## Column faceting</span></span>
-<span id="cb90-3"><a href="#cb90-3" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>, <span class="at">ref_group =</span> <span class="st">&quot;A: Drug X&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb90-4"><a href="#cb90-4" tabindex="-1"></a>    <span class="do">## Overall count</span></span>
-<span id="cb90-5"><a href="#cb90-5" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;USUBJID&quot;</span>, a_count_subjs, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb90-6"><a href="#cb90-6" tabindex="-1"></a>    <span class="do">## Censored subjects summary</span></span>
-<span id="cb90-7"><a href="#cb90-7" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;CNSDTDSC&quot;</span>, cnsr_counter, <span class="at">var_labels =</span> <span class="st">&quot;Censored Subjects&quot;</span>, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb90-8"><a href="#cb90-8" tabindex="-1"></a>    <span class="do">## Cox P-H analysis</span></span>
-<span id="cb90-9"><a href="#cb90-9" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;ARM&quot;</span>, a_cph, <span class="at">extra_args =</span> <span class="fu">list</span>(<span class="at">full_cox_fit =</span> cph), <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb90-10"><a href="#cb90-10" tabindex="-1"></a>    <span class="do">## Time-to-event analysis</span></span>
-<span id="cb90-11"><a href="#cb90-11" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;ARM&quot;</span>, a_tte, <span class="at">var_labels =</span> <span class="st">&quot;Time to first adverse event&quot;</span>, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>,</span>
-<span id="cb90-12"><a href="#cb90-12" tabindex="-1"></a>            <span class="at">extra_args =</span> <span class="fu">list</span>(<span class="at">kp_table =</span> surv_tbl),</span>
-<span id="cb90-13"><a href="#cb90-13" tabindex="-1"></a>            <span class="at">table_names =</span> <span class="st">&quot;kapmeier&quot;</span>)</span>
-<span id="cb90-14"><a href="#cb90-14" tabindex="-1"></a></span>
-<span id="cb90-15"><a href="#cb90-15" tabindex="-1"></a>tbl_tte <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, adtte2)</span></code></pre></div>
+<span id="cb90-2"><a href="#cb90-2" tabindex="-1"></a>  <span class="do">## Column faceting</span></span>
+<span id="cb90-3"><a href="#cb90-3" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>, <span class="at">ref_group =</span> <span class="st">&quot;A: Drug X&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb90-4"><a href="#cb90-4" tabindex="-1"></a>  <span class="do">## Overall count</span></span>
+<span id="cb90-5"><a href="#cb90-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;USUBJID&quot;</span>, a_count_subjs, <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb90-6"><a href="#cb90-6" tabindex="-1"></a>  <span class="do">## Censored subjects summary</span></span>
+<span id="cb90-7"><a href="#cb90-7" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;CNSDTDSC&quot;</span>, cnsr_counter, <span class="at">var_labels =</span> <span class="st">&quot;Censored Subjects&quot;</span>, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb90-8"><a href="#cb90-8" tabindex="-1"></a>  <span class="do">## Cox P-H analysis</span></span>
+<span id="cb90-9"><a href="#cb90-9" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;ARM&quot;</span>, a_cph, <span class="at">extra_args =</span> <span class="fu">list</span>(<span class="at">full_cox_fit =</span> cph), <span class="at">show_labels =</span> <span class="st">&quot;hidden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb90-10"><a href="#cb90-10" tabindex="-1"></a>  <span class="do">## Time-to-event analysis</span></span>
+<span id="cb90-11"><a href="#cb90-11" tabindex="-1"></a>  <span class="fu">analyze</span>(</span>
+<span id="cb90-12"><a href="#cb90-12" tabindex="-1"></a>    <span class="st">&quot;ARM&quot;</span>, a_tte,</span>
+<span id="cb90-13"><a href="#cb90-13" tabindex="-1"></a>    <span class="at">var_labels =</span> <span class="st">&quot;Time to first adverse event&quot;</span>, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>,</span>
+<span id="cb90-14"><a href="#cb90-14" tabindex="-1"></a>    <span class="at">extra_args =</span> <span class="fu">list</span>(<span class="at">kp_table =</span> surv_tbl),</span>
+<span id="cb90-15"><a href="#cb90-15" tabindex="-1"></a>    <span class="at">table_names =</span> <span class="st">&quot;kapmeier&quot;</span></span>
+<span id="cb90-16"><a href="#cb90-16" tabindex="-1"></a>  )</span>
+<span id="cb90-17"><a href="#cb90-17" tabindex="-1"></a></span>
+<span id="cb90-18"><a href="#cb90-18" tabindex="-1"></a>tbl_tte <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, adtte2)</span></code></pre></div>
 <p>We set the <code>show_colcounts</code> argument of
 <code>basic_table()</code> to <code>TRUE</code> to first print the total
 subject counts for each column. Next we use <code>split_cols_by()</code>
@@ -2268,11 +2308,12 @@ estimates are used to calculate the statistics listed under the “Time to
 first adverse event” heading within the table. The referential footnote
 created earlier in the time-to-event analysis function
 (<code>a_tte</code>) is also displayed.</p>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" tabindex="-1"></a><span class="fu">fnotes_at_path</span>(tbl_tte,</span>
-<span id="cb91-2"><a href="#cb91-2" tabindex="-1"></a>               <span class="fu">c</span>(<span class="st">&quot;ma_USUBJID_CNSDTDSC_ARM_kapmeier&quot;</span>, <span class="st">&quot;kapmeier&quot;</span>)</span>
-<span id="cb91-3"><a href="#cb91-3" tabindex="-1"></a>               ) <span class="ot">&lt;-</span> <span class="st">&quot;Product-limit (Kaplan-Meier) estimates.&quot;</span></span>
-<span id="cb91-4"><a href="#cb91-4" tabindex="-1"></a></span>
-<span id="cb91-5"><a href="#cb91-5" tabindex="-1"></a>tbl_tte</span></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" tabindex="-1"></a><span class="fu">fnotes_at_path</span>(</span>
+<span id="cb91-2"><a href="#cb91-2" tabindex="-1"></a>  tbl_tte,</span>
+<span id="cb91-3"><a href="#cb91-3" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;ma_USUBJID_CNSDTDSC_ARM_kapmeier&quot;</span>, <span class="st">&quot;kapmeier&quot;</span>)</span>
+<span id="cb91-4"><a href="#cb91-4" tabindex="-1"></a>) <span class="ot">&lt;-</span> <span class="st">&quot;Product-limit (Kaplan-Meier) estimates.&quot;</span></span>
+<span id="cb91-5"><a href="#cb91-5" tabindex="-1"></a></span>
+<span id="cb91-6"><a href="#cb91-6" tabindex="-1"></a>tbl_tte</span></code></pre></div>
 <pre><code>#                                             A: Drug X      B: Placebo     C: Combination
 #                                              (N=134)         (N=134)         (N=132)    
 # ————————————————————————————————————————————————————————————————————————————————————————

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2023-08-30" />
+<meta name="date" content="2023-12-07" />
 
 <title>Comparing Against Baselines or Control</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Comparing Against Baselines or Control</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2023-08-30</h4>
+<h4 class="date">2023-12-07</h4>
 
 
 
@@ -381,9 +381,9 @@ placebo arm and the other arms:</p>
 <span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, DM)</span>
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>tbl2</span></code></pre></div>
-<pre><code>#                          B: Placebo   A: Drug X   C: Combination
+<pre><code>#                          A: Drug X   B: Placebo   C: Combination
 # ————————————————————————————————————————————————————————————————
-# Difference of Averages      0.00        1.89           1.55</code></pre>
+# Difference of Averages     1.89         0.00           1.55</code></pre>
 <p>Note that the column order has changed and the reference group is
 displayed in the first column.</p>
 <p>In cases where we want cells to be blank in the reference column,
@@ -392,34 +392,38 @@ displayed in the first column.</p>
 argument:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>, <span class="at">ref_group =</span> <span class="st">&quot;B: Placebo&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(x, .ref_group, .in_ref_col) {</span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>      <span class="fu">in_rows</span>(<span class="st">&quot;Difference of Averages&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(<span class="fu">mean</span>(x) <span class="sc">-</span> <span class="fu">mean</span>(.ref_group),</span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>                                                       <span class="at">is_ref =</span> .in_ref_col,</span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>                                                       <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>))</span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  })</span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt3, DM)</span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>tbl3</span></code></pre></div>
-<pre><code>#                          B: Placebo   A: Drug X   C: Combination
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">analyze</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>    <span class="st">&quot;AGE&quot;</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    <span class="at">afun =</span> <span class="cf">function</span>(x, .ref_group, .in_ref_col) {</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>      <span class="fu">in_rows</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>        <span class="st">&quot;Difference of Averages&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(<span class="fu">mean</span>(x) <span class="sc">-</span> <span class="fu">mean</span>(.ref_group), <span class="at">is_ref =</span> .in_ref_col, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>      )</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>    }</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  )</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt3, DM)</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>tbl3</span></code></pre></div>
+<pre><code>#                          A: Drug X   B: Placebo   C: Combination
 # ————————————————————————————————————————————————————————————————
-# Difference of Averages                  1.89           1.55</code></pre>
+# Difference of Averages     1.89                        1.55</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>lyt4 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>, <span class="at">ref_group =</span> <span class="st">&quot;B: Placebo&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(x, .ref_group, .in_ref_col) {</span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>      <span class="fu">in_rows</span>(</span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>          <span class="st">&quot;Difference of Averages&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(<span class="fu">mean</span>(x) <span class="sc">-</span> <span class="fu">mean</span>(.ref_group),</span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>                                                   <span class="at">is_ref =</span> .in_ref_col,</span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>                                                   <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>),</span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>         <span class="st">&quot;another row&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(<span class="st">&quot;aaa&quot;</span>, .in_ref_col)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">analyze</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>    <span class="st">&quot;AGE&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>    <span class="at">afun =</span> <span class="cf">function</span>(x, .ref_group, .in_ref_col) {</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>      <span class="fu">in_rows</span>(</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>        <span class="st">&quot;Difference of Averages&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(<span class="fu">mean</span>(x) <span class="sc">-</span> <span class="fu">mean</span>(.ref_group), <span class="at">is_ref =</span> .in_ref_col, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>        <span class="st">&quot;another row&quot;</span> <span class="ot">=</span> <span class="fu">non_ref_rcell</span>(<span class="st">&quot;aaa&quot;</span>, .in_ref_col)</span>
 <span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>      )</span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  })</span>
-<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>tbl4 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt4, DM)</span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>tbl4</span></code></pre></div>
-<pre><code>#                          B: Placebo   A: Drug X   C: Combination
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>    }</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  )</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>tbl4 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt4, DM)</span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>tbl4</span></code></pre></div>
+<pre><code>#                          A: Drug X   B: Placebo   C: Combination
 # ————————————————————————————————————————————————————————————————
-# Difference of Averages                  1.89           1.55     
-# another row                              aaa           aaa</code></pre>
+# Difference of Averages     1.89                        1.55     
+# another row                 aaa                        aaa</code></pre>
 <p>You can see which arguments are available for <code>afun</code> in
 the manual for <code>analyze()</code>.</p>
 </div>
@@ -440,17 +444,17 @@ the column with or without row splitting. For example:</p>
 <span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a></span>
 <span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>tbl5 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt5, <span class="fu">subset</span>(DM, SEX <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span>
 <span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>tbl5</span></code></pre></div>
-<pre><code>#                                B: Placebo   A: Drug X   C: Combination
-#                                 (N=106)      (N=121)       (N=129)    
+<pre><code>#                                A: Drug X   B: Placebo   C: Combination
+#                                 (N=121)     (N=106)        (N=129)    
 # ——————————————————————————————————————————————————————————————————————
 # F                                                                     
-#   is reference (.in_ref_col)      TRUE        FALSE         FALSE     
-#   ref cell N (.ref_group)          56          56             56      
-#   ref column N (.ref_full)        106          106           106      
+#   is reference (.in_ref_col)     FALSE        TRUE          FALSE     
+#   ref cell N (.ref_group)         56           56             56      
+#   ref column N (.ref_full)        106         106            106      
 # M                                                                     
-#   is reference (.in_ref_col)      TRUE        FALSE         FALSE     
-#   ref cell N (.ref_group)          50          50             50      
-#   ref column N (.ref_full)        106          106           106</code></pre>
+#   is reference (.in_ref_col)     FALSE        TRUE          FALSE     
+#   ref cell N (.ref_group)         50           50             50      
+#   ref column N (.ref_full)        106         106            106</code></pre>
 <p>The data assigned to <code>.ref_full</code> is the full data of the
 reference column whereas the data assigned to <code>.ref_group</code>
 respects the subsetting defined by row-splitting and hence is from the

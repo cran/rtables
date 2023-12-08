@@ -373,7 +373,7 @@ generators:</p>
 <span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>    <span class="at">r2 =</span> <span class="fu">add_subgroup</span>(r1),</span>
 <span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">as.numeric</span>(<span class="dv">2</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(c1) <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(r1))</span>
 <span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>    <span class="fu">select</span>(c1, c2, r1, r2, x, y)</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>  <span class="fu">select</span>(c1, c2, r1, r2, x, y)</span>
 <span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a></span>
 <span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>df</span></code></pre></div>
 <pre><code># # A tibble: 100 × 6
@@ -477,7 +477,7 @@ with <code>in_rows()</code>:</p>
 <span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>  }, <span class="at">var_labels =</span> <span class="st">&quot;foo label&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;x&quot;</span>, <span class="cf">function</span>(x) {</span>
 <span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
-<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a>      <span class="st">&quot;more rows 1&quot;</span> <span class="ot">=</span>  <span class="fu">rcell</span>(<span class="fu">median</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>),</span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a>      <span class="st">&quot;more rows 1&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">median</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>),</span>
 <span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>      <span class="st">&quot;even more rows 1&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">IQR</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
 <span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a>    )</span>
 <span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a>  }, <span class="at">var_labels =</span> <span class="st">&quot;bar label&quot;</span>, <span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>)</span>
@@ -621,7 +621,7 @@ have to use:</p>
 <span id="cb49-5"><a href="#cb49-5" tabindex="-1"></a>lyt7 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb49-6"><a href="#cb49-6" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb49-7"><a href="#cb49-7" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb49-8"><a href="#cb49-8" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> foo) </span>
+<span id="cb49-8"><a href="#cb49-8" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>(<span class="at">cfun =</span> foo)</span>
 <span id="cb49-9"><a href="#cb49-9" tabindex="-1"></a></span>
 <span id="cb49-10"><a href="#cb49-10" tabindex="-1"></a>tbl7 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt7, df)</span>
 <span id="cb49-11"><a href="#cb49-11" tabindex="-1"></a>tbl7</span></code></pre></div>
@@ -670,7 +670,7 @@ in the function body. Let’s try some alternatives returning to
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a>lyt10 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb55-2"><a href="#cb55-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb55-3"><a href="#cb55-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;r1&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb55-4"><a href="#cb55-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;y&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(x) <span class="fu">mean</span>(x)) </span>
+<span id="cb55-4"><a href="#cb55-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;y&quot;</span>, <span class="at">afun =</span> <span class="cf">function</span>(x) <span class="fu">mean</span>(x))</span>
 <span id="cb55-5"><a href="#cb55-5" tabindex="-1"></a></span>
 <span id="cb55-6"><a href="#cb55-6" tabindex="-1"></a>tbl10 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt10, df)</span>
 <span id="cb55-7"><a href="#cb55-7" tabindex="-1"></a>tbl10</span></code></pre></div>

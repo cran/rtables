@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker" />
 
-<meta name="date" content="2023-08-30" />
+<meta name="date" content="2023-12-07" />
 
 <title>Controlling Splitting Behavior</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Controlling Splitting Behavior</h1>
 <h4 class="author">Gabriel Becker</h4>
-<h4 class="date">2023-08-30</h4>
+<h4 class="date">2023-12-07</h4>
 
 
 
@@ -405,21 +405,32 @@ using the following artificial data:</p>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>vclass <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;auto&quot;</span>, <span class="st">&quot;boat&quot;</span>), <span class="dv">1000</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>auto_inds <span class="ot">&lt;-</span> <span class="fu">which</span>(vclass <span class="sc">==</span> <span class="st">&quot;auto&quot;</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>vtype <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA_character_</span>, <span class="dv">1000</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>vtype[auto_inds] <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;car&quot;</span>, <span class="st">&quot;truck&quot;</span>), <span class="do">## suv missing on purpose</span></span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>                           <span class="fu">length</span>(auto_inds),</span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>                           <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>vtype[<span class="sc">-</span>auto_inds] <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;sailboat&quot;</span>, <span class="st">&quot;cruiseliner&quot;</span>),</span>
-<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>                            <span class="dv">1000</span> <span class="sc">-</span> <span class="fu">length</span>(auto_inds),</span>
-<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>                            <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>vehic_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">vehicle_class =</span> <span class="fu">factor</span>(vclass),</span>
-<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>                         <span class="at">vehicle_type =</span> <span class="fu">factor</span>(vtype, <span class="at">levels =</span> levs_type),</span>
-<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>                         <span class="at">color =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;white&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="dv">1000</span>,</span>
-<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>                                        <span class="at">prob =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>),</span>
-<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>                                        <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>                         <span class="at">cost =</span> <span class="fu">ifelse</span>(vclass <span class="sc">==</span> <span class="st">&quot;boat&quot;</span>, <span class="fu">rnorm</span>(<span class="dv">1000</span>, <span class="dv">100000</span>, <span class="at">sd =</span> <span class="dv">5000</span>),</span>
-<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>                                       <span class="fu">rnorm</span>(<span class="dv">1000</span>, <span class="dv">40000</span>, <span class="at">sd =</span> <span class="dv">5000</span>)))</span>
-<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="fu">head</span>(vehic_data)</span></code></pre></div>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>vtype[auto_inds] <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;car&quot;</span>, <span class="st">&quot;truck&quot;</span>), <span class="do">## suv missing on purpose</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="fu">length</span>(auto_inds),</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  <span class="at">replace =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>vtype[<span class="sc">-</span>auto_inds] <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;sailboat&quot;</span>, <span class="st">&quot;cruiseliner&quot;</span>),</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>  <span class="dv">1000</span> <span class="sc">-</span> <span class="fu">length</span>(auto_inds),</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  <span class="at">replace =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>)</span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>vehic_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>  <span class="at">vehicle_class =</span> <span class="fu">factor</span>(vclass),</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>  <span class="at">vehicle_type =</span> <span class="fu">factor</span>(vtype, <span class="at">levels =</span> levs_type),</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>  <span class="at">color =</span> <span class="fu">sample</span>(</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">&quot;white&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="dv">1000</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>    <span class="at">prob =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>    <span class="at">replace =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>  ),</span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>  <span class="at">cost =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>    vclass <span class="sc">==</span> <span class="st">&quot;boat&quot;</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">1000</span>, <span class="dv">100000</span>, <span class="at">sd =</span> <span class="dv">5000</span>),</span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">1000</span>, <span class="dv">40000</span>, <span class="at">sd =</span> <span class="dv">5000</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a>  )</span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a>)</span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a><span class="fu">head</span>(vehic_data)</span></code></pre></div>
 <pre><code>##   vehicle_class vehicle_type color      cost
 ## 1          boat     sailboat black 100393.81
 ## 2          auto          car white  38150.17
@@ -438,10 +449,10 @@ incoherent cells within our table:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="fu">build_table</span>(lyt, vehic_data)</span></code></pre></div>
 <pre><code>##                   black      white        red   
@@ -475,13 +486,12 @@ is taken up by meaningless combinations. If we use
 <code>vehicle_class</code>, we get a table which only has meaningful
 combinations:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">trim_levels_in_group</span>(<span class="st">&quot;vehicle_type&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="fu">build_table</span>(lyt2, vehic_data)</span></code></pre></div>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>, <span class="at">split_fun =</span> <span class="fu">trim_levels_in_group</span>(<span class="st">&quot;vehicle_type&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="fu">build_table</span>(lyt2, vehic_data)</span></code></pre></div>
 <pre><code>##                   black      white        red   
 ## ————————————————————————————————————————————————
 ## auto                                            
@@ -513,20 +523,20 @@ combinations <em>a priori</em>, and that exact set of combinations is
 produced in the resulting table, regardless of whether they are observed
 or not.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>map <span class="ot">&lt;-</span> <span class="fu">tribble</span>(<span class="sc">~</span>vehicle_class, <span class="sc">~</span>vehicle_type,</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>               <span class="st">&quot;auto&quot;</span>,         <span class="st">&quot;truck&quot;</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>               <span class="st">&quot;auto&quot;</span>,         <span class="st">&quot;suv&quot;</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>               <span class="st">&quot;auto&quot;</span>,         <span class="st">&quot;car&quot;</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>               <span class="st">&quot;boat&quot;</span>,         <span class="st">&quot;sailboat&quot;</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>               <span class="st">&quot;boat&quot;</span>,         <span class="st">&quot;cruiseliner&quot;</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
-<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>map <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="sc">~</span>vehicle_class, <span class="sc">~</span>vehicle_type,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="st">&quot;auto&quot;</span>,         <span class="st">&quot;truck&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="st">&quot;auto&quot;</span>,         <span class="st">&quot;suv&quot;</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="st">&quot;auto&quot;</span>,         <span class="st">&quot;car&quot;</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="st">&quot;boat&quot;</span>,         <span class="st">&quot;sailboat&quot;</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="st">&quot;boat&quot;</span>,         <span class="st">&quot;cruiseliner&quot;</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>)</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>, <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
 <span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a></span>
 <span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="fu">build_table</span>(lyt3, vehic_data)</span></code></pre></div>
 <pre><code>##                   black      white        red   
@@ -568,14 +578,12 @@ or last, if <code>FALSE</code>, in the ordering).</p>
 <p>Building further on our arbitrary vehicles table, we can use this to
 create an “all colors” category:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>lyt4 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>,</span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">add_overall_level</span>(<span class="st">&quot;allcolors&quot;</span>, <span class="at">label =</span> <span class="st">&quot;All Colors&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="fu">build_table</span>(lyt4, vehic_data)</span></code></pre></div>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>, <span class="at">split_fun =</span> <span class="fu">add_overall_level</span>(<span class="st">&quot;allcolors&quot;</span>, <span class="at">label =</span> <span class="st">&quot;All Colors&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>, <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="fu">build_table</span>(lyt4, vehic_data)</span></code></pre></div>
 <pre><code>##                 All Colors     black      white        red   
 ##                  (N=1000)     (N=521)    (N=251)     (N=228) 
 ## —————————————————————————————————————————————————————————————
@@ -618,19 +626,20 @@ tabulated within this column or row.</li>
 </ul>
 <p>Suppose we wanted combinations levels for all non-white colors, and
 for white and black colors. We do this like so:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>combodf <span class="ot">&lt;-</span> <span class="fu">tribble</span>(<span class="sc">~</span>valname,    <span class="sc">~</span>label,            <span class="sc">~</span>levelcombo,         <span class="sc">~</span>exargs,</span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>                   <span class="st">&quot;non-white&quot;</span>, <span class="st">&quot;Non-White&quot;</span>,       <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>),   <span class="fu">list</span>(),</span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>                   <span class="st">&quot;blackwhite&quot;</span>, <span class="st">&quot;Black or White&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;white&quot;</span>), <span class="fu">list</span>())</span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>lyt5 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>, <span class="at">split_fun =</span> <span class="fu">add_combo_levels</span>(combodf)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
-<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a></span>
-<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="fu">build_table</span>(lyt5, vehic_data)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>combodf <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="sc">~</span>valname, <span class="sc">~</span>label, <span class="sc">~</span>levelcombo, <span class="sc">~</span>exargs,</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="st">&quot;non-white&quot;</span>, <span class="st">&quot;Non-White&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="fu">list</span>(),</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  <span class="st">&quot;blackwhite&quot;</span>, <span class="st">&quot;Black or White&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;white&quot;</span>), <span class="fu">list</span>()</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>)</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>lyt5 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>, <span class="at">split_fun =</span> <span class="fu">add_combo_levels</span>(combodf)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>, <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="fu">build_table</span>(lyt5, vehic_data)</span></code></pre></div>
 <pre><code>##                   black      white        red      Non-White   Black or White
 ##                  (N=521)    (N=251)     (N=228)     (N=749)       (N=772)    
 ## —————————————————————————————————————————————————————————————————————————————
@@ -716,49 +725,54 @@ the data associated with it.</li>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="do">## reverse order of levels</span></span>
 <span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>rev_lev <span class="ot">&lt;-</span> <span class="cf">function</span>(df, spl, vals, labels, ...) {</span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>    <span class="do">## in the split_rows_by() and split_cols_by() cases,</span></span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>    <span class="do">## spl_variable() gives us the variable</span></span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>    var <span class="ot">&lt;-</span> <span class="fu">spl_variable</span>(spl)</span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>    vec <span class="ot">&lt;-</span> df[[var]]</span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>    levs <span class="ot">&lt;-</span> <span class="cf">if</span>(<span class="fu">is.character</span>(vec)) <span class="fu">unique</span>(vec) <span class="cf">else</span> <span class="fu">levels</span>(vec)</span>
-<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>    df[[var]] <span class="ot">&lt;-</span> <span class="fu">factor</span>(vec, <span class="at">levels =</span> <span class="fu">rev</span>(levs))</span>
-<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>    df</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="do">## in the split_rows_by() and split_cols_by() cases,</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>  <span class="do">## spl_variable() gives us the variable</span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>  var <span class="ot">&lt;-</span> <span class="fu">spl_variable</span>(spl)</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  vec <span class="ot">&lt;-</span> df[[var]]</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>  levs <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.character</span>(vec)) <span class="fu">unique</span>(vec) <span class="cf">else</span> <span class="fu">levels</span>(vec)</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>  df[[var]] <span class="ot">&lt;-</span> <span class="fu">factor</span>(vec, <span class="at">levels =</span> <span class="fu">rev</span>(levs))</span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>  df</span>
 <span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>}</span>
 <span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a></span>
 <span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a>rem_lev_facet <span class="ot">&lt;-</span> <span class="cf">function</span>(torem) {</span>
-<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>    <span class="cf">function</span>(df, spl, vals, labels, ...) {</span>
-<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a>        var <span class="ot">&lt;-</span> <span class="fu">spl_variable</span>(spl)</span>
-<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a>        vec <span class="ot">&lt;-</span> df[[var]]</span>
-<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a>        bad <span class="ot">&lt;-</span> vec <span class="sc">==</span> torem</span>
-<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a>        df <span class="ot">&lt;-</span> df[<span class="sc">!</span>bad,]</span>
-<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a>        levs <span class="ot">&lt;-</span> <span class="cf">if</span>(<span class="fu">is.character</span>(vec)) <span class="fu">unique</span>(vec) <span class="cf">else</span> <span class="fu">levels</span>(vec)</span>
-<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a>        df[[var]] <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">as.character</span>(vec[<span class="sc">!</span>bad]), <span class="at">levels =</span> <span class="fu">setdiff</span>(levs, torem))</span>
-<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a>        df</span>
-<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a>    }</span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>  <span class="cf">function</span>(df, spl, vals, labels, ...) {</span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a>    var <span class="ot">&lt;-</span> <span class="fu">spl_variable</span>(spl)</span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a>    vec <span class="ot">&lt;-</span> df[[var]]</span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a>    bad <span class="ot">&lt;-</span> vec <span class="sc">==</span> torem</span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a>    df <span class="ot">&lt;-</span> df[<span class="sc">!</span>bad, ]</span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a>    levs <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.character</span>(vec)) <span class="fu">unique</span>(vec) <span class="cf">else</span> <span class="fu">levels</span>(vec)</span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a>    df[[var]] <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">as.character</span>(vec[<span class="sc">!</span>bad]), <span class="at">levels =</span> <span class="fu">setdiff</span>(levs, torem))</span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a>    df</span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a>  }</span>
 <span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a>}</span></code></pre></div>
 <p>Finally we implement our post-processing function. Here we will
 reorder the facets based on the amount of data each of them
 represents.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>sort_them_facets <span class="ot">&lt;-</span> <span class="cf">function</span>(splret, spl, fulldf, ...) {</span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>    ord <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">sapply</span>(splret<span class="sc">$</span>datasplit, nrow))</span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>    <span class="fu">make_split_result</span>(splret<span class="sc">$</span>values[ord],</span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>                      splret<span class="sc">$</span>datasplit[ord],</span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>                      splret<span class="sc">$</span>labels[ord])</span>
-<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  ord <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">sapply</span>(splret<span class="sc">$</span>datasplit, nrow))</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">make_split_result</span>(</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>    splret<span class="sc">$</span>values[ord],</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>    splret<span class="sc">$</span>datasplit[ord],</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>    splret<span class="sc">$</span>labels[ord]</span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  )</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>}</span></code></pre></div>
 <p>Finally, we construct our custom split function and use it to create
 our table:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>silly_splfun1 <span class="ot">&lt;-</span> <span class="fu">make_split_fun</span>(<span class="at">pre =</span> <span class="fu">list</span>(rev_lev,</span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>                                           <span class="fu">rem_lev_facet</span>(<span class="st">&quot;white&quot;</span>)),</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>                                <span class="at">post =</span> <span class="fu">list</span>(sort_them_facets))</span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>lyt6 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>, <span class="at">split_fun =</span> silly_splfun1) <span class="sc">%&gt;%</span></span>
-<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
-<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>                  <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
-<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
-<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="fu">build_table</span>(lyt6, vehic_data)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>silly_splfun1 <span class="ot">&lt;-</span> <span class="fu">make_split_fun</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="at">pre =</span> <span class="fu">list</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>    rev_lev,</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>    <span class="fu">rem_lev_facet</span>(<span class="st">&quot;white&quot;</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  ),</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>  <span class="at">post =</span> <span class="fu">list</span>(sort_them_facets)</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>)</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>lyt6 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>, <span class="at">split_fun =</span> silly_splfun1) <span class="sc">%&gt;%</span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>, <span class="at">split_fun =</span> <span class="fu">trim_levels_to_map</span>(map)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="fu">build_table</span>(lyt6, vehic_data)</span></code></pre></div>
 <pre><code>##                    red        black  
 ##                  (N=228)     (N=521) 
 ## —————————————————————————————————————
@@ -786,16 +800,22 @@ test for structural bias in the first and last observations, but really
 its to simply illustrate overriding the core splitting machinery and has
 no meaningful statistical purpose.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>silly_core_split <span class="ot">&lt;-</span> <span class="cf">function</span>(spl, df, vals, labels, .spl_context) {</span>
-<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>    <span class="fu">make_split_result</span>(<span class="fu">c</span>(<span class="st">&quot;first&quot;</span>, <span class="st">&quot;lowmid&quot;</span>, <span class="st">&quot;highmid&quot;</span>, <span class="st">&quot;last&quot;</span>),</span>
-<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>                      <span class="at">datasplit =</span> <span class="fu">list</span>(df[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,],</span>
-<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>                                       df[<span class="dv">101</span><span class="sc">:</span><span class="dv">500</span>,],</span>
-<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>                                       df[<span class="dv">501</span><span class="sc">:</span><span class="dv">900</span>,],</span>
-<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>                                       df[<span class="dv">901</span><span class="sc">:</span><span class="dv">1000</span>,]),</span>
-<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;first 100&quot;</span>,</span>
-<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>                                 <span class="st">&quot;obs 101-500&quot;</span>,</span>
-<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>                                 <span class="st">&quot;obs 501-900&quot;</span>,</span>
-<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>                                 <span class="st">&quot;last 100&quot;</span>))</span>
-<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="fu">make_split_result</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">&quot;first&quot;</span>, <span class="st">&quot;lowmid&quot;</span>, <span class="st">&quot;highmid&quot;</span>, <span class="st">&quot;last&quot;</span>),</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>    <span class="at">datasplit =</span> <span class="fu">list</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>      df[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, ],</span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>      df[<span class="dv">101</span><span class="sc">:</span><span class="dv">500</span>, ],</span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>      df[<span class="dv">501</span><span class="sc">:</span><span class="dv">900</span>, ],</span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>      df[<span class="dv">901</span><span class="sc">:</span><span class="dv">1000</span>, ]</span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>    ),</span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>      <span class="st">&quot;first 100&quot;</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a>      <span class="st">&quot;obs 101-500&quot;</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>      <span class="st">&quot;obs 501-900&quot;</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a>      <span class="st">&quot;last 100&quot;</span></span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a>    )</span>
+<span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a>  )</span>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a>}</span></code></pre></div>
 <p>We can use this to construct a splitting function. This can be
 combined with pre- and post-processing functions, as each of the stages
 is performed independently, but in this case, we won’t, because our core
@@ -804,13 +824,12 @@ sense.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>even_sillier_splfun <span class="ot">&lt;-</span> <span class="fu">make_split_fun</span>(<span class="at">core_split =</span> silly_core_split)</span>
 <span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>lyt7 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>    <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>,</span>
-<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>                  <span class="at">split_fun =</span> even_sillier_splfun) <span class="sc">%&gt;%</span></span>
-<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>    <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>    <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
-<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a></span>
-<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a><span class="fu">build_table</span>(lyt7, vehic_data)</span></code></pre></div>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;color&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_class&quot;</span>, <span class="at">split_fun =</span> even_sillier_splfun) <span class="sc">%&gt;%</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;vehicle_type&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;cost&quot;</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a><span class="fu">build_table</span>(lyt7, vehic_data)</span></code></pre></div>
 <pre><code>##                   black       white        red   
 ##                  (N=521)     (N=251)     (N=228) 
 ## —————————————————————————————————————————————————

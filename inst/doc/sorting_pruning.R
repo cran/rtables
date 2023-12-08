@@ -64,8 +64,6 @@ tmptbl <- sort_at_path(tmptbl, path = c("RACE", "BLACK OR AFRICAN AMERICAN", "ST
 tmptbl <- sort_at_path(tmptbl, path = c("RACE", "WHITE", "STRATA1"), scorefun = cont_n_allcols)
 tmptbl
 
-
-
 ## -----------------------------------------------------------------------------
 table_structure(pruned)
 
@@ -123,8 +121,7 @@ scorefun_onecol <- function(colpath) {
     unlist(cell_values(tt, colpath = colpath), use.names = FALSE)[1] # Modified to lose the list names
   }
 }
-sort_at_path(tbl, c("RACE", "*", "STRATA1", "*", "AGE"),
-             scorefun_onecol(colpath = c("ARM", "A: Drug X")))
+sort_at_path(tbl, c("RACE", "*", "STRATA1", "*", "AGE"), scorefun_onecol(colpath = c("ARM", "A: Drug X")))
 
 ## -----------------------------------------------------------------------------
 # Simpler table
@@ -138,8 +135,7 @@ tbl <- basic_table() %>%
   prune_table() %>%
   print()
 
-sort_at_path(tbl, c("AGE"),
-             scorefun_onecol(colpath = c("ARM", "B: Placebo", "SEX", "F")))
+sort_at_path(tbl, c("AGE"), scorefun_onecol(colpath = c("ARM", "B: Placebo", "SEX", "F")))
 
 ## -----------------------------------------------------------------------------
 silly_name_scorer <- function(tt) {
@@ -156,10 +152,16 @@ silly_gender_diffcount <- function(tt) {
   rpath <- c(obj_name(tt), "@content", obj_name(tt))
   ## the [1] below is cause these are count (pct%) cells
   ## and we only want the count part!
-  mcount <- unlist(cell_values(tt, rowpath = rpath,
-                               colpath = c("ARM", "C: Combination", "SEX", "M")))[1]
-  fcount <- unlist(cell_values(tt, rowpath = rpath,
-                               colpath = c("ARM", "C: Combination", "SEX", "F")))[1]
+  mcount <- unlist(cell_values(
+    tt,
+    rowpath = rpath,
+    colpath = c("ARM", "C: Combination", "SEX", "M")
+  ))[1]
+  fcount <- unlist(cell_values(
+    tt,
+    rowpath = rpath,
+    colpath = c("ARM", "C: Combination", "SEX", "F")
+  ))[1]
   (mcount - fcount) / fcount
 }
 

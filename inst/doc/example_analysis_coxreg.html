@@ -12,7 +12,7 @@
 
 <meta name="author" content="Emily de la Rua and Gabriel Becker" />
 
-<meta name="date" content="2023-08-30" />
+<meta name="date" content="2023-12-07" />
 
 <title>Example Complex Analysis Function: Modelling Cox Regression</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Example Complex Analysis Function:
 Modelling Cox Regression</h1>
 <h4 class="author">Emily de la Rua and Gabriel Becker</h4>
-<h4 class="date">2023-08-30</h4>
+<h4 class="date">2023-12-07</h4>
 
 
 
@@ -448,7 +448,7 @@ a separate row.</p>
 <span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>    xval <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">median</span>(x)</span>
 <span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>    effect_index <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">grepl</span>(covar, <span class="fu">names</span>(betas))</span>
 <span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>    coef_hat <span class="ot">&lt;-</span> betas[effect_index] <span class="sc">+</span> xval <span class="sc">*</span> betas[<span class="sc">!</span>effect_index]</span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>    coef_se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(betas_var[effect_index] <span class="sc">+</span> xval <span class="sc">^</span> <span class="dv">2</span> <span class="sc">*</span> betas_var[<span class="sc">!</span>effect_index] <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> xval <span class="sc">*</span> betas_cov)</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>    coef_se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(betas_var[effect_index] <span class="sc">+</span> xval<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> betas_var[<span class="sc">!</span>effect_index] <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> xval <span class="sc">*</span> betas_cov)</span>
 <span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>    q_norm <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">qnorm</span>((<span class="dv">1</span> <span class="sc">+</span> control<span class="sc">$</span>conf_level) <span class="sc">/</span> <span class="dv">2</span>)</span>
 <span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
 <span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>    var_lvl <span class="ot">&lt;-</span> <span class="fu">paste0</span>(effect, <span class="fu">levels</span>(data[[effect]])[<span class="sc">-</span><span class="dv">1</span>]) <span class="co"># [-1]: reference level</span></span>
@@ -531,7 +531,7 @@ information to be processed and displayed within our output table.</p>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  control <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">pval_method =</span> <span class="st">&quot;wald&quot;</span>, <span class="at">ties =</span> <span class="st">&quot;exact&quot;</span>, <span class="at">conf_level =</span> <span class="fl">0.95</span>, <span class="at">interaction =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  test_statistic <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">wald =</span> <span class="st">&quot;Wald&quot;</span>, <span class="at">likelihood =</span> <span class="st">&quot;LR&quot;</span>)[control<span class="sc">$</span>pval_method]</span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  mod_aov <span class="ot">&lt;-</span> <span class="fu">withCallingHandlers</span>(</span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    <span class="at">expr =</span> {car<span class="sc">::</span><span class="fu">Anova</span>(mod, <span class="at">test.statistic =</span> test_statistic, <span class="at">type =</span> <span class="st">&quot;III&quot;</span>)},</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    <span class="at">expr =</span> car<span class="sc">::</span><span class="fu">Anova</span>(mod, <span class="at">test.statistic =</span> test_statistic, <span class="at">type =</span> <span class="st">&quot;III&quot;</span>),</span>
 <span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>    <span class="at">message =</span> <span class="cf">function</span>(m) <span class="fu">invokeRestart</span>(<span class="st">&quot;muffleMessage&quot;</span>)</span>
 <span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  )</span>
 <span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  msum <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">any</span>(<span class="fu">attr</span>(stats<span class="sc">::</span><span class="fu">terms</span>(mod), <span class="st">&quot;order&quot;</span>) <span class="sc">==</span> <span class="dv">2</span>)) <span class="fu">summary</span>(mod, <span class="at">conf.int =</span> control<span class="sc">$</span>conf_level) <span class="cf">else</span> mod_aov</span>
@@ -557,7 +557,7 @@ information to be processed and displayed within our output table.</p>
 <span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a>    y</span>
 <span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
 <span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a>    pval <span class="ot">&lt;-</span> sum_anova[sum_anova<span class="sc">$</span>term <span class="sc">==</span> effect, ][[<span class="st">&quot;p.value&quot;</span>]]</span>
-<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a>    </span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a></span>
 <span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a>    <span class="do">## Test the interaction effect</span></span>
 <span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a>    pval_inter <span class="ot">&lt;-</span> sum_anova[<span class="fu">grep</span>(<span class="st">&quot;:&quot;</span>, sum_anova<span class="sc">$</span>term), ][[<span class="st">&quot;p.value&quot;</span>]]</span>
 <span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a>    covar_test <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>

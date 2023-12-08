@@ -12,7 +12,7 @@
 
 <meta name="author" content="Jana Stoilova, Adrian Waddell and Gabriel Becker" />
 
-<meta name="date" content="2023-08-30" />
+<meta name="date" content="2023-12-07" />
 
 <title>Exploratory Analysis</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Exploratory Analysis</h1>
 <h4 class="author">Jana Stoilova, Adrian Waddell and Gabriel Becker</h4>
-<h4 class="date">2023-08-30</h4>
+<h4 class="date">2023-12-07</h4>
 
 
 
@@ -386,8 +386,8 @@ control how to split the data across columns and rows respectively.</p>
 # ———————————————————————————————————————————————
 # count      134         134            132</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">qtable</span>(ex_adsl, <span class="at">col_vars =</span> <span class="st">&quot;ARM&quot;</span>, <span class="at">row_vars =</span> <span class="st">&quot;SEX&quot;</span>)</span></code></pre></div>
-<pre><code># count              A: Drug X   B: Placebo   C: Combination
-#                     (N=134)     (N=134)        (N=132)    
+<pre><code>#                    A: Drug X   B: Placebo   C: Combination
+# count               (N=134)     (N=134)        (N=132)    
 # ——————————————————————————————————————————————————————————
 # F                     79           77             66      
 # M                     51           55             60      
@@ -407,7 +407,7 @@ empty strings (““). This is because non empty values are required as
 labels when generating the table. The code below will generate an
 error.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>tmp_adsl <span class="ot">&lt;-</span> ex_adsl</span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>tmp_adsl<span class="sc">$</span>new <span class="ot">&lt;-</span> <span class="fu">rep_len</span>(<span class="fu">c</span>(<span class="st">&quot;&quot;</span>,<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>), <span class="fu">nrow</span>(tmp_adsl))</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>tmp_adsl<span class="sc">$</span>new <span class="ot">&lt;-</span> <span class="fu">rep_len</span>(<span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>), <span class="fu">nrow</span>(tmp_adsl))</span>
 <span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a></span>
 <span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="fu">qtable</span>(tmp_adsl, <span class="at">row_vars =</span> <span class="st">&quot;new&quot;</span>)</span></code></pre></div>
 </div>
@@ -417,9 +417,9 @@ error.</p>
 in <code>qtable()</code> will create a nested table. Arbitrary nesting
 is supported in each dimension.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">qtable</span>(ex_adsl, <span class="at">row_vars =</span> <span class="fu">c</span>(<span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="at">col_vars =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;STRATA2&quot;</span>))</span></code></pre></div>
-<pre><code># count                 A: Drug X        B: Placebo       C: Combination  
+<pre><code>#                       A: Drug X        B: Placebo       C: Combination  
 #                      S1       S2       S1       S2       S1        S2   
-#                    (N=73)   (N=61)   (N=67)   (N=67)   (N=56)    (N=76) 
+# count              (N=73)   (N=61)   (N=67)   (N=67)   (N=56)    (N=76) 
 # ————————————————————————————————————————————————————————————————————————
 # F                                                                       
 #   A                  12       9        11       13        7        11   
@@ -441,13 +441,15 @@ included in the table. This can be modified with
 <code>drop_levels</code>. The code below adds a row of 0s for
 <code>STRATA1</code> level “B” nested under the <code>SEX</code> level
 “UNDIFFERENTIATED”.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">qtable</span>(ex_adsl, </span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>       <span class="at">row_vars =</span> <span class="fu">c</span>(<span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), </span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>       <span class="at">col_vars =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;STRATA2&quot;</span>), </span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>       <span class="at">drop_levels =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<pre><code># count                 A: Drug X        B: Placebo       C: Combination  
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">qtable</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  ex_adsl,</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="at">row_vars =</span> <span class="fu">c</span>(<span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="at">col_vars =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;STRATA2&quot;</span>),</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="at">drop_levels =</span> <span class="cn">FALSE</span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>#                       A: Drug X        B: Placebo       C: Combination  
 #                      S1       S2       S1       S2       S1        S2   
-#                    (N=73)   (N=61)   (N=67)   (N=67)   (N=56)    (N=76) 
+# count              (N=73)   (N=61)   (N=67)   (N=67)   (N=56)    (N=76) 
 # ————————————————————————————————————————————————————————————————————————
 # F                                                                       
 #   A                  12       9        11       13        7        11   
@@ -468,7 +470,7 @@ included in the table. This can be modified with
 <p>In contrast, <code>table()</code> cannot return a nested table.
 Rather it produces a list of contingency tables when more than two
 variables are used as inputs.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">table</span>(ex_adsl<span class="sc">$</span>SEX, ex_adsl<span class="sc">$</span>STRATA1, ex_adsl<span class="sc">$</span>ARM, ex_adsl<span class="sc">$</span>STRATA2) </span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">table</span>(ex_adsl<span class="sc">$</span>SEX, ex_adsl<span class="sc">$</span>STRATA1, ex_adsl<span class="sc">$</span>ARM, ex_adsl<span class="sc">$</span>STRATA2)</span></code></pre></div>
 <pre><code># , ,  = A: Drug X,  = S1
 # 
 #                   
@@ -524,7 +526,7 @@ variables are used as inputs.</p>
 #   UNDIFFERENTIATED  1  0  0</code></pre>
 <p>With some help from <code>stats::ftable()</code> the nested structure
 can be achieved in two steps.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">ftable</span>(ex_adsl[, <span class="fu">c</span>(<span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;STRATA2&quot;</span>)]) </span>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">ftable</span>(ex_adsl[, <span class="fu">c</span>(<span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;STRATA2&quot;</span>)])</span>
 <span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="fu">ftable</span>(t1, <span class="at">row.vars =</span> <span class="fu">c</span>(<span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>))</span></code></pre></div>
 <pre><code>#                          ARM     A: Drug X    B: Placebo    C: Combination   
 #                          STRATA2        S1 S2         S1 S2             S1 S2
@@ -556,8 +558,8 @@ into the analysis variable:</p>
 <span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>tmp_adsl[[<span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="cn">NA_character_</span></span>
 <span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a></span>
 <span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a><span class="fu">qtable</span>(tmp_adsl, <span class="at">row_vars =</span> <span class="st">&quot;ARM&quot;</span>, <span class="at">col_vars =</span> <span class="st">&quot;SEX&quot;</span>)</span></code></pre></div>
-<pre><code># count               F         M        U     UNDIFFERENTIATED
-#                  (N=222)   (N=166)   (N=9)        (N=3)      
+<pre><code>#                     F         M        U     UNDIFFERENTIATED
+# count            (N=222)   (N=166)   (N=9)        (N=3)      
 # —————————————————————————————————————————————————————————————
 # A: Drug X           0         0        0            0        
 # B: Placebo          0         0        0            0        
@@ -573,8 +575,8 @@ function. We will see how the latter is done in the <a href="#custom-aggregation
 <span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>tmp_adsl[[<span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">addNA</span>(tmp_adsl[[<span class="dv">1</span>]])</span>
 <span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a></span>
 <span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a><span class="fu">qtable</span>(tmp_adsl, <span class="at">row_vars =</span> <span class="st">&quot;ARM&quot;</span>, <span class="at">col_vars =</span> <span class="st">&quot;SEX&quot;</span>)</span></code></pre></div>
-<pre><code># count               F         M        U     UNDIFFERENTIATED
-#                  (N=222)   (N=166)   (N=9)        (N=3)      
+<pre><code>#                     F         M        U     UNDIFFERENTIATED
+# count            (N=222)   (N=166)   (N=9)        (N=3)      
 # —————————————————————————————————————————————————————————————
 # A: Drug X          79        51        3            1        
 # B: Placebo         77        55        2            0        
@@ -584,8 +586,8 @@ levels explicitly labelled as above. If this is not done, the columns
 and/or rows will not reflect the full data.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>tmp_adsl<span class="sc">$</span>new1 <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="cn">NA_character_</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;X&quot;</span>, <span class="st">&quot;Y&quot;</span>, <span class="st">&quot;Z&quot;</span>))</span>
 <span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a><span class="fu">qtable</span>(tmp_adsl, <span class="at">row_vars =</span> <span class="st">&quot;ARM&quot;</span>, <span class="at">col_vars =</span> <span class="st">&quot;new1&quot;</span>)</span></code></pre></div>
-<pre><code># count              X       Y       Z  
-#                  (N=0)   (N=0)   (N=0)
+<pre><code>#                    X       Y       Z  
+# count            (N=0)   (N=0)   (N=0)
 # ——————————————————————————————————————
 # A: Drug X          0       0       0  
 # B: Placebo         0       0       0  
@@ -595,8 +597,8 @@ adds a column to the table:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>tmp_adsl<span class="sc">$</span>new2 <span class="ot">&lt;-</span> <span class="fu">addNA</span>(tmp_adsl<span class="sc">$</span>new1)</span>
 <span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a><span class="fu">levels</span>(tmp_adsl<span class="sc">$</span>new2)[<span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="st">&quot;&lt;NA&gt;&quot;</span> <span class="co"># NA needs to be a recognizible string</span></span>
 <span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a><span class="fu">qtable</span>(tmp_adsl, <span class="at">row_vars =</span> <span class="st">&quot;ARM&quot;</span>, <span class="at">col_vars =</span> <span class="st">&quot;new2&quot;</span>)</span></code></pre></div>
-<pre><code># count              X       Y       Z      &lt;NA&gt;  
-#                  (N=0)   (N=0)   (N=0)   (N=400)
+<pre><code>#                    X       Y       Z      &lt;NA&gt;  
+# count            (N=0)   (N=0)   (N=0)   (N=400)
 # ————————————————————————————————————————————————
 # A: Drug X          0       0       0       134  
 # B: Placebo         0       0       0       134  
@@ -609,8 +611,8 @@ define the type of function used to summarize the data in each facet. We
 can specify the type of analysis summary using the <code>afun</code>
 argument:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">qtable</span>(ex_adsl, <span class="at">row_vars =</span> <span class="st">&quot;STRATA2&quot;</span>, <span class="at">col_vars =</span> <span class="st">&quot;ARM&quot;</span>, <span class="at">avar =</span> <span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> mean)</span></code></pre></div>
-<pre><code># AGE - mean   A: Drug X   B: Placebo   C: Combination
-#               (N=134)     (N=134)        (N=132)    
+<pre><code>#              A: Drug X   B: Placebo   C: Combination
+# AGE - mean    (N=134)     (N=134)        (N=132)    
 # ————————————————————————————————————————————————————
 # S1             34.10       36.46          35.70     
 # S2             33.38       34.40          35.24</code></pre>
@@ -619,8 +621,8 @@ function name are included in the top right header of the table.</p>
 <p>If the analysis function returns a vector of 2 or 3 elements, the
 result is displayed in multi-valued single cells.</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">qtable</span>(ex_adsl, <span class="at">row_vars =</span> <span class="st">&quot;STRATA2&quot;</span>, <span class="at">col_vars =</span> <span class="st">&quot;ARM&quot;</span>, <span class="at">avar =</span> <span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> range)</span></code></pre></div>
-<pre><code># AGE - range    A: Drug X    B: Placebo    C: Combination
-#                 (N=134)       (N=134)        (N=132)    
+<pre><code>#                A: Drug X    B: Placebo    C: Combination
+# AGE - range     (N=134)       (N=134)        (N=132)    
 # ————————————————————————————————————————————————————————
 # S1            23.0 / 48.0   24.0 / 62.0    20.0 / 69.0  
 # S2            21.0 / 50.0   21.0 / 58.0    23.0 / 64.0</code></pre>
@@ -629,11 +631,11 @@ elements, you can use a list. In this case, the values are displayed in
 the table as multiple stacked cells within each facet. If the list
 elements are named, the names are used as row labels.</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>fivenum2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">as.list</span>(<span class="fu">fivenum</span>(x)), <span class="fu">c</span>(<span class="st">&quot;min&quot;</span>,<span class="st">&quot;Q1&quot;</span>,<span class="st">&quot;MED&quot;</span>,<span class="st">&quot;Q3&quot;</span>,<span class="st">&quot;max&quot;</span>))</span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">as.list</span>(<span class="fu">fivenum</span>(x)), <span class="fu">c</span>(<span class="st">&quot;min&quot;</span>, <span class="st">&quot;Q1&quot;</span>, <span class="st">&quot;MED&quot;</span>, <span class="st">&quot;Q3&quot;</span>, <span class="st">&quot;max&quot;</span>))</span>
 <span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>}</span>
 <span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a><span class="fu">qtable</span>(ex_adsl, <span class="at">row_vars =</span> <span class="st">&quot;STRATA2&quot;</span>, <span class="at">col_vars =</span> <span class="st">&quot;ARM&quot;</span>, <span class="at">avar =</span> <span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> fivenum2)</span></code></pre></div>
-<pre><code># AGE - fivenum2   A: Drug X   B: Placebo   C: Combination
-#                   (N=134)     (N=134)        (N=132)    
+<pre><code>#                  A: Drug X   B: Placebo   C: Combination
+# AGE - fivenum2    (N=134)     (N=134)        (N=132)    
 # ————————————————————————————————————————————————————————
 # S1                                                      
 #   min              23.00       24.00          20.00     
@@ -649,16 +651,16 @@ elements are named, the names are used as row labels.</p>
 #   max              50.00       58.00          64.00</code></pre>
 <p>More advanced formatting can be controlled with
 <code>in_rows()</code>. See function documentation for more details.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>meansd_range <span class="ot">=</span> <span class="cf">function</span>(x) {</span>
-<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>    <span class="fu">in_rows</span>(</span>
-<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a>        <span class="st">&quot;Mean (sd)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>),</span>
-<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a>        <span class="st">&quot;Range&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">range</span>(x), <span class="at">format =</span> <span class="st">&quot;xx - xx&quot;</span>)</span>
-<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a>    )</span>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>meansd_range <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>  <span class="fu">in_rows</span>(</span>
+<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a>    <span class="st">&quot;Mean (sd)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>),</span>
+<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a>    <span class="st">&quot;Range&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">range</span>(x), <span class="at">format =</span> <span class="st">&quot;xx - xx&quot;</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a>  )</span>
 <span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a>}</span>
 <span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a></span>
 <span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a><span class="fu">qtable</span>(ex_adsl, <span class="at">row_vars =</span> <span class="st">&quot;STRATA2&quot;</span>, <span class="at">col_vars =</span> <span class="st">&quot;ARM&quot;</span>, <span class="at">avar =</span> <span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> meansd_range)</span></code></pre></div>
-<pre><code># AGE - meansd_range    A: Drug X      B: Placebo    C: Combination
-#                        (N=134)        (N=134)         (N=132)    
+<pre><code>#                       A: Drug X      B: Placebo    C: Combination
+# AGE - meansd_range     (N=134)        (N=134)         (N=132)    
 # —————————————————————————————————————————————————————————————————
 # S1                                                               
 #   Mean (sd)          34.10 (6.71)   36.46 (7.72)    35.70 (8.22) 
@@ -674,10 +676,13 @@ add marginal summary rows with the <code>summarize_groups</code>
 argument. This summary will add to the table the count of non-NA records
 of the analysis variable at each level of nesting. For example, compare
 these two tables:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">qtable</span>(ex_adsl, <span class="at">row_vars =</span> <span class="fu">c</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;STRATA2&quot;</span>), <span class="at">col_vars =</span> <span class="st">&quot;ARM&quot;</span>,</span>
-<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a>      <span class="at">avar =</span> <span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> mean)</span></code></pre></div>
-<pre><code># AGE - mean   A: Drug X   B: Placebo   C: Combination
-#               (N=134)     (N=134)        (N=132)    
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">qtable</span>(</span>
+<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a>  ex_adsl,</span>
+<span id="cb37-3"><a href="#cb37-3" tabindex="-1"></a>  <span class="at">row_vars =</span> <span class="fu">c</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;STRATA2&quot;</span>), <span class="at">col_vars =</span> <span class="st">&quot;ARM&quot;</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" tabindex="-1"></a>  <span class="at">avar =</span> <span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> mean</span>
+<span id="cb37-5"><a href="#cb37-5" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>#              A: Drug X   B: Placebo   C: Combination
+# AGE - mean    (N=134)     (N=134)        (N=132)    
 # ————————————————————————————————————————————————————
 # A                                                   
 #   S1           31.61       36.68          34.00     
@@ -688,10 +693,13 @@ these two tables:</p>
 # C                                                   
 #   S1           35.26       35.38          36.58     
 #   S2           32.95       34.89          34.72</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">qtable</span>(ex_adsl, <span class="at">row_vars =</span> <span class="fu">c</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;STRATA2&quot;</span>), <span class="at">col_vars =</span> <span class="st">&quot;ARM&quot;</span>,</span>
-<span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a>       <span class="at">summarize_groups =</span> <span class="cn">TRUE</span>, <span class="at">avar =</span> <span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> mean)</span></code></pre></div>
-<pre><code># AGE - mean       A: Drug X    B: Placebo   C: Combination
-#                   (N=134)      (N=134)        (N=132)    
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">qtable</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a>  ex_adsl,</span>
+<span id="cb39-3"><a href="#cb39-3" tabindex="-1"></a>  <span class="at">row_vars =</span> <span class="fu">c</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;STRATA2&quot;</span>), <span class="at">col_vars =</span> <span class="st">&quot;ARM&quot;</span>,</span>
+<span id="cb39-4"><a href="#cb39-4" tabindex="-1"></a>  <span class="at">summarize_groups =</span> <span class="cn">TRUE</span>, <span class="at">avar =</span> <span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> mean</span>
+<span id="cb39-5"><a href="#cb39-5" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>#                  A: Drug X    B: Placebo   C: Combination
+# AGE - mean        (N=134)      (N=134)        (N=132)    
 # —————————————————————————————————————————————————————————
 # A                38 (28.4%)   44 (32.8%)     40 (30.3%)  
 #   S1             18 (13.4%)   22 (16.4%)     14 (10.6%)  
@@ -724,22 +732,25 @@ summary rows when using the core <code>rtables</code> framework.</p>
 <h2>Table Decorations</h2>
 <p>Tables generated with <code>qtable()</code> can include annotations
 such as titles, subtitles and footnotes like so:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">qtable</span>(ex_adsl, <span class="at">row_vars =</span> <span class="st">&quot;STRATA2&quot;</span>, <span class="at">col_vars =</span> <span class="st">&quot;ARM&quot;</span>,</span>
-<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Strata 2 Summary&quot;</span>, </span>
-<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="fu">paste0</span>(<span class="st">&quot;STUDY &quot;</span>, ex_adsl<span class="sc">$</span>STUDYID[<span class="dv">1</span>]), </span>
-<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a>       <span class="at">main_footer =</span> <span class="fu">paste0</span>(<span class="st">&quot;Date: &quot;</span>, <span class="fu">as.character</span>(<span class="fu">Sys.Date</span>())))</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">qtable</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a>  ex_adsl,</span>
+<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a>  <span class="at">row_vars =</span> <span class="st">&quot;STRATA2&quot;</span>, <span class="at">col_vars =</span> <span class="st">&quot;ARM&quot;</span>,</span>
+<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Strata 2 Summary&quot;</span>,</span>
+<span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a>  <span class="at">subtitle =</span> <span class="fu">paste0</span>(<span class="st">&quot;STUDY &quot;</span>, ex_adsl<span class="sc">$</span>STUDYID[<span class="dv">1</span>]),</span>
+<span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="fu">paste0</span>(<span class="st">&quot;Date: &quot;</span>, <span class="fu">as.character</span>(<span class="fu">Sys.Date</span>()))</span>
+<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code># Strata 2 Summary
 # STUDY AB12345
 # 
 # ———————————————————————————————————————————————
-# count   A: Drug X   B: Placebo   C: Combination
-#          (N=134)     (N=134)        (N=132)    
+#         A: Drug X   B: Placebo   C: Combination
+# count    (N=134)     (N=134)        (N=132)    
 # ———————————————————————————————————————————————
 # S1         73           67             56      
 # S2         61           67             76      
 # ———————————————————————————————————————————————
 # 
-# Date: 2023-08-30</code></pre>
+# Date: 2023-12-07</code></pre>
 </div>
 <div id="summary" class="section level2">
 <h2>Summary</h2>

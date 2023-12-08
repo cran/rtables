@@ -5,6 +5,9 @@ knitr::opts_chunk$set(comment = "#")
 library(rtables)
 library(dplyr)
 
+## ----echo=FALSE, fig.align='center'-------------------------------------------
+knitr::include_graphics("../man/figures/rtables-basics.png")
+
 ## ----data---------------------------------------------------------------------
 n <- 400
 
@@ -30,10 +33,20 @@ lyt <- basic_table(show_colcounts = TRUE) %>%
   summarize_row_groups() %>%
   split_rows_by("handed") %>%
   summarize_row_groups() %>%
-  analyze("age", afun = mean, format = "xx.x")
+  analyze("age", afun = mean, format = "xx.xx")
 
 tbl <- build_table(lyt, df)
 tbl
+
+## -----------------------------------------------------------------------------
+qtable(df,
+  row_vars = c("country", "handed"),
+  col_vars = c("arm", "gender"),
+  avar = "age",
+  afun = mean,
+  summarize_groups = TRUE,
+  row_labels = "mean"
+)
 
 ## -----------------------------------------------------------------------------
 lyt <- basic_table() %>%
@@ -80,12 +93,11 @@ lyt <- basic_table() %>%
   split_cols_by("arm") %>%
   split_cols_by("gender") %>%
   split_rows_by("country", page_by = TRUE) %>%
-  split_rows_by("handed") %>%  
+  split_rows_by("handed") %>%
   analyze("age", afun = mean, format = "xx.x")
 
 tbl <- build_table(lyt, df)
-cat(export_as_txt(tbl, page_type = "letter",
-                  page_break = "\n\n~~~~~~ Page Break ~~~~~~\n\n"))
+cat(export_as_txt(tbl, page_type = "letter", page_break = "\n\n~~~~~~ Page Break ~~~~~~\n\n"))
 
 ## -----------------------------------------------------------------------------
 lyt <- basic_table() %>%
@@ -128,28 +140,4 @@ lyt <- basic_table() %>%
 
 tbl <- build_table(lyt, df)
 tbl
-
-## -----------------------------------------------------------------------------
-table_structure(tbl)
-
-## -----------------------------------------------------------------------------
-table_structure(tbl, detail = "row")
-
-## -----------------------------------------------------------------------------
-make_row_df(tbl)[,c("label", "name", "abs_rownumber", "path", "node_class")]
-
-## -----------------------------------------------------------------------------
-make_row_df(tbl, visible_only = FALSE)[,c("label", "name", "abs_rownumber", "path", "node_class")]
-
-## -----------------------------------------------------------------------------
-make_col_df(tbl)
-
-## -----------------------------------------------------------------------------
-make_col_df(tbl, visible_only = FALSE)
-
-## -----------------------------------------------------------------------------
-row_paths_summary(tbl)
-
-## -----------------------------------------------------------------------------
-col_paths_summary(tbl)
 

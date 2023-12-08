@@ -117,18 +117,22 @@ tbl
 
 ## -----------------------------------------------------------------------------
 analysisfun <- function(x, ...) {
-    in_rows(row1 = 5,
-            row2 = c(1, 2),
-            .row_footnotes = list(row1 = "row 1 rfn"),
-            .cell_footnotes = list(row2 = "row 2 cfn"))
-    }
+  in_rows(
+    row1 = 5,
+    row2 = c(1, 2),
+    .row_footnotes = list(row1 = "row 1 rfn"),
+    .cell_footnotes = list(row2 = "row 2 cfn")
+  )
+}
 
-lyt <- basic_table(title = "Title says Whaaaat", subtitles = "Oh, ok.",
-                   main_footer = "ha HA! Footer!", prov_footer = "provenaaaaance") %>%
-    split_cols_by("ARM") %>%
-    analyze("AGE", afun = analysisfun)
+lyt <- basic_table(
+  title = "Title says Whaaaat", subtitles = "Oh, ok.",
+  main_footer = "ha HA! Footer!", prov_footer = "provenaaaaance"
+) %>%
+  split_cols_by("ARM") %>%
+  analyze("AGE", afun = analysisfun)
 
-result <-  build_table(lyt, ex_adsl)
+result <- build_table(lyt, ex_adsl)
 result
 
 ## -----------------------------------------------------------------------------
@@ -217,7 +221,7 @@ lyt <- basic_table(show_colcounts = TRUE) %>%
   split_rows_by("STRATA1") %>%
   analyze("AGE", mean, show_labels = "default")
 
-build_table(lyt, DM) 
+build_table(lyt, DM)
 
 ## -----------------------------------------------------------------------------
 lyt2 <- basic_table(show_colcounts = TRUE) %>%
@@ -226,7 +230,7 @@ lyt2 <- basic_table(show_colcounts = TRUE) %>%
   split_rows_by("STRATA1") %>%
   analyze("AGE", mean, show_labels = "visible")
 
-build_table(lyt2, DM) 
+build_table(lyt2, DM)
 
 ## -----------------------------------------------------------------------------
 basic_table(
@@ -256,23 +260,26 @@ basic_table(
 
 ## -----------------------------------------------------------------------------
 trimmed_data <- ex_adsl %>%
-    filter(SEX %in% c("M", "F")) %>%
-    filter(RACE %in% levels(RACE)[1:2])
+  filter(SEX %in% c("M", "F")) %>%
+  filter(RACE %in% levels(RACE)[1:2])
 
 levels(trimmed_data$ARM)[1] <- "Incredibly long column name to be wrapped"
 levels(trimmed_data$ARM)[2] <- "This_column_name_should_be_split_somewhere"
 
 wide_tbl <- basic_table(
-    title = "Title that is too long and also needs to be wrapped to a smaller width",
-    subtitles = "Subtitle that is also long and also needs to be wrapped to a smaller width",
-    main_footer = "Footnote that is wider than expected for this table.",
-    prov_footer = "Provenance footer material that is also wider than expected for this table.") %>%
-    split_cols_by("ARM") %>%
-    split_rows_by("RACE", split_fun = drop_split_levels) %>%
-    analyze(c("AGE", "EOSDY"),
-            na_str = "Very long cell contents to_be_wrapped_and_splitted",
-            inclNAs = TRUE) %>%
-    build_table(trimmed_data)
+  title = "Title that is too long and also needs to be wrapped to a smaller width",
+  subtitles = "Subtitle that is also long and also needs to be wrapped to a smaller width",
+  main_footer = "Footnote that is wider than expected for this table.",
+  prov_footer = "Provenance footer material that is also wider than expected for this table."
+) %>%
+  split_cols_by("ARM") %>%
+  split_rows_by("RACE", split_fun = drop_split_levels) %>%
+  analyze(
+    c("AGE", "EOSDY"),
+    na_str = "Very long cell contents to_be_wrapped_and_splitted",
+    inclNAs = TRUE
+  ) %>%
+  build_table(trimmed_data)
 
 wide_tbl
 
@@ -282,10 +289,12 @@ matrix_wrap_cells <- matrix(strsplit(result_wrap_cells, "\n")[[1]], ncol = 1)
 matrix_wrap_cells
 
 ## -----------------------------------------------------------------------------
-result_wrap_cells_tf <- toString(wide_tbl,
-                                 widths = c(10, 8, 8, 8),
-                                 tf_wrap = TRUE,
-                                 max_width = 43)
+result_wrap_cells_tf <- toString(
+  wide_tbl,
+  widths = c(10, 8, 8, 8),
+  tf_wrap = TRUE,
+  max_width = 43
+)
 matrix_wrap_cells_tf <- matrix(strsplit(result_wrap_cells_tf, "\n")[[1]], ncol = 1)
 matrix_wrap_cells_tf
 

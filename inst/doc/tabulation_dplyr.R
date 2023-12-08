@@ -67,23 +67,23 @@ tbl
 ## -----------------------------------------------------------------------------
 c_h_df <- df %>%
   group_by(arm, gender, country, handed) %>%
-    summarize(mean = mean(age), c_h_count = n()) %>%
-    ## we need the sum below to *not* be by country, so that we're dividing by the column counts
-    ungroup(country) %>%
+  summarize(mean = mean(age), c_h_count = n()) %>%
+  ## we need the sum below to *not* be by country, so that we're dividing by the column counts
+  ungroup(country) %>%
   # now the `handed` grouping has been removed, therefore we can calculate percent now:
-    mutate(n_col = sum(c_h_count), c_h_percent = c_h_count / n_col)
+  mutate(n_col = sum(c_h_count), c_h_percent = c_h_count / n_col)
 c_h_df
 
 ## -----------------------------------------------------------------------------
 c_df <- df %>%
   group_by(arm, gender, country) %>%
-    summarize(c_count = n()) %>%
+  summarize(c_count = n()) %>%
   # now the `handed` grouping has been removed, therefore we can calculate percent now:
-    mutate(n_col = sum(c_count), c_percent = c_count / n_col)
+  mutate(n_col = sum(c_count), c_percent = c_count / n_col)
 c_df
 
 ## -----------------------------------------------------------------------------
-full_dplyr <- left_join(c_h_df, c_df) %>% ungroup
+full_dplyr <- left_join(c_h_df, c_df) %>% ungroup()
 
 ## -----------------------------------------------------------------------------
 lyt <- basic_table(show_colcounts = TRUE) %>%
@@ -99,26 +99,31 @@ tbl <- build_table(lyt, df)
 tbl
 
 ## -----------------------------------------------------------------------------
-frm_rtables_h <- cell_values(tbl, rowpath = c("country", "CAN", "handed", "Right", "@content"),
-                             colpath = c("arm", "Arm B", "gender", "Female"))[[1]]
+frm_rtables_h <- cell_values(
+  tbl,
+  rowpath = c("country", "CAN", "handed", "Right", "@content"),
+  colpath = c("arm", "Arm B", "gender", "Female")
+)[[1]]
 frm_rtables_h
 
-frm_dplyr_h <-  full_dplyr %>%
-    filter(country == "CAN" & handed == "Right" & arm == "Arm B" &
-           gender == "Female") %>%
-    select(c_h_count, c_h_percent)
+frm_dplyr_h <- full_dplyr %>%
+  filter(country == "CAN" & handed == "Right" & arm == "Arm B" & gender == "Female") %>%
+  select(c_h_count, c_h_percent)
 
 frm_dplyr_h
 
 
-frm_rtables_c <-  cell_values(tbl, rowpath = c("country", "CAN", "@content"),
-                              colpath = c("arm", "Arm A", "gender", "Male"))[[1]]
+frm_rtables_c <- cell_values(
+  tbl,
+  rowpath = c("country", "CAN", "@content"),
+  colpath = c("arm", "Arm A", "gender", "Male")
+)[[1]]
 
 frm_rtables_c
 
 frm_dplyr_c <- full_dplyr %>%
-    filter(country == "CAN" & arm == "Arm A" & gender == "Male") %>%
-    select(c_count, c_percent)
+  filter(country == "CAN" & arm == "Arm A" & gender == "Male") %>%
+  select(c_count, c_percent)
 
 frm_dplyr_c
 
