@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2023-12-07" />
+<meta name="date" content="2024-04-15" />
 
 <title>Introspecting Tables</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introspecting Tables</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2023-12-07</h4>
+<h4 class="date">2024-04-15</h4>
 
 
 
@@ -576,6 +576,45 @@ the column case), indented to illustrate table structure:</p>
 #   S1     ARMCD, ARM C, STRATA2, S1
 #   S2     ARMCD, ARM C, STRATA2, S2
 # All      All, All</code></pre>
+</div>
+<div id="insights-on-value-format-structure" class="section level2">
+<h2>Insights on Value Format Structure</h2>
+<p>We can gain insight into the value formatting structure of a table
+using <code>table_shell()</code>, which returns a table with the same
+output as <code>print()</code> but with the cell values replaced by
+their underlying format strings (e.g. instead of <code>40.0</code>,
+<code>xx.x</code> is displayed, and so on). This is useful for
+understanding the structure of the table, and for debugging purposes.
+Another useful tool is the <code>value_formats()</code> function which
+instead of a table returns a matrix of the format strings for each cell
+value in the table.</p>
+<p>See below the printout for the above examples:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">table_shell</span>(tbl)</span></code></pre></div>
+<pre><code>#                  ARM A                     ARM B                     ARM C                      
+#             S1           S2           S1           S2           S1           S2          All    
+#           (N=73)       (N=61)       (N=67)       (N=67)       (N=56)       (N=76)      (N=400)  
+# ————————————————————————————————————————————————————————————————————————————————————————————————
+# A       xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)
+#   max      xx.x         xx.x         xx.x         xx.x         xx.x         xx.x         xx.x   
+# B       xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)
+#   max      xx.x         xx.x         xx.x         xx.x         xx.x         xx.x         xx.x   
+# C       xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)
+#   max      xx.x         xx.x         xx.x         xx.x         xx.x         xx.x         xx.x</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="fu">value_formats</span>(tbl)</span></code></pre></div>
+<pre><code>#     ARM A.S1     ARM A.S2     ARM B.S1     ARM B.S2     ARM C.S1    
+# A   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
+# max &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;      
+# B   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
+# max &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;      
+# C   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
+# max &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;      
+#     ARM C.S2     All         
+# A   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
+# max &quot;xx.x&quot;       &quot;xx.x&quot;      
+# B   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
+# max &quot;xx.x&quot;       &quot;xx.x&quot;      
+# C   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
+# max &quot;xx.x&quot;       &quot;xx.x&quot;</code></pre>
 </div>
 <div id="applications" class="section level2">
 <h2>Applications</h2>

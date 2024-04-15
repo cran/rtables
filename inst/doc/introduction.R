@@ -1,12 +1,12 @@
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 knitr::opts_chunk$set(comment = "#")
 
-## ---- message=FALSE-----------------------------------------------------------
+## ----message=FALSE------------------------------------------------------------
 library(rtables)
 library(dplyr)
 
 ## ----echo=FALSE, fig.align='center'-------------------------------------------
-knitr::include_graphics("../man/figures/rtables-basics.png")
+knitr::include_graphics("./images/rtables-basics.png")
 
 ## ----data---------------------------------------------------------------------
 n <- 400
@@ -25,7 +25,7 @@ df <- tibble(
 
 head(df)
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 lyt <- basic_table(show_colcounts = TRUE) %>%
   split_cols_by("arm") %>%
   split_cols_by("gender") %>%

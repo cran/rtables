@@ -4,7 +4,7 @@
 \alias{clear_indent_mods}
 \alias{clear_indent_mods,VTableTree-method}
 \alias{clear_indent_mods,TableRow-method}
-\title{Clear All Indent Mods from a Table}
+\title{Clear all indent modifiers from a table}
 \usage{
 clear_indent_mods(tt)
 
@@ -13,23 +13,23 @@ clear_indent_mods(tt)
 \S4method{clear_indent_mods}{TableRow}(tt)
 }
 \arguments{
-\item{tt}{\code{TableTree} (or related class). A \code{TableTree} object representing a
-populated table.}
+\item{tt}{(\code{TableTree} or related class)\cr a \code{TableTree} object representing a populated table.}
 }
 \value{
-The same class as \code{tt}, with all indent mods set to zero.
+The same class as \code{tt}, with all indent modifiers set to zero.
 }
 \description{
-Clear All Indent Mods from a Table
+Clear all indent modifiers from a table
 }
 \examples{
 lyt1 <- basic_table() \%>\%
   summarize_row_groups("STUDYID", label_fstr = "overall summary") \%>\%
   split_rows_by("AEBODSYS", child_labels = "visible") \%>\%
-  summarize_row_groups("STUDYID", label = "subgroup summary") \%>\%
+  summarize_row_groups("STUDYID", label_fstr = "subgroup summary") \%>\%
   analyze("AGE", indent_mod = -1L)
 
 tbl1 <- build_table(lyt1, ex_adae)
 tbl1
 clear_indent_mods(tbl1)
+
 }

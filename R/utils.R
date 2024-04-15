@@ -1,12 +1,13 @@
 #' Check if an object is a valid `rtable`
 #'
-#' @param x an object
+#' @param x (`ANY`)\cr an object.
 #'
+#' @return `TRUE` if `x` is a formal `TableTree` object, `FALSE` otherwise.
 #'
-#' @export
-#' @return \code{TRUE} if \code{x} is a formal Table object, \code{FALSE} otherwise.
 #' @examples
 #' is_rtable(build_table(basic_table(), iris))
+#'
+#' @export
 is_rtable <- function(x) {
   is(x, "VTableTree")
 }
@@ -74,13 +75,12 @@ func_takes <- function(func, params, is_first = FALSE) {
   }
 }
 
-#' Translate spl_context to Path for display in error messages
+#' Translate spl_context to a path to display in error messages
 #'
-#' @param ctx data.frame. The `spl_context` data.frame where the error occurred
+#' @param ctx (`data.frame`)\cr the `spl_context` data frame where the error occurred.
 #'
-#' @return A character string containing a description of the row path corresponding
-#' to the `ctx`
-#' 
+#' @return A character string containing a description of the row path corresponding to `ctx`.
+#'
 #' @export
 spl_context_to_disp_path <- function(ctx) {
   ## this can happen in the first split in column space, but
@@ -108,7 +108,7 @@ paste_vec <- function(vec) {
 # Utility for checking if a package is installed
 check_required_packages <- function(pkgs) {
   for (pkgi in pkgs) {
-    if (!requireNamespace(pkgi)) {
+    if (!requireNamespace(pkgi, quietly = TRUE)) {
       stop(
         "This function requires the ", pkgi, " package. ",
         "Please install it if you wish to use it"
@@ -116,4 +116,3 @@ check_required_packages <- function(pkgs) {
     }
   }
 }
-

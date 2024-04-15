@@ -133,41 +133,7 @@ test_that("sort_at_path just returns an empty input table", {
   expect_identical(emptytable, result)
 })
 
-
-test_that("trim_zero_rows, trim_rows, prune do the same thing in normal cases", {
-  tbl <- basic_table() %>%
-    split_rows_by("RACE") %>%
-    analyze("COUNTRY") %>%
-    build_table(ex_adsl)
-
-  expect_warning(tzr_tbl1 <- trim_zero_rows(tbl), "deprecated")
-  tr_tbl1 <- trim_rows(tbl)
-
-  expect_true(all(unclass(compare_rtables(tzr_tbl1, tr_tbl1)) == "."))
-
-  tbl2 <- basic_table() %>%
-    split_cols_by("ARM") %>%
-    split_rows_by("RACE") %>%
-    analyze("COUNTRY") %>%
-    build_table(ex_adsl)
-
-  expect_warning(tzr_tbl2 <- trim_zero_rows(tbl2), "deprecated")
-  tr_tbl2 <- trim_rows(tbl2)
-
-  expect_true(all(unclass(compare_rtables(tzr_tbl2, tr_tbl2)) == "."))
-
-  tbl3 <- basic_table() %>%
-    split_cols_by("ARM") %>%
-    split_cols_by("SEX") %>%
-    split_rows_by("RACE") %>%
-    analyze("COUNTRY") %>%
-    build_table(ex_adsl)
-
-  expect_warning(tzr_tbl3 <- trim_zero_rows(tbl3), "deprecated")
-  tr_tbl3 <- trim_rows(tbl3)
-
-  expect_true(all(unclass(compare_rtables(tzr_tbl3, tr_tbl3)) == "."))
-
+test_that("trim_rows and prune_table do the same thing in normal cases", {
   bigtbl <- basic_table() %>%
     split_rows_by("RACE") %>%
     split_rows_by("COUNTRY") %>%
@@ -258,6 +224,16 @@ test_that("provided score functions throw informative errors when invalid and * 
     )
   })
 
+  ## leading "root" doesn't bother it #816
+  expect_silent({
+    stbl2 <- sort_at_path(raw_tbl,
+      path = c("root", "AEBODSYS", "*", "AEDECOD"),
+      scorefun = real_scorefun, # cont_n_allcols,
+      decreasing = TRUE
+    )
+  })
+  expect_identical(cell_values(stbl), cell_values(stbl2))
+
   ## spot check that things were reordered as we expect
   expect_identical(
     row_paths(raw_tbl)[63:71], ## "cl B.2" ->  "dcd B.2.1.2.1" old position
@@ -283,6 +259,18 @@ test_that("provided score functions throw informative errors when invalid and * 
       )
     },
     "occurred at path: AEBODSYS -> * (cl A.1) -> AEDECOD -> dcd A.1.1.1.1",
+    fixed = TRUE
+  )
+  ## paths that are entirely wrong (don't exist at all) work out ok.
+  expect_error(
+    {
+      sort_at_path(raw_tbl,
+        path = c("AEBODSYS", "*", "WRONG"),
+        scorefun = cont_n_onecol(1),
+        decreasing = TRUE
+      )
+    },
+    "occurred at path: AEBODSYS -> * (cl A.1)",
     fixed = TRUE
   )
 })

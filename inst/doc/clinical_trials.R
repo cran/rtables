@@ -1,7 +1,7 @@
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 knitr::opts_chunk$set(comment = "#")
 
-## ---- message=FALSE-----------------------------------------------------------
+## ----message=FALSE------------------------------------------------------------
 library(rtables)
 library(tibble)
 library(dplyr)
@@ -77,7 +77,7 @@ summary_tbl2
 ## -----------------------------------------------------------------------------
 identical(summary_tbl, summary_tbl2)
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 stopifnot(identical(summary_tbl, summary_tbl2))
 
 ## -----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ lyt <- basic_table(show_colcounts = TRUE) %>%
 tbl <- build_table(lyt, ADSL)
 tbl
 
-## ---- warning=FALSE-----------------------------------------------------------
+## ----warning=FALSE------------------------------------------------------------
 lyt <- basic_table(show_colcounts = TRUE) %>%
   split_cols_by(var = "ARM") %>%
   split_rows_by("SEX") %>%
@@ -105,7 +105,7 @@ lyt <- basic_table(show_colcounts = TRUE) %>%
 tbl <- build_table(lyt, ADSL)
 tbl
 
-## ---- warning=FALSE-----------------------------------------------------------
+## ----warning=FALSE------------------------------------------------------------
 ADSL_M_F <- filter(ADSL, SEX %in% c("M", "F"))
 
 lyt2 <- basic_table(show_colcounts = TRUE) %>%

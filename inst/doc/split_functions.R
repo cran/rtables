@@ -52,7 +52,7 @@ lyt2 <- basic_table() %>%
 
 build_table(lyt2, vehic_data)
 
-## ---- message = FALSE---------------------------------------------------------
+## ----message = FALSE----------------------------------------------------------
 library(tibble)
 map <- tribble(
   ~vehicle_class, ~vehicle_type,

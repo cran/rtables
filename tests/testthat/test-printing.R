@@ -319,9 +319,10 @@ test_that("Decimal alignment works", {
     "c10    1111.11%           1111.11%            1111.11%   ",
     "c11    1111.111%          1111.111%           1111.111%  ",
     "c12   (N=11.11111)       (N=11.11111)        (N=11.11111)",
-    "c13      11.1               11.1                11.1     ",
-    "c14      11.11              11.11               11.11    ",
-    "c15      11.1111            11.1111             11.1111  "
+    "c13    N=11.11111         N=11.11111          N=11.11111 ",
+    "c14      11.1               11.1                11.1     ",
+    "c15      11.11              11.11               11.11    ",
+    "c16      11.1111            11.1111             11.1111  "
   )
   expect_identical(res, expected)
 })
@@ -394,6 +395,34 @@ test_that("section_div works throughout", {
   expect_identical(mylns[9], "                        ")
   expect_identical(mylns[12], "------------------------")
   expect_identical(length(mylns), 31L) ## sect div not printed for last one
+})
+
+test_that("section_div works when analyzing multiple variables", {
+  # Regression test for #835
+  lyt <- basic_table() %>%
+    split_rows_by("Species", section_div = "|") %>%
+    analyze(c("Petal.Width", "Petal.Length"),
+      afun = function(x) list("m" = mean(x), "sd" = sd(x)), section_div = "-"
+    )
+
+  tbl <- build_table(lyt, iris)
+  out <- strsplit(toString(tbl), "\n")[[1]]
+
+  expect_true(check_pattern(out[11], "|", length(out[1])))
+  expect_true(check_pattern(out[16], "-", length(out[1])))
+
+  # One-var still works
+  lyt <- basic_table() %>%
+    split_rows_by("Species", section_div = "|") %>%
+    analyze("Petal.Width",
+      afun = function(x) list("m" = mean(x), "sd" = sd(x)), section_div = "-"
+    )
+
+  tbl <- build_table(lyt, iris)
+  out <- strsplit(toString(tbl), "\n")[[1]]
+
+  expect_true(check_pattern(out[7], "|", length(out[1])))
+  expect_true(check_pattern(out[10], "-", length(out[1])))
 })
 
 test_that("Inset works for table, ref_footnotes, and main footer", {
@@ -629,9 +658,9 @@ test_that("Support for newline characters in all the parts", {
     "",
     "---------------------------------",
     "                                 ",
+    "                         ARM     ",
     "                                 ",
-    "                                 ",
-    "a                                ",
+    "a                         A      ",
     "b                            A wo",
     "d                     TWO        ",
     "c                    words    rd ",
@@ -659,13 +688,13 @@ test_that("Support for newline characters in all the parts", {
     "{2} - ahahha",
     "---------------------------------",
     "",
-    "This",
+    "main_footer: This",
     "is",
     "a",
     "",
     "weird one",
     "",
-    "This",
+    "prov_footer: This",
     "is",
     "a",
     "",
@@ -693,13 +722,13 @@ test_that("Separators and wrapping work together with getter and setters", {
   fast_afun <- function(x) list("m" = rcell(mean(x), format = "xx."), "m/2" = max(x) / 2)
 
   lyt <- basic_table() %>%
-    split_rows_by("cat", section_div = "~") 
-  
+    split_rows_by("cat", section_div = "~")
+
   lyt1 <- lyt %>%
     analyze("value", afun = fast_afun, section_div = " ")
-  
+
   lyt2 <- lyt %>%
-    summarize_row_groups() %>% 
+    summarize_row_groups() %>%
     analyze("value", afun = fast_afun, section_div = " ")
 
   tbl1 <- build_table(lyt1, df)
@@ -708,7 +737,7 @@ test_that("Separators and wrapping work together with getter and setters", {
   mf2 <- matrix_form(tbl2)
   expect_identical(mf1$row_info$trailing_sep, mf2$row_info$trailing_sep)
   expect_identical(mf1$row_info$trailing_sep, rep(c(NA, " ", "~"), 2))
-  
+
   exp1 <- c(
     "            all obs",
     "———————————————————",
@@ -729,10 +758,10 @@ test_that("Separators and wrapping work together with getter and setters", {
   cw <- propose_column_widths(tbl1)
   cw[1] <- ceiling(cw[1] / 3)
   expect_identical(strsplit(toString(tbl1, widths = cw), "\n")[[1]], exp1)
-  
-  # setter and getter 
-  a_sec_div <- section_div(tbl1) 
-  a_sec_div[1] <- "a"  
+
+  # setter and getter
+  a_sec_div <- section_div(tbl1)
+  a_sec_div[1] <- "a"
   section_div(tbl1) <- a_sec_div
   expect_identical(
     strsplit(toString(tbl1[seq_len(2), ]), "\\n")[[1]][4],
@@ -750,7 +779,7 @@ test_that("horizontal separator is propagated from table to print and export", {
         "range" = diff(range(x))
       )
     })
-  
+
   tbl <- build_table(lyt, iris, hsep = "~")
   tostring_tbl <- strsplit(toString(tbl), "\n")[[1]]
   export_txt_tbl <- strsplit(export_as_txt(tbl), "\n")[[1]]

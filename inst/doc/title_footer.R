@@ -1,4 +1,4 @@
-## ---- echo=FALSE, output="hide"-----------------------------------------------
+## ----echo=FALSE, output="hide"------------------------------------------------
 knitr::opts_chunk$set(comment = "#")
 suppressPackageStartupMessages(library(rtables))
 suppressPackageStartupMessages(library(dplyr))

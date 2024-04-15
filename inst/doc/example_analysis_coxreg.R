@@ -1,4 +1,4 @@
-## ---- message=FALSE, warning=FALSE--------------------------------------------
+## ----message=FALSE, warning=FALSE---------------------------------------------
 library(rtables)
 library(dplyr)
 

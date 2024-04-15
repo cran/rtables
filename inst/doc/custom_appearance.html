@@ -12,7 +12,7 @@
 
 <meta name="author" content="Davide Garolini, Abinaya Yogasekaram, and Gabriel Becker" />
 
-<meta name="date" content="2023-12-07" />
+<meta name="date" content="2024-04-15" />
 
 <title>Customizing Appearance</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Customizing Appearance</h1>
 <h4 class="author">Davide Garolini, Abinaya Yogasekaram, and Gabriel
 Becker</h4>
-<h4 class="date">2023-12-07</h4>
+<h4 class="date">2024-04-15</h4>
 
 
 
@@ -367,7 +367,7 @@ also possible to use <code>decimal</code>, <code>dec_right</code>, and
 <code>dec_left</code> for decimal alignments. The first takes all
 numerical values and aligns the decimal character <code>.</code> in
 every value of the column that has <code>align = &quot;decimal&quot;</code>. Also
-numberic without decimal values are aligned according to an imaginary
+numeric without decimal values are aligned according to an imaginary
 <code>.</code> if specified as such. <code>dec_left</code> and
 <code>dec_right</code> behave similarly, with the difference that if the
 column present empty spaces at left or right, it pushes values towards
@@ -731,22 +731,18 @@ the end of the table is never printed.</p>
 # ——————————————————————————————————————————————————————
 # Sepal.Length                                          
 #   mean / sd    5.01 (0.35)   5.94 (0.52)   6.59 (0.64)
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #   range           1.50          2.10          3.00    
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Sepal.Width                                           
 #   mean / sd    3.43 (0.38)   2.77 (0.31)   2.97 (0.32)
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #   range           2.10          1.40          1.60    
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Petal.Length                                          
 #   mean / sd    1.46 (0.17)   4.26 (0.47)   5.55 (0.55)
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #   range           0.90          2.10          2.40    
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Petal.Width                                           
 #   mean / sd    0.25 (0.11)   1.33 (0.20)   2.03 (0.27)
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #   range           0.50          0.80          1.10</code></pre>
 <p>Section dividers can be set to ” ” to create a blank line.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -763,22 +759,18 @@ the end of the table is never printed.</p>
 # ——————————————————————————————————————————————————————
 # Sepal.Length                                          
 #   mean / sd    5.01 (0.35)   5.94 (0.52)   6.59 (0.64)
-#                                                       
 #   range           1.50          2.10          3.00    
 #                                                       
 # Sepal.Width                                           
 #   mean / sd    3.43 (0.38)   2.77 (0.31)   2.97 (0.32)
-#                                                       
 #   range           2.10          1.40          1.60    
 #                                                       
 # Petal.Length                                          
 #   mean / sd    1.46 (0.17)   4.26 (0.47)   5.55 (0.55)
-#                                                       
 #   range           0.90          2.10          2.40    
 #                                                       
 # Petal.Width                                           
 #   mean / sd    0.25 (0.11)   1.33 (0.20)   2.03 (0.27)
-#                                                       
 #   range           0.50          0.80          1.10</code></pre>
 <p>Separation characters can be specified for different row splits.
 However, only one will be printed if they “pile up” next to each
