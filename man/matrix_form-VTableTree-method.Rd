@@ -8,7 +8,9 @@
   obj,
   indent_rownames = FALSE,
   expand_newlines = TRUE,
-  indent_size = 2
+  indent_size = 2,
+  fontspec = NULL,
+  col_gap = 3L
 )
 }
 \arguments{
@@ -21,6 +23,14 @@ has indented row names (strings pre-fixed).}
 newlines into multiple 'physical' rows (as they will appear when rendered into ASCII). Defaults to \code{TRUE}.}
 
 \item{indent_size}{(\code{numeric(1)})\cr number of spaces to use per indent level. Defaults to 2.}
+
+\item{fontspec}{(\code{font_spec})\cr The font that should be used by default when
+rendering this \code{MatrixPrintForm} object, or NULL (the default).}
+
+\item{col_gap}{(\code{numeric(1)})]\cr The number of spaces (in the font specified
+by \code{fontspec}) that should be placed between columns when the table
+is rendered directly to text (e.g., by \code{toString} or \code{export_as_txt}). Defaults
+to \code{3}.}
 }
 \value{
 A list with the following elements:

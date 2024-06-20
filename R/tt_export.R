@@ -103,7 +103,7 @@ formatters::export_as_txt
 #' @return
 #' * `as_result_df` returns a result `data.frame`.
 #'
-#' @seealso [df_to_tt()] when using `as_is = TRUE` and [make_row_df()] to have a comprehensive view of the
+#' @seealso [df_to_tt()] when using `as_is = TRUE` and [formatters::make_row_df()] to have a comprehensive view of the
 #'   hierarchical structure of the rows.
 #'
 #' @examples
@@ -741,10 +741,10 @@ margins_landscape <- function() {
 #'   object to change its layout and style. If `NULL`, it will produce a table similar to `rtables` default. Defaults
 #'   to `theme_docx_default(tt)`.
 #' @param border (`officer` border object)\cr defaults to `officer::fp_border(width = 0.5)`.
-#' @param indent_size (`integer(1)`)\cr if `NULL`, the default indent size of the table (see [matrix_form()]
+#' @param indent_size (`integer(1)`)\cr if `NULL`, the default indent size of the table (see [formatters::matrix_form()]
 #'   `indent_size`) is used. To work with `docx`, any size is multiplied by 2 mm (5.67 pt) by default.
 #' @param titles_as_header (`flag`)\cr defaults to `TRUE` for [tt_to_flextable()], so the table is self-contained
-#'   as it makes additional header rows for [main_title()] string and [subtitles()] character vector (one per element).
+#'   as it makes additional header rows for [formatters::main_title()] string and [formatters::subtitles()] character vector (one per element).
 #'   `FALSE` is suggested for [export_as_docx()]. This adds titles and subtitles as a text paragraph above the table.
 #'   The same style is applied.
 #' @param footers_as_text (`flag`)\cr defaults to `FALSE` for [tt_to_flextable()], so the table is self-contained with
@@ -853,14 +853,15 @@ tt_to_flextable <- function(tt,
   # Header addition -> NB: here we have a problem with (N=xx)
   hdr <- body[seq_len(hnum), , drop = FALSE]
 
-  # IMPORTANT: Fix of (N=xx) which is by default on a new line but we usually do not
-  # want this, and it depends on the size of the table, it is not another
-  # row with different columns -> All of this should be fixed at source (in toString)
+  # XXX NOT NECESSARY change of (N=xx) which is by default on a new line but we do not
+  # want this in docx, and it depends on the size of the table, it is not another
+  # row with different columns -> All of this should be fixed at source (in matrix_form)
+  # See .tbl_header_mat for this change
   if (hnum > 1) { # otherwise nothing to do
     det_nclab <- apply(hdr, 2, grepl, pattern = "\\(N=[0-9]+\\)$")
     has_nclab <- apply(det_nclab, 1, any)
-    if (isFALSE(counts_in_newline) && any(has_nclab)) {
-      whsnc <- which(has_nclab) # which rows have it
+    whsnc <- which(has_nclab) # which rows have it -> more than one is not supported
+    if (isFALSE(counts_in_newline) && any(has_nclab) && length(whsnc) == 1L) {
       what_is_nclab <- det_nclab[whsnc, ]
 
       # condition for popping the interested row by merging the upper one
@@ -973,7 +974,7 @@ tt_to_flextable <- function(tt,
 #' @param font_size (`integer(1)`)\cr font size. Defaults to 9.
 #' @param bold (`character`)\cr parts of the table text that should be in bold. Can be any combination of
 #'   `c("header", "content_rows", "label_rows")`. The first one renders all column names bold (not `topleft` content).
-#'   The second and third option use [rtables::make_row_df()] to render content or/and label rows as bold.
+#'   The second and third option use [formatters::make_row_df()] to render content or/and label rows as bold.
 #' @param bold_manual (named `list` or `NULL`)\cr list of index lists. See example for needed structure. Accepted
 #'   groupings/names are `c("header", "body")`.
 #'

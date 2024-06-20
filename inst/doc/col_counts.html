@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Davide Garolini" />
+
+<meta name="date" content="2024-06-20" />
+
+<title>Column Counts and Formats</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Column Counts and Formats</h1>
+<h4 class="author">Davide Garolini</h4>
+<h4 class="date">2024-06-20</h4>
+
+
+
+<div id="the-old-way" class="section level1">
+<h1>The Old Way</h1>
+<p>Many tables call for column counts to be displayed in the header
+material of a table (i.e., interspersed with the column labels).</p>
+<p>Historically, <code>rtables</code> supported this only for so-called
+leaf or individual columns.</p>
+<div id="setting-column-counts-to-visible-at-layout-time" class="section level2">
+<h2>Setting column counts to visible at Layout time</h2>
+<p>Display of column counts (off by default) was primarily achieved via
+passing <code>show_colcounts = TRUE</code> to <code>basic_table</code> ,
+e.g.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, ex_adsl)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>tbl</span></code></pre></div>
+<pre><code>#           A: Drug X        B: Placebo       C: Combination  
+#          F        M        F        M         F         M   
+#        (N=79)   (N=51)   (N=77)   (N=55)   (N=66)    (N=60) 
+# ————————————————————————————————————————————————————————————
+# Mean   32.76    35.57    34.12    37.44     35.20     35.38</code></pre>
+<p>The format of the counts could also be controlled by the
+<code>colcount_format</code> argument to <code>basic_table</code>.</p>
+<p>We had no way of displaying (or, in fact, even easily calculating)
+the <code>ARM</code> facet counts.</p>
+</div>
+<div id="modifying-counts-on-an-existing-table" class="section level2">
+<h2>Modifying counts on an existing table</h2>
+<p>(Leaf-)column counts could be altered after the fact via the
+<code>col_counts&lt;-</code> getter:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">col_counts</span>(tbl) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>tbl</span></code></pre></div>
+<pre><code>#           A: Drug X        B: Placebo       C: Combination  
+#          F        M        F        M         F         M   
+#        (N=17)   (N=18)   (N=19)   (N=17)   (N=18)    (N=19) 
+# ————————————————————————————————————————————————————————————
+# Mean   32.76    35.57    34.12    37.44     35.20     35.38</code></pre>
+<p><strong>NB</strong> doing this has never updated percentages that
+appear within the table as they are calculated at table-creation time,
+so this can lead to misleading results when not used with care.</p>
+</div>
+<div id="hiding-counts" class="section level2">
+<h2>Hiding counts</h2>
+<p>We did not provide a user-visible way to toggle column count display
+after table creation, though we did support showing a blank space for
+particular counts by setting them to <code>NA</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">col_counts</span>(tbl) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">17</span>, <span class="dv">18</span>, <span class="cn">NA</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>tbl</span></code></pre></div>
+<pre><code>#           A: Drug X        B: Placebo      C: Combination  
+#          F        M        F       M         F         M   
+#        (N=17)   (N=18)           (N=17)   (N=18)    (N=19) 
+# ———————————————————————————————————————————————————————————
+# Mean   32.76    35.57    34.12   37.44     35.20     35.38</code></pre>
+<p>These mechanisms will all continue to work for the forseeable future,
+though new code is advised use the new API discussed below.</p>
+</div>
+</div>
+<div id="higher-level-column-counts" class="section level1">
+<h1>Higher Level Column Counts</h1>
+<p>Starting in <code>rtables</code> version <code>6.8.0</code>, the
+concept of column counts is modeled and handled with much more
+granularity than previously. Each facet in column space now has a column
+count (whether or not it is displayed), which will appear directly under
+the corresponding column label (spanning the same number of rows) when
+set to be visible.</p>
+<div id="setting-column-counts-to-visible-at-layout-time-1" class="section level2">
+<h2>Setting Column Counts to Visible at Layout Time</h2>
+<p>The primary way for users to create tables which displays these
+“high-level” column counts is to create a layout that specifies they
+should be visible.</p>
+<p>We do this with the new <code>show_colcounts</code> argument now
+accepted by all <code>split_cols_by*</code> layout functions.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>    <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>)),</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>    <span class="at">show_colcounts =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, ex_adsl)</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>tbl2</span></code></pre></div>
+<pre><code>#           A: Drug X        B: Placebo       C: Combination  
+#          F        M        F        M         F         M   
+#        (N=79)   (N=51)   (N=77)   (N=55)   (N=66)    (N=60) 
+# ————————————————————————————————————————————————————————————
+# Mean   32.76    35.57    34.12    37.44     35.20     35.38</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>, <span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt3, ex_adsl)</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>tbl3</span></code></pre></div>
+<pre><code>#          A: Drug X      B: Placebo      C: Combination  
+#           (N=134)         (N=134)           (N=132)     
+#          F       M       F       M        F         M   
+# ————————————————————————————————————————————————————————
+# Mean   32.76   35.57   34.12   37.44    35.20     35.38</code></pre>
+<p>As before, these column counts are calculated at table creation time,
+using <code>alt_counts_df</code> if it is provided (or simply
+<code>df</code> otherwise).</p>
+<p>Column formats are set at layout time via the
+<code>colcount_format</code> argument <em>of the specific
+<code>split_cols_by</code> call</em>.</p>
+</div>
+<div id="manipulating-column-counts-in-an-existing-table" class="section level2">
+<h2>Manipulating Column Counts In An Existing Table</h2>
+<p>Manipulation of column counts (beyond the old setters provided for
+backwards compatibility) is path based. In other words, when we set a
+column count (e.g., to NA so it displays as a blank) or set the
+visibilty of a set of column counts, we do so by indicating them via
+column paths. The ability to alter column count formats on an existing
+table is currently not offered by any exported functions.</p>
+<p>Column paths can be obtained via <code>col_paths</code> for the leaf
+columns, or via <code>make_col_df(tbl, visible_only = FALSE)$path</code>
+for all addressable facets.</p>
+<div id="setting-individual-column-counts" class="section level3">
+<h3>Setting individual column counts</h3>
+<p>The <code>facet_colcount</code> getter and setter queries and sets
+the column count for a facet in column space (note it needs not be a
+leaf facet). E.g.,</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>))</span></code></pre></div>
+<pre><code># [1] 132</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>)) <span class="ot">&lt;-</span> <span class="dv">75</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>tbl3</span></code></pre></div>
+<pre><code>#          A: Drug X      B: Placebo      C: Combination  
+#           (N=134)         (N=134)           (N=75)      
+#          F       M       F       M        F         M   
+# ————————————————————————————————————————————————————————
+# Mean   32.76   35.57   34.12   37.44    35.20     35.38</code></pre>
+<p>For convenience (primarily because it was needed internally), we also
+provide <code>rm_all_colcounts</code> which sets <em>all</em> column
+counts for a particular table to <code>NA</code> at all levels of
+nesting. We do not expect this to be particularly useful to
+end-users.</p>
+</div>
+<div id="setting-col-count-visibility" class="section level3">
+<h3>Setting Col Count Visibility</h3>
+<p>Typically we do not set column count visibility individually. *This
+is due to a constraint where direct leaf siblings (e.g. F and M under
+one of the arms in our layout) must have the same visibility for their
+column counts in order for the rendering machinery to work.</p>
+<p>Instead, we can reset the column count visibility of groups of
+siblings via the <code>facet_colcounts_visible</code> (note the ‘s’)
+setter. This function accepts a path which ends in the name associated
+with a splitting instruction in the layout (e.g., <code>c(&quot;ARM&quot;)</code>,
+<code>c(&quot;ARM&quot;, &quot;B: Placebo&quot;, &quot;SEX&quot;)</code>, etc) and <em>resets the
+visibility of all direct children of that path</em>.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">facet_colcounts_visible</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>)) <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>tbl3</span></code></pre></div>
+<pre><code>#           A: Drug X                                       
+#            (N=134)        B: Placebo      C: Combination  
+#          F        M         (N=134)           (N=75)      
+#        (N=79)   (N=51)     F       M        F         M   
+# ——————————————————————————————————————————————————————————
+# Mean   32.76    35.57    34.12   37.44    35.20     35.38</code></pre>
+<p><strong>NOTE</strong> as we can see here, the visibility of column
+counts can have an “unbalanced design”, provided the direct-siblings
+agreeing constraint is met. This leads to things not lining up directly
+as one might expect (it does not generate any blank spaces the way
+setting a visible column count to <code>NA</code> does).</p>
+<p>Currently paths with <code>&quot;*&quot;</code> in them do not work within
+<code>facet_colcounts_visible</code>, but that capability is likely to
+be added in future releases.</p>
+<p><code>colcount_visible</code> getters and setters do also exist which
+retrieve and set individual column counts’ visiblities, but these are
+largely an internal detail and in virtually all cases end users should
+avoid calling them directly.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="do">## BEWARE</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>tbl4 <span class="ot">&lt;-</span> tbl3</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="fu">colcount_visible</span>(tbl4, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)) <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>tbl4</span></code></pre></div>
+<pre><code># Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;toString&#39;: Detected different colcount visibility among sibling facets (those arising from the same split_cols_by* layout instruction). This is not supported.
+# Set count values to NA if you want a blank space to appear as the displayed count for particular facets.
+# First disagreement occured at paths:
+# ARM[A: Drug X]-&gt;SEX[F]
+# ARM[A: Drug X]-&gt;SEX[M]</code></pre>
+<p>Note currently this restriction is currently only enforced for leaf
+columns due to technical implementation details but how a table renders
+should be considered undefined behavior when it contains a group of
+sibling column facets arising from the same layout instruction whose
+column count visiblities disagree. That may become an error in future
+versions without warning.</p>
+</div>
+<div id="advanced-settings" class="section level3">
+<h3>Advanced Settings</h3>
+<p>By using <code>make_col_df()</code> we can see the full path to any
+column count. One example application is to add a <code>NA</code> value
+that would print to the default value is <code>&quot;&quot;</code>, that will show
+nothing. To change (for now uniformly only) the output string in case of
+missing values in the column counts you can use
+<code>colcount_na_str</code>:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>coldf <span class="ot">&lt;-</span> <span class="fu">make_col_df</span>(tbl3)</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, coldf<span class="sc">$</span>path[[<span class="dv">1</span>]][<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)]) <span class="ot">&lt;-</span> <span class="cn">NA_integer_</span></span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a><span class="fu">print</span>(tbl3) <span class="co"># Keeps the missing space</span></span></code></pre></div>
+<pre><code>#           A: Drug X                                       
+#                           B: Placebo      C: Combination  
+#          F        M         (N=134)           (N=75)      
+#        (N=79)   (N=51)     F       M        F         M   
+# ——————————————————————————————————————————————————————————
+# Mean   32.76    35.57    34.12   37.44    35.20     35.38</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">colcount_na_str</span>(tbl3) <span class="ot">&lt;-</span> <span class="st">&quot;NaN&quot;</span></span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>tbl3 <span class="co"># Shows NaN</span></span></code></pre></div>
+<pre><code>#           A: Drug X                                       
+#              NaN          B: Placebo      C: Combination  
+#          F        M         (N=134)           (N=75)      
+#        (N=79)   (N=51)     F       M        F         M   
+# ——————————————————————————————————————————————————————————
+# Mean   32.76    35.57    34.12   37.44    35.20     35.38</code></pre>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

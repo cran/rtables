@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2024-04-15" />
+<meta name="date" content="2024-06-20" />
 
 <title>Subsetting and Manipulating Table Contents</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Subsetting and Manipulating Table
 Contents</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2024-04-15</h4>
+<h4 class="date">2024-06-20</h4>
 
 
 
@@ -414,7 +414,7 @@ multi-element) value associated with the cell.</li>
 <p><strong>Known Differences from <code>[.data.frame</code></strong> -
 absolute position cannot currently be used to reorder columns or rows.
 Note in general the result of such an ordering is unlikely to be
-structurally valid. To change the order of values, please read <a href="https://insightsengineering.github.io/rtables/main/articles/sorting_pruning.html">sorting
+structurally valid. To change the order of values, please read <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/sorting_pruning.html">sorting
 and pruning</a> vignette or relevant function
 (<code>sort_at_path()</code>). - <code>character</code> indices are
 treated as paths, not vectors of names in both <code>[</code> and
@@ -520,7 +520,7 @@ subsetting as follows:</p>
 #     Mean       35.20</code></pre>
 <p>If the referenced entry is present in the subsetting, also the
 referential footnote will appear. Please consider reading relevant
-vignette about <a href="https://insightsengineering.github.io/rtables/main/articles/title_footer.html#referential-footnotes">referential
+vignette about <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/title_footer.html#referential-footnotes">referential
 footnotes</a>. In case of subsetting, the referential footnotes are by
 default indexed again, as if the produced table is a new one.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>tbl[<span class="dv">10</span>, <span class="dv">1</span>]</span></code></pre></div>

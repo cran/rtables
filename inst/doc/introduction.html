@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2024-04-15" />
+<meta name="date" content="2024-06-20" />
 
 <title>Introduction to {rtables}</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introduction to {rtables}</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2024-04-15</h4>
+<h4 class="date">2024-06-20</h4>
 
 
 
@@ -358,8 +358,8 @@ resources:</p>
 <ul>
 <li>The <a href="https://www.youtube.com/watch?v=CBQzZ8ZhXLA"><code>rtables</code>
 useR 2020 presentation</a> by Gabriel Becker</li>
-<li><a href="https://arxiv.org/pdf/2306.16610.pdf"><code>rtables</code>
-- A Framework For Creating Complex Structured Reporting Tables Via
+<li><a href="https://arxiv.org/pdf/2306.16610"><code>rtables</code> - A
+Framework For Creating Complex Structured Reporting Tables Via
 Multi-Level Faceted Computations</a>.</li>
 </ul>
 <p>The packages used in this vignette are <code>rtables</code> and
@@ -440,7 +440,7 @@ function. If you are new to tabulation with the <code>rtables</code>
 layout framework, you can use this convenience wrapper to create many
 types of two-way frequency tables.</p>
 <p>The purpose of <code>qtable</code> is to enable quick exploratory
-data analysis. See the <a href="https://insightsengineering.github.io/rtables/main/articles/exploratory_analysis.html"><code>exploratory_analysis</code></a>
+data analysis. See the <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/exploratory_analysis.html"><code>exploratory_analysis</code></a>
 vignette for more details.</p>
 <p>Here is the code to recreate the table above:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">qtable</span>(df,</span>
@@ -572,6 +572,8 @@ by the gender:</p>
 <code>df$arm == &quot;A&quot; &amp; df$gender == &quot;Female&quot;</code> and the second
 column the data in <code>df</code> where
 <code>df$arm == &quot;A&quot; &amp; df$gender == &quot;Male&quot;</code>, and so on.</p>
+<p>More information on column structure can be found in the
+<code>col_counts</code> vignette.</p>
 </div>
 <div id="adding-row-structure" class="section level2">
 <h2>Adding Row Structure</h2>
@@ -780,7 +782,7 @@ of tabulation has to do with splitting/subsetting data.</li>
 </ul>
 <p>The other vignettes in the <code>rtables</code> package will provide
 more detailed information about the <code>rtables</code> package. We
-recommend that you continue with the <a href="https://insightsengineering.github.io/rtables/main/articles/tabulation_dplyr.html"><code>tabulation_dplyr</code></a>
+recommend that you continue with the <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/tabulation_dplyr.html"><code>tabulation_dplyr</code></a>
 vignette which compares the information derived by the table in this
 vignette using <code>dplyr</code>.</p>
 </div>

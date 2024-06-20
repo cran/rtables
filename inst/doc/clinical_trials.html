@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2024-04-15" />
+<meta name="date" content="2024-06-20" />
 
 <title>Example Clinical Trials Tables</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Example Clinical Trials Tables</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2024-04-15</h4>
+<h4 class="date">2024-06-20</h4>
 
 
 
@@ -1165,7 +1165,8 @@ tabulation:</p>
 <p>Alternatively, if the desired column counts are already calculated,
 they can be specified directly via the <code>col_counts</code> argument
 to <code>build_table()</code>, though specifying an
-<code>alt_counts_df</code> is the preferred mechanism.</p>
+<code>alt_counts_df</code> is the preferred mechanism (the number of
+rows will be used, but no duplicate checking!!!).</p>
 <p>We next calculate this information per system organ class:</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a>adae_soc_lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb57-2"><a href="#cb57-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -1486,7 +1487,7 @@ the <code>trim_rows()</code> function:</p>
 #     Total number of events                                 240            122     
 #     HYPOTENSION                                             44             31     
 #     ORTHOSTATIC HYPOTENSION                                 49             44</code></pre>
-<p>Pruning is a larger topic with a <a href="https://insightsengineering.github.io/rtables/main/articles/sorting_pruning.html">separate
+<p>Pruning is a larger topic with a <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/sorting_pruning.html">separate
 <code>rtables</code> package vignette</a>.</p>
 </div>
 <div id="adverse-events-by-id-and-by-grade" class="section level3">

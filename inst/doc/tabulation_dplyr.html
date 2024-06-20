@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2024-04-15" />
+<meta name="date" content="2024-06-20" />
 
 <title>Comparison with dplyr Tabulation</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Comparison with dplyr Tabulation</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2024-04-15</h4>
+<h4 class="date">2024-06-20</h4>
 
 
 
@@ -361,7 +361,7 @@ table visualization/markup and just derive the cell content.</p>
 <p>Using <code>dplyr</code> to summarize data and <code>gt</code> to
 visualize the table is a good way if the tabulation is of a certain
 nature or complexity. However, there are tables such as the table
-created in the <a href="https://insightsengineering.github.io/rtables/main/articles/introduction.html"><code>introduction</code></a>
+created in the <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/introduction.html"><code>introduction</code></a>
 vignette that take some effort to create with <code>dplyr</code>. Part
 of the effort is due to fact that when using <code>dplyr</code> the
 table data is stored in <code>data.frame</code>s or <code>tibble</code>s
@@ -372,7 +372,7 @@ in this vignette.</p>
 vignette.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
-<p>Here is the table and data used in the <a href="https://insightsengineering.github.io/rtables/main/articles/introduction.html"><code>introduction</code></a>
+<p>Here is the table and data used in the <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/introduction.html"><code>introduction</code></a>
 vignette:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">400</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
@@ -417,7 +417,7 @@ vignette:</p>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
 <p>We will start by deriving the first data cell on row 3 (note, row 1
-and 2 have content cells, see the <a href="https://insightsengineering.github.io/rtables/main/articles/introduction.html"><code>introduction</code></a>
+and 2 have content cells, see the <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/introduction.html"><code>introduction</code></a>
 vignette). Cell 3,1 contains the mean age for left handed &amp; female
 Canadians in “Arm A”:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>age[df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>])</span></code></pre></div>
@@ -659,7 +659,7 @@ required</li>
 <li><code>rtables</code> streamlines the construction of complex
 tables</li>
 </ul>
-<p>We recommend that you continue reading the <a href="https://insightsengineering.github.io/rtables/main/articles/clinical_trials.html"><code>clinical_trials</code></a>
+<p>We recommend that you continue reading the <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/clinical_trials.html"><code>clinical_trials</code></a>
 vignette where we create a number of more advanced tables using
 layouts.</p>
 </div>

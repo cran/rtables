@@ -9,7 +9,7 @@ basic_table(
   subtitles = character(),
   main_footer = character(),
   prov_footer = character(),
-  show_colcounts = FALSE,
+  show_colcounts = NA,
   colcount_format = "(N=xx)",
   header_section_div = NA_character_,
   top_level_section_div = NA_character_,
@@ -17,22 +17,27 @@ basic_table(
 )
 }
 \arguments{
-\item{title}{(\code{string})\cr single string to use as main title (\code{\link[=main_title]{main_title()}}). Ignored for subtables.}
+\item{title}{(\code{string})\cr single string to use as main title (\code{\link[formatters:title_footer]{formatters::main_title()}}). Ignored for subtables.}
 
-\item{subtitles}{(\code{character})\cr a vector of strings to use as subtitles (\code{\link[=subtitles]{subtitles()}}), where every element is
+\item{subtitles}{(\code{character})\cr a vector of strings to use as subtitles (\code{\link[formatters:title_footer]{formatters::subtitles()}}), where every element is
 printed on a separate line. Ignored for subtables.}
 
 \item{main_footer}{(\code{character})\cr a vector of strings to use as main global (non-referential) footer materials
-(\code{\link[=main_footer]{main_footer()}}), where every element is printed on a separate line.}
+(\code{\link[formatters:title_footer]{formatters::main_footer()}}), where every element is printed on a separate line.}
 
 \item{prov_footer}{(\code{character})\cr a vector of strings to use as provenance-related global footer materials
-(\code{\link[=prov_footer]{prov_footer()}}), where every element is printed on a separate line.}
+(\code{\link[formatters:title_footer]{formatters::prov_footer()}}), where every element is printed on a separate line.}
 
-\item{show_colcounts}{(\code{flag})\cr whether column counts should be displayed in the resulting table when this
-layout is applied to data.}
+\item{show_colcounts}{(\code{logical(1)})\cr Indicates whether the lowest level of
+applied to data. \code{NA}, the default, indicates that the \code{show_colcounts}
+argument(s) passed to the relevant calls to \verb{split_cols_by*}
+functions. Non-missing values will override the behavior specified in
+column splitting layout instructions which create the lowest level, or
+leaf, columns.}
 
 \item{colcount_format}{(\code{string})\cr format for use when displaying the column counts. Must be 1d, or 2d
-where one component is a percent. See Details below.}
+where one component is a percent. This will also apply to any displayed higher
+level column counts where an explicit format was not specified. Defaults to \code{"(N=xx)"}. See Details below.}
 
 \item{header_section_div}{(\code{string})\cr string which will be used to divide the header from the table. See
 \code{\link[=header_section_div]{header_section_div()}} for the associated getter and setter. Please consider changing last element of
@@ -64,7 +69,7 @@ of valid format labels to select from.
 \item Because percent components in \code{colcount_format} are \emph{always} populated with the value 1, we can get arguably
 strange results, such as that individual arm columns and a combined "all patients" column all list "100\%" as
 their percentage, even though the individual arm columns represent strict subsets of the "all patients" column.
-\item Note that subtitles (\code{\link[=subtitles]{subtitles()}}) and footers (\code{\link[=main_footer]{main_footer()}} and \code{\link[=prov_footer]{prov_footer()}}) that span more than one
+\item Note that subtitles (\code{\link[formatters:title_footer]{formatters::subtitles()}}) and footers (\code{\link[formatters:title_footer]{formatters::main_footer()}} and \code{\link[formatters:title_footer]{formatters::prov_footer()}}) that span more than one
 line can be supplied as a character vector to maintain indentation on multiple lines.
 }
 }

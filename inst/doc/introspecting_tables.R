@@ -6,9 +6,9 @@ library(rtables)
 library(dplyr)
 
 ## -----------------------------------------------------------------------------
-lyt <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARMCD") %>%
-  split_cols_by("STRATA2") %>%
+lyt <- basic_table() %>%
+  split_cols_by("ARMCD", show_colcounts = TRUE, colcount_format = "N=xx") %>%
+  split_cols_by("STRATA2", show_colcounts = TRUE) %>%
   split_rows_by("STRATA1") %>%
   add_overall_col("All") %>%
   summarize_row_groups() %>%
@@ -26,7 +26,10 @@ ncol(tbl)
 table_structure(tbl)
 
 ## -----------------------------------------------------------------------------
-table_structure(tbl, detail = "row")
+table_structure(tbl, detail = "row") # or "subtable"
+
+## -----------------------------------------------------------------------------
+coltree_structure(tbl)
 
 ## -----------------------------------------------------------------------------
 make_row_df(tbl)[, c("label", "name", "abs_rownumber", "path", "node_class")]
