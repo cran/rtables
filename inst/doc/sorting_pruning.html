@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker, Adrian Waddell and Davide Garolini" />
 
-<meta name="date" content="2024-06-20" />
+<meta name="date" content="2024-06-27" />
 
 <title>Pruning and Sorting Tables</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Pruning and Sorting Tables</h1>
 <h4 class="author">Gabriel Becker, Adrian Waddell and Davide
 Garolini</h4>
-<h4 class="date">2024-06-20</h4>
+<h4 class="date">2024-06-27</h4>
 
 
 
@@ -727,7 +727,7 @@ definition, below:</p>
 #     }
 #     sum(sapply(row_values(tree_children(ctab)[[1]]), function(cv) cv[1]))
 # }
-# &lt;bytecode: 0x55f5b1c88f70&gt;
+# &lt;bytecode: 0x56369a554160&gt;
 # &lt;environment: namespace:rtables&gt;</code></pre>
 <p>Therefore, a fundamental difference between pruning and sorting is
 that sorting occurs at particular places in the table, as defined by a
@@ -1103,7 +1103,7 @@ proceed.</p>
 #         row_values(tree_children(ctab)[[1]])[[j]][1]
 #     }
 # }
-# &lt;bytecode: 0x55f5b360ff48&gt;
+# &lt;bytecode: 0x56369b4cf628&gt;
 # &lt;environment: namespace:rtables&gt;</code></pre>
 <p>We see that a similar function to <code>cont_n_allcols()</code> is
 wrapped by one that allows a parameter <code>j</code> to be used to

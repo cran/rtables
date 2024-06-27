@@ -52,11 +52,19 @@ tbl3
 facet_colcounts_visible(tbl3, c("ARM", "A: Drug X", "SEX")) <- TRUE
 tbl3
 
-## ----error=TRUE---------------------------------------------------------------
-## BEWARE
-tbl4 <- tbl3
-colcount_visible(tbl4, c("ARM", "A: Drug X", "SEX", "F")) <- FALSE
-tbl4
+## ----eval = FALSE-------------------------------------------------------------
+#  ## BEWARE, the following is expected to show error
+#  tbl4 <- tbl3
+#  colcount_visible(tbl4, c("ARM", "A: Drug X", "SEX", "F")) <- FALSE
+#  tbl4
+#  
+#  # Expected Error message
+#  # Error in h(simpleError(msg, call)) :
+#  #  error in evaluating the argument 'x' in selecting a method for function 'toString': Detected different colcount visibility among sibling facets (those arising from the same split_cols_by* layout instruction). This is not supported.
+#  # Set count values to NA if you want a blank space to appear as the displayed count for particular facets.
+#  # First disagreement occured at paths:
+#  # ARM[A: Drug X]->SEX[F]
+#  # ARM[A: Drug X]->SEX[M]
 
 ## -----------------------------------------------------------------------------
 coldf <- make_col_df(tbl3)

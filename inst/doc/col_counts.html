@@ -12,7 +12,7 @@
 
 <meta name="author" content="Davide Garolini" />
 
-<meta name="date" content="2024-06-20" />
+<meta name="date" content="2024-06-27" />
 
 <title>Column Counts and Formats</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Column Counts and Formats</h1>
 <h4 class="author">Davide Garolini</h4>
-<h4 class="date">2024-06-20</h4>
+<h4 class="date">2024-06-27</h4>
 
 
 
@@ -517,15 +517,18 @@ be added in future releases.</p>
 retrieve and set individual column counts’ visiblities, but these are
 largely an internal detail and in virtually all cases end users should
 avoid calling them directly.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="do">## BEWARE</span></span>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="do">## BEWARE, the following is expected to show error</span></span>
 <span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>tbl4 <span class="ot">&lt;-</span> tbl3</span>
 <span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="fu">colcount_visible</span>(tbl4, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)) <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>tbl4</span></code></pre></div>
-<pre><code># Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;toString&#39;: Detected different colcount visibility among sibling facets (those arising from the same split_cols_by* layout instruction). This is not supported.
-# Set count values to NA if you want a blank space to appear as the displayed count for particular facets.
-# First disagreement occured at paths:
-# ARM[A: Drug X]-&gt;SEX[F]
-# ARM[A: Drug X]-&gt;SEX[M]</code></pre>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>tbl4</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co"># Expected Error message</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="co"># Error in h(simpleError(msg, call)) :</span></span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="co">#  error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;toString&#39;: Detected different colcount visibility among sibling facets (those arising from the same split_cols_by* layout instruction). This is not supported.</span></span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co"># Set count values to NA if you want a blank space to appear as the displayed count for particular facets.</span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="co"># First disagreement occured at paths:</span></span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a><span class="co"># ARM[A: Drug X]-&gt;SEX[F]</span></span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a><span class="co"># ARM[A: Drug X]-&gt;SEX[M]</span></span></code></pre></div>
 <p>Note currently this restriction is currently only enforced for leaf
 columns due to technical implementation details but how a table renders
 should be considered undefined behavior when it contains a group of
@@ -541,17 +544,17 @@ that would print to the default value is <code>&quot;&quot;</code>, that will sh
 nothing. To change (for now uniformly only) the output string in case of
 missing values in the column counts you can use
 <code>colcount_na_str</code>:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>coldf <span class="ot">&lt;-</span> <span class="fu">make_col_df</span>(tbl3)</span>
-<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, coldf<span class="sc">$</span>path[[<span class="dv">1</span>]][<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)]) <span class="ot">&lt;-</span> <span class="cn">NA_integer_</span></span>
-<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a><span class="fu">print</span>(tbl3) <span class="co"># Keeps the missing space</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>coldf <span class="ot">&lt;-</span> <span class="fu">make_col_df</span>(tbl3)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, coldf<span class="sc">$</span>path[[<span class="dv">1</span>]][<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)]) <span class="ot">&lt;-</span> <span class="cn">NA_integer_</span></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="fu">print</span>(tbl3) <span class="co"># Keeps the missing space</span></span></code></pre></div>
 <pre><code>#           A: Drug X                                       
 #                           B: Placebo      C: Combination  
 #          F        M         (N=134)           (N=75)      
 #        (N=79)   (N=51)     F       M        F         M   
 # ——————————————————————————————————————————————————————————
 # Mean   32.76    35.57    34.12   37.44    35.20     35.38</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">colcount_na_str</span>(tbl3) <span class="ot">&lt;-</span> <span class="st">&quot;NaN&quot;</span></span>
-<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>tbl3 <span class="co"># Shows NaN</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">colcount_na_str</span>(tbl3) <span class="ot">&lt;-</span> <span class="st">&quot;NaN&quot;</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>tbl3 <span class="co"># Shows NaN</span></span></code></pre></div>
 <pre><code>#           A: Drug X                                       
 #              NaN          B: Placebo      C: Combination  
 #          F        M         (N=134)           (N=75)      

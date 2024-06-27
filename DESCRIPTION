@@ -1,7 +1,7 @@
 Package: rtables
 Title: Reporting Tables
-Version: 0.6.8
-Date: 2024-06-16
+Version: 0.6.9
+Date: 2024-06-27
 Authors@R: c(
     person("Gabriel", "Becker", , "gabembecker@gmail.com", role = "aut",
            comment = "Original creator of the package"),
@@ -58,7 +58,7 @@ Collate: '00tabletrees.R' 'Viewer.R' 'argument_conventions.R'
         'tt_toString.R' 'tt_export.R' 'index_footnotes.R'
         'tt_from_df.R' 'validate_table_struct.R' 'zzz_constants.R'
 NeedsCompilation: no
-Packaged: 2024-06-20 15:03:22 UTC; rstudio
+Packaged: 2024-06-27 06:16:26 UTC; rstudio
 Author: Gabriel Becker [aut] (Original creator of the package),
   Adrian Waddell [aut],
   Daniel Sabanés Bové [ctb],
@@ -70,4 +70,4 @@ Author: Gabriel Becker [aut] (Original creator of the package),
   F. Hoffmann-La Roche AG [cph, fnd]
 Maintainer: Joe Zhu <joe.zhu@roche.com>
 Repository: CRAN
-Date/Publication: 2024-06-20 15:50:02 UTC
+Date/Publication: 2024-06-27 07:00:02 UTC
