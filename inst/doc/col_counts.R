@@ -1,3 +1,16 @@
+## ----include = FALSE----------------------------------------------------------
+suggested_dependent_pkgs <- c("dplyr")
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = all(vapply(
+    suggested_dependent_pkgs,
+    requireNamespace,
+    logical(1),
+    quietly = TRUE
+  ))
+)
+
 ## ----echo=FALSE---------------------------------------------------------------
 knitr::opts_chunk$set(comment = "#")
 
@@ -60,7 +73,9 @@ tbl3
 #  
 #  # Expected Error message
 #  # Error in h(simpleError(msg, call)) :
-#  #  error in evaluating the argument 'x' in selecting a method for function 'toString': Detected different colcount visibility among sibling facets (those arising from the same split_cols_by* layout instruction). This is not supported.
+#  #  error in evaluating the argument 'x' in selecting a method for function 'toString':
+#  #  Detected different colcount visibility among sibling facets (those arising from the
+#  #  same split_cols_by* layout instruction). This is not supported.
 #  # Set count values to NA if you want a blank space to appear as the displayed count for particular facets.
 #  # First disagreement occured at paths:
 #  # ARM[A: Drug X]->SEX[F]

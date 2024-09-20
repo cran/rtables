@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2024-06-27" />
+<meta name="date" content="2024-09-20" />
 
 <title>Comparing Against Baselines or Control</title>
 
@@ -340,10 +340,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Comparing Against Baselines or Control</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2024-06-27</h4>
+<h4 class="date">2024-09-20</h4>
 
 
 
+<p>baseline.R</p>
 <style type="text/css">
 .sourcecode {
 background-color:lightblue;
@@ -369,6 +370,7 @@ other columns.</p>
 <pre><code>#        A: Drug X   B: Placebo   C: Combination
 # ——————————————————————————————————————————————
 # Mean     34.91       33.02          34.57</code></pre>
+<p>baseline.R</p>
 <p>and then the difference of the average <code>AGE</code> between the
 placebo arm and the other arms:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -384,6 +386,7 @@ placebo arm and the other arms:</p>
 <pre><code>#                          A: Drug X   B: Placebo   C: Combination
 # ————————————————————————————————————————————————————————————————
 # Difference of Averages     1.89         0.00           1.55</code></pre>
+<p>baseline.R</p>
 <p>Note that the column order has changed and the reference group is
 displayed in the first column.</p>
 <p>In cases where we want cells to be blank in the reference column,
@@ -424,6 +427,7 @@ argument:</p>
 # ————————————————————————————————————————————————————————————————
 # Difference of Averages     1.89                        1.55     
 # another row                 aaa                        aaa</code></pre>
+<p>baseline.R</p>
 <p>You can see which arguments are available for <code>afun</code> in
 the manual for <code>analyze()</code>.</p>
 </div>
@@ -455,6 +459,7 @@ the column with or without row splitting. For example:</p>
 #   is reference (.in_ref_col)     FALSE        TRUE          FALSE     
 #   ref cell N (.ref_group)         50           50             50      
 #   ref column N (.ref_full)        106         106            106</code></pre>
+<p>baseline.R</p>
 <p>The data assigned to <code>.ref_full</code> is the full data of the
 reference column whereas the data assigned to <code>.ref_group</code>
 respects the subsetting defined by row-splitting and hence is from the

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker" />
 
-<meta name="date" content="2024-06-27" />
+<meta name="date" content="2024-09-20" />
 
 <title>{rtables} Advanced Usage</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">{rtables} Advanced Usage</h1>
 <h4 class="author">Gabriel Becker</h4>
-<h4 class="date">2024-06-27</h4>
+<h4 class="date">2024-09-20</h4>
 
 
 
@@ -352,6 +352,7 @@ the repository will work/be correct, but they likely are not in their
 final form.</p>
 <p>Initialization</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span></code></pre></div>
+<p>advanced_usage.R</p>
 </div>
 <div id="control-splitting-with-provided-function-limited-customization" class="section level2">
 <h2>Control splitting with provided function (limited
@@ -372,6 +373,7 @@ without creating an entirely new split functions. By default
 ## M                  1    1    2    3 
 ## U                  0    0    0    0 
 ## UNDIFFERENTIATED   0    0    0    0</code></pre>
+<p>advanced_usage.R</p>
 <p>For continuous variables, the <code>split_*_by_cutfun</code> can be
 leveraged to create categories and the corresponding faceting, when the
 break points are dependent from the data.</p>
@@ -398,6 +400,7 @@ break points are dependent from the data.</p>
 ## M                  21     115      30 
 ## U                   1      8       0  
 ## UNDIFFERENTIATED    0      1       2</code></pre>
+<p>advanced_usage.R</p>
 <p>Alternatively, <code>split_*_by_cuts</code> can be used when
 breakpoints are predefined and <code>split_*_by_quartiles</code> when
 the data should be faceted by quantile.</p>
@@ -416,6 +419,7 @@ the data should be faceted by quantile.</p>
 ## M                     48          116            2     
 ## U                      2           7             0     
 ## UNDIFFERENTIATED       1           2             0</code></pre>
+<p>advanced_usage.R</p>
 </div>
 <div id="custom-split-functions" class="section level2">
 <h2>Custom Split Functions</h2>
@@ -453,17 +457,20 @@ cases:</p>
 <span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>lyt1 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>, <span class="at">split_fun =</span> <span class="fu">picky_splitter</span>(<span class="st">&quot;ARM&quot;</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span></code></pre></div>
+<p>advanced_usage.R</p>
 <p>This gives us the desired behavior in both the one column corner
 case:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">build_table</span>(lyt1, d1)</span></code></pre></div>
 <pre><code>##        A: Drug X
 ## ————————————————
 ## Mean     33.77</code></pre>
+<p>advanced_usage.R</p>
 <p>and the standard multi-column case:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">build_table</span>(lyt1, ex_adsl)</span></code></pre></div>
 <pre><code>##        A: Drug X   B: Placebo   C: Combination   All Obs
 ## ————————————————————————————————————————————————————————
 ## Mean     33.77       35.43          35.43         34.88</code></pre>
+<p>advanced_usage.R</p>
 <p>Notice we use add_overall_level which is itself a function
 constructor, and then immediately call the constructed function in the
 more-than-one-columns case.</p>
@@ -535,6 +542,7 @@ information:</p>
 ## V3                                                                         
 ##   n               2             2            1           1        0      0 
 ##   Mean, SD   5.50 (2.12)   4.50 (2.12)   1.00 (NA)   9.00 (NA)    NA    NA</code></pre>
+<p>advanced_usage.R</p>
 </div>
 <div id="simulating-baseline-comparison-in-row-space" class="section level3">
 <h3>Simulating ‘Baseline Comparison’ In Row Space</h3>
@@ -579,6 +587,7 @@ information:</p>
 ## V3                                                                         
 ##   n               2             2            1           1        0      0 
 ##   Mean, SD   5.50 (2.12)   4.50 (2.12)   1.00 (NA)   9.00 (NA)    NA    NA</code></pre>
+<p>advanced_usage.R</p>
 <p>We can further simulate the formal modeling of reference row(s) using
 the <code>extra_args</code> machinery</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>my_afun <span class="ot">&lt;-</span> <span class="cf">function</span>(x, .var, ref_rowgroup, .spl_context) {</span>
@@ -618,6 +627,7 @@ the <code>extra_args</code> machinery</p>
 ## V3                                                                   
 ##   n              2           2          1          1        0      0 
 ##   Mean, SD   5.5 (2.1)   4.5 (2.1)   1.0 (NA)   9.0 (NA)    NA    NA</code></pre>
+<p>advanced_usage.R</p>
 </div>
 </div>
 

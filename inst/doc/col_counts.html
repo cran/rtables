@@ -12,7 +12,7 @@
 
 <meta name="author" content="Davide Garolini" />
 
-<meta name="date" content="2024-06-27" />
+<meta name="date" content="2024-09-20" />
 
 <title>Column Counts and Formats</title>
 
@@ -340,10 +340,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Column Counts and Formats</h1>
 <h4 class="author">Davide Garolini</h4>
-<h4 class="date">2024-06-27</h4>
+<h4 class="date">2024-09-20</h4>
 
 
 
+<p>col_counts.R</p>
 <div id="the-old-way" class="section level1">
 <h1>The Old Way</h1>
 <p>Many tables call for column counts to be displayed in the header
@@ -363,12 +364,13 @@ e.g.</p>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, ex_adsl)</span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>tbl</span></code></pre></div>
-<pre><code>#           A: Drug X        B: Placebo       C: Combination  
-#          F        M        F        M         F         M   
-#        (N=79)   (N=51)   (N=77)   (N=55)   (N=66)    (N=60) 
-# ————————————————————————————————————————————————————————————
-# Mean   32.76    35.57    34.12    37.44     35.20     35.38</code></pre>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>tbl</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#           A: Drug X        B: Placebo       C: Combination  </span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#          F        M        F        M         F         M   </span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#        (N=79)   (N=51)   (N=77)   (N=55)   (N=66)    (N=60) </span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————————</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12    37.44     35.20     35.38</span></span></code></pre></div>
+<p>col_counts.R</p>
 <p>The format of the counts could also be controlled by the
 <code>colcount_format</code> argument to <code>basic_table</code>.</p>
 <p>We had no way of displaying (or, in fact, even easily calculating)
@@ -378,29 +380,31 @@ the <code>ARM</code> facet counts.</p>
 <h2>Modifying counts on an existing table</h2>
 <p>(Leaf-)column counts could be altered after the fact via the
 <code>col_counts&lt;-</code> getter:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">col_counts</span>(tbl) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>tbl</span></code></pre></div>
-<pre><code>#           A: Drug X        B: Placebo       C: Combination  
-#          F        M        F        M         F         M   
-#        (N=17)   (N=18)   (N=19)   (N=17)   (N=18)    (N=19) 
-# ————————————————————————————————————————————————————————————
-# Mean   32.76    35.57    34.12    37.44     35.20     35.38</code></pre>
-<p><strong>NB</strong> doing this has never updated percentages that
-appear within the table as they are calculated at table-creation time,
-so this can lead to misleading results when not used with care.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">col_counts</span>(tbl) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>tbl</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#           A: Drug X        B: Placebo       C: Combination  </span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#          F        M        F        M         F         M   </span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#        (N=17)   (N=18)   (N=19)   (N=17)   (N=18)    (N=19) </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————————</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12    37.44     35.20     35.38</span></span></code></pre></div>
+<p>col_counts.R <strong>NB</strong> doing this has never updated
+percentages that appear within the table as they are calculated at
+table-creation time, so this can lead to misleading results when not
+used with care.</p>
 </div>
 <div id="hiding-counts" class="section level2">
 <h2>Hiding counts</h2>
 <p>We did not provide a user-visible way to toggle column count display
 after table creation, though we did support showing a blank space for
 particular counts by setting them to <code>NA</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">col_counts</span>(tbl) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">17</span>, <span class="dv">18</span>, <span class="cn">NA</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>tbl</span></code></pre></div>
-<pre><code>#           A: Drug X        B: Placebo      C: Combination  
-#          F        M        F       M         F         M   
-#        (N=17)   (N=18)           (N=17)   (N=18)    (N=19) 
-# ———————————————————————————————————————————————————————————
-# Mean   32.76    35.57    34.12   37.44     35.20     35.38</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">col_counts</span>(tbl) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">17</span>, <span class="dv">18</span>, <span class="cn">NA</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>tbl</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#           A: Drug X        B: Placebo      C: Combination  </span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#          F        M        F       M         F         M   </span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#        (N=17)   (N=18)           (N=17)   (N=18)    (N=19) </span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co"># ———————————————————————————————————————————————————————————</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12   37.44     35.20     35.38</span></span></code></pre></div>
+<p>col_counts.R</p>
 <p>These mechanisms will all continue to work for the forseeable future,
 though new code is advised use the new API discussed below.</p>
 </div>
@@ -420,33 +424,35 @@ set to be visible.</p>
 should be visible.</p>
 <p>We do this with the new <code>show_colcounts</code> argument now
 accepted by all <code>split_cols_by*</code> layout functions.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>    <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>)),</span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>    <span class="at">show_colcounts =</span> <span class="cn">TRUE</span></span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, ex_adsl)</span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>tbl2</span></code></pre></div>
-<pre><code>#           A: Drug X        B: Placebo       C: Combination  
-#          F        M        F        M         F         M   
-#        (N=79)   (N=51)   (N=77)   (N=55)   (N=66)    (N=60) 
-# ————————————————————————————————————————————————————————————
-# Mean   32.76    35.57    34.12    37.44     35.20     35.38</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>, <span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt3, ex_adsl)</span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>tbl3</span></code></pre></div>
-<pre><code>#          A: Drug X      B: Placebo      C: Combination  
-#           (N=134)         (N=134)           (N=132)     
-#          F       M       F       M        F         M   
-# ————————————————————————————————————————————————————————
-# Mean   32.76   35.57   34.12   37.44    35.20     35.38</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>    <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>)),</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    <span class="at">show_colcounts =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt2, ex_adsl)</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>tbl2</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#           A: Drug X        B: Placebo       C: Combination  </span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#          F        M        F        M         F         M   </span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#        (N=79)   (N=51)   (N=77)   (N=55)   (N=66)    (N=60) </span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————————</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12    37.44     35.20     35.38</span></span></code></pre></div>
+<p>col_counts.R</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>, <span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>tbl3 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt3, ex_adsl)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>tbl3</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#          A: Drug X      B: Placebo      C: Combination  </span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#           (N=134)         (N=134)           (N=132)     </span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#          F       M       F       M        F         M   </span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co"># Mean   32.76   35.57   34.12   37.44    35.20     35.38</span></span></code></pre></div>
+<p>col_counts.R</p>
 <p>As before, these column counts are calculated at table creation time,
 using <code>alt_counts_df</code> if it is provided (or simply
 <code>df</code> otherwise).</p>
@@ -470,15 +476,17 @@ for all addressable facets.</p>
 <p>The <code>facet_colcount</code> getter and setter queries and sets
 the column count for a facet in column space (note it needs not be a
 leaf facet). E.g.,</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>))</span></code></pre></div>
-<pre><code># [1] 132</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>)) <span class="ot">&lt;-</span> <span class="dv">75</span></span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>tbl3</span></code></pre></div>
-<pre><code>#          A: Drug X      B: Placebo      C: Combination  
-#           (N=134)         (N=134)           (N=75)      
-#          F       M       F       M        F         M   
-# ————————————————————————————————————————————————————————
-# Mean   32.76   35.57   34.12   37.44    35.20     35.38</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># [1] 132</span></span></code></pre></div>
+<p>col_counts.R</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>)) <span class="ot">&lt;-</span> <span class="dv">75</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>tbl3</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#          A: Drug X      B: Placebo      C: Combination  </span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#           (N=134)         (N=134)           (N=75)      </span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#          F       M       F       M        F         M   </span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co"># Mean   32.76   35.57   34.12   37.44    35.20     35.38</span></span></code></pre></div>
+<p>col_counts.R</p>
 <p>For convenience (primarily because it was needed internally), we also
 provide <code>rm_all_colcounts</code> which sets <em>all</em> column
 counts for a particular table to <code>NA</code> at all levels of
@@ -497,14 +505,15 @@ setter. This function accepts a path which ends in the name associated
 with a splitting instruction in the layout (e.g., <code>c(&quot;ARM&quot;)</code>,
 <code>c(&quot;ARM&quot;, &quot;B: Placebo&quot;, &quot;SEX&quot;)</code>, etc) and <em>resets the
 visibility of all direct children of that path</em>.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">facet_colcounts_visible</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>)) <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>tbl3</span></code></pre></div>
-<pre><code>#           A: Drug X                                       
-#            (N=134)        B: Placebo      C: Combination  
-#          F        M         (N=134)           (N=75)      
-#        (N=79)   (N=51)     F       M        F         M   
-# ——————————————————————————————————————————————————————————
-# Mean   32.76    35.57    34.12   37.44    35.20     35.38</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">facet_colcounts_visible</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>)) <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>tbl3</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#           A: Drug X                                       </span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#            (N=134)        B: Placebo      C: Combination  </span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#          F        M         (N=134)           (N=75)      </span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#        (N=79)   (N=51)     F       M        F         M   </span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co"># ——————————————————————————————————————————————————————————</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12   37.44    35.20     35.38</span></span></code></pre></div>
+<p>col_counts.R</p>
 <p><strong>NOTE</strong> as we can see here, the visibility of column
 counts can have an “unbalanced design”, provided the direct-siblings
 agreeing constraint is met. This leads to things not lining up directly
@@ -517,18 +526,21 @@ be added in future releases.</p>
 retrieve and set individual column counts’ visiblities, but these are
 largely an internal detail and in virtually all cases end users should
 avoid calling them directly.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="do">## BEWARE, the following is expected to show error</span></span>
-<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>tbl4 <span class="ot">&lt;-</span> tbl3</span>
-<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="fu">colcount_visible</span>(tbl4, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)) <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>tbl4</span>
-<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a></span>
-<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co"># Expected Error message</span></span>
-<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="co"># Error in h(simpleError(msg, call)) :</span></span>
-<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="co">#  error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;toString&#39;: Detected different colcount visibility among sibling facets (those arising from the same split_cols_by* layout instruction). This is not supported.</span></span>
-<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co"># Set count values to NA if you want a blank space to appear as the displayed count for particular facets.</span></span>
-<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="co"># First disagreement occured at paths:</span></span>
-<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a><span class="co"># ARM[A: Drug X]-&gt;SEX[F]</span></span>
-<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a><span class="co"># ARM[A: Drug X]-&gt;SEX[M]</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="do">## BEWARE, the following is expected to show error</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>tbl4 <span class="ot">&lt;-</span> tbl3</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="fu">colcount_visible</span>(tbl4, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)) <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>tbl4</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co"># Expected Error message</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co"># Error in h(simpleError(msg, call)) :</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#  error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;toString&#39;:</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#  Detected different colcount visibility among sibling facets (those arising from the</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#  same split_cols_by* layout instruction). This is not supported.</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co"># Set count values to NA if you want a blank space to appear as the displayed count for particular facets.</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co"># First disagreement occured at paths:</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co"># ARM[A: Drug X]-&gt;SEX[F]</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co"># ARM[A: Drug X]-&gt;SEX[M]</span></span></code></pre></div>
+<p>col_counts.R</p>
 <p>Note currently this restriction is currently only enforced for leaf
 columns due to technical implementation details but how a table renders
 should be considered undefined behavior when it contains a group of
@@ -544,23 +556,24 @@ that would print to the default value is <code>&quot;&quot;</code>, that will sh
 nothing. To change (for now uniformly only) the output string in case of
 missing values in the column counts you can use
 <code>colcount_na_str</code>:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>coldf <span class="ot">&lt;-</span> <span class="fu">make_col_df</span>(tbl3)</span>
-<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, coldf<span class="sc">$</span>path[[<span class="dv">1</span>]][<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)]) <span class="ot">&lt;-</span> <span class="cn">NA_integer_</span></span>
-<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="fu">print</span>(tbl3) <span class="co"># Keeps the missing space</span></span></code></pre></div>
-<pre><code>#           A: Drug X                                       
-#                           B: Placebo      C: Combination  
-#          F        M         (N=134)           (N=75)      
-#        (N=79)   (N=51)     F       M        F         M   
-# ——————————————————————————————————————————————————————————
-# Mean   32.76    35.57    34.12   37.44    35.20     35.38</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">colcount_na_str</span>(tbl3) <span class="ot">&lt;-</span> <span class="st">&quot;NaN&quot;</span></span>
-<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>tbl3 <span class="co"># Shows NaN</span></span></code></pre></div>
-<pre><code>#           A: Drug X                                       
-#              NaN          B: Placebo      C: Combination  
-#          F        M         (N=134)           (N=75)      
-#        (N=79)   (N=51)     F       M        F         M   
-# ——————————————————————————————————————————————————————————
-# Mean   32.76    35.57    34.12   37.44    35.20     35.38</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>coldf <span class="ot">&lt;-</span> <span class="fu">make_col_df</span>(tbl3)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, coldf<span class="sc">$</span>path[[<span class="dv">1</span>]][<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)]) <span class="ot">&lt;-</span> <span class="cn">NA_integer_</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">print</span>(tbl3) <span class="co"># Keeps the missing space</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#           A: Drug X                                       </span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#                           B: Placebo      C: Combination  </span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#          F        M         (N=134)           (N=75)      </span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#        (N=79)   (N=51)     F       M        F         M   </span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># ——————————————————————————————————————————————————————————</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12   37.44    35.20     35.38</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="fu">colcount_na_str</span>(tbl3) <span class="ot">&lt;-</span> <span class="st">&quot;NaN&quot;</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>tbl3 <span class="co"># Shows NaN</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#           A: Drug X                                       </span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#              NaN          B: Placebo      C: Combination  </span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#          F        M         (N=134)           (N=75)      </span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#        (N=79)   (N=51)     F       M        F         M   </span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co"># ——————————————————————————————————————————————————————————</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12   37.44    35.20     35.38</span></span></code></pre></div>
+<p>col_counts.R</p>
 </div>
 </div>
 </div>

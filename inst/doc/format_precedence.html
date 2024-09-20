@@ -12,7 +12,7 @@
 
 <meta name="author" content="Wojciech Wójciak and Gabriel Becker" />
 
-<meta name="date" content="2024-06-27" />
+<meta name="date" content="2024-09-20" />
 
 <title>Format Precedence and NA Handling</title>
 
@@ -340,10 +340,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Format Precedence and NA Handling</h1>
 <h4 class="author">Wojciech Wójciak and Gabriel Becker</h4>
-<h4 class="date">2024-06-27</h4>
+<h4 class="date">2024-09-20</h4>
 
 
 
+<p>format_precedence.R</p>
 <style type="text/css">
 .reveal .r code {
 white-space: pre;
@@ -367,6 +368,7 @@ variables content for different population subsets (encoded in the
 columns).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>ADSL <span class="ot">&lt;-</span> ex_adsl</span></code></pre></div>
+<p>format_precedence.R</p>
 <p>Note that all <code>ex_*</code> data which is currently attached to
 the <code>rtables</code> package is provided by the <a href="https://insightsengineering.github.io/formatters/"><code>formatters</code></a>
 package and was created using the publicly available <a href="https://insightsengineering.github.io/random.cdisc.data/"><code>random.cdisc.data</code></a>
@@ -415,6 +417,7 @@ table object.</p>
 #   [ElementaryTable] AGE (1 x 3)
 #  [TableTree] UNDIFFERENTIATED
 #   [ElementaryTable] AGE (1 x 3)</code></pre>
+<p>format_precedence.R</p>
 <p>In this table, there are 4 sub-tables under the <code>SEX</code>
 table. These are: <code>F</code>, <code>M</code>, <code>U</code>, and
 <code>UNDIFFERENTIATED</code>. Each of these sub-tables has one
@@ -451,6 +454,7 @@ is applied.</p>
 <pre><code>#           A: Drug X          B: Placebo       C: Combination 
 # —————————————————————————————————————————————————————————————
 # mean   33.7686567164179   35.4328358208955   35.4318181818182</code></pre>
+<p>format_precedence.R</p>
 </div>
 <div id="cell-format" class="section level3">
 <h3>Cell Format</h3>
@@ -483,6 +487,7 @@ user.</p>
 <pre><code>#        A: Drug X   B: Placebo   C: Combination
 # ——————————————————————————————————————————————
 # Mean     33.77       35.43          35.43</code></pre>
+<p>format_precedence.R</p>
 <p>If the format is specified in both of these places at the same time,
 the one specified via <code>in_rows()</code> takes highest precedence.
 Technically, in this case, the format defined in <code>rcell()</code>
@@ -504,6 +509,7 @@ described above are still in place.</p>
 <pre><code>#        A: Drug X   B: Placebo   C: Combination
 # ——————————————————————————————————————————————
 # Mean     33.77       35.43          35.43</code></pre>
+<p>format_precedence.R</p>
 </div>
 <div id="parent-table-format-and-inheritance" class="section level3">
 <h3>Parent Table Format and Inheritance</h3>
@@ -519,6 +525,7 @@ innermost parent table split (if any).</p>
 <pre><code>#        A: Drug X   B: Placebo   C: Combination
 # ——————————————————————————————————————————————
 # mean     33.8         35.4           35.4</code></pre>
+<p>format_precedence.R</p>
 <p>If the cell format is also specified for a cell, then the parent
 table format is ignored for this cell since the cell format is more
 specific and therefore takes precedence.</p>
@@ -553,6 +560,7 @@ specific and therefore takes precedence.</p>
 # ——————————————————————————————————————————————
 # Mean     33.77       35.43          35.43     
 # SD       6.55         7.90           7.72</code></pre>
+<p>format_precedence.R</p>
 <p>In the following, slightly more complicated, example, we can observe
 partial inheritance. That is, only <code>SD</code> cells inherit the
 parent table’s format while the <code>Mean</code> cells do not.</p>
@@ -573,6 +581,7 @@ parent table’s format while the <code>Mean</code> cells do not.</p>
 # ——————————————————————————————————————————————
 # Mean     33.77       35.43          35.43     
 # SD        6.6         7.9            7.7</code></pre>
+<p>format_precedence.R</p>
 </div>
 </div>
 <div id="na-handling" class="section level2">
@@ -594,6 +603,7 @@ parent table’s format while the <code>Mean</code> cells do not.</p>
 #   mean               31.67       31.00          35.25     
 # UNDIFFERENTIATED                                          
 #   mean               28.00         NA           45.00</code></pre>
+<p>format_precedence.R</p>
 <p>In the output the cell corresponding to the
 <code>UNDIFFERENTIATED</code> level of <code>SEX</code> and the
 <code>B: Placebo</code> level of <code>ARM</code> is displayed as
@@ -652,6 +662,7 @@ parameter in <code>in_rows()</code>.</p>
 #   Mean               31.67       31.00          35.25     
 # UNDIFFERENTIATED                                          
 #   Mean               28.00     &lt;MISSING&gt;        45.00</code></pre>
+<p>format_precedence.R</p>
 <p>If the <code>NA</code> string is specified in both of these places at
 the same time, the one specified with <code>in_rows()</code> takes
 precedence. Technically, in this case the <code>NA</code> replacement
@@ -682,6 +693,7 @@ are still in place.</p>
 #   Mean               31.67       31.00          35.25     
 # UNDIFFERENTIATED                                          
 #   Mean               28.00     &lt;MISSING&gt;        45.00</code></pre>
+<p>format_precedence.R</p>
 </div>
 <div id="parent-table-replacement-of-na-values-and-inheritance-principles" class="section level3">
 <h3>Parent Table Replacement of <code>NA</code> Values and Inheritance
@@ -707,6 +719,7 @@ innermost parent table split (if any).</p>
 #   mean               31.67         31.00           35.25     
 # UNDIFFERENTIATED                                             
 #   mean               28.00     not available       45.00</code></pre>
+<p>format_precedence.R</p>
 <p>If an <code>NA</code> value replacement string was also specified at
 the cell level, then the one set at the parent table level is ignored
 for this cell as the cell level format is more specific and therefore
@@ -762,6 +775,7 @@ takes precedence.</p>
 # UNDIFFERENTIATED                                          
 #   Mean               28.00     &lt;missing&gt;        45.00     
 #   SD               &lt;missing&gt;   &lt;missing&gt;         1.41</code></pre>
+<p>format_precedence.R</p>
 <p>In the following, slightly more complicated example, we can observe
 partial inheritance of NA strings. That is, only <code>SD</code> cells
 inherit the parent table’s <code>NA</code> string, while the
@@ -795,6 +809,7 @@ inherit the parent table’s <code>NA</code> string, while the
 # UNDIFFERENTIATED                                                 
 #   Mean                 28.00         &lt;missing&gt;         45.00     
 #   SD               not available   not available        1.41</code></pre>
+<p>format_precedence.R</p>
 </div>
 </div>
 

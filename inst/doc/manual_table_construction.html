@@ -12,7 +12,7 @@
 
 <meta name="author" content="Adrian Waddell" />
 
-<meta name="date" content="2024-06-27" />
+<meta name="date" content="2024-09-20" />
 
 <title>Constructing rtables Manually</title>
 
@@ -340,10 +340,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Constructing rtables Manually</h1>
 <h4 class="author">Adrian Waddell</h4>
-<h4 class="date">2024-06-27</h4>
+<h4 class="date">2024-09-20</h4>
 
 
 
+<p>manual_table_construction.R</p>
 <style type="text/css">
 .reveal .r code {
 white-space: pre;
@@ -369,6 +370,7 @@ format</li>
 <div id="simple-example" class="section level2">
 <h2>Simple Example</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span></code></pre></div>
+<p>manual_table_construction.R</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">rtable</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="at">header =</span> <span class="fu">c</span>(<span class="st">&quot;Treatement</span><span class="sc">\n</span><span class="st">N=100&quot;</span>, <span class="st">&quot;Comparison</span><span class="sc">\n</span><span class="st">N=300&quot;</span>),</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>,</span>
@@ -379,6 +381,7 @@ format</li>
 <span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="fu">rrow</span>(<span class="st">&quot;estimate&quot;</span>, <span class="fu">rcell</span>(<span class="fl">55.23</span>, <span class="st">&quot;xx.xx&quot;</span>, <span class="at">colspan =</span> <span class="dv">2</span>)),</span>
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  <span class="fu">rrow</span>(<span class="st">&quot;95% CI&quot;</span>, <span class="at">indent =</span> <span class="dv">1</span>, <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fl">44.8</span>, <span class="fl">67.4</span>), <span class="at">format =</span> <span class="st">&quot;(xx.x, xx.x)&quot;</span>, <span class="at">colspan =</span> <span class="dv">2</span>))</span>
 <span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>)</span></code></pre></div>
+<p>manual_table_construction.R</p>
 <p>Before we go into explaining the individual components used to create
 this table we continue with the html conversion of the
 <code>rtable()</code> object:</p>
@@ -433,6 +436,7 @@ this table we continue with the html conversion of the
 </table>
 <div class="rtables-footers-block rtables-container"></div>
 </div>
+<p>manual_table_construction.R</p>
 <p>Next, the <code>[</code> operator lets you access the cell
 content.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>tbl[<span class="dv">1</span>, <span class="dv">1</span>]</span></code></pre></div>
@@ -440,6 +444,7 @@ content.</p>
 #        N=100    
 # ————————————————
 # A   104 (20.00%)</code></pre>
+<p>manual_table_construction.R</p>
 <p>and to format that cell run <code>format_rcell(tbl[1,1])</code>=.</p>
 <p>Note that <code>tbl[6, 1]</code> and <code>tbl[6, 2]</code> display
 both the same <code>rcell</code> because of the

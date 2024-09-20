@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2024-06-27" />
+<meta name="date" content="2024-09-20" />
 
 <title>Introspecting Tables</title>
 
@@ -340,14 +340,16 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introspecting Tables</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2024-06-27</h4>
+<h4 class="date">2024-09-20</h4>
 
 
 
+<p>introspecting_tables.R</p>
 <p>The packages used in this vignette are <code>rtables</code> and
 <code>dplyr</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<p>introspecting_tables.R</p>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>First, let’s set up a simple table.</p>
@@ -360,103 +362,108 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> max, <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
 <span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a></span>
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, ex_adsl)</span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>tbl</span></code></pre></div>
-<pre><code>#                  ARM A                     ARM B                     ARM C                       
-#                  N=134                     N=134                     N=132                       
-#             S1           S2           S1           S2           S1           S2                  
-#           (N=73)       (N=61)       (N=67)       (N=67)       (N=56)       (N=76)         All    
-# —————————————————————————————————————————————————————————————————————————————————————————————————
-# A       18 (24.7%)   20 (32.8%)   22 (32.8%)   22 (32.8%)   14 (25.0%)   26 (34.2%)   122 (30.5%)
-#   max      40.0         46.0         62.0         50.0         47.0         45.0         62.0    
-# B       28 (38.4%)   19 (31.1%)   19 (28.4%)   26 (38.8%)   18 (32.1%)   25 (32.9%)   135 (33.8%)
-#   max      48.0         47.0         58.0         58.0         46.0         64.0         64.0    
-# C       27 (37.0%)   22 (36.1%)   26 (38.8%)   19 (28.4%)   24 (42.9%)   25 (32.9%)   143 (35.8%)
-#   max      48.0         50.0         48.0         51.0         69.0         50.0         69.0</code></pre>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>tbl</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#                  ARM A                     ARM B                     ARM C                       </span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#                  N=134                     N=134                     N=132                       </span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#             S1           S2           S1           S2           S1           S2                  </span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#           (N=73)       (N=61)       (N=67)       (N=67)       (N=56)       (N=76)         All    </span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co"># —————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co"># A       18 (24.7%)   20 (32.8%)   22 (32.8%)   22 (32.8%)   14 (25.0%)   26 (34.2%)   122 (30.5%)</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#   max      40.0         46.0         62.0         50.0         47.0         45.0         62.0    </span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co"># B       28 (38.4%)   19 (31.1%)   19 (28.4%)   26 (38.8%)   18 (32.1%)   25 (32.9%)   135 (33.8%)</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#   max      48.0         47.0         58.0         58.0         46.0         64.0         64.0    </span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co"># C       27 (37.0%)   22 (36.1%)   26 (38.8%)   19 (28.4%)   24 (42.9%)   25 (32.9%)   143 (35.8%)</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#   max      48.0         50.0         48.0         51.0         69.0         50.0         69.0</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
 <p>We can get basic table dimensions, the number of rows, and the number
 of columns with the following code:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">dim</span>(tbl)</span></code></pre></div>
-<pre><code># [1] 6 7</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">nrow</span>(tbl)</span></code></pre></div>
-<pre><code># [1] 6</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">ncol</span>(tbl)</span></code></pre></div>
-<pre><code># [1] 7</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">dim</span>(tbl)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co"># [1] 6 7</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">nrow</span>(tbl)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># [1] 6</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="fu">ncol</span>(tbl)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co"># [1] 7</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 </div>
 <div id="detailed-table-structure" class="section level2">
 <h2>Detailed Table Structure</h2>
 <p>The <code>table_structure()</code> function prints a summary of a
 table’s row structure at one of two levels of detail. By default, it
 summarizes the structure at the subtable level.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">table_structure</span>(tbl)</span></code></pre></div>
-<pre><code># [TableTree] STRATA1
-#  [TableTree] A [cont: 1 x 7]
-#   [ElementaryTable] AGE (1 x 7)
-#  [TableTree] B [cont: 1 x 7]
-#   [ElementaryTable] AGE (1 x 7)
-#  [TableTree] C [cont: 1 x 7]
-#   [ElementaryTable] AGE (1 x 7)</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">table_structure</span>(tbl)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co"># [TableTree] STRATA1</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#  [TableTree] A [cont: 1 x 7]</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#   [ElementaryTable] AGE (1 x 7)</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#  [TableTree] B [cont: 1 x 7]</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#   [ElementaryTable] AGE (1 x 7)</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#  [TableTree] C [cont: 1 x 7]</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#   [ElementaryTable] AGE (1 x 7)</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 <p>When the <code>detail</code> argument is set to <code>&quot;row&quot;</code>,
 however, it provides a more detailed row-level summary which acts as a
 useful alternative to how we might normally use the <code>str()</code>
 function to interrogate compound nested lists.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">table_structure</span>(tbl, <span class="at">detail =</span> <span class="st">&quot;row&quot;</span>) <span class="co"># or &quot;subtable&quot;</span></span></code></pre></div>
-<pre><code># TableTree: [STRATA1] (STRATA1)
-#   labelrow: [STRATA1] (STRATA1) - &lt;not visible&gt;
-#   children: 
-#     TableTree: [A] (A)
-#       labelrow: [A] (A) - &lt;not visible&gt;
-#       content:
-#         ElementaryTable: [A@content] ()
-#           labelrow: [] () - &lt;not visible&gt;
-#           children: 
-#             ContentRow: [A] (A)
-#       children: 
-#         ElementaryTable: [AGE] (AGE)
-#           labelrow: [AGE] (AGE) - &lt;not visible&gt;
-#           children: 
-#             DataRow: [max] (max)
-#     TableTree: [B] (B)
-#       labelrow: [B] (B) - &lt;not visible&gt;
-#       content:
-#         ElementaryTable: [B@content] ()
-#           labelrow: [] () - &lt;not visible&gt;
-#           children: 
-#             ContentRow: [B] (B)
-#       children: 
-#         ElementaryTable: [AGE] (AGE)
-#           labelrow: [AGE] (AGE) - &lt;not visible&gt;
-#           children: 
-#             DataRow: [max] (max)
-#     TableTree: [C] (C)
-#       labelrow: [C] (C) - &lt;not visible&gt;
-#       content:
-#         ElementaryTable: [C@content] ()
-#           labelrow: [] () - &lt;not visible&gt;
-#           children: 
-#             ContentRow: [C] (C)
-#       children: 
-#         ElementaryTable: [AGE] (AGE)
-#           labelrow: [AGE] (AGE) - &lt;not visible&gt;
-#           children: 
-#             DataRow: [max] (max)</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">table_structure</span>(tbl, <span class="at">detail =</span> <span class="st">&quot;row&quot;</span>) <span class="co"># or &quot;subtable&quot;</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co"># TableTree: [STRATA1] (STRATA1)</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#   labelrow: [STRATA1] (STRATA1) - &lt;not visible&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#   children: </span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#     TableTree: [A] (A)</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#       labelrow: [A] (A) - &lt;not visible&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#       content:</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#         ElementaryTable: [A@content] ()</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#           labelrow: [] () - &lt;not visible&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#           children: </span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#             ContentRow: [A] (A)</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#       children: </span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#         ElementaryTable: [AGE] (AGE)</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#           labelrow: [AGE] (AGE) - &lt;not visible&gt;</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#           children: </span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#             DataRow: [max] (max)</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#     TableTree: [B] (B)</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#       labelrow: [B] (B) - &lt;not visible&gt;</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#       content:</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#         ElementaryTable: [B@content] ()</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#           labelrow: [] () - &lt;not visible&gt;</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#           children: </span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#             ContentRow: [B] (B)</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#       children: </span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#         ElementaryTable: [AGE] (AGE)</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#           labelrow: [AGE] (AGE) - &lt;not visible&gt;</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#           children: </span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#             DataRow: [max] (max)</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#     TableTree: [C] (C)</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#       labelrow: [C] (C) - &lt;not visible&gt;</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#       content:</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#         ElementaryTable: [C@content] ()</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#           labelrow: [] () - &lt;not visible&gt;</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co">#           children: </span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#             ContentRow: [C] (C)</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#       children: </span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#         ElementaryTable: [AGE] (AGE)</span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#           labelrow: [AGE] (AGE) - &lt;not visible&gt;</span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co">#           children: </span></span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co">#             DataRow: [max] (max)</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 <p>Similarly, for columns we can see how the tree is structured with the
 following call:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">coltree_structure</span>(tbl)</span></code></pre></div>
-<pre><code># [root] (no pos)
-#    [ARMCD] (no pos)
-#      [ARM A] (ARMCD: ARM A)
-#        [S1] (ARMCD: ARM A -&gt; STRATA2: S1)
-#        [S2] (ARMCD: ARM A -&gt; STRATA2: S2)
-#      [ARM B] (ARMCD: ARM B)
-#        [S1] (ARMCD: ARM B -&gt; STRATA2: S1)
-#        [S2] (ARMCD: ARM B -&gt; STRATA2: S2)
-#      [ARM C] (ARMCD: ARM C)
-#        [S1] (ARMCD: ARM C -&gt; STRATA2: S1)
-#        [S2] (ARMCD: ARM C -&gt; STRATA2: S2)
-#    [All] (no pos)
-#      [All] (All: All)</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">coltree_structure</span>(tbl)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># [root] (no pos)</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#    [ARMCD] (no pos)</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#      [ARM A] (ARMCD: ARM A)</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#        [S1] (ARMCD: ARM A -&gt; STRATA2: S1)</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#        [S2] (ARMCD: ARM A -&gt; STRATA2: S2)</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#      [ARM B] (ARMCD: ARM B)</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#        [S1] (ARMCD: ARM B -&gt; STRATA2: S1)</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#        [S2] (ARMCD: ARM B -&gt; STRATA2: S2)</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#      [ARM C] (ARMCD: ARM C)</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#        [S1] (ARMCD: ARM C -&gt; STRATA2: S1)</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#        [S2] (ARMCD: ARM C -&gt; STRATA2: S2)</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#    [All] (no pos)</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#      [All] (All: All)</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 <p>Further information about the column structure can be found in the
 vignette on <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/col_counts.html"><code>col_counts</code></a>.</p>
 <p>The <code>make_row_df()</code> and <code>make_col_df()</code>
@@ -466,135 +473,143 @@ purposes are the <code>label</code>, <code>name</code>,
 <code>abs_rownumber</code>, <code>path</code> and
 <code>node_class</code> columns (the remainder of the information in the
 returned <code>data.frame</code> is used for pagination)</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">make_row_df</span>(tbl)[, <span class="fu">c</span>(<span class="st">&quot;label&quot;</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;abs_rownumber&quot;</span>, <span class="st">&quot;path&quot;</span>, <span class="st">&quot;node_class&quot;</span>)]</span></code></pre></div>
-<pre><code>#   label name abs_rownumber         path node_class
-# 1     A    A             1 STRATA1,.... ContentRow
-# 2   max  max             2 STRATA1,....    DataRow
-# 3     B    B             3 STRATA1,.... ContentRow
-# 4   max  max             4 STRATA1,....    DataRow
-# 5     C    C             5 STRATA1,.... ContentRow
-# 6   max  max             6 STRATA1,....    DataRow</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">make_row_df</span>(tbl)[, <span class="fu">c</span>(<span class="st">&quot;label&quot;</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;abs_rownumber&quot;</span>, <span class="st">&quot;path&quot;</span>, <span class="st">&quot;node_class&quot;</span>)]</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#   label name abs_rownumber         path node_class</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co"># 1     A    A             1 STRATA1,.... ContentRow</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co"># 2   max  max             2 STRATA1,....    DataRow</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co"># 3     B    B             3 STRATA1,.... ContentRow</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co"># 4   max  max             4 STRATA1,....    DataRow</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co"># 5     C    C             5 STRATA1,.... ContentRow</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co"># 6   max  max             6 STRATA1,....    DataRow</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 <p>There is also a wrapper function, <code>row_paths()</code> available
 for <code>make_row_df</code> to display only the row path structure:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">row_paths</span>(tbl)</span></code></pre></div>
-<pre><code># [[1]]
-# [1] &quot;STRATA1&quot;  &quot;A&quot;        &quot;@content&quot; &quot;A&quot;       
-# 
-# [[2]]
-# [1] &quot;STRATA1&quot; &quot;A&quot;       &quot;AGE&quot;     &quot;max&quot;    
-# 
-# [[3]]
-# [1] &quot;STRATA1&quot;  &quot;B&quot;        &quot;@content&quot; &quot;B&quot;       
-# 
-# [[4]]
-# [1] &quot;STRATA1&quot; &quot;B&quot;       &quot;AGE&quot;     &quot;max&quot;    
-# 
-# [[5]]
-# [1] &quot;STRATA1&quot;  &quot;C&quot;        &quot;@content&quot; &quot;C&quot;       
-# 
-# [[6]]
-# [1] &quot;STRATA1&quot; &quot;C&quot;       &quot;AGE&quot;     &quot;max&quot;</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">row_paths</span>(tbl)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co"># [[1]]</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># [1] &quot;STRATA1&quot;  &quot;A&quot;        &quot;@content&quot; &quot;A&quot;       </span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co"># [[2]]</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co"># [1] &quot;STRATA1&quot; &quot;A&quot;       &quot;AGE&quot;     &quot;max&quot;    </span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co"># [[3]]</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co"># [1] &quot;STRATA1&quot;  &quot;B&quot;        &quot;@content&quot; &quot;B&quot;       </span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co"># [[4]]</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co"># [1] &quot;STRATA1&quot; &quot;B&quot;       &quot;AGE&quot;     &quot;max&quot;    </span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co"># [[5]]</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co"># [1] &quot;STRATA1&quot;  &quot;C&quot;        &quot;@content&quot; &quot;C&quot;       </span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co"># [[6]]</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co"># [1] &quot;STRATA1&quot; &quot;C&quot;       &quot;AGE&quot;     &quot;max&quot;</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 <p>By default <code>make_row_df()</code> summarizes only visible rows,
 but setting <code>visible_only</code> to <code>FALSE</code> gives us a
 structural summary of the table with the full hierarchy of subtables,
 including those that are not represented directly by any visible
 rows:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">make_row_df</span>(tbl, <span class="at">visible_only =</span> <span class="cn">FALSE</span>)[, <span class="fu">c</span>(<span class="st">&quot;label&quot;</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;abs_rownumber&quot;</span>, <span class="st">&quot;path&quot;</span>, <span class="st">&quot;node_class&quot;</span>)]</span></code></pre></div>
-<pre><code>#    label      name abs_rownumber         path      node_class
-# 1          STRATA1            NA      STRATA1       TableTree
-# 2                A            NA   STRATA1, A       TableTree
-# 3        A@content            NA STRATA1,.... ElementaryTable
-# 4      A         A             1 STRATA1,....      ContentRow
-# 5              AGE            NA STRATA1,.... ElementaryTable
-# 6    max       max             2 STRATA1,....         DataRow
-# 7                B            NA   STRATA1, B       TableTree
-# 8        B@content            NA STRATA1,.... ElementaryTable
-# 9      B         B             3 STRATA1,....      ContentRow
-# 10             AGE            NA STRATA1,.... ElementaryTable
-# 11   max       max             4 STRATA1,....         DataRow
-# 12               C            NA   STRATA1, C       TableTree
-# 13       C@content            NA STRATA1,.... ElementaryTable
-# 14     C         C             5 STRATA1,....      ContentRow
-# 15             AGE            NA STRATA1,.... ElementaryTable
-# 16   max       max             6 STRATA1,....         DataRow</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">make_row_df</span>(tbl, <span class="at">visible_only =</span> <span class="cn">FALSE</span>)[, <span class="fu">c</span>(<span class="st">&quot;label&quot;</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;abs_rownumber&quot;</span>, <span class="st">&quot;path&quot;</span>, <span class="st">&quot;node_class&quot;</span>)]</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#    label      name abs_rownumber         path      node_class</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co"># 1          STRATA1            NA      STRATA1       TableTree</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co"># 2                A            NA   STRATA1, A       TableTree</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co"># 3        A@content            NA STRATA1,.... ElementaryTable</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co"># 4      A         A             1 STRATA1,....      ContentRow</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co"># 5              AGE            NA STRATA1,.... ElementaryTable</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co"># 6    max       max             2 STRATA1,....         DataRow</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co"># 7                B            NA   STRATA1, B       TableTree</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co"># 8        B@content            NA STRATA1,.... ElementaryTable</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co"># 9      B         B             3 STRATA1,....      ContentRow</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co"># 10             AGE            NA STRATA1,.... ElementaryTable</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co"># 11   max       max             4 STRATA1,....         DataRow</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co"># 12               C            NA   STRATA1, C       TableTree</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co"># 13       C@content            NA STRATA1,.... ElementaryTable</span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co"># 14     C         C             5 STRATA1,....      ContentRow</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co"># 15             AGE            NA STRATA1,.... ElementaryTable</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co"># 16   max       max             6 STRATA1,....         DataRow</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 <p><code>make_col_df()</code> similarly accepts
 <code>visible_only</code>, though here the meaning is slightly
 different, indicating whether only <em>leaf</em> columns should be
 summarized (defaults to <code>TRUE</code>) or whether higher level
 groups of columns - analogous to subtables in row space - should be
 summarized as well.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">make_col_df</span>(tbl)[, <span class="fu">c</span>(<span class="st">&quot;label&quot;</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;abs_pos&quot;</span>, <span class="st">&quot;path&quot;</span>, <span class="st">&quot;leaf_indices&quot;</span>)]</span></code></pre></div>
-<pre><code>#   label name abs_pos         path leaf_indices
-# 1    S1   S1       1 ARMCD, A....            1
-# 2    S2   S2       2 ARMCD, A....            2
-# 3    S1   S1       3 ARMCD, A....            3
-# 4    S2   S2       4 ARMCD, A....            4
-# 5    S1   S1       5 ARMCD, A....            5
-# 6    S2   S2       6 ARMCD, A....            6
-# 7   All  All       7     All, All            7</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">make_col_df</span>(tbl, <span class="at">visible_only =</span> <span class="cn">FALSE</span>)[, <span class="fu">c</span>(<span class="st">&quot;label&quot;</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;abs_pos&quot;</span>, <span class="st">&quot;path&quot;</span>, <span class="st">&quot;leaf_indices&quot;</span>)]</span></code></pre></div>
-<pre><code>#    label  name abs_pos         path leaf_indices
-# 1  ARM A ARM A      NA ARMCD, ARM A         1, 2
-# 2     S1    S1       1 ARMCD, A....            1
-# 3     S2    S2       2 ARMCD, A....            2
-# 4  ARM B ARM B      NA ARMCD, ARM B         3, 4
-# 5     S1    S1       3 ARMCD, A....            3
-# 6     S2    S2       4 ARMCD, A....            4
-# 7  ARM C ARM C      NA ARMCD, ARM C         5, 6
-# 8     S1    S1       5 ARMCD, A....            5
-# 9     S2    S2       6 ARMCD, A....            6
-# 10   All   All       7     All, All            7</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">make_col_df</span>(tbl)[, <span class="fu">c</span>(<span class="st">&quot;label&quot;</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;abs_pos&quot;</span>, <span class="st">&quot;path&quot;</span>, <span class="st">&quot;leaf_indices&quot;</span>)]</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#   label name abs_pos         path leaf_indices</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co"># 1    S1   S1       1 ARMCD, A....            1</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co"># 2    S2   S2       2 ARMCD, A....            2</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co"># 3    S1   S1       3 ARMCD, A....            3</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co"># 4    S2   S2       4 ARMCD, A....            4</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co"># 5    S1   S1       5 ARMCD, A....            5</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># 6    S2   S2       6 ARMCD, A....            6</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co"># 7   All  All       7     All, All            7</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">make_col_df</span>(tbl, <span class="at">visible_only =</span> <span class="cn">FALSE</span>)[, <span class="fu">c</span>(<span class="st">&quot;label&quot;</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;abs_pos&quot;</span>, <span class="st">&quot;path&quot;</span>, <span class="st">&quot;leaf_indices&quot;</span>)]</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="co">#    label  name abs_pos         path leaf_indices</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co"># 1  ARM A ARM A      NA ARMCD, ARM A         1, 2</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co"># 2     S1    S1       1 ARMCD, A....            1</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co"># 3     S2    S2       2 ARMCD, A....            2</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co"># 4  ARM B ARM B      NA ARMCD, ARM B         3, 4</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co"># 5     S1    S1       3 ARMCD, A....            3</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co"># 6     S2    S2       4 ARMCD, A....            4</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co"># 7  ARM C ARM C      NA ARMCD, ARM C         5, 6</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co"># 8     S1    S1       5 ARMCD, A....            5</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co"># 9     S2    S2       6 ARMCD, A....            6</span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co"># 10   All   All       7     All, All            7</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 <p>Similarly, there is wrapper function <code>col_paths()</code>
 available, which displays only the column structure:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">col_paths</span>(tbl)</span></code></pre></div>
-<pre><code># [[1]]
-# [1] &quot;ARMCD&quot;   &quot;ARM A&quot;   &quot;STRATA2&quot; &quot;S1&quot;     
-# 
-# [[2]]
-# [1] &quot;ARMCD&quot;   &quot;ARM A&quot;   &quot;STRATA2&quot; &quot;S2&quot;     
-# 
-# [[3]]
-# [1] &quot;ARMCD&quot;   &quot;ARM B&quot;   &quot;STRATA2&quot; &quot;S1&quot;     
-# 
-# [[4]]
-# [1] &quot;ARMCD&quot;   &quot;ARM B&quot;   &quot;STRATA2&quot; &quot;S2&quot;     
-# 
-# [[5]]
-# [1] &quot;ARMCD&quot;   &quot;ARM C&quot;   &quot;STRATA2&quot; &quot;S1&quot;     
-# 
-# [[6]]
-# [1] &quot;ARMCD&quot;   &quot;ARM C&quot;   &quot;STRATA2&quot; &quot;S2&quot;     
-# 
-# [[7]]
-# [1] &quot;All&quot; &quot;All&quot;</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">col_paths</span>(tbl)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co"># [[1]]</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co"># [1] &quot;ARMCD&quot;   &quot;ARM A&quot;   &quot;STRATA2&quot; &quot;S1&quot;     </span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co"># [[2]]</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co"># [1] &quot;ARMCD&quot;   &quot;ARM A&quot;   &quot;STRATA2&quot; &quot;S2&quot;     </span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co"># [[3]]</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co"># [1] &quot;ARMCD&quot;   &quot;ARM B&quot;   &quot;STRATA2&quot; &quot;S1&quot;     </span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co"># [[4]]</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co"># [1] &quot;ARMCD&quot;   &quot;ARM B&quot;   &quot;STRATA2&quot; &quot;S2&quot;     </span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co"># [[5]]</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co"># [1] &quot;ARMCD&quot;   &quot;ARM C&quot;   &quot;STRATA2&quot; &quot;S1&quot;     </span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="co"># [[6]]</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="co"># [1] &quot;ARMCD&quot;   &quot;ARM C&quot;   &quot;STRATA2&quot; &quot;S2&quot;     </span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co"># [[7]]</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="co"># [1] &quot;All&quot; &quot;All&quot;</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 <p>The <code>row_paths_summary()</code> and
 <code>col_paths_summary()</code> functions wrap the respective
 <code>make_*_df</code> functions, printing the <code>name</code>,
 <code>node_class</code>, and <code>path</code> information (in the row
 case), or the <code>label</code> and <code>path</code> information (in
 the column case), indented to illustrate table structure:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">row_paths_summary</span>(tbl)</span></code></pre></div>
-<pre><code># rowname    node_class    path                   
-# ————————————————————————————————————————————————
-# A          ContentRow    STRATA1, A, @content, A
-#   max      DataRow       STRATA1, A, AGE, max   
-# B          ContentRow    STRATA1, B, @content, B
-#   max      DataRow       STRATA1, B, AGE, max   
-# C          ContentRow    STRATA1, C, @content, C
-#   max      DataRow       STRATA1, C, AGE, max</code></pre>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">col_paths_summary</span>(tbl)</span></code></pre></div>
-<pre><code># label    path                     
-# ——————————————————————————————————
-# ARM A    ARMCD, ARM A             
-#   S1     ARMCD, ARM A, STRATA2, S1
-#   S2     ARMCD, ARM A, STRATA2, S2
-# ARM B    ARMCD, ARM B             
-#   S1     ARMCD, ARM B, STRATA2, S1
-#   S2     ARMCD, ARM B, STRATA2, S2
-# ARM C    ARMCD, ARM C             
-#   S1     ARMCD, ARM C, STRATA2, S1
-#   S2     ARMCD, ARM C, STRATA2, S2
-# All      All, All</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">row_paths_summary</span>(tbl)</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co"># rowname    node_class    path                   </span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co"># A          ContentRow    STRATA1, A, @content, A</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#   max      DataRow       STRATA1, A, AGE, max   </span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co"># B          ContentRow    STRATA1, B, @content, B</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#   max      DataRow       STRATA1, B, AGE, max   </span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co"># C          ContentRow    STRATA1, C, @content, C</span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#   max      DataRow       STRATA1, C, AGE, max</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">col_paths_summary</span>(tbl)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="co"># label    path                     </span></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co"># ——————————————————————————————————</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co"># ARM A    ARMCD, ARM A             </span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#   S1     ARMCD, ARM A, STRATA2, S1</span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#   S2     ARMCD, ARM A, STRATA2, S2</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co"># ARM B    ARMCD, ARM B             </span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co">#   S1     ARMCD, ARM B, STRATA2, S1</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co">#   S2     ARMCD, ARM B, STRATA2, S2</span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="co"># ARM C    ARMCD, ARM C             </span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co">#   S1     ARMCD, ARM C, STRATA2, S1</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co">#   S2     ARMCD, ARM C, STRATA2, S2</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co"># All      All, All</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 </div>
 <div id="insights-on-value-format-structure" class="section level2">
 <h2>Insights on Value Format Structure</h2>
@@ -608,33 +623,35 @@ Another useful tool is the <code>value_formats()</code> function which
 instead of a table returns a matrix of the format strings for each cell
 value in the table.</p>
 <p>See below the printout for the above examples:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="fu">table_shell</span>(tbl)</span></code></pre></div>
-<pre><code>#                  ARM A                     ARM B                     ARM C                      
-#                  N=134                     N=134                     N=132                      
-#             S1           S2           S1           S2           S1           S2                 
-#           (N=73)       (N=61)       (N=67)       (N=67)       (N=56)       (N=76)        All    
-# ————————————————————————————————————————————————————————————————————————————————————————————————
-# A       xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)
-#   max      xx.x         xx.x         xx.x         xx.x         xx.x         xx.x         xx.x   
-# B       xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)
-#   max      xx.x         xx.x         xx.x         xx.x         xx.x         xx.x         xx.x   
-# C       xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)
-#   max      xx.x         xx.x         xx.x         xx.x         xx.x         xx.x         xx.x</code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">value_formats</span>(tbl)</span></code></pre></div>
-<pre><code>#     ARM A.S1     ARM A.S2     ARM B.S1     ARM B.S2     ARM C.S1    
-# A   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
-# max &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;      
-# B   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
-# max &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;      
-# C   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
-# max &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;      
-#     ARM C.S2     All         
-# A   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
-# max &quot;xx.x&quot;       &quot;xx.x&quot;      
-# B   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
-# max &quot;xx.x&quot;       &quot;xx.x&quot;      
-# C   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;
-# max &quot;xx.x&quot;       &quot;xx.x&quot;</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">table_shell</span>(tbl)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co">#                  ARM A                     ARM B                     ARM C                      </span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co">#                  N=134                     N=134                     N=132                      </span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="co">#             S1           S2           S1           S2           S1           S2                 </span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="co">#           (N=73)       (N=61)       (N=67)       (N=67)       (N=56)       (N=76)        All    </span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="co"># A       xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co">#   max      xx.x         xx.x         xx.x         xx.x         xx.x         xx.x         xx.x   </span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="co"># B       xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)</span></span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="co">#   max      xx.x         xx.x         xx.x         xx.x         xx.x         xx.x         xx.x   </span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="co"># C       xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)   xx (xx.x%)</span></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="co">#   max      xx.x         xx.x         xx.x         xx.x         xx.x         xx.x         xx.x</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">value_formats</span>(tbl)</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="co">#     ARM A.S1     ARM A.S2     ARM B.S1     ARM B.S2     ARM C.S1    </span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="co"># A   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="co"># max &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;      </span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a><span class="co"># B   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;</span></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a><span class="co"># max &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;      </span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a><span class="co"># C   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;</span></span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a><span class="co"># max &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;       &quot;xx.x&quot;      </span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a><span class="co">#     ARM C.S2     All         </span></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a><span class="co"># A   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;</span></span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a><span class="co"># max &quot;xx.x&quot;       &quot;xx.x&quot;      </span></span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a><span class="co"># B   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;</span></span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a><span class="co"># max &quot;xx.x&quot;       &quot;xx.x&quot;      </span></span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a><span class="co"># C   &quot;xx (xx.x%)&quot; &quot;xx (xx.x%)&quot;</span></span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a><span class="co"># max &quot;xx.x&quot;       &quot;xx.x&quot;</span></span></code></pre></div>
+<p>introspecting_tables.R</p>
 </div>
 <div id="applications" class="section level2">
 <h2>Applications</h2>

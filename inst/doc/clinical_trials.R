@@ -1,3 +1,16 @@
+## ----include = FALSE----------------------------------------------------------
+suggested_dependent_pkgs <- c("dplyr")
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = all(vapply(
+    suggested_dependent_pkgs,
+    requireNamespace,
+    logical(1),
+    quietly = TRUE
+  ))
+)
+
 ## ----echo=FALSE---------------------------------------------------------------
 knitr::opts_chunk$set(comment = "#")
 
@@ -541,7 +554,7 @@ rsp_lyt3 <- basic_table(show_colcounts = TRUE) %>%
   ) %>%
   split_rows_by(
     var = "AVALC",
-    split_fun = reorder_split_levels(neworder = c("CR", "PR", "SD", "NON CR/PD", "PD", "NE"), drlevels = TRUE),
+    split_fun = reorder_split_levels(neworder = c("CR", "PR", "SD", "PD", "NE"), drlevels = TRUE),
     nested = FALSE
   ) %>%
   summarize_row_groups() %>%
