@@ -30,10 +30,10 @@ qtable(ex_adsl, col_vars = "ARM", row_vars = "SEX")
 qtable(ex_adsl, "ARM", show_colcounts = FALSE)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  tmp_adsl <- ex_adsl
-#  tmp_adsl$new <- rep_len(c("", "A", "B"), nrow(tmp_adsl))
-#  
-#  qtable(tmp_adsl, row_vars = "new")
+# tmp_adsl <- ex_adsl
+# tmp_adsl$new <- rep_len(c("", "A", "B"), nrow(tmp_adsl))
+# 
+# qtable(tmp_adsl, row_vars = "new")
 
 ## -----------------------------------------------------------------------------
 qtable(ex_adsl, row_vars = c("SEX", "STRATA1"), col_vars = c("ARM", "STRATA2"))

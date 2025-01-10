@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker, Adrian Waddell and Davide Garolini" />
 
-<meta name="date" content="2024-09-20" />
+<meta name="date" content="2025-01-09" />
 
 <title>Pruning and Sorting Tables</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -62,7 +62,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -341,11 +341,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Pruning and Sorting Tables</h1>
 <h4 class="author">Gabriel Becker, Adrian Waddell and Davide
 Garolini</h4>
-<h4 class="date">2024-09-20</h4>
+<h4 class="date">2025-01-09</h4>
 
 
 
-<p>sorting_pruning.R</p>
 <style type="text/css">
 .reveal .r code {
 white-space: pre;
@@ -438,7 +437,6 @@ other filtering contain 0 rows.</li>
 <span id="cb1-71"><a href="#cb1-71" tabindex="-1"></a><span class="co">#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA       </span></span>
 <span id="cb1-72"><a href="#cb1-72" tabindex="-1"></a><span class="co">#   C                                          0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)         0 (0.0%)     0 (0.0%)    0 (NA%)       0 (NA%)     </span></span>
 <span id="cb1-73"><a href="#cb1-73" tabindex="-1"></a><span class="co">#     Mean                                        NA           NA         NA             NA              NA           NA         NA             NA              NA           NA         NA             NA</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 </div>
 <div id="trimming" class="section level2">
 <h2>Trimming</h2>
@@ -484,7 +482,6 @@ no values in them, i.e. that have all <code>NA</code> values or all
 <span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#     Mean                      37.00        43.67        NA             NA            48.00        36.75        NA             NA            34.33        36.00        NA             NA       </span></span>
 <span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#   C                          2 (2.9%)     2 (3.9%)    0 (NA%)       0 (NA%)         3 (5.4%)     0 (0.0%)    0 (NA%)       0 (NA%)         4 (6.6%)     4 (5.9%)    0 (NA%)       0 (NA%)     </span></span>
 <span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#     Mean                      35.50        44.00        NA             NA            44.67          NA         NA             NA            38.50        35.00        NA             NA</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 </div>
 <div id="trimming-columns" class="section level3">
 <h3>Trimming Columns</h3>
@@ -511,7 +508,6 @@ subsetting using the <code>col_counts()</code> function:</p>
 <span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#     Mean                      36.14        34.33        29.67        32.00        36.33        31.00   </span></span>
 <span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#   C                          6 (8.6%)    6 (11.8%)     4 (7.1%)    7 (14.0%)     3 (4.9%)     4 (5.9%) </span></span>
 <span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#     Mean                      31.33        39.67        34.50        34.00        33.00        36.50</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>Now, it is interesting to see how this table is structured:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">table_structure</span>(h_coltrimmed)</span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co"># [TableTree] RACE</span></span>
@@ -531,7 +527,6 @@ subsetting using the <code>col_counts()</code> function:</p>
 <span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#     [ElementaryTable] AGE (1 x 6)</span></span>
 <span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#    [TableTree] C [cont: 1 x 6]</span></span>
 <span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#     [ElementaryTable] AGE (1 x 6)</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>For a deeper understanding of the fundamental structures in
 <code>rtables</code>, we suggest taking a look at slides 69-76 of this
 <a href="https://docs.google.com/presentation/d/1ygQE9UaoXY6C_FiQLkiYtXB_OnkVbXvsMIY6_MQPbx0/edit?usp=sharing">Slide
@@ -577,7 +572,6 @@ following:</p>
 <span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#     Mean                     DataRow       RACE, BLACK OR AFRICAN AMERICAN, STRATA1, B, AGE, Mean              </span></span>
 <span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#   C                          ContentRow    RACE, BLACK OR AFRICAN AMERICAN, STRATA1, C, @content, C            </span></span>
 <span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#     Mean                     DataRow       RACE, BLACK OR AFRICAN AMERICAN, STRATA1, C, AGE, Mean</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 </div>
 </div>
 <div id="pruning" class="section level2">
@@ -622,7 +616,6 @@ contains all zeros or all <code>NA</code>s</li>
 <span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   </span></span>
 <span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) </span></span>
 <span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>We can also use the <code>low_obs_pruner()</code> pruning function
 constructor to create a pruning function which removes subtrees with
 content summaries whose first entries for each column sum or average are
@@ -640,7 +633,6 @@ column is the count).</p>
 <span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#     Mean     33.75        34.88        32.46        30.94        33.30        35.92   </span></span>
 <span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#   C        13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)</span></span>
 <span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#     Mean     36.92        35.60        34.00        31.89        33.47        31.38</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>Note that because the pruning is being applied recursively, only the
 <code>ASIAN</code> subtree remains because even though the full
 <code>BLACK OR AFRICAN AMERICAN</code> subtree encompassed enough
@@ -672,7 +664,6 @@ setting the <code>stop_depth</code> for pruning to <code>1</code>.</p>
 <span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   </span></span>
 <span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) </span></span>
 <span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>We can also see that pruning to a lower number of observations, say,
 to a total of <code>16</code>, with no <code>stop_depth</code> removes
 some but not all of the strata from our third race
@@ -699,7 +690,6 @@ some but not all of the strata from our third race
 <span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co"># WHITE                       8 (11.4%)    6 (11.8%)    7 (12.5%)    7 (14.0%)    8 (13.1%)    10 (14.7%)</span></span>
 <span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co">#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) </span></span>
 <span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="co">#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 </div>
 <div id="sorting" class="section level2">
 <h2>Sorting</h2>
@@ -737,9 +727,8 @@ definition, below:</p>
 <span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#     }</span></span>
 <span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#     sum(sapply(row_values(tree_children(ctab)[[1]]), function(cv) cv[1]))</span></span>
 <span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co"># }</span></span>
-<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x55a49d864718&gt;</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x55a2205a7168&gt;</span></span>
 <span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co"># &lt;environment: namespace:rtables&gt;</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>Therefore, a fundamental difference between pruning and sorting is
 that sorting occurs at particular places in the table, as defined by a
 path.</p>
@@ -771,7 +760,6 @@ by observation counts within just the <code>ASIAN</code> subtable:</p>
 <span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="co">#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) </span></span>
 <span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a><span class="co">#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</span></span>
 <span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a><span class="co"># B and C are swapped as the global count (sum of all column counts) of strata C is higher than the one of strata B</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 </div>
 <div id="wildcards-in-sort-paths" class="section level3">
 <h3>Wildcards in Sort Paths</h3>
@@ -809,7 +797,6 @@ wildcard:</p>
 <span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a><span class="co">#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) </span></span>
 <span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a><span class="co">#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</span></span>
 <span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a><span class="co"># All subtables, i.e. ASIAN, BLACK..., and WHITE, are reordered separately</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>The above is equivalent to separately calling the following:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>tmptbl <span class="ot">&lt;-</span> <span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols)</span>
 <span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>tmptbl <span class="ot">&lt;-</span> <span class="fu">sort_at_path</span>(tmptbl, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;BLACK OR AFRICAN AMERICAN&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="at">scorefun =</span> cont_n_allcols)</span>
@@ -839,7 +826,6 @@ wildcard:</p>
 <span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#     Mean                      34.00        45.00        29.33        33.33        35.00        32.80   </span></span>
 <span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) </span></span>
 <span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>It is possible to understand better pathing with
 <code>table_structure()</code> that highlights the tree-like structure
 and the node names:</p>
@@ -869,7 +855,6 @@ and the node names:</p>
 <span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a><span class="co">#     [ElementaryTable] AGE (1 x 6)</span></span>
 <span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a><span class="co">#    [TableTree] C [cont: 1 x 6]</span></span>
 <span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a><span class="co">#     [ElementaryTable] AGE (1 x 6)</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>or with <code>row_paths_summary</code>:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">row_paths_summary</span>(pruned)</span>
 <span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co"># rowname                      node_class    path                                                                </span></span>
@@ -895,7 +880,6 @@ and the node names:</p>
 <span id="cb15-22"><a href="#cb15-22" tabindex="-1"></a><span class="co">#     Mean                     DataRow       RACE, WHITE, STRATA1, B, AGE, Mean                                  </span></span>
 <span id="cb15-23"><a href="#cb15-23" tabindex="-1"></a><span class="co">#   C                          ContentRow    RACE, WHITE, STRATA1, C, @content, C                                </span></span>
 <span id="cb15-24"><a href="#cb15-24" tabindex="-1"></a><span class="co">#     Mean                     DataRow       RACE, WHITE, STRATA1, C, AGE, Mean</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>Note in the latter we see content rows as those with paths following
 <code>@content</code>, e.g., <code>ASIAN, @content, ASIAN</code>. The
 first of these at a given path (i.e.,
@@ -929,7 +913,6 @@ order:</p>
 <span id="cb16-24"><a href="#cb16-24" tabindex="-1"></a><span class="co">#     Mean                      33.75        34.88        32.46        30.94        33.30        35.92   </span></span>
 <span id="cb16-25"><a href="#cb16-25" tabindex="-1"></a><span class="co">#   C                         13 (18.6%)   15 (29.4%)   10 (17.9%)   9 (18.0%)    15 (24.6%)   16 (23.5%)</span></span>
 <span id="cb16-26"><a href="#cb16-26" tabindex="-1"></a><span class="co">#     Mean                      36.92        35.60        34.00        31.89        33.47        31.38</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>Within each ethnicity separately, sort the strata by number of
 females in arm C (i.e. column position <code>5</code>):</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">sort_at_path</span>(pruned, <span class="at">path =</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>), <span class="fu">cont_n_onecol</span>(<span class="dv">5</span>))</span>
@@ -957,7 +940,6 @@ females in arm C (i.e. column position <code>5</code>):</p>
 <span id="cb17-23"><a href="#cb17-23" tabindex="-1"></a><span class="co">#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   </span></span>
 <span id="cb17-24"><a href="#cb17-24" tabindex="-1"></a><span class="co">#   A                          2 (2.9%)     1 (2.0%)     3 (5.4%)     3 (6.0%)     1 (1.6%)     5 (7.4%) </span></span>
 <span id="cb17-25"><a href="#cb17-25" tabindex="-1"></a><span class="co">#     Mean                      34.00        45.00        29.33        33.33        35.00        32.80</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 </div>
 <div id="sorting-within-an-analysis-subtable" class="section level3">
 <h3>Sorting Within an Analysis Subtable</h3>
@@ -1015,7 +997,6 @@ table as before:</p>
 <span id="cb18-42"><a href="#cb18-42" tabindex="-1"></a><span class="co">#   C                         12 (9.9%)    11 (10.4%)      7 (5.4%)   </span></span>
 <span id="cb18-43"><a href="#cb18-43" tabindex="-1"></a><span class="co">#     median                     33.0         36.0           32.0     </span></span>
 <span id="cb18-44"><a href="#cb18-44" tabindex="-1"></a><span class="co">#     mean                       35.5         34.2           35.0</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>What should we do now if we want to sort each median and mean in each
 of the strata variables? We need to write a custom score function as the
 ready-made ones at the moment work only with content nodes
@@ -1043,7 +1024,6 @@ looking at the structure first with <code>table_structure()</code> or
 <span id="cb19-16"><a href="#cb19-16" tabindex="-1"></a><span class="co">#     [ElementaryTable] AGE (2 x 3)</span></span>
 <span id="cb19-17"><a href="#cb19-17" tabindex="-1"></a><span class="co">#    [TableTree] C [cont: 1 x 3]</span></span>
 <span id="cb19-18"><a href="#cb19-18" tabindex="-1"></a><span class="co">#     [ElementaryTable] AGE (2 x 3)</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>We see that to order all of the <code>AGE</code> nodes we need to get
 there with something like this:
 <code>RACE, ASIAN, STRATA1, A, AGE</code> and no more as the next level
@@ -1088,7 +1068,6 @@ single numeric value as output.</p>
 <span id="cb20-25"><a href="#cb20-25" tabindex="-1"></a><span class="co">#   C                         12 (9.9%)    11 (10.4%)      7 (5.4%)   </span></span>
 <span id="cb20-26"><a href="#cb20-26" tabindex="-1"></a><span class="co">#     mean                       35.5         34.2           35.0     </span></span>
 <span id="cb20-27"><a href="#cb20-27" tabindex="-1"></a><span class="co">#     median                     33.0         36.0           32.0</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>To help the user visualize what is happening in the score function we
 show here an example of its exploration from the debugging:</p>
 <pre><code>&gt; sort_at_path(tbl, c(&quot;RACE&quot;, &quot;*&quot;, &quot;STRATA1&quot;, &quot;*&quot;, &quot;AGE&quot;), scorefun)
@@ -1124,9 +1103,8 @@ proceed.</p>
 <span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="co">#         row_values(tree_children(ctab)[[1]])[[j]][1]</span></span>
 <span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="co">#     }</span></span>
 <span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="co"># }</span></span>
-<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x55a49abd2d88&gt;</span></span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x55a21e3ad2d8&gt;</span></span>
 <span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a><span class="co"># &lt;environment: namespace:rtables&gt;</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>We see that a similar function to <code>cont_n_allcols()</code> is
 wrapped by one that allows a parameter <code>j</code> to be used to
 select a specific column. We will do the same here for selecting which
@@ -1160,7 +1138,6 @@ column we want to sort.</p>
 <span id="cb23-27"><a href="#cb23-27" tabindex="-1"></a><span class="co">#   C                         12 (9.9%)    11 (10.4%)      7 (5.4%)   </span></span>
 <span id="cb23-28"><a href="#cb23-28" tabindex="-1"></a><span class="co">#     mean                       35.5         34.2           35.0     </span></span>
 <span id="cb23-29"><a href="#cb23-29" tabindex="-1"></a><span class="co">#     median                     33.0         36.0           32.0</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p>In the above table we see that the mean and median rows are reordered
 by their values in the first column, compared to the raw table, as
 desired.</p>
@@ -1188,7 +1165,6 @@ nested within larger splits:</p>
 <span id="cb24-20"><a href="#cb24-20" tabindex="-1"></a><span class="co"># —————————————————————————————————————————————————————————</span></span>
 <span id="cb24-21"><a href="#cb24-21" tabindex="-1"></a><span class="co"># mean     33.7    36.5   33.8    32.1     34.9      34.3  </span></span>
 <span id="cb24-22"><a href="#cb24-22" tabindex="-1"></a><span class="co"># median   32.0    35.0   33.0    31.0     35.0      32.0</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 </div>
 </div>
 <div id="writing-custom-pruning-criteria-and-scoring-functions" class="section level1">
@@ -1266,7 +1242,6 @@ previous sorting by ethnicity above).</p>
 <span id="cb25-32"><a href="#cb25-32" tabindex="-1"></a><span class="co">#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00   </span></span>
 <span id="cb25-33"><a href="#cb25-33" tabindex="-1"></a><span class="co">#   C                          2 (2.9%)     2 (3.9%)     3 (5.4%)     0 (0.0%)     4 (6.6%)     4 (5.9%) </span></span>
 <span id="cb25-34"><a href="#cb25-34" tabindex="-1"></a><span class="co">#     Mean                      35.50        44.00        44.67          NA         38.50        35.00</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 <p><strong>NOTE</strong>: Generally this would be more appropriately
 done using the <code>reorder_split_levels()</code> function within the
 layout rather than as a sort post-processing step, but other character
@@ -1327,7 +1302,6 @@ do inside custom sorting functions.</p>
 <span id="cb26-41"><a href="#cb26-41" tabindex="-1"></a><span class="co">#     Mean                      35.50        44.00        44.67          NA         38.50        35.00   </span></span>
 <span id="cb26-42"><a href="#cb26-42" tabindex="-1"></a><span class="co">#   B                          4 (5.7%)     3 (5.9%)     1 (1.8%)     4 (8.0%)     3 (4.9%)     1 (1.5%) </span></span>
 <span id="cb26-43"><a href="#cb26-43" tabindex="-1"></a><span class="co">#     Mean                      37.00        43.67        48.00        36.75        34.33        36.00</span></span></code></pre></div>
-<p>sorting_pruning.R</p>
 </div>
 </div>
 </div>

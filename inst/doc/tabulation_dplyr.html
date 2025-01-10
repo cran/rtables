@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2024-09-20" />
+<meta name="date" content="2025-01-09" />
 
 <title>Comparison with dplyr Tabulation</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -62,7 +62,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -340,11 +340,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Comparison with dplyr Tabulation</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2024-09-20</h4>
+<h4 class="date">2025-01-09</h4>
 
 
 
-<p>tabulation_dplyr.R</p>
 <style type="text/css">
 .reveal .r code {
 white-space: pre;
@@ -362,7 +361,7 @@ table visualization/markup and just derive the cell content.</p>
 <p>Using <code>dplyr</code> to summarize data and <code>gt</code> to
 visualize the table is a good way if the tabulation is of a certain
 nature or complexity. However, there are tables such as the table
-created in the <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/introduction.html"><code>introduction</code></a>
+created in the <a href="https://insightsengineering.github.io/rtables/latest-release/articles/rtables.html"><code>introduction</code></a>
 vignette that take some effort to create with <code>dplyr</code>. Part
 of the effort is due to fact that when using <code>dplyr</code> the
 table data is stored in <code>data.frame</code>s or <code>tibble</code>s
@@ -373,8 +372,7 @@ in this vignette.</p>
 vignette.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
-<p>tabulation_dplyr.R</p>
-<p>Here is the table and data used in the <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/introduction.html"><code>introduction</code></a>
+<p>Here is the table and data used in the <a href="https://insightsengineering.github.io/rtables/latest-release/articles/rtables.html"><code>introduction</code></a>
 vignette:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">400</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
@@ -415,17 +413,15 @@ vignette:</p>
 <span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#     mean      40.4         39.7         39.2         40.1   </span></span>
 <span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#   Right    17 (17.7%)   22 (21.0%)   21 (22.8%)   20 (18.7%)</span></span>
 <span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#     mean      36.9         39.8         38.5         39.0</span></span></code></pre></div>
-<p>tabulation_dplyr.R</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
 <p>We will start by deriving the first data cell on row 3 (note, row 1
-and 2 have content cells, see the <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/introduction.html"><code>introduction</code></a>
+and 2 have content cells, see the <a href="https://insightsengineering.github.io/rtables/latest-release/articles/rtables.html"><code>introduction</code></a>
 vignette). Cell 3,1 contains the mean age for left handed &amp; female
 Canadians in “Arm A”:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">mean</span>(df<span class="sc">$</span>age[df<span class="sc">$</span>country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span> <span class="sc">&amp;</span> df<span class="sc">$</span>handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>])</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co"># [1] 38.86979</span></span></code></pre></div>
-<p>tabulation_dplyr.R</p>
 <p>or with <code>dplyr</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span>, arm <span class="sc">==</span> <span class="st">&quot;Arm A&quot;</span>, gender <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>, handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -434,7 +430,6 @@ Canadians in “Arm A”:</p>
 <span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#   mean_age</span></span>
 <span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#      &lt;dbl&gt;</span></span>
 <span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co"># 1     38.9</span></span></code></pre></div>
-<p>tabulation_dplyr.R</p>
 <p>Further, <code>dplyr</code> gives us other verbs to easily get the
 average age of left handed Canadians for each group defined by the 4
 columns:</p>
@@ -452,7 +447,6 @@ columns:</p>
 <span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co"># 2 Arm A Male       40.4</span></span>
 <span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co"># 3 Arm B Female     40.3</span></span>
 <span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co"># 4 Arm B Male       37.7</span></span></code></pre></div>
-<p>tabulation_dplyr.R</p>
 <p>We can further get to all the average age cell values with:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>average_age <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender, country, handed) <span class="sc">%&gt;%</span></span>
@@ -481,7 +475,6 @@ columns:</p>
 <span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co"># 14 Arm B Male   CAN     Right      40.6</span></span>
 <span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co"># 15 Arm B Male   USA     Left       40.1</span></span>
 <span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co"># 16 Arm B Male   USA     Right      39.0</span></span></code></pre></div>
-<p>tabulation_dplyr.R</p>
 <p>In <code>rtable</code> syntax, we need the following code to get to
 the same content:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -506,7 +499,6 @@ the same content:</p>
 <span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#     mean    40.4    39.7    39.2    40.1</span></span>
 <span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#   Right                                 </span></span>
 <span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#     mean    36.9    39.8    38.5    39.0</span></span></code></pre></div>
-<p>tabulation_dplyr.R</p>
 <p>As mentioned in the introduction to this vignette, please ignore the
 difference in arranging and formatting the data: it’s possible to
 condense the <code>rtable</code> more and it is possible to make the
@@ -553,7 +545,6 @@ row mean values:</p>
 <span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co"># 14 Arm B Male   CAN     Right   40.6        25   107       0.234</span></span>
 <span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co"># 15 Arm B Male   USA     Left    40.1        25   107       0.234</span></span>
 <span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co"># 16 Arm B Male   USA     Right   39.0        20   107       0.187</span></span></code></pre></div>
-<p>tabulation_dplyr.R</p>
 <p>which has 16 rows (cells) like the <code>average_age</code> data
 frame defined above. Next, we will derive the group information for
 countries:</p>
@@ -577,13 +568,11 @@ countries:</p>
 <span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co"># 6 Arm B Female USA          46    92     0.5  </span></span>
 <span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co"># 7 Arm B Male   CAN          62   107     0.579</span></span>
 <span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co"># 8 Arm B Male   USA          45   107     0.421</span></span></code></pre></div>
-<p>tabulation_dplyr.R</p>
 <p>Finally, we <code>left_join()</code> the two levels of summary to get
 a data.frame containing the full set of values which make up the body of
 our table (note, however, they are not in the same order):</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>full_dplyr <span class="ot">&lt;-</span> <span class="fu">left_join</span>(c_h_df, c_df) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co"># Joining with `by = join_by(arm, gender, country, n_col)`</span></span></code></pre></div>
-<p>tabulation_dplyr.R</p>
 <p>Alternatively, we could calculate only the counts in
 <code>c_h_df</code>, and use <code>mutate()</code> after the
 <code>left_join()</code> to divide the counts by the <code>n_col</code>
@@ -618,7 +607,6 @@ computations.</p>
 <span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co">#     mean      40.4         39.7         39.2         40.1   </span></span>
 <span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="co">#   Right    17 (17.7%)   22 (21.0%)   21 (22.8%)   20 (18.7%)</span></span>
 <span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a><span class="co">#     mean      36.9         39.8         38.5         39.0</span></span></code></pre></div>
-<p>tabulation_dplyr.R</p>
 <p>We can now spot check that the values are the same</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>frm_rtables_h <span class="ot">&lt;-</span> <span class="fu">cell_values</span>(</span>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  tbl,</span>
@@ -658,8 +646,6 @@ computations.</p>
 <span id="cb12-36"><a href="#cb12-36" tabindex="-1"></a><span class="co">#     &lt;int&gt;     &lt;dbl&gt;</span></span>
 <span id="cb12-37"><a href="#cb12-37" tabindex="-1"></a><span class="co"># 1      64     0.610</span></span>
 <span id="cb12-38"><a href="#cb12-38" tabindex="-1"></a><span class="co"># 2      64     0.610</span></span></code></pre></div>
-<p>tabulation_dplyr.R</p>
-<p>tabulation_dplyr.R</p>
 <p>Further, the <code>rtable</code> syntax has hopefully also become a
 bit more straightforward to derive the cell values than with
 <code>dplyr</code> for this particular table.</p>

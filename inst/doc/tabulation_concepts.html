@@ -50,7 +50,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -61,7 +61,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -343,7 +343,6 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<p>tabulation_concepts.R</p>
 <style type="text/css">
 .reveal .r code {
 white-space: pre;
@@ -358,7 +357,6 @@ packages:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(rtables)</span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>The data we use is the following, created with random number
 generators:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>add_subgroup <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">paste0</span>(<span class="fu">tolower</span>(x), <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="fu">length</span>(x), <span class="cn">TRUE</span>))</span>
@@ -392,7 +390,6 @@ generators:</p>
 <span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#  9 C     c3    V     v2     0.576     0</span></span>
 <span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co"># 10 C     c3    U     u2    -0.305     3</span></span>
 <span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co"># # ℹ 90 more rows</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 </div>
 <div id="building-a-table-row-by-row" class="section level2">
 <h2>Building A Table Row By Row</h2>
@@ -410,7 +407,6 @@ respective column and:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>df_A <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(c1 <span class="sc">==</span> <span class="st">&quot;A&quot;</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>df_B <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(c1 <span class="sc">==</span> <span class="st">&quot;B&quot;</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>df_C <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>Let’s do this on the concrete data with <code>analyze()</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>foo <span class="ot">&lt;-</span> prod</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>bar <span class="ot">&lt;-</span> sum</span>
@@ -434,7 +430,6 @@ respective column and:</p>
 <span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#   bar label   1.87   4.37    4.64 </span></span>
 <span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co"># zoo label                         </span></span>
 <span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#   zoo label   0.05   0.13    0.18</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>or if we wanted the <code>x</code> variable instead of the data
 frame:</p>
 <pre><code>                     A         B         C
@@ -446,7 +441,6 @@ zoo_label        zoo(x_A)  zoo(x_B)  zoo(x_C)</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>x_A <span class="ot">&lt;-</span> df_A<span class="sc">$</span>x</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>x_B <span class="ot">&lt;-</span> df_B<span class="sc">$</span>x</span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>x_C <span class="ot">&lt;-</span> df_C<span class="sc">$</span>x</span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>The function passed to <code>afun</code> is evaluated using argument
 matching. If <code>afun</code> has an argument <code>x</code> the
 analysis variable specified in <code>vars</code> in
@@ -471,7 +465,6 @@ dataset is passed to <code>afun</code>:</p>
 <span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#   bar       1.87   4.37    4.64 </span></span>
 <span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co"># zoo label                       </span></span>
 <span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#   zoo       0.05   0.13    0.18</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>Note that it is also possible that a function returns multiple rows
 with <code>in_rows()</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -501,7 +494,6 @@ with <code>in_rows()</code>:</p>
 <span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="co"># bar label                                 </span></span>
 <span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a><span class="co">#   more rows 1        -0.0     0.2     0.3 </span></span>
 <span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a><span class="co">#   even more rows 1   1.20    1.15    1.16</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>This is how we recommend you specify the row names explicitly.</p>
 </div>
 <div id="tabulation-with-row-structure" class="section level2">
@@ -523,7 +515,6 @@ follows:</p>
 <span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>df_UC <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;U&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span>
 <span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>df_VC <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;V&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span>
 <span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>df_WC <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(r1 <span class="sc">==</span> <span class="st">&quot;W&quot;</span>, c1 <span class="sc">==</span> <span class="st">&quot;C&quot;</span>)</span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>further note that <code>df_*</code> are of the same class as
 <code>df</code>, i.e. <code>tibble</code>s. Hence <code>foo</code>
 aggregates the subset of our data to a cell value.</p>
@@ -532,7 +523,6 @@ now):</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>(df, <span class="at">labelstr =</span> <span class="st">&quot;&quot;</span>, ...) {</span>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">paste</span>(<span class="fu">dim</span>(df), <span class="at">collapse =</span> <span class="st">&quot; x &quot;</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>}</span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>we can start calculating the cell values individually:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">foo</span>(df_UA)</span>
 <span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co"># [1] &quot;17 x 6&quot;</span></span>
@@ -552,7 +542,6 @@ now):</p>
 <span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co"># [1] &quot;5 x 6&quot;</span></span>
 <span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="fu">foo</span>(df_WC)</span>
 <span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co"># [1] &quot;11 x 6&quot;</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>Now we are still missing the table structure:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">matrix</span>(</span>
 <span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="fu">list</span>(</span>
@@ -572,7 +561,6 @@ now):</p>
 <span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="co"># [1,] &quot;17 x 6&quot; &quot;13 x 6&quot; &quot;10 x 6&quot;</span></span>
 <span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="co"># [2,] &quot;9 x 6&quot;  &quot;15 x 6&quot; &quot;5 x 6&quot; </span></span>
 <span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="co"># [3,] &quot;14 x 6&quot; &quot;11 x 6&quot; &quot;11 x 6&quot;</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>In <code>rtables</code> this type of tabulation is done with
 <code>layouts</code>:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>lyt4 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -590,7 +578,6 @@ now):</p>
 <span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="co">#   foo   9 x 6    15 x 6   5 x 6 </span></span>
 <span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="co"># W                               </span></span>
 <span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="co">#   foo   14 x 6   6 x 6    11 x 6</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>or if we would not want to see the <code>foo</code> label we would
 have to use:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>lyt5 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -605,7 +592,6 @@ have to use:</p>
 <span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a><span class="co">#    17 x 6   13 x 6   10 x 6</span></span>
 <span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a><span class="co">#    9 x 6    15 x 6   5 x 6 </span></span>
 <span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a><span class="co">#    14 x 6   6 x 6    11 x 6</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>but now the row labels have disappeared. This is because
 <code>cfun</code> needs to define its row label. So let’s redefine
 <code>foo</code>:</p>
@@ -625,7 +611,6 @@ have to use:</p>
 <span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a><span class="co"># U   17 x 6   13 x 6   10 x 6</span></span>
 <span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a><span class="co"># V   9 x 6    15 x 6   5 x 6 </span></span>
 <span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a><span class="co"># W   14 x 6   6 x 6    11 x 6</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <div id="calculating-the-mean" class="section level3">
 <h3>Calculating the Mean</h3>
 <p>Now let’s calculate the mean of <code>df$y</code> for pattern I:</p>
@@ -645,7 +630,6 @@ have to use:</p>
 <span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a><span class="co"># U   -1.00   1.00    3.00 </span></span>
 <span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a><span class="co"># V   -4.00   -2.00   0.00 </span></span>
 <span id="cb18-16"><a href="#cb18-16" tabindex="-1"></a><span class="co"># W   -7.00   -5.00   -3.00</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>Note that <code>foo</code> has the variable information hard-encoded
 in the function body. Let’s try some alternatives returning to
 <code>analyze()</code>:</p>
@@ -664,7 +648,6 @@ in the function body. Let’s try some alternatives returning to
 <span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a><span class="co">#   mean   -4   -2   0 </span></span>
 <span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a><span class="co"># W                    </span></span>
 <span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a><span class="co">#   mean   -7   -5   -3</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>Note that the subset of the <code>y</code> variable is passed as the
 <code>x</code> argument to <code>mean()</code>. We could also get the
 <code>data.frame</code> instead of the variable:</p>
@@ -683,7 +666,6 @@ in the function body. Let’s try some alternatives returning to
 <span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a><span class="co">#   y   -4   -2   0 </span></span>
 <span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a><span class="co"># W                 </span></span>
 <span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a><span class="co">#   y   -7   -5   -3</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>which is in contrast to:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>lyt10 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -700,7 +682,6 @@ in the function body. Let’s try some alternatives returning to
 <span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a><span class="co">#   y   -4   -2   0 </span></span>
 <span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a><span class="co"># W                 </span></span>
 <span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a><span class="co">#   y   -7   -5   -3</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>where the function receives the subset of <code>y</code>.</p>
 </div>
 <div id="group-summaries" class="section level3">
@@ -731,7 +712,6 @@ subset:</p>
 <span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a><span class="co">#   &lt;fct&gt; &lt;chr&gt; &lt;fct&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
 <span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a><span class="co"># 1 A     a2    U     u1    1.12     -1</span></span>
 <span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a><span class="co"># 2 A     a1    U     u1    0.594    -1</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>and so on. We can get this table as follows:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>lyt11 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;c1&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -757,7 +737,6 @@ subset:</p>
 <span id="cb24-22"><a href="#cb24-22" tabindex="-1"></a><span class="co">#   mean x for w1   -0.58   0.42    0.67 </span></span>
 <span id="cb24-23"><a href="#cb24-23" tabindex="-1"></a><span class="co">#   mean x for w3   0.56    0.69    -0.39</span></span>
 <span id="cb24-24"><a href="#cb24-24" tabindex="-1"></a><span class="co">#   mean x for w2   -1.99   -0.10   0.53</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>or, if we wanted to calculate two summaries per row split:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>s_mean_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>  <span class="fu">in_rows</span>(<span class="st">&quot;mean (sd)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">c</span>(<span class="fu">mean</span>(x), <span class="fu">sd</span>(x)), <span class="at">format =</span> <span class="st">&quot;xx.xx (xx.xx)&quot;</span>))</span>
@@ -828,7 +807,6 @@ subset:</p>
 <span id="cb25-67"><a href="#cb25-67" tabindex="-1"></a><span class="co">#   w2                                                       </span></span>
 <span id="cb25-68"><a href="#cb25-68" tabindex="-1"></a><span class="co">#     mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) </span></span>
 <span id="cb25-69"><a href="#cb25-69" tabindex="-1"></a><span class="co">#     range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>Which has the following structure:</p>
 <pre><code>                   A              B              C
 ---------------------------------------------------------
@@ -987,7 +965,6 @@ layout framework as follows:</p>
 <span id="cb28-72"><a href="#cb28-72" tabindex="-1"></a><span class="co">#   w2 (n)              1              4              4      </span></span>
 <span id="cb28-73"><a href="#cb28-73" tabindex="-1"></a><span class="co">#     mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) </span></span>
 <span id="cb28-74"><a href="#cb28-74" tabindex="-1"></a><span class="co">#     range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>In the same manner, if we want content rows for the <code>r1</code>
 split we can do it at as follows:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>lyt14 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -1053,7 +1030,6 @@ split we can do it at as follows:</p>
 <span id="cb29-61"><a href="#cb29-61" tabindex="-1"></a><span class="co">#   w2 (n)              1              4              4      </span></span>
 <span id="cb29-62"><a href="#cb29-62" tabindex="-1"></a><span class="co">#     mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) </span></span>
 <span id="cb29-63"><a href="#cb29-63" tabindex="-1"></a><span class="co">#     range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</span></span></code></pre></div>
-<p>tabulation_concepts.R</p>
 <p>In pagination, content rows and label rows get repeated if a page is
 split in a descendant of a content row. So, for example, if we were to
 split the following table at <code>***</code>:</p>

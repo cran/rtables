@@ -6,8 +6,6 @@
 \alias{rtables-package}
 \title{rtables: Reporting Tables}
 \description{
-\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
-
 Reporting tables often have structure that goes beyond simple rectangular data. The 'rtables' package provides a framework for declaring complex multi-level tabulations and then applying them to data. This framework models both tabulation and the resulting tables as hierarchical, tree-like objects which support sibling sub-tables, arbitrary splitting or grouping of data in row and column dimensions, cells containing multiple values, and the concept of contextual summary computations. A convenient pipe-able interface is provided for declaring table layouts and the corresponding computations, and then applying them to data.
 }
 \seealso{
@@ -20,20 +18,20 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Joe Zhu \email{joe.zhu@roche.com} [contributor]
+\strong{Maintainer}: Joe Zhu \email{joe.zhu@roche.com} (\href{https://orcid.org/0000-0001-7566-2787}{ORCID})
 
 Authors:
 \itemize{
   \item Gabriel Becker \email{gabembecker@gmail.com} (Original creator of the package)
   \item Adrian Waddell \email{adrian.waddell@gene.com}
+  \item Davide Garolini \email{davide.garolini@roche.com}
+  \item Emily de la Rua \email{emily.de_la_rua@contractors.roche.com}
 }
 
 Other contributors:
 \itemize{
   \item Daniel Sabanés Bové \email{daniel.sabanes_bove@roche.com} [contributor]
   \item Maximilian Mordig \email{maximilian_oliver.mordig@roche.com} [contributor]
-  \item Davide Garolini \email{davide.garolini@roche.com} [contributor]
-  \item Emily de la Rua \email{emily.de_la_rua@contractors.roche.com} [contributor]
   \item Abinaya Yogasekaram \email{abinaya.yogasekaram@contractors.roche.com} [contributor]
   \item F. Hoffmann-La Roche AG [copyright holder, funder]
 }

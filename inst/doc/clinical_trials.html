@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2024-09-20" />
+<meta name="date" content="2025-01-09" />
 
 <title>Example Clinical Trials Tables</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -62,7 +62,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -340,11 +340,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Example Clinical Trials Tables</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2024-09-20</h4>
+<h4 class="date">2025-01-09</h4>
 
 
 
-<p>clinical_trials.R</p>
 <style type="text/css">
 .reveal .r code {
 white-space: pre;
@@ -372,7 +371,6 @@ R package.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
-<p>clinical_trials.R</p>
 </div>
 <div id="demographic-table" class="section level2">
 <h2>Demographic Table</h2>
@@ -398,7 +396,6 @@ can specify multiple rows with the <code>in_rows()</code> function:</p>
 <span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co"># ——————————————————————————————————————————————————————————</span></span>
 <span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co"># Mean (sd)   33.77 (6.55)    35.43 (7.90)     35.43 (7.72) </span></span>
 <span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co"># Range       21.00 - 50.00   21.00 - 62.00   20.00 - 69.00</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Multiple variables can be analyzed in one <code>analyze()</code>
 call:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -420,7 +417,6 @@ call:</p>
 <span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co"># BMRKR1                                                      </span></span>
 <span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#   Mean (sd)    5.97 (3.55)     5.70 (3.31)     5.62 (3.49)  </span></span>
 <span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#   Range       0.41 - 17.67    0.65 - 14.24     0.17 - 21.39</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Hence, if <code>afun</code> can process different data vector types
 (i.e. variables selected from the data) then we are fairly close to a
 standard demographic table. Here is a function that either creates a
@@ -441,7 +437,6 @@ factor or numeric, respectively:</p>
 <span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;type not supported&quot;</span>)</span>
 <span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>  }</span>
 <span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>}</span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Note we use <code>rcell</code> to wrap the results in order to add
 formatting instructions for <code>rtables</code>. We can use
 <code>s_summary</code> outside the context of tabulation:</p>
@@ -453,7 +448,6 @@ formatting instructions for <code>rtables</code>. We can use
 <span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co"># 2 Mean (sd)   34.88 (7.44)          0 Mean (sd)</span></span>
 <span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co"># 3       IQR          10.00          0       IQR</span></span>
 <span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co"># 4 min - max  20.00 - 69.00          0 min - max</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>and</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">s_summary</span>(ADSL<span class="sc">$</span>SEX)</span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># RowsVerticalSection (in_rows) object print method:</span></span>
@@ -463,7 +457,6 @@ formatting instructions for <code>rtables</code>. We can use
 <span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co"># 2                M            166          0                M</span></span>
 <span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co"># 3                U              9          0                U</span></span>
 <span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co"># 4 UNDIFFERENTIATED              3          0 UNDIFFERENTIATED</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>We can now create a commonly used variant of the demographic
 table:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>summary_lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -484,7 +477,6 @@ table:</p>
 <span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#   M                       51              55               60      </span></span>
 <span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#   U                        3               2               4       </span></span>
 <span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#   UNDIFFERENTIATED         1               0               2</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Note that <code>analyze()</code> can also be called multiple times in
 sequence:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>summary_lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -506,12 +498,9 @@ sequence:</p>
 <span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#   M                       51              55               60      </span></span>
 <span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#   U                        3               2               4       </span></span>
 <span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#   UNDIFFERENTIATED         1               0               2</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>which leads to the table identical to <code>summary_tbl</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">identical</span>(summary_tbl, summary_tbl2)</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co"># [1] TRUE</span></span></code></pre></div>
-<p>clinical_trials.R</p>
-<p>clinical_trials.R</p>
 <p>In clinical trials analyses the number of patients per column is
 often referred to as <code>N</code> (rather than the overall population
 which outside of clinical trials is commonly referred to as
@@ -537,7 +526,6 @@ which outside of clinical trials is commonly referred to as
 <span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#   M                       51              55              60      </span></span>
 <span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#   U                        3               2               4      </span></span>
 <span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#   UNDIFFERENTIATED         1               0               2</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <div id="variations-on-the-demographic-table" class="section level3">
 <h3>Variations on the Demographic Table</h3>
 <p>We will now show a couple of variations of the demographic table that
@@ -564,7 +552,6 @@ analysis, hence they don’t require a modification to the
 <span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#   LOW              50              45               40      </span></span>
 <span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="co">#   MEDIUM           37              56               42      </span></span>
 <span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="co">#   HIGH             47              33               50</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Assume we would like to have this analysis carried out per gender
 encoded in the row space:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
@@ -617,7 +604,6 @@ encoded in the row space:</p>
 <span id="cb12-48"><a href="#cb12-48" tabindex="-1"></a><span class="co">#     LOW                  1               0               2       </span></span>
 <span id="cb12-49"><a href="#cb12-49" tabindex="-1"></a><span class="co">#     MEDIUM               0               0               0       </span></span>
 <span id="cb12-50"><a href="#cb12-50" tabindex="-1"></a><span class="co">#     HIGH                 0               0               0</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>We will now subset <code>ADSL</code> to include only males and
 females in the analysis in order to reduce the number of rows in the
 table:</p>
@@ -673,7 +659,6 @@ table:</p>
 <span id="cb13-50"><a href="#cb13-50" tabindex="-1"></a><span class="co">#     LOW                  0               0               0       </span></span>
 <span id="cb13-51"><a href="#cb13-51" tabindex="-1"></a><span class="co">#     MEDIUM               0               0               0       </span></span>
 <span id="cb13-52"><a href="#cb13-52" tabindex="-1"></a><span class="co">#     HIGH                 0               0               0</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Note that the <code>UNDIFFERENTIATED</code> and <code>U</code> levels
 still show up in the table. This is because tabulation respects the
 factor levels and level order, exactly as the <code>split</code> and
@@ -714,7 +699,6 @@ addressed in a specific package vignette.</p>
 <span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a><span class="co">#     LOW              21              23               11      </span></span>
 <span id="cb14-29"><a href="#cb14-29" tabindex="-1"></a><span class="co">#     MEDIUM           15              18               23      </span></span>
 <span id="cb14-30"><a href="#cb14-30" tabindex="-1"></a><span class="co">#     HIGH             15              14               26</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>In the table above the labels <code>M</code> and <code>F</code> are
 not very descriptive. You can add the full labels as follows:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>ADSL_M_F_l <span class="ot">&lt;-</span> ADSL_M_F <span class="sc">%&gt;%</span></span>
@@ -755,7 +739,6 @@ not very descriptive. You can add the full labels as follows:</p>
 <span id="cb15-36"><a href="#cb15-36" tabindex="-1"></a><span class="co">#     LOW              21              23               11      </span></span>
 <span id="cb15-37"><a href="#cb15-37" tabindex="-1"></a><span class="co">#     MEDIUM           15              18               23      </span></span>
 <span id="cb15-38"><a href="#cb15-38" tabindex="-1"></a><span class="co">#     HIGH             15              14               26</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>For the next table variation we only stratify by gender for the
 <code>AGE</code> analysis. To do this the <code>nested</code> argument
 has to be set to <code>FALSE</code> in <code>analyze()</code> call:</p>
@@ -786,7 +769,6 @@ has to be set to <code>FALSE</code> in <code>analyze()</code> call:</p>
 <span id="cb16-25"><a href="#cb16-25" tabindex="-1"></a><span class="co">#   LOW                47              44               37      </span></span>
 <span id="cb16-26"><a href="#cb16-26" tabindex="-1"></a><span class="co">#   MEDIUM             36              56               40      </span></span>
 <span id="cb16-27"><a href="#cb16-27" tabindex="-1"></a><span class="co">#   HIGH               47              32               49</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Once we split the rows into groups (<code>Male</code> and
 <code>Female</code> here) one might want to summarize groups: usually by
 showing count and column percentages. This is especially important if we
@@ -831,7 +813,6 @@ missing data to the <code>AGE</code> variable:</p>
 <span id="cb17-37"><a href="#cb17-37" tabindex="-1"></a><span class="co">#   LOW              47              44               37      </span></span>
 <span id="cb17-38"><a href="#cb17-38" tabindex="-1"></a><span class="co">#   MEDIUM           36              56               40      </span></span>
 <span id="cb17-39"><a href="#cb17-39" tabindex="-1"></a><span class="co">#   HIGH             47              32               49</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Here it is not easy to see how many females and males there are in
 each arm as <code>n</code> represents the number of non-missing data
 elements in the variables. Groups within rows that are defined by
@@ -863,7 +844,6 @@ for example:</p>
 <span id="cb18-24"><a href="#cb18-24" tabindex="-1"></a><span class="co">#   LOW              47              44               37      </span></span>
 <span id="cb18-25"><a href="#cb18-25" tabindex="-1"></a><span class="co">#   MEDIUM           36              56               40      </span></span>
 <span id="cb18-26"><a href="#cb18-26" tabindex="-1"></a><span class="co">#   HIGH             47              32               49</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>There are a couple of things to note here:</p>
 <ul>
 <li>Group summaries produce “content” rows. Visually, it’s impossible to
@@ -908,7 +888,6 @@ same table as above:</p>
 <span id="cb19-28"><a href="#cb19-28" tabindex="-1"></a><span class="co"># BEP01FL                                                     </span></span>
 <span id="cb19-29"><a href="#cb19-29" tabindex="-1"></a><span class="co">#   Y                67              63               65      </span></span>
 <span id="cb19-30"><a href="#cb19-30" tabindex="-1"></a><span class="co">#   N                63              69               61</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Note that <code>cfun</code>, like <code>afun</code> (which is used in
 <code>analyze()</code>), can operate on either variables, passed via the
 <code>x</code> argument, or <code>data.frame</code>s or
@@ -946,7 +925,6 @@ from splitting) and hence it could be modified:</p>
 <span id="cb20-27"><a href="#cb20-27" tabindex="-1"></a><span class="co"># BEP01FL                                                               </span></span>
 <span id="cb20-28"><a href="#cb20-28" tabindex="-1"></a><span class="co">#   Y                          67              63               65      </span></span>
 <span id="cb20-29"><a href="#cb20-29" tabindex="-1"></a><span class="co">#   N                          63              69               61</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 </div>
 <div id="using-layouts" class="section level3">
 <h3>Using Layouts</h3>
@@ -977,7 +955,6 @@ a shortcoming)</li>
 <span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a><span class="co"># Row-Split Structure:</span></span>
 <span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a><span class="co"># AGE:SEX (** multivar analysis **)</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>We can now build a table for <code>ADSL</code></p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>adsl_tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(adsl_lyt, ADSL)</span>
 <span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>adsl_tbl</span>
@@ -994,7 +971,6 @@ a shortcoming)</li>
 <span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="co">#   M                       51              55               60      </span></span>
 <span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a><span class="co">#   U                        3               2               4       </span></span>
 <span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a><span class="co">#   UNDIFFERENTIATED         1               0               2</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>or for all patients that are older than 18:</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>adsl_f_tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, ADSL <span class="sc">%&gt;%</span> <span class="fu">filter</span>(AGE <span class="sc">&gt;</span> <span class="dv">18</span>))</span>
 <span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="co"># Warning in min(x): no non-missing arguments to min; returning Inf</span></span>
@@ -1043,7 +1019,6 @@ a shortcoming)</li>
 <span id="cb23-45"><a href="#cb23-45" tabindex="-1"></a><span class="co">#     LOW                  1               0               2       </span></span>
 <span id="cb23-46"><a href="#cb23-46" tabindex="-1"></a><span class="co">#     MEDIUM               0               0               0       </span></span>
 <span id="cb23-47"><a href="#cb23-47" tabindex="-1"></a><span class="co">#     HIGH                 0               0               0</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 </div>
 </div>
 <div id="adverse-events" class="section level2">
@@ -1125,7 +1100,6 @@ but rather generate a dataset on the fly (see <a href="https://github.com/waddel
 <span id="cb24-69"><a href="#cb24-69" tabindex="-1"></a><span class="co">#  9       1 ARM A    45 F         9 HEADACHE              NERVOUS SYSTEM… 5      </span></span>
 <span id="cb24-70"><a href="#cb24-70" tabindex="-1"></a><span class="co"># 10       1 ARM A    45 F        10 FAECES SOFT           GASTROINTESTIN… 2      </span></span>
 <span id="cb24-71"><a href="#cb24-71" tabindex="-1"></a><span class="co"># # ℹ 3,108 more rows</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <div id="adverse-events-by-id" class="section level3">
 <h3>Adverse Events By ID</h3>
 <p>We start by defining an events summary function:</p>
@@ -1136,7 +1110,6 @@ but rather generate a dataset on the fly (see <a href="https://github.com/waddel
 <span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>    <span class="st">&quot;Total number of events&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">length</span>(x), <span class="at">format =</span> <span class="st">&quot;xx&quot;</span>)</span>
 <span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>  )</span>
 <span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a>}</span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>So, for a population of <code>5</code> patients where</p>
 <ul>
 <li>one patient has 2 <code>AE</code>s</li>
@@ -1153,7 +1126,6 @@ but rather generate a dataset on the fly (see <a href="https://github.com/waddel
 <span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a><span class="co">#                                          row_label</span></span>
 <span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a><span class="co"># 1 Total number of patients with at least one event</span></span>
 <span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a><span class="co"># 2                           Total number of events</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>The <code>.N_col</code> argument is a special keyword argument by
 which <code>build_table()</code> passes the population size for each
 respective column. For a list of keyword arguments for the functions
@@ -1172,7 +1144,6 @@ tabulation:</p>
 <span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a><span class="co"># —————————————————————————————————————————————————————————————————————————————</span></span>
 <span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a><span class="co"># Total number of patients with at least one event   114 (5.53%)   150 (14.18%)</span></span>
 <span id="cb27-11"><a href="#cb27-11" tabindex="-1"></a><span class="co"># Total number of events                                2060           1058</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Note that the column <code>N</code>s are wrong as by default they are
 set to the number of rows per group (i.e. number of <code>AE</code>s per
 arm here). This also affects the percentages. For this table we are
@@ -1191,7 +1162,6 @@ tabulation:</p>
 <span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="co"># ——————————————————————————————————————————————————————————————————————————————</span></span>
 <span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="co"># Total number of patients with at least one event   114 (78.08%)   150 (97.40%)</span></span>
 <span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a><span class="co"># Total number of events                                 2060           1058</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Alternatively, if the desired column counts are already calculated,
 they can be specified directly via the <code>col_counts</code> argument
 to <code>build_table()</code>, though specifying an
@@ -1223,7 +1193,6 @@ rows will be used, but no duplicate checking!!!).</p>
 <span id="cb29-23"><a href="#cb29-23" tabindex="-1"></a><span class="co"># VASCULAR DISORDERS                                                              </span></span>
 <span id="cb29-24"><a href="#cb29-24" tabindex="-1"></a><span class="co">#   Total number of patients with at least one event   93 (63.70%)    75 (48.70%) </span></span>
 <span id="cb29-25"><a href="#cb29-25" tabindex="-1"></a><span class="co">#   Total number of events                                 240            122</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>We now have to add a count table of <code>AEDECOD</code> for each
 <code>AEBODSYS</code>. The default <code>analyze()</code> behavior for a
 factor is to create the count table per level (using
@@ -1295,7 +1264,6 @@ factor is to create the count table per level (using
 <span id="cb30-65"><a href="#cb30-65" tabindex="-1"></a><span class="co">#     NAUSEA (INTERMITTENT)                                   0              0      </span></span>
 <span id="cb30-66"><a href="#cb30-66" tabindex="-1"></a><span class="co">#     ORTHOSTATIC HYPOTENSION                                136             64     </span></span>
 <span id="cb30-67"><a href="#cb30-67" tabindex="-1"></a><span class="co">#     WEAKNESS                                                0              0</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>The <code>indent_mod</code> argument enables relative indenting
 changes if the tree structure of the table does not result in the
 desired indentation by default.</p>
@@ -1342,7 +1310,6 @@ to write a custom analysis function:</p>
 <span id="cb31-37"><a href="#cb31-37" tabindex="-1"></a><span class="co"># 9          NAUSEA (INTERMITTENT)</span></span>
 <span id="cb31-38"><a href="#cb31-38" tabindex="-1"></a><span class="co"># 10       ORTHOSTATIC HYPOTENSION</span></span>
 <span id="cb31-39"><a href="#cb31-39" tabindex="-1"></a><span class="co"># 11                      WEAKNESS</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>So the desired <code>AE</code> table is:</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a>adae_soc_lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -1411,7 +1378,6 @@ to write a custom analysis function:</p>
 <span id="cb32-65"><a href="#cb32-65" tabindex="-1"></a><span class="co">#     NAUSEA (INTERMITTENT)                                   0              0      </span></span>
 <span id="cb32-66"><a href="#cb32-66" tabindex="-1"></a><span class="co">#     ORTHOSTATIC HYPOTENSION                                 49             44     </span></span>
 <span id="cb32-67"><a href="#cb32-67" tabindex="-1"></a><span class="co">#     WEAKNESS                                                0              0</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Note that we are missing the overall summary in the first two rows.
 This can be added with an initial <code>analyze()</code> call.</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>adae_soc_lyt4 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
@@ -1487,7 +1453,6 @@ This can be added with an initial <code>analyze()</code> call.</p>
 <span id="cb33-71"><a href="#cb33-71" tabindex="-1"></a><span class="co">#     NAUSEA (INTERMITTENT)                                   0              0      </span></span>
 <span id="cb33-72"><a href="#cb33-72" tabindex="-1"></a><span class="co">#     ORTHOSTATIC HYPOTENSION                                 49             44     </span></span>
 <span id="cb33-73"><a href="#cb33-73" tabindex="-1"></a><span class="co">#     WEAKNESS                                                0              0</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Finally, if we wanted to prune the 0 count rows we can do that with
 the <code>trim_rows()</code> function:</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">trim_rows</span>(adae_soc_tbl4)</span>
@@ -1522,7 +1487,6 @@ the <code>trim_rows()</code> function:</p>
 <span id="cb34-30"><a href="#cb34-30" tabindex="-1"></a><span class="co">#     Total number of events                                 240            122     </span></span>
 <span id="cb34-31"><a href="#cb34-31" tabindex="-1"></a><span class="co">#     HYPOTENSION                                             44             31     </span></span>
 <span id="cb34-32"><a href="#cb34-32" tabindex="-1"></a><span class="co">#     ORTHOSTATIC HYPOTENSION                                 49             44</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Pruning is a larger topic with a <a href="https://insightsengineering.github.io/rtables/latest-tag/articles/sorting_pruning.html">separate
 <code>rtables</code> package vignette</a>.</p>
 </div>
@@ -1564,7 +1528,6 @@ the “overall” groups with a custom split function.</p>
 <span id="cb35-29"><a href="#cb35-29" tabindex="-1"></a><span class="co"># 4             3             74          0             3</span></span>
 <span id="cb35-30"><a href="#cb35-30" tabindex="-1"></a><span class="co"># 5             4             25          0             4</span></span>
 <span id="cb35-31"><a href="#cb35-31" tabindex="-1"></a><span class="co"># 6             5             65          0             5</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>All of the layouting concepts needed to create this table have
 already been introduced so far:</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a>adae_grade_lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
@@ -1934,7 +1897,6 @@ already been introduced so far:</p>
 <span id="cb36-365"><a href="#cb36-365" tabindex="-1"></a><span class="co">#       3                                                0         0   </span></span>
 <span id="cb36-366"><a href="#cb36-366" tabindex="-1"></a><span class="co">#       4                                                0         0   </span></span>
 <span id="cb36-367"><a href="#cb36-367" tabindex="-1"></a><span class="co">#       5                                                0         0</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 </div>
 </div>
 <div id="response-table" class="section level2">
@@ -1974,7 +1936,6 @@ parts:</p>
 <span id="cb37-25"><a href="#cb37-25" tabindex="-1"></a><span class="co"># ———————————————————————————————————————————————————————————————————</span></span>
 <span id="cb37-26"><a href="#cb37-26" tabindex="-1"></a><span class="co"># Responders       114.00 (85.07%)   90.00 (67.16%)   120.00 (90.91%)</span></span>
 <span id="cb37-27"><a href="#cb37-27" tabindex="-1"></a><span class="co"># Non-Responders   20.00 (14.93%)    44.00 (32.84%)    12.00 (9.09%)</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Note that we did set the <code>ref_group</code> argument in
 <code>split_cols_by()</code> which for the current table had no effect
 as we only use the cell data for the responder and non-responder counts.
@@ -2052,7 +2013,6 @@ function:</p>
 <span id="cb38-67"><a href="#cb38-67" tabindex="-1"></a><span class="co"># 2   95% CI (Wald, with correction)</span></span>
 <span id="cb38-68"><a href="#cb38-68" tabindex="-1"></a><span class="co"># 3       p-value (Chi-Squared Test)</span></span>
 <span id="cb38-69"><a href="#cb38-69" tabindex="-1"></a><span class="co"># 4              Odds Ratio (95% CI)</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Hence we can now add the next vignette to the table:</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a>rsp_lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARMCD&quot;</span>, <span class="at">ref_group =</span> <span class="st">&quot;ARM A&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -2075,7 +2035,6 @@ function:</p>
 <span id="cb39-19"><a href="#cb39-19" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)                        (-27.89, -7.93)       (-1.94, 13.61)  </span></span>
 <span id="cb39-20"><a href="#cb39-20" tabindex="-1"></a><span class="co">#   p-value (Chi-Squared Test)                                 0.0006               0.1436      </span></span>
 <span id="cb39-21"><a href="#cb39-21" tabindex="-1"></a><span class="co">#   Odds Ratio (95% CI)                                  0.36 (0.20 - 0.65)   1.75 (0.82 - 3.75)</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Next we will add part 3: the multinomial response table. To do so, we
 are adding a row-split by response level, and then doing the same thing
 as we did for the binary response table above.</p>
@@ -2095,7 +2054,6 @@ as we did for the binary response table above.</p>
 <span id="cb40-14"><a href="#cb40-14" tabindex="-1"></a><span class="co"># 1 95% CI (Wald, with correction) (49.38, 66.67)          0</span></span>
 <span id="cb40-15"><a href="#cb40-15" tabindex="-1"></a><span class="co">#                        row_label</span></span>
 <span id="cb40-16"><a href="#cb40-16" tabindex="-1"></a><span class="co"># 1 95% CI (Wald, with correction)</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>We can now create the final response table with all three parts:</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a>rsp_lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>(<span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARMCD&quot;</span>, <span class="at">ref_group =</span> <span class="st">&quot;ARM A&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -2134,7 +2092,6 @@ as we did for the binary response table above.</p>
 <span id="cb41-35"><a href="#cb41-35" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)      (0.00, 2.72)        (0.00, 2.72)         (0.00, 2.76)   </span></span>
 <span id="cb41-36"><a href="#cb41-36" tabindex="-1"></a><span class="co"># NE                                      0 (0.0%)            0 (0.0%)             0 (0.0%)     </span></span>
 <span id="cb41-37"><a href="#cb41-37" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)      (0.00, 2.72)        (0.00, 2.72)         (0.00, 2.76)</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>In the case that we wanted to rename the levels of <code>AVALC</code>
 and remove the CI for <code>NE</code> we could do that as follows:</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a>rsp_label <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
@@ -2194,7 +2151,6 @@ and remove the CI for <code>NE</code> we could do that as follows:</p>
 <span id="cb42-55"><a href="#cb42-55" tabindex="-1"></a><span class="co"># Progressive Disease (PD)                0 (0.00%)          0 (0.00%)            0 (0.00%)     </span></span>
 <span id="cb42-56"><a href="#cb42-56" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)      (0.00, 2.72)        (0.00, 2.72)         (0.00, 2.76)   </span></span>
 <span id="cb42-57"><a href="#cb42-57" tabindex="-1"></a><span class="co"># Not Evaluable (NE)                    0.00 (0.00%)        0.00 (0.00%)         0.00 (0.00%)</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Note that the table is missing the rows gaps to make it more
 readable. The row spacing feature is on the <code>rtables</code> roadmap
 and will be implemented in future.</p>
@@ -2226,7 +2182,6 @@ the data to be used in the construction of this table.</p>
 <span id="cb43-8"><a href="#cb43-8" tabindex="-1"></a></span>
 <span id="cb43-9"><a href="#cb43-9" tabindex="-1"></a>adtte2 <span class="ot">&lt;-</span> adtte <span class="sc">%&gt;%</span></span>
 <span id="cb43-10"><a href="#cb43-10" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CNSDTDSC =</span> <span class="fu">ifelse</span>(CNSDTDSC <span class="sc">==</span> <span class="st">&quot;&quot;</span>, <span class="st">&quot;__none__&quot;</span>, CNSDTDSC))</span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>The <code>adtte</code> dataset will be used in preparing the models
 while the <code>adtte2</code> dataset handles missing values in the
 “Censor Date Description” column and will be used to produce the final
@@ -2239,7 +2194,6 @@ the data.</p>
 <span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a>    <span class="st">&quot;Subjects with Adverse Events n (%)&quot;</span> <span class="ot">=</span> <span class="fu">rcell</span>(<span class="fu">length</span>(<span class="fu">unique</span>(x)) <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>)</span>
 <span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a>  )</span>
 <span id="cb44-5"><a href="#cb44-5" tabindex="-1"></a>}</span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Then an analysis function is created to generate the counts of
 censored subjects for each level of a factor variable in the dataset. In
 this case the <code>cnsr_counter</code> function will be applied with
@@ -2250,7 +2204,6 @@ description for each censored subject.</p>
 <span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x[x <span class="sc">!=</span> <span class="st">&quot;__none__&quot;</span>]</span>
 <span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a>  <span class="fu">lapply</span>(<span class="fu">table</span>(x), <span class="cf">function</span>(xi) <span class="fu">rcell</span>(xi <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="sc">/</span> .N_col), <span class="at">format =</span> <span class="st">&quot;xx (xx.xx%)&quot;</span>))</span>
 <span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a>}</span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>This function generates counts and fractions of unique subjects
 corresponding to each factor level, excluding missing values (uncensored
 patients).</p>
@@ -2286,7 +2239,6 @@ confidence intervals, and p-values comparing against the reference group
 <span id="cb46-22"><a href="#cb46-22" tabindex="-1"></a>    <span class="at">.names =</span> <span class="fu">c</span>(<span class="st">&quot;Hazard ratio&quot;</span>, <span class="st">&quot;95% confidence interval&quot;</span>, <span class="st">&quot;p-value (one-sided stratified log rank)&quot;</span>)</span>
 <span id="cb46-23"><a href="#cb46-23" tabindex="-1"></a>  )</span>
 <span id="cb46-24"><a href="#cb46-24" tabindex="-1"></a>}</span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>The fourth and final analysis function, <code>a_tte</code>, generates
 a time to first adverse event table with three rows corresponding to
 Median, 95% Confidence Interval, and Min Max respectively. First a
@@ -2320,7 +2272,6 @@ event consisting of the previously mentioned summary statistics.</p>
 <span id="cb47-23"><a href="#cb47-23" tabindex="-1"></a>    <span class="at">.row_footnotes =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="cn">NULL</span>, rowfn)</span>
 <span id="cb47-24"><a href="#cb47-24" tabindex="-1"></a>  )</span>
 <span id="cb47-25"><a href="#cb47-25" tabindex="-1"></a>}</span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>Additionally, the <code>a_tte</code> function creates a referential
 footnote within the table to indicate where censoring occurred in the
 data.</p>
@@ -2344,7 +2295,6 @@ time to event analysis table.</p>
 <span id="cb48-16"><a href="#cb48-16" tabindex="-1"></a>  )</span>
 <span id="cb48-17"><a href="#cb48-17" tabindex="-1"></a></span>
 <span id="cb48-18"><a href="#cb48-18" tabindex="-1"></a>tbl_tte <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, adtte2)</span></code></pre></div>
-<p>clinical_trials.R</p>
 <p>We set the <code>show_colcounts</code> argument of
 <code>basic_table()</code> to <code>TRUE</code> to first print the total
 subject counts for each column. Next we use <code>split_cols_by()</code>
@@ -2390,7 +2340,6 @@ created earlier in the time-to-event analysis function
 <span id="cb49-25"><a href="#cb49-25" tabindex="-1"></a><span class="co"># {1} - Product-limit (Kaplan-Meier) estimates.</span></span>
 <span id="cb49-26"><a href="#cb49-26" tabindex="-1"></a><span class="co"># {2} - * indicates censoring</span></span>
 <span id="cb49-27"><a href="#cb49-27" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————————————————————————————————————</span></span></code></pre></div>
-<p>clinical_trials.R</p>
 </div>
 
 

@@ -656,17 +656,25 @@ test_that("row label indentation is kept even if there are newline characters", 
 
 test_that("Support for newline characters in all the parts", {
   out <- strsplit(toString(tt_for_nl, hsep = "-"), "\\n")[[1]]
+  mf <- matrix_form(tt_for_nl, TRUE)
+
+  # topleft is correctly aligned
+  expect_equal(
+    mf$strings[seq(mf_nlheader(mf)), 1],
+    unlist(strsplit(paste0(top_left(tt_for_nl), collapse = "\n"), "\n"))
+  )
+
   expected <- c(
     "why not",
     "also here",
     "",
     "---------------------------------",
     "                                 ",
-    "                         ARM     ",
-    "                                 ",
-    "a                         A      ",
-    "b                            A wo",
-    "d                     TWO        ",
+    "a                        ARM     ",
+    "b                                ",
+    "d                         A      ",
+    "                             A wo",
+    "                      TWO        ",
     "c                    words    rd ",
     "---------------------------------",
     "m                                ",
@@ -793,6 +801,9 @@ test_that("horizontal separator is propagated from table to print and export", {
 ## higher-level showing ncols works:
 
 test_that("showing higher-level ncols works", {
+  skip_if_not_installed("tibble")
+  require(tibble, quietly = TRUE)
+
   mydat <- subset(ex_adsl, SEX %in% c("M", "F"))
   mydat$SEX2 <- factor(
     ifelse(

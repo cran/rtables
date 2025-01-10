@@ -1,3 +1,23 @@
+## rtables 0.6.11
+
+### New Features
+ * Initialized vignette about quality control outputs of `as_result_df()`.
+ * Completed parameter `make_ard` output for single-line statistical outputs.
+ * Added `stat_names` to `rcell()` to be used by `as_result_df(make_ard = TRUE)`.
+
+### Miscellaneous
+ * Split `docx` document generation to the new package [`rtables.officer`](https://github.com/insightsengineering/rtables.officer).
+ * Refactored  `as_result_df()` parameters `as_strings` and `as_viewer` into `data_format = c("full_precision", "strings", "numeric")` following the same outputs.
+ * Refactored `as_result_df()` to have a standard behavior, with all the relevant parameters, and a possibility to add personalized `spec`.
+ * Removed `result_df_specs()`, because `as_result_df()` was a too shallow wrapper.
+ * Merged behavior of  `as_result_df()` parameters `as_is` and `simplify` parameters to remove structural information.
+
+### Bug Fixes
+ * Fixed bug that was keeping indentation space characters in top left information when making a `flextable` from a `TableTree` object.
+ * Fixed bug in `analyze` that was causing an error when passing a single `NA` value to the
+`var_labels` parameter.
+ * Fixed bugs for multiple `analyze` calls in `as_result_df`.
+
 ## rtables 0.6.10
 
 ### New Features

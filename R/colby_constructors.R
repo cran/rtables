@@ -1113,6 +1113,10 @@ analyze <- function(lyt,
                     section_div = NA_character_) {
   show_labels <- match.arg(show_labels)
   subafun <- substitute(afun)
+  # R treats a single NA value as a logical atomic. The below
+  # maps all the NAs in `var_labels` to NA_character_ required by `Split`
+  # and avoids the error when `var_labels` is just c(NA).
+  var_labels <- vapply(var_labels, function(label) ifelse(is.na(label), NA_character_, label), character(1))
   if (
     is.name(subafun) &&
       is.function(afun) &&
@@ -1488,7 +1492,8 @@ setMethod(
     }
     ret <- rcell(cnt,
       format = format,
-      label = label
+      label = label,
+      stat_names = "n"
     )
     ret
   }
@@ -1511,11 +1516,11 @@ setMethod(
       cnt <- sum(!is.na(df))
     }
     ## the formatter does the *100 so we don't here.
-    ## TODO name elements of this so that ARD generation has access to them
-    ## ret <- rcell(c(n = cnt, pct = cnt / .N_col),
+    ## Elements are named with stat_names so that ARD generation has access to them
     ret <- rcell(c(cnt, cnt / .N_col),
       format = format,
-      label = label
+      label = label,
+      stat_names = c("n", "p")
     )
     ret
   }

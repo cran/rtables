@@ -12,7 +12,7 @@
 
 <meta name="author" content="Davide Garolini, Abinaya Yogasekaram, and Gabriel Becker" />
 
-<meta name="date" content="2024-09-20" />
+<meta name="date" content="2025-01-09" />
 
 <title>Customizing Appearance</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -62,7 +62,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -341,11 +341,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Customizing Appearance</h1>
 <h4 class="author">Davide Garolini, Abinaya Yogasekaram, and Gabriel
 Becker</h4>
-<h4 class="date">2024-09-20</h4>
+<h4 class="date">2025-01-09</h4>
 
 
 
-<p>custom_appearance.R</p>
 <style type="text/css">
 .reveal .r code {
 white-space: pre;
@@ -358,7 +357,6 @@ customize the appearance of <code>rtables</code>.</p>
 <p>Loading the package:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
-<p>custom_appearance.R</p>
 <div id="rows-and-cell-values-alignments" class="section level3">
 <h3>Rows and cell values alignments</h3>
 <p>It is possible to align the content by assigning <code>&quot;left&quot;</code>,
@@ -399,7 +397,6 @@ alignment options.</p>
 <span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co"># left     l      </span></span>
 <span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co"># right          r</span></span>
 <span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co"># center      c</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># In in_rows, we use .aligns. This can either set the general value or the</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#   single values (see NB).</span></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>lyt2 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -419,7 +416,6 @@ alignment options.</p>
 <span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co"># left           l</span></span>
 <span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co"># right          r</span></span>
 <span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co"># center         c</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>These concepts can be well applied to any clinical table as shown in
 the following, more complex, example.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -467,7 +463,6 @@ the following, more complex, example.</p>
 <span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="co">#     sd             NE          NE           1.4           </span></span>
 <span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="co">#   STRATA1                                                 </span></span>
 <span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="co">#     STRATA1                1            0                2</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 </div>
 <div id="top-left-materials" class="section level3">
 <h3>Top-left Materials</h3>
@@ -493,7 +488,6 @@ Indenting is automatically added <code>label_pos = &quot;topleft&quot;</code>.</
 <span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#   Mean                         35.46       32.42          34.39     </span></span>
 <span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co"># C                                                                   </span></span>
 <span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#   Mean                         36.34       34.45          33.54</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>Specify label position using the <code>split_rows</code> function.
 Notice the position of <code>STRATA1</code> and <code>SEX</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -533,7 +527,6 @@ Notice the position of <code>STRATA1</code> and <code>SEX</code>.</p>
 <span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a><span class="co">#     Mean                NA           NA             NA      </span></span>
 <span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="co">#   UNDIFFERENTIATED                                          </span></span>
 <span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a><span class="co">#     Mean                NA           NA             NA</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>Post-processing using the <code>top_left()</code> function:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -583,7 +576,6 @@ Notice the position of <code>STRATA1</code> and <code>SEX</code>.</p>
 <span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a><span class="co">#     sd                       NE          NE           1.4           </span></span>
 <span id="cb7-47"><a href="#cb7-47" tabindex="-1"></a><span class="co">#   STRATA1                                                           </span></span>
 <span id="cb7-48"><a href="#cb7-48" tabindex="-1"></a><span class="co">#     STRATA1                          1            0                2</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 </div>
 <div id="table-inset" class="section level3">
 <h3>Table Inset</h3>
@@ -600,7 +592,6 @@ during post-processing with <code>table_inset()</code>.</p>
 <span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#             all obs</span></span>
 <span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#      ——————————————</span></span>
 <span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#      Mean    34.22</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>Using the post-processing function:</p>
 <p>Without inset -</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -611,14 +602,12 @@ during post-processing with <code>table_inset()</code>.</p>
 <span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#        all obs</span></span>
 <span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co"># ——————————————</span></span>
 <span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co"># Mean    34.22</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>With an inset of 5 characters -</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">table_inset</span>(tbl) <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>tbl</span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#             all obs</span></span>
 <span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#      ——————————————</span></span>
 <span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#      Mean    34.22</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>Below is an example with a table produced for clinical data. Compare
 the inset of the table and main footer between the two tables.</p>
 <p>Without inset -</p>
@@ -657,7 +646,6 @@ the inset of the table and main footer between the two tables.</p>
 <span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a><span class="co"># ha HA! Footer!</span></span>
 <span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a><span class="co"># provenaaaaance</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>With inset -</p>
 <p>Notice, the inset does not apply to any title materials (main title,
 subtitles, page titles), or provenance footer materials. Inset settings
@@ -682,7 +670,6 @@ materials and any horizontal dividers.</p>
 <span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="co">#      ha HA! Footer!</span></span>
 <span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co"># provenaaaaance</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 </div>
 <div id="horizontal-separation" class="section level3">
 <h3>Horizontal Separation</h3>
@@ -723,7 +710,6 @@ something on both sides of the divider.</li>
 <span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#   Mean (sd)    0.25 (0.11)   1.33 (0.20)   2.03 (0.27)</span></span>
 <span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#   Variance        0.011         0.039         0.075   </span></span>
 <span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#   Min - Max     0.1 - 0.6     1.0 - 1.8     1.4 - 2.5</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 </div>
 <div id="section-dividers" class="section level3">
 <h3>Section Dividers</h3>
@@ -758,7 +744,6 @@ the end of the table is never printed.</p>
 <span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a><span class="co"># Petal.Width                                           </span></span>
 <span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a><span class="co">#   mean / sd    0.25 (0.11)   1.33 (0.20)   2.03 (0.27)</span></span>
 <span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a><span class="co">#   range           0.50          0.80          1.10</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>Section dividers can be set to ” ” to create a blank line.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;Species&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -787,7 +772,6 @@ the end of the table is never printed.</p>
 <span id="cb15-25"><a href="#cb15-25" tabindex="-1"></a><span class="co"># Petal.Width                                           </span></span>
 <span id="cb15-26"><a href="#cb15-26" tabindex="-1"></a><span class="co">#   mean / sd    0.25 (0.11)   1.33 (0.20)   2.03 (0.27)</span></span>
 <span id="cb15-27"><a href="#cb15-27" tabindex="-1"></a><span class="co">#   range           0.50          0.80          1.10</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>Separation characters can be specified for different row splits.
 However, only one will be printed if they “pile up” next to each
 other.</p>
@@ -879,7 +863,6 @@ other.</p>
 <span id="cb16-86"><a href="#cb16-86" tabindex="-1"></a><span class="co"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span>
 <span id="cb16-87"><a href="#cb16-87" tabindex="-1"></a><span class="co">#   C                                                                                </span></span>
 <span id="cb16-88"><a href="#cb16-88" tabindex="-1"></a><span class="co">#     mean                                       NA           NA             NA</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 </div>
 <div id="indent-modifier" class="section level3">
 <h3>Indent Modifier</h3>
@@ -939,7 +922,6 @@ the tables below:</p>
 <span id="cb17-49"><a href="#cb17-49" tabindex="-1"></a><span class="co"># Analysis was done using cool methods that are correct</span></span>
 <span id="cb17-50"><a href="#cb17-50" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb17-51"><a href="#cb17-51" tabindex="-1"></a><span class="co"># file: /path/to/stuff/that/lives/there HASH:1ac41b242a</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>Modified indent -</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">basic_table</span>(</span>
 <span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
@@ -992,7 +974,6 @@ the tables below:</p>
 <span id="cb18-49"><a href="#cb18-49" tabindex="-1"></a><span class="co"># Analysis was done using cool methods that are correct</span></span>
 <span id="cb18-50"><a href="#cb18-50" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb18-51"><a href="#cb18-51" tabindex="-1"></a><span class="co"># file: /path/to/stuff/that/lives/there HASH:1ac41b242a</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 </div>
 <div id="variable-label-visibility" class="section level3">
 <h3>Variable Label Visibility</h3>
@@ -1034,7 +1015,6 @@ rows.</p>
 <span id="cb19-22"><a href="#cb19-22" tabindex="-1"></a><span class="co">#     mean   36.6428571428571   32.0869565217391   34.3684210526316</span></span>
 <span id="cb19-23"><a href="#cb19-23" tabindex="-1"></a><span class="co">#   C                                                              </span></span>
 <span id="cb19-24"><a href="#cb19-24" tabindex="-1"></a><span class="co">#     mean   37.3913043478261       32.8125        32.8333333333333</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>When set to default, the label <code>AGE</code> is not repeated since
 there is only one variable being analyzed at the same level of nesting.
 Override this by setting the <code>show_labels</code> argument as
@@ -1067,7 +1047,6 @@ Override this by setting the <code>show_labels</code> argument as
 <span id="cb20-26"><a href="#cb20-26" tabindex="-1"></a><span class="co"># C                                                                </span></span>
 <span id="cb20-27"><a href="#cb20-27" tabindex="-1"></a><span class="co">#   AGE                                                            </span></span>
 <span id="cb20-28"><a href="#cb20-28" tabindex="-1"></a><span class="co">#     mean   37.3913043478261       32.8125        32.8333333333333</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>Below is an example using the <code>label_pos</code> argument for
 modifying label visibility:</p>
 <p>Label order will mirror the order of <code>split_rows_by</code>
@@ -1112,7 +1091,6 @@ calls. If the labels of any subgroups should be hidden, the
 <span id="cb21-36"><a href="#cb21-36" tabindex="-1"></a><span class="co"># Analysis was done using cool methods that are correct</span></span>
 <span id="cb21-37"><a href="#cb21-37" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb21-38"><a href="#cb21-38" tabindex="-1"></a><span class="co"># file: /path/to/stuff/that/lives/there HASH:1ac41b242a</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>“SEX” label position is with the top-left materials -</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">basic_table</span>(</span>
 <span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Study XXXXXXXX&quot;</span>,</span>
@@ -1151,7 +1129,6 @@ calls. If the labels of any subgroups should be hidden, the
 <span id="cb22-35"><a href="#cb22-35" tabindex="-1"></a><span class="co"># Analysis was done using cool methods that are correct</span></span>
 <span id="cb22-36"><a href="#cb22-36" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb22-37"><a href="#cb22-37" tabindex="-1"></a><span class="co"># file: /path/to/stuff/that/lives/there HASH:1ac41b242a</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 </div>
 <div id="cell-label-and-annotation-wrapping" class="section level3">
 <h3>Cell, Label, and Annotation Wrapping</h3>
@@ -1205,7 +1182,6 @@ has very wide contents in several cells, labels, and titles/footers.</p>
 <span id="cb23-42"><a href="#cb23-42" tabindex="-1"></a><span class="co"># Footnote that is wider than expected for this table.</span></span>
 <span id="cb23-43"><a href="#cb23-43" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb23-44"><a href="#cb23-44" tabindex="-1"></a><span class="co"># Provenance footer material that is also wider than expected for this table.</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>In the following sections we will use the <code>toString()</code>
 function to render the table in string form. This resulting string
 representation is ready to be printed or written to a plain text file,
@@ -1284,7 +1260,6 @@ customized via the <code>col_gap</code> argument to
 <span id="cb24-44"><a href="#cb24-44" tabindex="-1"></a><span class="co"># [40,] &quot;Footnote that is wider than expected for this table.&quot;                       </span></span>
 <span id="cb24-45"><a href="#cb24-45" tabindex="-1"></a><span class="co"># [41,] &quot;&quot;                                                                           </span></span>
 <span id="cb24-46"><a href="#cb24-46" tabindex="-1"></a><span class="co"># [42,] &quot;Provenance footer material that is also wider than expected for this table.&quot;</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 <p>In the resulting output we can see that the table has been correctly
 rendered using wrapping with a total width of 43 characters, but that
 the titles and footers remain wider than the rendered table.</p>
@@ -1355,7 +1330,6 @@ annotations have a maximum width of 43 characters.</p>
 <span id="cb25-53"><a href="#cb25-53" tabindex="-1"></a><span class="co"># [44,] &quot;&quot;                                           </span></span>
 <span id="cb25-54"><a href="#cb25-54" tabindex="-1"></a><span class="co"># [45,] &quot;Provenance footer material that is also&quot;    </span></span>
 <span id="cb25-55"><a href="#cb25-55" tabindex="-1"></a><span class="co"># [46,] &quot;wider than expected for this table.&quot;</span></span></code></pre></div>
-<p>custom_appearance.R</p>
 </div>
 </div>
 </div>

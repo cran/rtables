@@ -1,13 +1,11 @@
 context("Result Data Frames")
 
 test_that("Result Data Frame generation works v0", {
-  ## change here (only) when v0 is crystalized (no longer experimental)
-  spec_version <- "v0_experimental"
   lyt <- make_big_lyt()
 
   tbl <- build_table(lyt, rawdat)
 
-  result_df <- as_result_df(tbl, spec_version)
+  result_df <- as_result_df(tbl)
   expect_identical(
     result_df[2, "ARM1.M"][[1]],
     c(37, 37 / 256)
@@ -20,7 +18,7 @@ test_that("Result Data Frame generation works v0", {
 
   expect_identical(
     names(result_df)[1:5],
-    c("spl_var_1", "spl_value_1", "spl_var_2", "spl_value_2", "avar_name")
+    c("group1", "group1_level", "group2", "group2_level", "avar_name")
   )
 
   ## handle multiple analyses
@@ -30,7 +28,7 @@ test_that("Result Data Frame generation works v0", {
     analyze(c("AGE", "BMRKR2"))
 
   tbl2 <- build_table(lyt, ex_adsl)
-  result_df2 <- as_result_df(tbl2, spec_version)
+  result_df2 <- as_result_df(tbl2)
 
   ## regression test
   expect_false(any(is.na(result_df2$spl_var_1)))
@@ -46,7 +44,7 @@ test_that("Result Data Frame generation works v0", {
     analyze_colvars(afun = length, inclNAs = TRUE)
 
   tbl3 <- build_table(lyt3, test)
-  result_df3 <- as_result_df(tbl3, spec_version)
+  result_df3 <- as_result_df(tbl3)
 
   expect_identical(nrow(result_df3), 1L)
 
@@ -61,33 +59,36 @@ test_that("Result Data Frame generation works v0", {
   expect_identical(
     names(result_df4),
     c(
+      "group1", "group1_level",
       "avar_name", "row_name", "label_name", "row_num", "is_group_summary",
       "node_class", "A: Drug X", "B: Placebo", "C: Combination"
     )
   )
 })
 
-test_that("as_result_df works with visual output (as_viewer)", {
+test_that("as_result_df works with visual output (data_format as numeric)", {
   lyt <- make_big_lyt()
   tbl <- build_table(lyt, rawdat)
 
-  res <- expect_silent(as_result_df(tbl, simplify = TRUE, as_viewer = TRUE))
+  res <- expect_silent(as_result_df(tbl, simplify = TRUE, data_format = "numeric"))
   expect_equal(res$ARM1.M[[1]], c(116.0, 45.3))
 
-  res <- expect_silent(as_result_df(tbl, simplify = TRUE, as_viewer = TRUE, as_strings = TRUE))
+  res <- expect_silent(as_result_df(tbl, data_format = "strings", simplify = TRUE))
   expect_equal(res$ARM1.M[[1]], "116 (45.3%)")
 
   mf <- matrix_form(tbl)
   string_tbl <- mf_strings(mf)[-seq_len(mf_nlheader(mf)), ]
-  string_tbl <- string_tbl[nzchar(string_tbl[, 2]), ]
+  string_tbl <- as.data.frame(string_tbl[nzchar(string_tbl[, 2]), ])
   colnames(string_tbl) <- colnames(res)
-  expect_equal(res, data.frame(string_tbl))
+  rownames(string_tbl) <- NULL
+  expect_equal(res, string_tbl)
 
-  res <- expect_silent(as_result_df(tbl, simplify = TRUE, as_strings = TRUE, expand_colnames = TRUE))
+  res <- expect_silent(as_result_df(tbl, simplify = TRUE, data_format = "strings", expand_colnames = TRUE))
   string_tbl <- mf_strings(mf)
   string_tbl <- data.frame(string_tbl[nzchar(string_tbl[, 2]), ])
   colnames(string_tbl) <- colnames(res)
-  string_tbl$row_name[seq_len(mf_nlheader(mf))] <- res$row_name[seq_len(mf_nlheader(mf))]
+  string_tbl$label_name[seq_len(mf_nlheader(mf))] <- res$label_name[seq_len(mf_nlheader(mf))]
+  rownames(string_tbl) <- NULL
   expect_equal(res, string_tbl)
 
   expect_silent(basic_table() %>% build_table(DM) %>% as_result_df())
@@ -97,11 +98,11 @@ test_that("as_result_df works with visual output (as_viewer)", {
     build_table(DM)
   expect_equal(as_result_df(tbl)$`all obs`, 5.851948, tolerance = 1e-6)
   expect_equal(
-    as_result_df(tbl, as_viewer = TRUE)$`all obs`,
-    as.numeric(as_result_df(tbl, as_strings = TRUE)$`all obs`)
+    as_result_df(tbl, data_format = "numeric")$`all obs`,
+    as.numeric(as_result_df(tbl, data_format = "strings")$`all obs`)
   )
   expect_equal(as_result_df(tbl, expand_colnames = TRUE)$`all obs`[2], "356")
-  expect_equal(as_result_df(tbl, expand_colnames = TRUE, as_strings = TRUE)$`all obs`[2], "(N=356)")
+  expect_equal(as_result_df(tbl, expand_colnames = TRUE, data_format = "strings")$`all obs`[2], "(N=356)")
 
 
   # Test for integer extraction and ranges
@@ -111,7 +112,7 @@ test_that("as_result_df works with visual output (as_viewer)", {
     analyze("AGE", afun = function(x) list(a = mean(x), b = range(x)))
 
   tbl <- build_table(lyt, ex_adsl)
-  expect_equal(as_result_df(tbl, simplify = TRUE, as_viewer = TRUE)[2, 2][[1]], c(24, 46))
+  expect_equal(as_result_df(tbl, simplify = TRUE, data_format = "numeric")[2, 2][[1]], c(24, 46))
 
   # Test for tables with less than 3 rows
   tbl <- rtable(
@@ -159,8 +160,8 @@ test_that("as_result_df keeps label rows", {
 
   rd1 <- as_result_df(tbl, keep_label_rows = TRUE)
   rd2 <- as_result_df(tbl, keep_label_rows = TRUE, expand_colnames = TRUE)
-  rd3 <- as_result_df(tbl, keep_label_rows = TRUE, expand_colnames = TRUE, as_strings = TRUE)
-  rd4 <- as_result_df(tbl, keep_label_rows = TRUE, expand_colnames = TRUE, as_viewer = TRUE)
+  rd3 <- as_result_df(tbl, keep_label_rows = TRUE, expand_colnames = TRUE, data_format = "strings")
+  rd4 <- as_result_df(tbl, keep_label_rows = TRUE, expand_colnames = TRUE, data_format = "numeric")
 
   expect_equal(nrow(rd1), nrow(rd2) - 2)
   expect_equal(nrow(rd1), nrow(rd3) - 2)
@@ -193,12 +194,12 @@ test_that("as_result_df keeps label rows", {
   )
 })
 
-test_that("as_result_df as_is is producing a data.frame that is compatible with df_to_tt", {
+test_that("as_result_df simplify is producing a data.frame that is compatible with df_to_tt", {
   # More challenging labels
   lyt <- make_big_lyt()
   tbl <- build_table(lyt, rawdat)
 
-  ard_out <- as_result_df(tbl, as_is = TRUE)
+  ard_out <- as_result_df(tbl, simplify = TRUE, keep_label_rows = TRUE)
   mf_tbl <- matrix_form(tbl)
 
   # Label works
@@ -214,7 +215,7 @@ test_that("as_result_df as_is is producing a data.frame that is compatible with 
 
   init_tbl <- df_to_tt(mtcars)
   end_tbl <- init_tbl %>%
-    as_result_df(as_is = TRUE) %>%
+    as_result_df(simplify = TRUE) %>%
     df_to_tt()
 
   expect_equal(
@@ -237,4 +238,263 @@ test_that("as_result_df works fine with empty tables and no character(0) is allo
     ),
     "a"
   )
+})
+
+test_that("as_result_df works with analyze-only tables (odd num of path elements)", {
+  tbl <- basic_table() %>%
+    analyze("cyl", table_names = "a") %>%
+    analyze("mpg") %>%
+    build_table(mtcars)
+
+  expect_equal(as_result_df(tbl)$group1[[1]], "<analysis_spl_tbl_name>")
+  expect_equal(as_result_df(tbl, make_ard = TRUE)$group1[[1]], "<analysis_spl_tbl_name>")
+})
+
+test_that("make_ard produces realistic ARD output with as_result_df", {
+  # Testing fundamental getters/setters
+  rc <- rcell(c(1, 2), stat_names = c("Rand1", "Rand2"))
+  expect_equal(obj_stat_names(rc), c("Rand1", "Rand2"))
+
+  rc_row <- in_rows(
+    .list = list(a = c(NA, 1), b = c(1, NA)),
+    .formats = c("xx - xx", "xx.x - xx.x"),
+    .format_na_strs = list(c("asda", "lkjklj")),
+    .stat_names = list(c("A", "B"), c("B", "C")) # if c("A", "B") one each row, if single list duplicated
+  )
+
+  expect_equal(
+    list("a" = c("A", "B"), "b" = c("B", "C")), # now it is named
+    lapply(rc_row, obj_stat_names)
+  )
+
+  # Lets make a custom function and check ARDs
+  mean_sd_custom <- function(x) {
+    mean <- mean(x, na.rm = FALSE)
+    sd <- sd(x, na.rm = FALSE)
+
+    rcell(c(mean, sd),
+      label = "Mean (SD)", format = "xx.x (xx.x)",
+      stat_names = c("Mean", "SD")
+    )
+  }
+  counts_percentage_custom <- function(x) {
+    cnts <- table(x)
+    out <- lapply(cnts, function(x) {
+      perc <- x / sum(cnts)
+      rcell(c(x, perc), format = "xx. (xx.%)")
+    })
+    in_rows(
+      .list = as.list(out), .labels = names(cnts),
+      .stat_names = list(c("Count", "Percentage"))
+    )
+  }
+
+  lyt <- basic_table(show_colcounts = TRUE, colcount_format = "N=xx") %>%
+    split_cols_by("ARM", split_fun = keep_split_levels(c("A: Drug X", "B: Placebo"))) %>%
+    analyze(vars = "AGE", afun = mean_sd_custom) %>%
+    analyze(vars = "SEX", afun = counts_percentage_custom)
+
+  tbl <- build_table(lyt, ex_adsl)
+  ard_out <- as_result_df(tbl, make_ard = TRUE)
+
+  # Numeric output
+  expect_equal(
+    ard_out[2, , drop = TRUE],
+    list(
+      group1 = "<analysis_spl_tbl_name>",
+      group1_level = "ma_AGE_SEX",
+      group2 = "ARM",
+      group2_level = "A: Drug X",
+      variable = "AGE",
+      variable_level = "Mean (SD)",
+      variable_label = "Mean (SD)",
+      stat_name = "SD",
+      stat = 6.553326
+    ),
+    tolerance = 10e-6
+  )
+
+  # Percentage output
+  expect_equal(
+    ard_out[14, , drop = TRUE],
+    list(
+      group1 = "<analysis_spl_tbl_name>",
+      group1_level = "ma_AGE_SEX",
+      group2 = "ARM",
+      group2_level = "B: Placebo",
+      variable = "SEX",
+      variable_level = "F",
+      variable_label = "F",
+      stat_name = "Percentage",
+      stat = 0.5746269
+    ),
+    tolerance = 10e-6
+  )
+
+  # Default values
+  lyt <- basic_table() %>%
+    split_cols_by("ARM") %>%
+    analyze(c("AGE", "SEX"))
+
+  tbl <- build_table(lyt, ex_adsl)
+  ard_out <- as_result_df(tbl, make_ard = TRUE)
+
+  expect_equal(unique(ard_out$stat_name), c("mean", "n"))
+})
+
+test_that("make_ard works with multiple row levels", {
+  lyt <- basic_table() %>%
+    split_rows_by("STRATA1") %>%
+    split_rows_by("STRATA2") %>%
+    split_cols_by("ARM") %>%
+    analyze(c("AGE", "SEX"))
+
+  tbl <- build_table(lyt, ex_adsl)
+  ard_out <- as_result_df(tbl, make_ard = TRUE)
+
+  expect_equal(unique(ard_out$stat_name), c("mean", "n"))
+  expect_contains(colnames(ard_out), c("group2", "group2_level"))
+
+  # Count output
+  expect_equal(
+    ard_out[90, , drop = TRUE],
+    list(
+      group1 = "STRATA1",
+      group1_level = "C",
+      group2 = "STRATA2",
+      group2_level = "S2",
+      group3 = "ARM",
+      group3_level = "C: Combination",
+      variable = "SEX",
+      variable_level = "UNDIFFERENTIATED",
+      variable_label = "UNDIFFERENTIATED",
+      stat_name = "n",
+      stat = 0
+    ),
+    tolerance = 10e-6
+  )
+})
+
+test_that("make_ard works with multiple column levels", {
+  lyt <- basic_table() %>%
+    split_rows_by("STRATA1") %>%
+    split_cols_by("ARM") %>%
+    split_cols_by("STRATA2") %>%
+    analyze(c("AGE", "SEX"))
+
+  tbl <- build_table(lyt, ex_adsl)
+  ard_out <- as_result_df(tbl, make_ard = TRUE)
+
+  expect_equal(unique(ard_out$stat_name), c("mean", "n"))
+  expect_contains(colnames(ard_out), c("group1", "group1_level"))
+  expect_contains(colnames(ard_out), c("group2", "group2_level"))
+
+  # Count output
+  expect_equal(
+    ard_out[16, , drop = TRUE],
+    list(
+      group1 = "STRATA1",
+      group1_level = "A",
+      group2 = "ARM",
+      group2_level = "A: Drug X",
+      group3 = "STRATA2",
+      group3_level = "S2",
+      variable = "AGE",
+      variable_level = "Mean",
+      variable_label = "Mean",
+      stat_name = "mean",
+      stat = 34.4
+    ),
+    tolerance = 10e-6
+  )
+})
+
+test_that("make_ard works with summarize_row_groups", {
+  lyt <- basic_table() %>%
+    split_rows_by("STRATA2") %>%
+    summarize_row_groups() %>%
+    split_rows_by("ARM") %>%
+    split_cols_by("ARM") %>%
+    split_cols_by("STRATA1") %>%
+    analyze(c("AGE", "SEX"))
+
+  tbl <- build_table(lyt, ex_adsl)
+  ard_out <- as_result_df(tbl, make_ard = TRUE)
+
+  expect_contains(unique(ard_out$stat_name), c("mean", "n", "p"))
+  expect_contains(colnames(ard_out), c("group1", "group1_level"))
+  expect_contains(colnames(ard_out), c("group2", "group2_level"))
+
+  # label row output
+  expect_equal(
+    ard_out[1, , drop = TRUE],
+    list(
+      group1 = "STRATA2",
+      group1_level = "S1",
+      group2 = NA_character_,
+      group2_level = NA_character_,
+      group3 = "ARM",
+      group3_level = "A: Drug X",
+      group4 = "STRATA1",
+      group4_level = "A",
+      variable = "STRATA2",
+      variable_level = "S1",
+      variable_label = "S1",
+      stat_name = "n",
+      stat = 18
+    ),
+    tolerance = 10e-6
+  )
+
+  # Testing different placements of summarize_row_groups
+  lyt <- basic_table() %>%
+    split_rows_by("STRATA2") %>%
+    split_rows_by("ARM") %>%
+    summarize_row_groups() %>%
+    split_cols_by("ARM") %>%
+    split_cols_by("STRATA1") %>%
+    analyze(c("AGE", "SEX"))
+
+  tbl <- build_table(lyt, ex_adsl)
+  ard_out <- as_result_df(tbl, make_ard = TRUE)
+
+  # label row output
+  expect_equal(
+    ard_out[1, , drop = TRUE],
+    list(
+      group1 = "STRATA2",
+      group1_level = "S1",
+      group2 = "ARM",
+      group2_level = "A: Drug X",
+      group3 = "ARM",
+      group3_level = "A: Drug X",
+      group4 = "STRATA1",
+      group4_level = "A",
+      variable = "ARM",
+      variable_level = "A: Drug X",
+      variable_label = "A: Drug X",
+      stat_name = "n",
+      stat = 18
+    ),
+    tolerance = 10e-6
+  )
+})
+
+test_that("make_ard works if there are no stat_names", {
+  mean_sd_custom <- function(x) {
+    mean <- mean(x, na.rm = FALSE)
+    sd <- sd(x, na.rm = FALSE)
+
+    rcell(c(mean, sd),
+      label = "Mean (SD)", format = "xx.x (xx.x)"
+    )
+  }
+
+  lyt <- basic_table(show_colcounts = TRUE, colcount_format = "N=xx") %>%
+    split_cols_by("ARM", split_fun = keep_split_levels(c("A: Drug X", "B: Placebo"))) %>%
+    analyze(vars = "AGE", afun = mean_sd_custom)
+
+  tbl <- build_table(lyt, ex_adsl)
+
+  expect_equal(as_result_df(tbl, make_ard = TRUE)$stat_name, rep(NA_character_, 4))
 })

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Davide Garolini" />
 
-<meta name="date" content="2024-09-20" />
+<meta name="date" content="2025-01-09" />
 
 <title>Column Counts and Formats</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -62,7 +62,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -340,11 +340,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Column Counts and Formats</h1>
 <h4 class="author">Davide Garolini</h4>
-<h4 class="date">2024-09-20</h4>
+<h4 class="date">2025-01-09</h4>
 
 
 
-<p>col_counts.R</p>
 <div id="the-old-way" class="section level1">
 <h1>The Old Way</h1>
 <p>Many tables call for column counts to be displayed in the header
@@ -370,7 +369,6 @@ e.g.</p>
 <span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#        (N=79)   (N=51)   (N=77)   (N=55)   (N=66)    (N=60) </span></span>
 <span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————————</span></span>
 <span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12    37.44     35.20     35.38</span></span></code></pre></div>
-<p>col_counts.R</p>
 <p>The format of the counts could also be controlled by the
 <code>colcount_format</code> argument to <code>basic_table</code>.</p>
 <p>We had no way of displaying (or, in fact, even easily calculating)
@@ -387,10 +385,9 @@ the <code>ARM</code> facet counts.</p>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#        (N=17)   (N=18)   (N=19)   (N=17)   (N=18)    (N=19) </span></span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————————</span></span>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12    37.44     35.20     35.38</span></span></code></pre></div>
-<p>col_counts.R <strong>NB</strong> doing this has never updated
-percentages that appear within the table as they are calculated at
-table-creation time, so this can lead to misleading results when not
-used with care.</p>
+<p><strong>NB</strong> doing this has never updated percentages that
+appear within the table as they are calculated at table-creation time,
+so this can lead to misleading results when not used with care.</p>
 </div>
 <div id="hiding-counts" class="section level2">
 <h2>Hiding counts</h2>
@@ -404,7 +401,6 @@ particular counts by setting them to <code>NA</code>:</p>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#        (N=17)   (N=18)           (N=17)   (N=18)    (N=19) </span></span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co"># ———————————————————————————————————————————————————————————</span></span>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12   37.44     35.20     35.38</span></span></code></pre></div>
-<p>col_counts.R</p>
 <p>These mechanisms will all continue to work for the forseeable future,
 though new code is advised use the new API discussed below.</p>
 </div>
@@ -439,7 +435,6 @@ accepted by all <code>split_cols_by*</code> layout functions.</p>
 <span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#        (N=79)   (N=51)   (N=77)   (N=55)   (N=66)    (N=60) </span></span>
 <span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————————</span></span>
 <span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12    37.44     35.20     35.38</span></span></code></pre></div>
-<p>col_counts.R</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>lyt3 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>, <span class="at">show_colcounts =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>))) <span class="sc">%&gt;%</span></span>
@@ -452,7 +447,6 @@ accepted by all <code>split_cols_by*</code> layout functions.</p>
 <span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#          F       M       F       M        F         M   </span></span>
 <span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————</span></span>
 <span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co"># Mean   32.76   35.57   34.12   37.44    35.20     35.38</span></span></code></pre></div>
-<p>col_counts.R</p>
 <p>As before, these column counts are calculated at table creation time,
 using <code>alt_counts_df</code> if it is provided (or simply
 <code>df</code> otherwise).</p>
@@ -478,7 +472,6 @@ the column count for a facet in column space (note it needs not be a
 leaf facet). E.g.,</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># [1] 132</span></span></code></pre></div>
-<p>col_counts.R</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>)) <span class="ot">&lt;-</span> <span class="dv">75</span></span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>tbl3</span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#          A: Drug X      B: Placebo      C: Combination  </span></span>
@@ -486,7 +479,6 @@ leaf facet). E.g.,</p>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#          F       M       F       M        F         M   </span></span>
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co"># ————————————————————————————————————————————————————————</span></span>
 <span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co"># Mean   32.76   35.57   34.12   37.44    35.20     35.38</span></span></code></pre></div>
-<p>col_counts.R</p>
 <p>For convenience (primarily because it was needed internally), we also
 provide <code>rm_all_colcounts</code> which sets <em>all</em> column
 counts for a particular table to <code>NA</code> at all levels of
@@ -513,7 +505,6 @@ visibility of all direct children of that path</em>.</p>
 <span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#        (N=79)   (N=51)     F       M        F         M   </span></span>
 <span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co"># ——————————————————————————————————————————————————————————</span></span>
 <span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12   37.44    35.20     35.38</span></span></code></pre></div>
-<p>col_counts.R</p>
 <p><strong>NOTE</strong> as we can see here, the visibility of column
 counts can have an “unbalanced design”, provided the direct-siblings
 agreeing constraint is met. This leads to things not lining up directly
@@ -540,7 +531,6 @@ avoid calling them directly.</p>
 <span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co"># First disagreement occured at paths:</span></span>
 <span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co"># ARM[A: Drug X]-&gt;SEX[F]</span></span>
 <span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co"># ARM[A: Drug X]-&gt;SEX[M]</span></span></code></pre></div>
-<p>col_counts.R</p>
 <p>Note currently this restriction is currently only enforced for leaf
 columns due to technical implementation details but how a table renders
 should be considered undefined behavior when it contains a group of
@@ -573,7 +563,6 @@ missing values in the column counts you can use
 <span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#        (N=79)   (N=51)     F       M        F         M   </span></span>
 <span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co"># ——————————————————————————————————————————————————————————</span></span>
 <span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co"># Mean   32.76    35.57    34.12   37.44    35.20     35.38</span></span></code></pre></div>
-<p>col_counts.R</p>
 </div>
 </div>
 </div>

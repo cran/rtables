@@ -12,7 +12,7 @@
 
 <meta name="author" content="Emily de la Rua and Gabriel Becker" />
 
-<meta name="date" content="2024-09-20" />
+<meta name="date" content="2025-01-09" />
 
 <title>Example Complex Analysis Function: Modelling Cox Regression</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -62,7 +62,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Example Complex Analysis Function:
 Modelling Cox Regression</h1>
 <h4 class="author">Emily de la Rua and Gabriel Becker</h4>
-<h4 class="date">2024-09-20</h4>
+<h4 class="date">2025-01-09</h4>
 
 
 
@@ -362,7 +362,6 @@ example.</p>
 <p>The packages used in this vignette are:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
-<p>example_analysis_coxreg.R</p>
 </div>
 <div id="data-pre-processing" class="section level2">
 <h2>Data Pre-Processing</h2>
@@ -391,7 +390,6 @@ used as the reference level of our treatment variable, and the
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">RACE =</span> <span class="fu">droplevels</span>(RACE)) <span class="sc">%&gt;%</span></span>
 <span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">ARM =</span> <span class="fu">droplevels</span>(stats<span class="sc">::</span><span class="fu">relevel</span>(ARM, <span class="st">&quot;B: Placebo&quot;</span>))) <span class="sc">%&gt;%</span></span>
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">EVENT =</span> <span class="dv">1</span> <span class="sc">-</span> CNSR)</span></code></pre></div>
-<p>example_analysis_coxreg.R</p>
 </div>
 <div id="creating-helper-functions-cox-regression-model-calculations" class="section level2">
 <h2>Creating Helper Functions: Cox Regression Model Calculations</h2>
@@ -415,7 +413,6 @@ a tidied <code>tibble::tibble()</code> object.</p>
 <span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>  ret<span class="sc">$</span>n <span class="ot">&lt;-</span> x[[<span class="st">&quot;n&quot;</span>]]</span>
 <span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  ret</span>
 <span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>}</span></code></pre></div>
-<p>example_analysis_coxreg.R</p>
 </div>
 <div id="function-to-estimate-interaction-effects-h_coxreg_inter_effect" class="section level3">
 <h3>Function to Estimate Interaction Effects:
@@ -514,7 +511,6 @@ a separate row.</p>
 <span id="cb4-78"><a href="#cb4-78" tabindex="-1"></a>    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
 <span id="cb4-79"><a href="#cb4-79" tabindex="-1"></a>  )</span>
 <span id="cb4-80"><a href="#cb4-80" tabindex="-1"></a>}</span></code></pre></div>
-<p>example_analysis_coxreg.R</p>
 </div>
 <div id="function-to-extract-effect-information-h_coxreg_extract_interaction" class="section level3">
 <h3>Function to Extract Effect Information:
@@ -585,7 +581,6 @@ information to be processed and displayed within our output table.</p>
 <span id="cb5-52"><a href="#cb5-52" tabindex="-1"></a>    <span class="fu">rbind</span>(covar_test, y)</span>
 <span id="cb5-53"><a href="#cb5-53" tabindex="-1"></a>  }</span>
 <span id="cb5-54"><a href="#cb5-54" tabindex="-1"></a>}</span></code></pre></div>
-<p>example_analysis_coxreg.R</p>
 </div>
 </div>
 <div id="creating-a-helper-function-cached_model" class="section level2">
@@ -639,7 +634,6 @@ and stored in the caching environment object as
 <span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>  }</span>
 <span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a>  model</span>
 <span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a>}</span></code></pre></div>
-<p>example_analysis_coxreg.R</p>
 </div>
 <div id="creating-the-analysis-function-a_cox_summary" class="section level2">
 <h2>Creating the Analysis Function: <code>a_cox_summary</code></h2>
@@ -735,7 +729,6 @@ commented function code below, where the purpose of each line within
 <span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a>    <span class="at">.format_na_strs =</span> <span class="fu">setNames</span>(<span class="fu">rep</span>(<span class="st">&quot;&quot;</span>, <span class="fu">length</span>(nms)), nms)</span>
 <span id="cb7-47"><a href="#cb7-47" tabindex="-1"></a>  )</span>
 <span id="cb7-48"><a href="#cb7-48" tabindex="-1"></a>}</span></code></pre></div>
-<p>example_analysis_coxreg.R</p>
 </div>
 <div id="selecting-parameters" class="section level2">
 <h2>Selecting Parameters</h2>
@@ -756,7 +749,6 @@ interval, effect p-value, and interaction p-value.</p>
 <span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>)</span>
 <span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>my_env <span class="ot">&lt;-</span> <span class="fu">new.env</span>()</span>
 <span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>ny_cache_env <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="fu">length</span>(my_stats), <span class="fu">list</span>(my_env)) <span class="do">## Caching environment</span></span></code></pre></div>
-<p>example_analysis_coxreg.R</p>
 </div>
 <div id="constructing-the-table" class="section level2">
 <h2>Constructing the Table</h2>
@@ -841,7 +833,6 @@ effect) for that same covariate.</p>
 <span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a>  <span class="do">## Create data rows for covariate interaction effects</span></span>
 <span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a>  <span class="fu">analyze_colvars</span>(<span class="at">afun =</span> a_cox_summary)</span></code></pre></div>
-<p>example_analysis_coxreg.R</p>
 <p>Using our pre-processed <code>anl</code> dataset, we can now build
 and output our final Cox regression summary table.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>cox_tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, anl)</span>
@@ -857,7 +848,6 @@ and output our final Cox regression summary table.</p>
 <span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt;     ASIAN                                     1.03       (0.68, 1.57)                           </span></span>
 <span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt;     BLACK OR AFRICAN AMERICAN                 0.78       (0.41, 1.49)                           </span></span>
 <span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt;     WHITE                                     1.06       (0.55, 2.04)</span></span></code></pre></div>
-<p>example_analysis_coxreg.R</p>
 </div>
 
 
