@@ -112,6 +112,27 @@ test_that("cell_values function works as desired", {
   )
 })
 
+test_that("Subsetting by integer(0) keeps decorations", {
+  # Regression #870
+  test_tbl <- basic_table(title = "t", subtitles = "s", main_footer = "mf", prov_footer = "pf") %>%
+    analyze("BMRKR1") %>%
+    build_table(DM)
+
+  expect_equal(main_title(test_tbl), main_title(test_tbl[integer(), , keep_titles = TRUE]))
+  expect_equal(subtitles(test_tbl), subtitles(test_tbl[integer(), , keep_titles = TRUE]))
+  expect_equal(all_footers(test_tbl), all_footers(test_tbl[integer(), , keep_footers = TRUE]))
+
+  expect_no_error(test_tbl[, NA])
+  expect_no_error(test_tbl[NA, NA])
+  expect_no_error(test_tbl[, c(0, 1)])
+  expect_no_error(test_tbl[, c(NA, 1)])
+
+  expect_error(
+    test_tbl[, integer()],
+    "No column selected."
+  )
+})
+
 
 test_colpaths <- function(tt) {
   cdf <- make_col_df(tt, visible_only = TRUE)
@@ -376,8 +397,30 @@ test_that("setters work ok", {
     cell_values(tbl4)[["U.AGE.mean"]],
     list(5, 7, 8)
   )
-})
 
+  tbl5 <- tbl
+  tbl5[4, 1] <- rcell(999, format = "xx.xx")
+  tbl5[5, 2] <- list(c(3, 0.25))
+  tbl5[5, 3] <- rcell(NA, format_na_str = "<NA>")
+  tbl5[6, ] <- list(-111, -222, -333)
+  matform5 <- matrix_form(tbl5)
+  expect_identical(
+    c("mean", "999.00", "32.1", "34.2794117647059"),
+    mf_strings(matform5)[5, ]
+  )
+  expect_identical(
+    c("U", "0 (0.0%)", "3 (25.0%)", "<NA>"),
+    mf_strings(matform5)[6, ]
+  )
+  expect_identical(
+    c("mean", "-111", "-222", "-333"),
+    mf_strings(matform5)[7, ]
+  )
+  expect_identical(
+    c("", "xx.xx", "xx", "xx"),
+    mf_formats(matform5)[5, ]
+  )
+})
 
 test_that("cell_values and value_at work on row objects", {
   tbl <- basic_table() %>%
@@ -565,4 +608,60 @@ test_that("tt_at_path and cell_values work with values even if they differ in na
   rdf <- make_row_df(tbl)
   names(rdf$path[[2]]) <- c("a", "b")
   expect_silent(tt_at_path(tbl, rdf$path[[2]]))
+})
+
+test_that("tt_at_path works with identical split names", {
+  # Regression test #864
+  adsl <- ex_adsl
+  adsl$flag <- sample(c("Y", "N"), nrow(adsl), replace = TRUE)
+
+  afun <- function(x, ...) rcell(label = "Flagged Pop. Count", sum(x == "Y"))
+
+  lyt <- basic_table() %>%
+    analyze("flag", afun = afun) %>%
+    split_rows_by("flag", split_fun = keep_split_levels("Y"), child_labels = "hidden") %>%
+    split_rows_by("SEX") %>%
+    analyze("BMRKR1")
+
+  tbl <- build_table(lyt, adsl)
+
+  expect_equal(
+    tt_at_path(tbl, c("root", "flag", "Y")),
+    tree_children(tree_children(tbl)[[2]])[[1]]
+  )
+
+  # Even with deeper branching
+  lyt <- basic_table() %>%
+    split_rows_by("flag", split_fun = keep_split_levels("Y"), child_labels = "hidden") %>%
+    split_rows_by("SEX", split_fun = keep_split_levels("U")) %>%
+    analyze("BMRKR1") %>%
+    split_rows_by("flag", split_fun = keep_split_levels("Y"), child_labels = "hidden") %>%
+    split_rows_by("SEX", split_fun = keep_split_levels("U")) %>%
+    analyze("AGE")
+
+  tbl <- build_table(lyt, adsl)
+
+  expect_equal(
+    names(tt_at_path(tbl, c("root", "flag", "Y", "SEX", "U"))),
+    rep("flag", 2)
+  )
+})
+
+test_that("tt_at_path gives an informative error when labels are used instead of row names", {
+  # Issue #1004
+  adsl <- ex_adsl
+
+  out <- basic_table() %>%
+    split_rows_by("ARM") %>%
+    analyze("BMRKR1", afun = mean, show_labels = "visible", var_labels = "An error may occur") %>%
+    build_table(adsl)
+
+  real_path <- row_paths(out)[[3]]
+  expect_silent(nothing <- tt_at_path(out, real_path))
+
+  real_path[3] <- "An error may occur" # using the labels
+  expect_error(
+    tt_at_path(out, real_path),
+    "Path appears invalid for this tree at step \\'An error may occur\\'. Please use only row names and NOT"
+  )
 })

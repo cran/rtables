@@ -12,7 +12,7 @@
 
 <meta name="author" content="Davide Garolini" />
 
-<meta name="date" content="2025-01-09" />
+<meta name="date" content="2025-04-10" />
 
 <title>Generating QC-Ready Result Data Frames (ARDs) from Tables</title>
 
@@ -62,7 +62,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Generating QC-Ready Result Data Frames
 (ARDs) from Tables</h1>
 <h4 class="author">Davide Garolini</h4>
-<h4 class="date">2025-01-09</h4>
+<h4 class="date">2025-04-10</h4>
 
 
 
@@ -392,105 +392,93 @@ setting different parameters in the <code>as_results_df()</code>
 function, and these results can be transformed back into a table using
 the <code>df_to_tt()</code> function.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">as_result_df</span>(tbl)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#                    group1 group1_level avar_name         row_name</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># 1 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX       AGE             Mean</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># 2 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX       SEX                F</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co"># 3 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX       SEX                M</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># 4 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX       SEX                U</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># 5 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX       SEX UNDIFFERENTIATED</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#         label_name row_num is_group_summary node_class A: Drug X B: Placebo</span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co"># 1             Mean       2            FALSE    DataRow  33.76866   35.43284</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co"># 2                F       4            FALSE    DataRow        79         77</span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co"># 3                M       5            FALSE    DataRow        51         55</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co"># 4                U       6            FALSE    DataRow         3          2</span></span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co"># 5 UNDIFFERENTIATED       7            FALSE    DataRow         1          0</span></span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#   C: Combination</span></span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co"># 1       35.43182</span></span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co"># 2             66</span></span>
-<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co"># 3             60</span></span>
-<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co"># 4              4</span></span>
-<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co"># 5              2</span></span>
-<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="fu">as_result_df</span>(tbl, <span class="at">data_format =</span> <span class="st">&quot;strings&quot;</span>)</span>
-<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#                    group1 group1_level avar_name         row_name</span></span>
-<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co"># 1 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX       AGE             Mean</span></span>
-<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co"># 2 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX       SEX                F</span></span>
-<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co"># 3 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX       SEX                M</span></span>
-<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co"># 4 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX       SEX                U</span></span>
-<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co"># 5 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX       SEX UNDIFFERENTIATED</span></span>
-<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#         label_name row_num is_group_summary node_class A: Drug X B: Placebo</span></span>
-<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co"># 1             Mean       2            FALSE    DataRow     33.77      35.43</span></span>
-<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co"># 2                F       4            FALSE    DataRow        79         77</span></span>
-<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co"># 3                M       5            FALSE    DataRow        51         55</span></span>
-<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co"># 4                U       6            FALSE    DataRow         3          2</span></span>
-<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co"># 5 UNDIFFERENTIATED       7            FALSE    DataRow         1          0</span></span>
-<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#   C: Combination</span></span>
-<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co"># 1          35.43</span></span>
-<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co"># 2             66</span></span>
-<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co"># 3             60</span></span>
-<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co"># 4              4</span></span>
-<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co"># 5              2</span></span>
-<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="fu">as_result_df</span>(tbl, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#         label_name A: Drug X B: Placebo C: Combination</span></span>
-<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co"># 1             Mean  33.76866   35.43284       35.43182</span></span>
-<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co"># 2                F        79         77             66</span></span>
-<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co"># 3                M        51         55             60</span></span>
-<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co"># 4                U         3          2              4</span></span>
-<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co"># 5 UNDIFFERENTIATED         1          0              2</span></span>
-<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="fu">as_result_df</span>(tbl, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">keep_label_rows =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co">#         label_name A: Drug X B: Placebo C: Combination</span></span>
-<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a><span class="co"># 1              AGE        NA         NA             NA</span></span>
-<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="co"># 2             Mean  33.76866   35.43284       35.43182</span></span>
-<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a><span class="co"># 3              SEX        NA         NA             NA</span></span>
-<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a><span class="co"># 4                F        79         77             66</span></span>
-<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a><span class="co"># 5                M        51         55             60</span></span>
-<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a><span class="co"># 6                U         3          2              4</span></span>
-<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a><span class="co"># 7 UNDIFFERENTIATED         1          0              2</span></span>
-<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="fu">as_result_df</span>(tbl, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">keep_label_rows =</span> <span class="cn">TRUE</span>, <span class="at">expand_colnames =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a><span class="co">#                label_name A: Drug X B: Placebo C: Combination</span></span>
-<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a><span class="co"># 1 &lt;only_for_column_names&gt; A: Drug X B: Placebo C: Combination</span></span>
-<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="co"># 2                     AGE        NA         NA             NA</span></span>
-<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a><span class="co"># 3                    Mean  33.76866   35.43284       35.43182</span></span>
-<span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a><span class="co"># 4                     SEX        NA         NA             NA</span></span>
-<span id="cb2-62"><a href="#cb2-62" tabindex="-1"></a><span class="co"># 5                       F        79         77             66</span></span>
-<span id="cb2-63"><a href="#cb2-63" tabindex="-1"></a><span class="co"># 6                       M        51         55             60</span></span>
-<span id="cb2-64"><a href="#cb2-64" tabindex="-1"></a><span class="co"># 7                       U         3          2              4</span></span>
-<span id="cb2-65"><a href="#cb2-65" tabindex="-1"></a><span class="co"># 8        UNDIFFERENTIATED         1          0              2</span></span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#   avar_name         row_name       label_name row_num is_group_summary</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># 1       AGE             Mean             Mean       2            FALSE</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># 2       SEX                F                F       4            FALSE</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co"># 3       SEX                M                M       5            FALSE</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># 4       SEX                U                U       6            FALSE</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># 5       SEX UNDIFFERENTIATED UNDIFFERENTIATED       7            FALSE</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#   node_class A: Drug X B: Placebo C: Combination</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co"># 1    DataRow  33.76866   35.43284       35.43182</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co"># 2    DataRow        79         77             66</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co"># 3    DataRow        51         55             60</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co"># 4    DataRow         3          2              4</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co"># 5    DataRow         1          0              2</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="fu">as_result_df</span>(tbl, <span class="at">data_format =</span> <span class="st">&quot;strings&quot;</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#   avar_name         row_name       label_name row_num is_group_summary</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co"># 1       AGE             Mean             Mean       2            FALSE</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co"># 2       SEX                F                F       4            FALSE</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co"># 3       SEX                M                M       5            FALSE</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co"># 4       SEX                U                U       6            FALSE</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co"># 5       SEX UNDIFFERENTIATED UNDIFFERENTIATED       7            FALSE</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#   node_class A: Drug X B: Placebo C: Combination</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co"># 1    DataRow     33.77      35.43          35.43</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co"># 2    DataRow        79         77             66</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co"># 3    DataRow        51         55             60</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co"># 4    DataRow         3          2              4</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co"># 5    DataRow         1          0              2</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="fu">as_result_df</span>(tbl, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#         label_name A: Drug X B: Placebo C: Combination</span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co"># 1             Mean  33.76866   35.43284       35.43182</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co"># 2                F        79         77             66</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co"># 3                M        51         55             60</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co"># 4                U         3          2              4</span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co"># 5 UNDIFFERENTIATED         1          0              2</span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="fu">as_result_df</span>(tbl, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">keep_label_rows =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#         label_name A: Drug X B: Placebo C: Combination</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co"># 1              AGE        NA         NA             NA</span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co"># 2             Mean  33.76866   35.43284       35.43182</span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co"># 3              SEX        NA         NA             NA</span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co"># 4                F        79         77             66</span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co"># 5                M        51         55             60</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co"># 6                U         3          2              4</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co"># 7 UNDIFFERENTIATED         1          0              2</span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="fu">as_result_df</span>(tbl, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">keep_label_rows =</span> <span class="cn">TRUE</span>, <span class="at">expand_colnames =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co">#                label_name A: Drug X B: Placebo C: Combination</span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co"># 1 &lt;only_for_column_names&gt; A: Drug X B: Placebo C: Combination</span></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="co"># 2                     AGE        NA         NA             NA</span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co"># 3                    Mean  33.76866   35.43284       35.43182</span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a><span class="co"># 4                     SEX        NA         NA             NA</span></span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="co"># 5                       F        79         77             66</span></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a><span class="co"># 6                       M        51         55             60</span></span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a><span class="co"># 7                       U         3          2              4</span></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a><span class="co"># 8        UNDIFFERENTIATED         1          0              2</span></span></code></pre></div>
 <p>Now let’s generate our final ARD output, which is ready to be used
 for quality control purposes.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">as_result_df</span>(tbl, <span class="at">make_ard =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#                     group1 group1_level group2   group2_level variable</span></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co"># 1  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM      A: Drug X      AGE</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># 2  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM      A: Drug X      SEX</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co"># 3  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM      A: Drug X      SEX</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co"># 4  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM      A: Drug X      SEX</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># 5  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM      A: Drug X      SEX</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co"># 6  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM     B: Placebo      AGE</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co"># 7  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM     B: Placebo      SEX</span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co"># 8  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM     B: Placebo      SEX</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co"># 9  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM     B: Placebo      SEX</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co"># 10 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM     B: Placebo      SEX</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co"># 11 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM C: Combination      AGE</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co"># 12 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM C: Combination      SEX</span></span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co"># 13 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM C: Combination      SEX</span></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co"># 14 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM C: Combination      SEX</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co"># 15 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM C: Combination      SEX</span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#      variable_level   variable_label stat_name     stat</span></span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co"># 1              Mean             Mean      mean 33.76866</span></span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co"># 2                 F                F         n 79.00000</span></span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co"># 3                 M                M         n 51.00000</span></span>
-<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co"># 4                 U                U         n  3.00000</span></span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co"># 5  UNDIFFERENTIATED UNDIFFERENTIATED         n  1.00000</span></span>
-<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co"># 6              Mean             Mean      mean 35.43284</span></span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co"># 7                 F                F         n 77.00000</span></span>
-<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co"># 8                 M                M         n 55.00000</span></span>
-<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co"># 9                 U                U         n  2.00000</span></span>
-<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co"># 10 UNDIFFERENTIATED UNDIFFERENTIATED         n  0.00000</span></span>
-<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co"># 11             Mean             Mean      mean 35.43182</span></span>
-<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co"># 12                F                F         n 66.00000</span></span>
-<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co"># 13                M                M         n 60.00000</span></span>
-<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co"># 14                U                U         n  4.00000</span></span>
-<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co"># 15 UNDIFFERENTIATED UNDIFFERENTIATED         n  2.00000</span></span></code></pre></div>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#    group1   group1_level variable   variable_level   variable_label stat_name</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co"># 1     ARM      A: Drug X      AGE             Mean             Mean      mean</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># 2     ARM      A: Drug X      SEX                F                F         n</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co"># 3     ARM      A: Drug X      SEX                M                M         n</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co"># 4     ARM      A: Drug X      SEX                U                U         n</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># 5     ARM      A: Drug X      SEX UNDIFFERENTIATED UNDIFFERENTIATED         n</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co"># 6     ARM     B: Placebo      AGE             Mean             Mean      mean</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co"># 7     ARM     B: Placebo      SEX                F                F         n</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co"># 8     ARM     B: Placebo      SEX                M                M         n</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co"># 9     ARM     B: Placebo      SEX                U                U         n</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co"># 10    ARM     B: Placebo      SEX UNDIFFERENTIATED UNDIFFERENTIATED         n</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co"># 11    ARM C: Combination      AGE             Mean             Mean      mean</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co"># 12    ARM C: Combination      SEX                F                F         n</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co"># 13    ARM C: Combination      SEX                M                M         n</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co"># 14    ARM C: Combination      SEX                U                U         n</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co"># 15    ARM C: Combination      SEX UNDIFFERENTIATED UNDIFFERENTIATED         n</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#        stat stat_string</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co"># 1  33.76866       33.77</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co"># 2  79.00000          79</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co"># 3  51.00000          51</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co"># 4   3.00000           3</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co"># 5   1.00000           1</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co"># 6  35.43284       35.43</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co"># 7  77.00000          77</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co"># 8  55.00000          55</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co"># 9   2.00000           2</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co"># 10  0.00000           0</span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co"># 11 35.43182       35.43</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co"># 12 66.00000          66</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co"># 13 60.00000          60</span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co"># 14  4.00000           4</span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co"># 15  2.00000           2</span></span></code></pre></div>
 </div>
 <div id="customizing-the-output" class="section level2">
 <h2>Customizing the Output</h2>
@@ -575,48 +563,48 @@ names:</p>
 <span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, ex_adsl)</span>
 <span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a></span>
 <span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="fu">as_result_df</span>(tbl, <span class="at">make_ard =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#                     group1 group1_level group2 group2_level variable</span></span>
-<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co"># 1  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM    A: Drug X      AGE</span></span>
-<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co"># 2  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM    A: Drug X      AGE</span></span>
-<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co"># 3  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM    A: Drug X      SEX</span></span>
-<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co"># 4  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM    A: Drug X      SEX</span></span>
-<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co"># 5  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM    A: Drug X      SEX</span></span>
-<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co"># 6  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM    A: Drug X      SEX</span></span>
-<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co"># 7  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM    A: Drug X      SEX</span></span>
-<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co"># 8  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM    A: Drug X      SEX</span></span>
-<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co"># 9  &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM    A: Drug X      SEX</span></span>
-<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co"># 10 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM    A: Drug X      SEX</span></span>
-<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="co"># 11 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM   B: Placebo      AGE</span></span>
-<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="co"># 12 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM   B: Placebo      AGE</span></span>
-<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="co"># 13 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM   B: Placebo      SEX</span></span>
-<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a><span class="co"># 14 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM   B: Placebo      SEX</span></span>
-<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a><span class="co"># 15 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM   B: Placebo      SEX</span></span>
-<span id="cb5-46"><a href="#cb5-46" tabindex="-1"></a><span class="co"># 16 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM   B: Placebo      SEX</span></span>
-<span id="cb5-47"><a href="#cb5-47" tabindex="-1"></a><span class="co"># 17 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM   B: Placebo      SEX</span></span>
-<span id="cb5-48"><a href="#cb5-48" tabindex="-1"></a><span class="co"># 18 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM   B: Placebo      SEX</span></span>
-<span id="cb5-49"><a href="#cb5-49" tabindex="-1"></a><span class="co"># 19 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM   B: Placebo      SEX</span></span>
-<span id="cb5-50"><a href="#cb5-50" tabindex="-1"></a><span class="co"># 20 &lt;analysis_spl_tbl_name&gt;   ma_AGE_SEX    ARM   B: Placebo      SEX</span></span>
-<span id="cb5-51"><a href="#cb5-51" tabindex="-1"></a><span class="co">#      variable_level   variable_label  stat_name         stat</span></span>
-<span id="cb5-52"><a href="#cb5-52" tabindex="-1"></a><span class="co"># 1         Mean (SD)        Mean (SD)       &lt;NA&gt; 33.768656716</span></span>
-<span id="cb5-53"><a href="#cb5-53" tabindex="-1"></a><span class="co"># 2         Mean (SD)        Mean (SD)       &lt;NA&gt;  6.553325712</span></span>
-<span id="cb5-54"><a href="#cb5-54" tabindex="-1"></a><span class="co"># 3                 F                F      Count 79.000000000</span></span>
-<span id="cb5-55"><a href="#cb5-55" tabindex="-1"></a><span class="co"># 4                 F                F Percentage  0.589552239</span></span>
-<span id="cb5-56"><a href="#cb5-56" tabindex="-1"></a><span class="co"># 5                 M                M      Count 51.000000000</span></span>
-<span id="cb5-57"><a href="#cb5-57" tabindex="-1"></a><span class="co"># 6                 M                M Percentage  0.380597015</span></span>
-<span id="cb5-58"><a href="#cb5-58" tabindex="-1"></a><span class="co"># 7                 U                U      Count  3.000000000</span></span>
-<span id="cb5-59"><a href="#cb5-59" tabindex="-1"></a><span class="co"># 8                 U                U Percentage  0.022388060</span></span>
-<span id="cb5-60"><a href="#cb5-60" tabindex="-1"></a><span class="co"># 9  UNDIFFERENTIATED UNDIFFERENTIATED      Count  1.000000000</span></span>
-<span id="cb5-61"><a href="#cb5-61" tabindex="-1"></a><span class="co"># 10 UNDIFFERENTIATED UNDIFFERENTIATED Percentage  0.007462687</span></span>
-<span id="cb5-62"><a href="#cb5-62" tabindex="-1"></a><span class="co"># 11        Mean (SD)        Mean (SD)       &lt;NA&gt; 35.432835821</span></span>
-<span id="cb5-63"><a href="#cb5-63" tabindex="-1"></a><span class="co"># 12        Mean (SD)        Mean (SD)       &lt;NA&gt;  7.895413879</span></span>
-<span id="cb5-64"><a href="#cb5-64" tabindex="-1"></a><span class="co"># 13                F                F      Count 77.000000000</span></span>
-<span id="cb5-65"><a href="#cb5-65" tabindex="-1"></a><span class="co"># 14                F                F Percentage  0.574626866</span></span>
-<span id="cb5-66"><a href="#cb5-66" tabindex="-1"></a><span class="co"># 15                M                M      Count 55.000000000</span></span>
-<span id="cb5-67"><a href="#cb5-67" tabindex="-1"></a><span class="co"># 16                M                M Percentage  0.410447761</span></span>
-<span id="cb5-68"><a href="#cb5-68" tabindex="-1"></a><span class="co"># 17                U                U      Count  2.000000000</span></span>
-<span id="cb5-69"><a href="#cb5-69" tabindex="-1"></a><span class="co"># 18                U                U Percentage  0.014925373</span></span>
-<span id="cb5-70"><a href="#cb5-70" tabindex="-1"></a><span class="co"># 19 UNDIFFERENTIATED UNDIFFERENTIATED      Count  0.000000000</span></span>
-<span id="cb5-71"><a href="#cb5-71" tabindex="-1"></a><span class="co"># 20 UNDIFFERENTIATED UNDIFFERENTIATED Percentage  0.000000000</span></span></code></pre></div>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#    group1 group1_level variable   variable_level   variable_label  stat_name</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co"># 1     ARM    A: Drug X      AGE        Mean (SD)        Mean (SD)       &lt;NA&gt;</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co"># 2     ARM    A: Drug X      AGE        Mean (SD)        Mean (SD)       &lt;NA&gt;</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co"># 3     ARM    A: Drug X      SEX                F                F      Count</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co"># 4     ARM    A: Drug X      SEX                F                F Percentage</span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co"># 5     ARM    A: Drug X      SEX                M                M      Count</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co"># 6     ARM    A: Drug X      SEX                M                M Percentage</span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co"># 7     ARM    A: Drug X      SEX                U                U      Count</span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co"># 8     ARM    A: Drug X      SEX                U                U Percentage</span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co"># 9     ARM    A: Drug X      SEX UNDIFFERENTIATED UNDIFFERENTIATED      Count</span></span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co"># 10    ARM    A: Drug X      SEX UNDIFFERENTIATED UNDIFFERENTIATED Percentage</span></span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="co"># 11    ARM   B: Placebo      AGE        Mean (SD)        Mean (SD)       &lt;NA&gt;</span></span>
+<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="co"># 12    ARM   B: Placebo      AGE        Mean (SD)        Mean (SD)       &lt;NA&gt;</span></span>
+<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="co"># 13    ARM   B: Placebo      SEX                F                F      Count</span></span>
+<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a><span class="co"># 14    ARM   B: Placebo      SEX                F                F Percentage</span></span>
+<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a><span class="co"># 15    ARM   B: Placebo      SEX                M                M      Count</span></span>
+<span id="cb5-46"><a href="#cb5-46" tabindex="-1"></a><span class="co"># 16    ARM   B: Placebo      SEX                M                M Percentage</span></span>
+<span id="cb5-47"><a href="#cb5-47" tabindex="-1"></a><span class="co"># 17    ARM   B: Placebo      SEX                U                U      Count</span></span>
+<span id="cb5-48"><a href="#cb5-48" tabindex="-1"></a><span class="co"># 18    ARM   B: Placebo      SEX                U                U Percentage</span></span>
+<span id="cb5-49"><a href="#cb5-49" tabindex="-1"></a><span class="co"># 19    ARM   B: Placebo      SEX UNDIFFERENTIATED UNDIFFERENTIATED      Count</span></span>
+<span id="cb5-50"><a href="#cb5-50" tabindex="-1"></a><span class="co"># 20    ARM   B: Placebo      SEX UNDIFFERENTIATED UNDIFFERENTIATED Percentage</span></span>
+<span id="cb5-51"><a href="#cb5-51" tabindex="-1"></a><span class="co">#            stat stat_string</span></span>
+<span id="cb5-52"><a href="#cb5-52" tabindex="-1"></a><span class="co"># 1  33.768656716        33.8</span></span>
+<span id="cb5-53"><a href="#cb5-53" tabindex="-1"></a><span class="co"># 2   6.553325712         6.6</span></span>
+<span id="cb5-54"><a href="#cb5-54" tabindex="-1"></a><span class="co"># 3  79.000000000          79</span></span>
+<span id="cb5-55"><a href="#cb5-55" tabindex="-1"></a><span class="co"># 4   0.589552239          59</span></span>
+<span id="cb5-56"><a href="#cb5-56" tabindex="-1"></a><span class="co"># 5  51.000000000          51</span></span>
+<span id="cb5-57"><a href="#cb5-57" tabindex="-1"></a><span class="co"># 6   0.380597015          38</span></span>
+<span id="cb5-58"><a href="#cb5-58" tabindex="-1"></a><span class="co"># 7   3.000000000           3</span></span>
+<span id="cb5-59"><a href="#cb5-59" tabindex="-1"></a><span class="co"># 8   0.022388060           2</span></span>
+<span id="cb5-60"><a href="#cb5-60" tabindex="-1"></a><span class="co"># 9   1.000000000           1</span></span>
+<span id="cb5-61"><a href="#cb5-61" tabindex="-1"></a><span class="co"># 10  0.007462687           1</span></span>
+<span id="cb5-62"><a href="#cb5-62" tabindex="-1"></a><span class="co"># 11 35.432835821        35.4</span></span>
+<span id="cb5-63"><a href="#cb5-63" tabindex="-1"></a><span class="co"># 12  7.895413879         7.9</span></span>
+<span id="cb5-64"><a href="#cb5-64" tabindex="-1"></a><span class="co"># 13 77.000000000          77</span></span>
+<span id="cb5-65"><a href="#cb5-65" tabindex="-1"></a><span class="co"># 14  0.574626866          57</span></span>
+<span id="cb5-66"><a href="#cb5-66" tabindex="-1"></a><span class="co"># 15 55.000000000          55</span></span>
+<span id="cb5-67"><a href="#cb5-67" tabindex="-1"></a><span class="co"># 16  0.410447761          41</span></span>
+<span id="cb5-68"><a href="#cb5-68" tabindex="-1"></a><span class="co"># 17  2.000000000           2</span></span>
+<span id="cb5-69"><a href="#cb5-69" tabindex="-1"></a><span class="co"># 18  0.014925373           1</span></span>
+<span id="cb5-70"><a href="#cb5-70" tabindex="-1"></a><span class="co"># 19  0.000000000           0</span></span>
+<span id="cb5-71"><a href="#cb5-71" tabindex="-1"></a><span class="co"># 20  0.000000000           0</span></span></code></pre></div>
 </div>
 </div>
 <div id="more-complex-outputs" class="section level1">
@@ -759,133 +747,133 @@ names:</p>
 <span id="cb6-135"><a href="#cb6-135" tabindex="-1"></a><span class="co"># 124 STRATA2           S2    ARM C: Combination STRATA1            C      SEX</span></span>
 <span id="cb6-136"><a href="#cb6-136" tabindex="-1"></a><span class="co"># 125 STRATA2           S2    ARM C: Combination STRATA1            C      SEX</span></span>
 <span id="cb6-137"><a href="#cb6-137" tabindex="-1"></a><span class="co"># 126 STRATA2           S2    ARM C: Combination STRATA1            C      SEX</span></span>
-<span id="cb6-138"><a href="#cb6-138" tabindex="-1"></a><span class="co">#       variable_level   variable_label stat_name       stat</span></span>
-<span id="cb6-139"><a href="#cb6-139" tabindex="-1"></a><span class="co"># 1                 S1               S1         n 18.0000000</span></span>
-<span id="cb6-140"><a href="#cb6-140" tabindex="-1"></a><span class="co"># 2                 S1               S1         p  0.4736842</span></span>
-<span id="cb6-141"><a href="#cb6-141" tabindex="-1"></a><span class="co"># 3               Mean             Mean      mean 31.6111111</span></span>
-<span id="cb6-142"><a href="#cb6-142" tabindex="-1"></a><span class="co"># 4                  F                F         n 12.0000000</span></span>
-<span id="cb6-143"><a href="#cb6-143" tabindex="-1"></a><span class="co"># 5                  M                M         n  5.0000000</span></span>
-<span id="cb6-144"><a href="#cb6-144" tabindex="-1"></a><span class="co"># 6                  U                U         n  1.0000000</span></span>
-<span id="cb6-145"><a href="#cb6-145" tabindex="-1"></a><span class="co"># 7   UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-146"><a href="#cb6-146" tabindex="-1"></a><span class="co"># 8                 S2               S2         n 20.0000000</span></span>
-<span id="cb6-147"><a href="#cb6-147" tabindex="-1"></a><span class="co"># 9                 S2               S2         p  0.5263158</span></span>
-<span id="cb6-148"><a href="#cb6-148" tabindex="-1"></a><span class="co"># 10              Mean             Mean      mean 34.4000000</span></span>
-<span id="cb6-149"><a href="#cb6-149" tabindex="-1"></a><span class="co"># 11                 F                F         n  9.0000000</span></span>
-<span id="cb6-150"><a href="#cb6-150" tabindex="-1"></a><span class="co"># 12                 M                M         n 11.0000000</span></span>
-<span id="cb6-151"><a href="#cb6-151" tabindex="-1"></a><span class="co"># 13                 U                U         n  0.0000000</span></span>
-<span id="cb6-152"><a href="#cb6-152" tabindex="-1"></a><span class="co"># 14  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-153"><a href="#cb6-153" tabindex="-1"></a><span class="co"># 15                S1               S1         n 28.0000000</span></span>
-<span id="cb6-154"><a href="#cb6-154" tabindex="-1"></a><span class="co"># 16                S1               S1         p  0.5957447</span></span>
-<span id="cb6-155"><a href="#cb6-155" tabindex="-1"></a><span class="co"># 17              Mean             Mean      mean 34.5714286</span></span>
-<span id="cb6-156"><a href="#cb6-156" tabindex="-1"></a><span class="co"># 18                 F                F         n 14.0000000</span></span>
-<span id="cb6-157"><a href="#cb6-157" tabindex="-1"></a><span class="co"># 19                 M                M         n 13.0000000</span></span>
-<span id="cb6-158"><a href="#cb6-158" tabindex="-1"></a><span class="co"># 20                 U                U         n  1.0000000</span></span>
-<span id="cb6-159"><a href="#cb6-159" tabindex="-1"></a><span class="co"># 21  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-160"><a href="#cb6-160" tabindex="-1"></a><span class="co"># 22                S2               S2         n 19.0000000</span></span>
-<span id="cb6-161"><a href="#cb6-161" tabindex="-1"></a><span class="co"># 23                S2               S2         p  0.4042553</span></span>
-<span id="cb6-162"><a href="#cb6-162" tabindex="-1"></a><span class="co"># 24              Mean             Mean      mean 32.7894737</span></span>
-<span id="cb6-163"><a href="#cb6-163" tabindex="-1"></a><span class="co"># 25                 F                F         n 11.0000000</span></span>
-<span id="cb6-164"><a href="#cb6-164" tabindex="-1"></a><span class="co"># 26                 M                M         n  8.0000000</span></span>
-<span id="cb6-165"><a href="#cb6-165" tabindex="-1"></a><span class="co"># 27                 U                U         n  0.0000000</span></span>
-<span id="cb6-166"><a href="#cb6-166" tabindex="-1"></a><span class="co"># 28  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-167"><a href="#cb6-167" tabindex="-1"></a><span class="co"># 29                S1               S1         n 27.0000000</span></span>
-<span id="cb6-168"><a href="#cb6-168" tabindex="-1"></a><span class="co"># 30                S1               S1         p  0.5510204</span></span>
-<span id="cb6-169"><a href="#cb6-169" tabindex="-1"></a><span class="co"># 31              Mean             Mean      mean 35.2592593</span></span>
-<span id="cb6-170"><a href="#cb6-170" tabindex="-1"></a><span class="co"># 32                 F                F         n 17.0000000</span></span>
-<span id="cb6-171"><a href="#cb6-171" tabindex="-1"></a><span class="co"># 33                 M                M         n  8.0000000</span></span>
-<span id="cb6-172"><a href="#cb6-172" tabindex="-1"></a><span class="co"># 34                 U                U         n  1.0000000</span></span>
-<span id="cb6-173"><a href="#cb6-173" tabindex="-1"></a><span class="co"># 35  UNDIFFERENTIATED UNDIFFERENTIATED         n  1.0000000</span></span>
-<span id="cb6-174"><a href="#cb6-174" tabindex="-1"></a><span class="co"># 36                S2               S2         n 22.0000000</span></span>
-<span id="cb6-175"><a href="#cb6-175" tabindex="-1"></a><span class="co"># 37                S2               S2         p  0.4489796</span></span>
-<span id="cb6-176"><a href="#cb6-176" tabindex="-1"></a><span class="co"># 38              Mean             Mean      mean 32.9545455</span></span>
-<span id="cb6-177"><a href="#cb6-177" tabindex="-1"></a><span class="co"># 39                 F                F         n 16.0000000</span></span>
-<span id="cb6-178"><a href="#cb6-178" tabindex="-1"></a><span class="co"># 40                 M                M         n  6.0000000</span></span>
-<span id="cb6-179"><a href="#cb6-179" tabindex="-1"></a><span class="co"># 41                 U                U         n  0.0000000</span></span>
-<span id="cb6-180"><a href="#cb6-180" tabindex="-1"></a><span class="co"># 42  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-181"><a href="#cb6-181" tabindex="-1"></a><span class="co"># 43                S1               S1         n 22.0000000</span></span>
-<span id="cb6-182"><a href="#cb6-182" tabindex="-1"></a><span class="co"># 44                S1               S1         p  0.5000000</span></span>
-<span id="cb6-183"><a href="#cb6-183" tabindex="-1"></a><span class="co"># 45              Mean             Mean      mean 36.6818182</span></span>
-<span id="cb6-184"><a href="#cb6-184" tabindex="-1"></a><span class="co"># 46                 F                F         n 11.0000000</span></span>
-<span id="cb6-185"><a href="#cb6-185" tabindex="-1"></a><span class="co"># 47                 M                M         n 10.0000000</span></span>
-<span id="cb6-186"><a href="#cb6-186" tabindex="-1"></a><span class="co"># 48                 U                U         n  1.0000000</span></span>
-<span id="cb6-187"><a href="#cb6-187" tabindex="-1"></a><span class="co"># 49  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-188"><a href="#cb6-188" tabindex="-1"></a><span class="co"># 50                S2               S2         n 22.0000000</span></span>
-<span id="cb6-189"><a href="#cb6-189" tabindex="-1"></a><span class="co"># 51                S2               S2         p  0.5000000</span></span>
-<span id="cb6-190"><a href="#cb6-190" tabindex="-1"></a><span class="co"># 52              Mean             Mean      mean 33.5454545</span></span>
-<span id="cb6-191"><a href="#cb6-191" tabindex="-1"></a><span class="co"># 53                 F                F         n 13.0000000</span></span>
-<span id="cb6-192"><a href="#cb6-192" tabindex="-1"></a><span class="co"># 54                 M                M         n  9.0000000</span></span>
-<span id="cb6-193"><a href="#cb6-193" tabindex="-1"></a><span class="co"># 55                 U                U         n  0.0000000</span></span>
-<span id="cb6-194"><a href="#cb6-194" tabindex="-1"></a><span class="co"># 56  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-195"><a href="#cb6-195" tabindex="-1"></a><span class="co"># 57                S1               S1         n 19.0000000</span></span>
-<span id="cb6-196"><a href="#cb6-196" tabindex="-1"></a><span class="co"># 58                S1               S1         p  0.4222222</span></span>
-<span id="cb6-197"><a href="#cb6-197" tabindex="-1"></a><span class="co"># 59              Mean             Mean      mean 37.6842105</span></span>
-<span id="cb6-198"><a href="#cb6-198" tabindex="-1"></a><span class="co"># 60                 F                F         n 12.0000000</span></span>
-<span id="cb6-199"><a href="#cb6-199" tabindex="-1"></a><span class="co"># 61                 M                M         n  7.0000000</span></span>
-<span id="cb6-200"><a href="#cb6-200" tabindex="-1"></a><span class="co"># 62                 U                U         n  0.0000000</span></span>
-<span id="cb6-201"><a href="#cb6-201" tabindex="-1"></a><span class="co"># 63  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-202"><a href="#cb6-202" tabindex="-1"></a><span class="co"># 64                S2               S2         n 26.0000000</span></span>
-<span id="cb6-203"><a href="#cb6-203" tabindex="-1"></a><span class="co"># 65                S2               S2         p  0.5777778</span></span>
-<span id="cb6-204"><a href="#cb6-204" tabindex="-1"></a><span class="co"># 66              Mean             Mean      mean 34.7692308</span></span>
-<span id="cb6-205"><a href="#cb6-205" tabindex="-1"></a><span class="co"># 67                 F                F         n 15.0000000</span></span>
-<span id="cb6-206"><a href="#cb6-206" tabindex="-1"></a><span class="co"># 68                 M                M         n 10.0000000</span></span>
-<span id="cb6-207"><a href="#cb6-207" tabindex="-1"></a><span class="co"># 69                 U                U         n  1.0000000</span></span>
-<span id="cb6-208"><a href="#cb6-208" tabindex="-1"></a><span class="co"># 70  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-209"><a href="#cb6-209" tabindex="-1"></a><span class="co"># 71                S1               S1         n 26.0000000</span></span>
-<span id="cb6-210"><a href="#cb6-210" tabindex="-1"></a><span class="co"># 72                S1               S1         p  0.5777778</span></span>
-<span id="cb6-211"><a href="#cb6-211" tabindex="-1"></a><span class="co"># 73              Mean             Mean      mean 35.3846154</span></span>
-<span id="cb6-212"><a href="#cb6-212" tabindex="-1"></a><span class="co"># 74                 F                F         n 13.0000000</span></span>
-<span id="cb6-213"><a href="#cb6-213" tabindex="-1"></a><span class="co"># 75                 M                M         n 13.0000000</span></span>
-<span id="cb6-214"><a href="#cb6-214" tabindex="-1"></a><span class="co"># 76                 U                U         n  0.0000000</span></span>
-<span id="cb6-215"><a href="#cb6-215" tabindex="-1"></a><span class="co"># 77  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-216"><a href="#cb6-216" tabindex="-1"></a><span class="co"># 78                S2               S2         n 19.0000000</span></span>
-<span id="cb6-217"><a href="#cb6-217" tabindex="-1"></a><span class="co"># 79                S2               S2         p  0.4222222</span></span>
-<span id="cb6-218"><a href="#cb6-218" tabindex="-1"></a><span class="co"># 80              Mean             Mean      mean 34.8947368</span></span>
-<span id="cb6-219"><a href="#cb6-219" tabindex="-1"></a><span class="co"># 81                 F                F         n 13.0000000</span></span>
-<span id="cb6-220"><a href="#cb6-220" tabindex="-1"></a><span class="co"># 82                 M                M         n  6.0000000</span></span>
-<span id="cb6-221"><a href="#cb6-221" tabindex="-1"></a><span class="co"># 83                 U                U         n  0.0000000</span></span>
-<span id="cb6-222"><a href="#cb6-222" tabindex="-1"></a><span class="co"># 84  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-223"><a href="#cb6-223" tabindex="-1"></a><span class="co"># 85                S1               S1         n 14.0000000</span></span>
-<span id="cb6-224"><a href="#cb6-224" tabindex="-1"></a><span class="co"># 86                S1               S1         p  0.3500000</span></span>
-<span id="cb6-225"><a href="#cb6-225" tabindex="-1"></a><span class="co"># 87              Mean             Mean      mean 34.0000000</span></span>
-<span id="cb6-226"><a href="#cb6-226" tabindex="-1"></a><span class="co"># 88                 F                F         n  7.0000000</span></span>
-<span id="cb6-227"><a href="#cb6-227" tabindex="-1"></a><span class="co"># 89                 M                M         n  6.0000000</span></span>
-<span id="cb6-228"><a href="#cb6-228" tabindex="-1"></a><span class="co"># 90                 U                U         n  1.0000000</span></span>
-<span id="cb6-229"><a href="#cb6-229" tabindex="-1"></a><span class="co"># 91  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-230"><a href="#cb6-230" tabindex="-1"></a><span class="co"># 92                S2               S2         n 26.0000000</span></span>
-<span id="cb6-231"><a href="#cb6-231" tabindex="-1"></a><span class="co"># 93                S2               S2         p  0.6500000</span></span>
-<span id="cb6-232"><a href="#cb6-232" tabindex="-1"></a><span class="co"># 94              Mean             Mean      mean 34.3461538</span></span>
-<span id="cb6-233"><a href="#cb6-233" tabindex="-1"></a><span class="co"># 95                 F                F         n 11.0000000</span></span>
-<span id="cb6-234"><a href="#cb6-234" tabindex="-1"></a><span class="co"># 96                 M                M         n 14.0000000</span></span>
-<span id="cb6-235"><a href="#cb6-235" tabindex="-1"></a><span class="co"># 97                 U                U         n  0.0000000</span></span>
-<span id="cb6-236"><a href="#cb6-236" tabindex="-1"></a><span class="co"># 98  UNDIFFERENTIATED UNDIFFERENTIATED         n  1.0000000</span></span>
-<span id="cb6-237"><a href="#cb6-237" tabindex="-1"></a><span class="co"># 99                S1               S1         n 18.0000000</span></span>
-<span id="cb6-238"><a href="#cb6-238" tabindex="-1"></a><span class="co"># 100               S1               S1         p  0.4186047</span></span>
-<span id="cb6-239"><a href="#cb6-239" tabindex="-1"></a><span class="co"># 101             Mean             Mean      mean 35.8333333</span></span>
-<span id="cb6-240"><a href="#cb6-240" tabindex="-1"></a><span class="co"># 102                F                F         n  9.0000000</span></span>
-<span id="cb6-241"><a href="#cb6-241" tabindex="-1"></a><span class="co"># 103                M                M         n  9.0000000</span></span>
-<span id="cb6-242"><a href="#cb6-242" tabindex="-1"></a><span class="co"># 104                U                U         n  0.0000000</span></span>
-<span id="cb6-243"><a href="#cb6-243" tabindex="-1"></a><span class="co"># 105 UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-244"><a href="#cb6-244" tabindex="-1"></a><span class="co"># 106               S2               S2         n 25.0000000</span></span>
-<span id="cb6-245"><a href="#cb6-245" tabindex="-1"></a><span class="co"># 107               S2               S2         p  0.5813953</span></span>
-<span id="cb6-246"><a href="#cb6-246" tabindex="-1"></a><span class="co"># 108             Mean             Mean      mean 36.6800000</span></span>
-<span id="cb6-247"><a href="#cb6-247" tabindex="-1"></a><span class="co"># 109                F                F         n 12.0000000</span></span>
-<span id="cb6-248"><a href="#cb6-248" tabindex="-1"></a><span class="co"># 110                M                M         n 12.0000000</span></span>
-<span id="cb6-249"><a href="#cb6-249" tabindex="-1"></a><span class="co"># 111                U                U         n  1.0000000</span></span>
-<span id="cb6-250"><a href="#cb6-250" tabindex="-1"></a><span class="co"># 112 UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span>
-<span id="cb6-251"><a href="#cb6-251" tabindex="-1"></a><span class="co"># 113               S1               S1         n 24.0000000</span></span>
-<span id="cb6-252"><a href="#cb6-252" tabindex="-1"></a><span class="co"># 114               S1               S1         p  0.4897959</span></span>
-<span id="cb6-253"><a href="#cb6-253" tabindex="-1"></a><span class="co"># 115             Mean             Mean      mean 36.5833333</span></span>
-<span id="cb6-254"><a href="#cb6-254" tabindex="-1"></a><span class="co"># 116                F                F         n 14.0000000</span></span>
-<span id="cb6-255"><a href="#cb6-255" tabindex="-1"></a><span class="co"># 117                M                M         n  8.0000000</span></span>
-<span id="cb6-256"><a href="#cb6-256" tabindex="-1"></a><span class="co"># 118                U                U         n  1.0000000</span></span>
-<span id="cb6-257"><a href="#cb6-257" tabindex="-1"></a><span class="co"># 119 UNDIFFERENTIATED UNDIFFERENTIATED         n  1.0000000</span></span>
-<span id="cb6-258"><a href="#cb6-258" tabindex="-1"></a><span class="co"># 120               S2               S2         n 25.0000000</span></span>
-<span id="cb6-259"><a href="#cb6-259" tabindex="-1"></a><span class="co"># 121               S2               S2         p  0.5102041</span></span>
-<span id="cb6-260"><a href="#cb6-260" tabindex="-1"></a><span class="co"># 122             Mean             Mean      mean 34.7200000</span></span>
-<span id="cb6-261"><a href="#cb6-261" tabindex="-1"></a><span class="co"># 123                F                F         n 13.0000000</span></span>
-<span id="cb6-262"><a href="#cb6-262" tabindex="-1"></a><span class="co"># 124                M                M         n 11.0000000</span></span>
-<span id="cb6-263"><a href="#cb6-263" tabindex="-1"></a><span class="co"># 125                U                U         n  1.0000000</span></span>
-<span id="cb6-264"><a href="#cb6-264" tabindex="-1"></a><span class="co"># 126 UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000</span></span></code></pre></div>
+<span id="cb6-138"><a href="#cb6-138" tabindex="-1"></a><span class="co">#       variable_level   variable_label stat_name       stat stat_string</span></span>
+<span id="cb6-139"><a href="#cb6-139" tabindex="-1"></a><span class="co"># 1                 S1               S1         n 18.0000000          18</span></span>
+<span id="cb6-140"><a href="#cb6-140" tabindex="-1"></a><span class="co"># 2                 S1               S1         p  0.4736842        47.4</span></span>
+<span id="cb6-141"><a href="#cb6-141" tabindex="-1"></a><span class="co"># 3               Mean             Mean      mean 31.6111111       31.61</span></span>
+<span id="cb6-142"><a href="#cb6-142" tabindex="-1"></a><span class="co"># 4                  F                F         n 12.0000000          12</span></span>
+<span id="cb6-143"><a href="#cb6-143" tabindex="-1"></a><span class="co"># 5                  M                M         n  5.0000000           5</span></span>
+<span id="cb6-144"><a href="#cb6-144" tabindex="-1"></a><span class="co"># 6                  U                U         n  1.0000000           1</span></span>
+<span id="cb6-145"><a href="#cb6-145" tabindex="-1"></a><span class="co"># 7   UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-146"><a href="#cb6-146" tabindex="-1"></a><span class="co"># 8                 S2               S2         n 20.0000000          20</span></span>
+<span id="cb6-147"><a href="#cb6-147" tabindex="-1"></a><span class="co"># 9                 S2               S2         p  0.5263158        52.6</span></span>
+<span id="cb6-148"><a href="#cb6-148" tabindex="-1"></a><span class="co"># 10              Mean             Mean      mean 34.4000000        34.4</span></span>
+<span id="cb6-149"><a href="#cb6-149" tabindex="-1"></a><span class="co"># 11                 F                F         n  9.0000000           9</span></span>
+<span id="cb6-150"><a href="#cb6-150" tabindex="-1"></a><span class="co"># 12                 M                M         n 11.0000000          11</span></span>
+<span id="cb6-151"><a href="#cb6-151" tabindex="-1"></a><span class="co"># 13                 U                U         n  0.0000000           0</span></span>
+<span id="cb6-152"><a href="#cb6-152" tabindex="-1"></a><span class="co"># 14  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-153"><a href="#cb6-153" tabindex="-1"></a><span class="co"># 15                S1               S1         n 28.0000000          28</span></span>
+<span id="cb6-154"><a href="#cb6-154" tabindex="-1"></a><span class="co"># 16                S1               S1         p  0.5957447        59.6</span></span>
+<span id="cb6-155"><a href="#cb6-155" tabindex="-1"></a><span class="co"># 17              Mean             Mean      mean 34.5714286       34.57</span></span>
+<span id="cb6-156"><a href="#cb6-156" tabindex="-1"></a><span class="co"># 18                 F                F         n 14.0000000          14</span></span>
+<span id="cb6-157"><a href="#cb6-157" tabindex="-1"></a><span class="co"># 19                 M                M         n 13.0000000          13</span></span>
+<span id="cb6-158"><a href="#cb6-158" tabindex="-1"></a><span class="co"># 20                 U                U         n  1.0000000           1</span></span>
+<span id="cb6-159"><a href="#cb6-159" tabindex="-1"></a><span class="co"># 21  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-160"><a href="#cb6-160" tabindex="-1"></a><span class="co"># 22                S2               S2         n 19.0000000          19</span></span>
+<span id="cb6-161"><a href="#cb6-161" tabindex="-1"></a><span class="co"># 23                S2               S2         p  0.4042553        40.4</span></span>
+<span id="cb6-162"><a href="#cb6-162" tabindex="-1"></a><span class="co"># 24              Mean             Mean      mean 32.7894737       32.79</span></span>
+<span id="cb6-163"><a href="#cb6-163" tabindex="-1"></a><span class="co"># 25                 F                F         n 11.0000000          11</span></span>
+<span id="cb6-164"><a href="#cb6-164" tabindex="-1"></a><span class="co"># 26                 M                M         n  8.0000000           8</span></span>
+<span id="cb6-165"><a href="#cb6-165" tabindex="-1"></a><span class="co"># 27                 U                U         n  0.0000000           0</span></span>
+<span id="cb6-166"><a href="#cb6-166" tabindex="-1"></a><span class="co"># 28  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-167"><a href="#cb6-167" tabindex="-1"></a><span class="co"># 29                S1               S1         n 27.0000000          27</span></span>
+<span id="cb6-168"><a href="#cb6-168" tabindex="-1"></a><span class="co"># 30                S1               S1         p  0.5510204        55.1</span></span>
+<span id="cb6-169"><a href="#cb6-169" tabindex="-1"></a><span class="co"># 31              Mean             Mean      mean 35.2592593       35.26</span></span>
+<span id="cb6-170"><a href="#cb6-170" tabindex="-1"></a><span class="co"># 32                 F                F         n 17.0000000          17</span></span>
+<span id="cb6-171"><a href="#cb6-171" tabindex="-1"></a><span class="co"># 33                 M                M         n  8.0000000           8</span></span>
+<span id="cb6-172"><a href="#cb6-172" tabindex="-1"></a><span class="co"># 34                 U                U         n  1.0000000           1</span></span>
+<span id="cb6-173"><a href="#cb6-173" tabindex="-1"></a><span class="co"># 35  UNDIFFERENTIATED UNDIFFERENTIATED         n  1.0000000           1</span></span>
+<span id="cb6-174"><a href="#cb6-174" tabindex="-1"></a><span class="co"># 36                S2               S2         n 22.0000000          22</span></span>
+<span id="cb6-175"><a href="#cb6-175" tabindex="-1"></a><span class="co"># 37                S2               S2         p  0.4489796        44.9</span></span>
+<span id="cb6-176"><a href="#cb6-176" tabindex="-1"></a><span class="co"># 38              Mean             Mean      mean 32.9545455       32.95</span></span>
+<span id="cb6-177"><a href="#cb6-177" tabindex="-1"></a><span class="co"># 39                 F                F         n 16.0000000          16</span></span>
+<span id="cb6-178"><a href="#cb6-178" tabindex="-1"></a><span class="co"># 40                 M                M         n  6.0000000           6</span></span>
+<span id="cb6-179"><a href="#cb6-179" tabindex="-1"></a><span class="co"># 41                 U                U         n  0.0000000           0</span></span>
+<span id="cb6-180"><a href="#cb6-180" tabindex="-1"></a><span class="co"># 42  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-181"><a href="#cb6-181" tabindex="-1"></a><span class="co"># 43                S1               S1         n 22.0000000          22</span></span>
+<span id="cb6-182"><a href="#cb6-182" tabindex="-1"></a><span class="co"># 44                S1               S1         p  0.5000000          50</span></span>
+<span id="cb6-183"><a href="#cb6-183" tabindex="-1"></a><span class="co"># 45              Mean             Mean      mean 36.6818182       36.68</span></span>
+<span id="cb6-184"><a href="#cb6-184" tabindex="-1"></a><span class="co"># 46                 F                F         n 11.0000000          11</span></span>
+<span id="cb6-185"><a href="#cb6-185" tabindex="-1"></a><span class="co"># 47                 M                M         n 10.0000000          10</span></span>
+<span id="cb6-186"><a href="#cb6-186" tabindex="-1"></a><span class="co"># 48                 U                U         n  1.0000000           1</span></span>
+<span id="cb6-187"><a href="#cb6-187" tabindex="-1"></a><span class="co"># 49  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-188"><a href="#cb6-188" tabindex="-1"></a><span class="co"># 50                S2               S2         n 22.0000000          22</span></span>
+<span id="cb6-189"><a href="#cb6-189" tabindex="-1"></a><span class="co"># 51                S2               S2         p  0.5000000          50</span></span>
+<span id="cb6-190"><a href="#cb6-190" tabindex="-1"></a><span class="co"># 52              Mean             Mean      mean 33.5454545       33.55</span></span>
+<span id="cb6-191"><a href="#cb6-191" tabindex="-1"></a><span class="co"># 53                 F                F         n 13.0000000          13</span></span>
+<span id="cb6-192"><a href="#cb6-192" tabindex="-1"></a><span class="co"># 54                 M                M         n  9.0000000           9</span></span>
+<span id="cb6-193"><a href="#cb6-193" tabindex="-1"></a><span class="co"># 55                 U                U         n  0.0000000           0</span></span>
+<span id="cb6-194"><a href="#cb6-194" tabindex="-1"></a><span class="co"># 56  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-195"><a href="#cb6-195" tabindex="-1"></a><span class="co"># 57                S1               S1         n 19.0000000          19</span></span>
+<span id="cb6-196"><a href="#cb6-196" tabindex="-1"></a><span class="co"># 58                S1               S1         p  0.4222222        42.2</span></span>
+<span id="cb6-197"><a href="#cb6-197" tabindex="-1"></a><span class="co"># 59              Mean             Mean      mean 37.6842105       37.68</span></span>
+<span id="cb6-198"><a href="#cb6-198" tabindex="-1"></a><span class="co"># 60                 F                F         n 12.0000000          12</span></span>
+<span id="cb6-199"><a href="#cb6-199" tabindex="-1"></a><span class="co"># 61                 M                M         n  7.0000000           7</span></span>
+<span id="cb6-200"><a href="#cb6-200" tabindex="-1"></a><span class="co"># 62                 U                U         n  0.0000000           0</span></span>
+<span id="cb6-201"><a href="#cb6-201" tabindex="-1"></a><span class="co"># 63  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-202"><a href="#cb6-202" tabindex="-1"></a><span class="co"># 64                S2               S2         n 26.0000000          26</span></span>
+<span id="cb6-203"><a href="#cb6-203" tabindex="-1"></a><span class="co"># 65                S2               S2         p  0.5777778        57.8</span></span>
+<span id="cb6-204"><a href="#cb6-204" tabindex="-1"></a><span class="co"># 66              Mean             Mean      mean 34.7692308       34.77</span></span>
+<span id="cb6-205"><a href="#cb6-205" tabindex="-1"></a><span class="co"># 67                 F                F         n 15.0000000          15</span></span>
+<span id="cb6-206"><a href="#cb6-206" tabindex="-1"></a><span class="co"># 68                 M                M         n 10.0000000          10</span></span>
+<span id="cb6-207"><a href="#cb6-207" tabindex="-1"></a><span class="co"># 69                 U                U         n  1.0000000           1</span></span>
+<span id="cb6-208"><a href="#cb6-208" tabindex="-1"></a><span class="co"># 70  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-209"><a href="#cb6-209" tabindex="-1"></a><span class="co"># 71                S1               S1         n 26.0000000          26</span></span>
+<span id="cb6-210"><a href="#cb6-210" tabindex="-1"></a><span class="co"># 72                S1               S1         p  0.5777778        57.8</span></span>
+<span id="cb6-211"><a href="#cb6-211" tabindex="-1"></a><span class="co"># 73              Mean             Mean      mean 35.3846154       35.38</span></span>
+<span id="cb6-212"><a href="#cb6-212" tabindex="-1"></a><span class="co"># 74                 F                F         n 13.0000000          13</span></span>
+<span id="cb6-213"><a href="#cb6-213" tabindex="-1"></a><span class="co"># 75                 M                M         n 13.0000000          13</span></span>
+<span id="cb6-214"><a href="#cb6-214" tabindex="-1"></a><span class="co"># 76                 U                U         n  0.0000000           0</span></span>
+<span id="cb6-215"><a href="#cb6-215" tabindex="-1"></a><span class="co"># 77  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-216"><a href="#cb6-216" tabindex="-1"></a><span class="co"># 78                S2               S2         n 19.0000000          19</span></span>
+<span id="cb6-217"><a href="#cb6-217" tabindex="-1"></a><span class="co"># 79                S2               S2         p  0.4222222        42.2</span></span>
+<span id="cb6-218"><a href="#cb6-218" tabindex="-1"></a><span class="co"># 80              Mean             Mean      mean 34.8947368       34.89</span></span>
+<span id="cb6-219"><a href="#cb6-219" tabindex="-1"></a><span class="co"># 81                 F                F         n 13.0000000          13</span></span>
+<span id="cb6-220"><a href="#cb6-220" tabindex="-1"></a><span class="co"># 82                 M                M         n  6.0000000           6</span></span>
+<span id="cb6-221"><a href="#cb6-221" tabindex="-1"></a><span class="co"># 83                 U                U         n  0.0000000           0</span></span>
+<span id="cb6-222"><a href="#cb6-222" tabindex="-1"></a><span class="co"># 84  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-223"><a href="#cb6-223" tabindex="-1"></a><span class="co"># 85                S1               S1         n 14.0000000          14</span></span>
+<span id="cb6-224"><a href="#cb6-224" tabindex="-1"></a><span class="co"># 86                S1               S1         p  0.3500000          35</span></span>
+<span id="cb6-225"><a href="#cb6-225" tabindex="-1"></a><span class="co"># 87              Mean             Mean      mean 34.0000000          34</span></span>
+<span id="cb6-226"><a href="#cb6-226" tabindex="-1"></a><span class="co"># 88                 F                F         n  7.0000000           7</span></span>
+<span id="cb6-227"><a href="#cb6-227" tabindex="-1"></a><span class="co"># 89                 M                M         n  6.0000000           6</span></span>
+<span id="cb6-228"><a href="#cb6-228" tabindex="-1"></a><span class="co"># 90                 U                U         n  1.0000000           1</span></span>
+<span id="cb6-229"><a href="#cb6-229" tabindex="-1"></a><span class="co"># 91  UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-230"><a href="#cb6-230" tabindex="-1"></a><span class="co"># 92                S2               S2         n 26.0000000          26</span></span>
+<span id="cb6-231"><a href="#cb6-231" tabindex="-1"></a><span class="co"># 93                S2               S2         p  0.6500000          65</span></span>
+<span id="cb6-232"><a href="#cb6-232" tabindex="-1"></a><span class="co"># 94              Mean             Mean      mean 34.3461538       34.35</span></span>
+<span id="cb6-233"><a href="#cb6-233" tabindex="-1"></a><span class="co"># 95                 F                F         n 11.0000000          11</span></span>
+<span id="cb6-234"><a href="#cb6-234" tabindex="-1"></a><span class="co"># 96                 M                M         n 14.0000000          14</span></span>
+<span id="cb6-235"><a href="#cb6-235" tabindex="-1"></a><span class="co"># 97                 U                U         n  0.0000000           0</span></span>
+<span id="cb6-236"><a href="#cb6-236" tabindex="-1"></a><span class="co"># 98  UNDIFFERENTIATED UNDIFFERENTIATED         n  1.0000000           1</span></span>
+<span id="cb6-237"><a href="#cb6-237" tabindex="-1"></a><span class="co"># 99                S1               S1         n 18.0000000          18</span></span>
+<span id="cb6-238"><a href="#cb6-238" tabindex="-1"></a><span class="co"># 100               S1               S1         p  0.4186047        41.9</span></span>
+<span id="cb6-239"><a href="#cb6-239" tabindex="-1"></a><span class="co"># 101             Mean             Mean      mean 35.8333333       35.83</span></span>
+<span id="cb6-240"><a href="#cb6-240" tabindex="-1"></a><span class="co"># 102                F                F         n  9.0000000           9</span></span>
+<span id="cb6-241"><a href="#cb6-241" tabindex="-1"></a><span class="co"># 103                M                M         n  9.0000000           9</span></span>
+<span id="cb6-242"><a href="#cb6-242" tabindex="-1"></a><span class="co"># 104                U                U         n  0.0000000           0</span></span>
+<span id="cb6-243"><a href="#cb6-243" tabindex="-1"></a><span class="co"># 105 UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-244"><a href="#cb6-244" tabindex="-1"></a><span class="co"># 106               S2               S2         n 25.0000000          25</span></span>
+<span id="cb6-245"><a href="#cb6-245" tabindex="-1"></a><span class="co"># 107               S2               S2         p  0.5813953        58.1</span></span>
+<span id="cb6-246"><a href="#cb6-246" tabindex="-1"></a><span class="co"># 108             Mean             Mean      mean 36.6800000       36.68</span></span>
+<span id="cb6-247"><a href="#cb6-247" tabindex="-1"></a><span class="co"># 109                F                F         n 12.0000000          12</span></span>
+<span id="cb6-248"><a href="#cb6-248" tabindex="-1"></a><span class="co"># 110                M                M         n 12.0000000          12</span></span>
+<span id="cb6-249"><a href="#cb6-249" tabindex="-1"></a><span class="co"># 111                U                U         n  1.0000000           1</span></span>
+<span id="cb6-250"><a href="#cb6-250" tabindex="-1"></a><span class="co"># 112 UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span>
+<span id="cb6-251"><a href="#cb6-251" tabindex="-1"></a><span class="co"># 113               S1               S1         n 24.0000000          24</span></span>
+<span id="cb6-252"><a href="#cb6-252" tabindex="-1"></a><span class="co"># 114               S1               S1         p  0.4897959          49</span></span>
+<span id="cb6-253"><a href="#cb6-253" tabindex="-1"></a><span class="co"># 115             Mean             Mean      mean 36.5833333       36.58</span></span>
+<span id="cb6-254"><a href="#cb6-254" tabindex="-1"></a><span class="co"># 116                F                F         n 14.0000000          14</span></span>
+<span id="cb6-255"><a href="#cb6-255" tabindex="-1"></a><span class="co"># 117                M                M         n  8.0000000           8</span></span>
+<span id="cb6-256"><a href="#cb6-256" tabindex="-1"></a><span class="co"># 118                U                U         n  1.0000000           1</span></span>
+<span id="cb6-257"><a href="#cb6-257" tabindex="-1"></a><span class="co"># 119 UNDIFFERENTIATED UNDIFFERENTIATED         n  1.0000000           1</span></span>
+<span id="cb6-258"><a href="#cb6-258" tabindex="-1"></a><span class="co"># 120               S2               S2         n 25.0000000          25</span></span>
+<span id="cb6-259"><a href="#cb6-259" tabindex="-1"></a><span class="co"># 121               S2               S2         p  0.5102041          51</span></span>
+<span id="cb6-260"><a href="#cb6-260" tabindex="-1"></a><span class="co"># 122             Mean             Mean      mean 34.7200000       34.72</span></span>
+<span id="cb6-261"><a href="#cb6-261" tabindex="-1"></a><span class="co"># 123                F                F         n 13.0000000          13</span></span>
+<span id="cb6-262"><a href="#cb6-262" tabindex="-1"></a><span class="co"># 124                M                M         n 11.0000000          11</span></span>
+<span id="cb6-263"><a href="#cb6-263" tabindex="-1"></a><span class="co"># 125                U                U         n  1.0000000           1</span></span>
+<span id="cb6-264"><a href="#cb6-264" tabindex="-1"></a><span class="co"># 126 UNDIFFERENTIATED UNDIFFERENTIATED         n  0.0000000           0</span></span></code></pre></div>
 </div>
 
 

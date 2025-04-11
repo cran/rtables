@@ -56,8 +56,11 @@ should be visible in the resulting table.}
 function (subtable, content table, or row) \emph{and all of that structure's children}. Defaults to 0, which
 corresponds to the unmodified default behavior.}
 
-\item{section_div}{(\code{string})\cr string which should be repeated as a section divider after each group defined
-by this split instruction, or \code{NA_character_} (the default) for no section divider.}
+\item{section_div}{(\code{string})\cr string which should be repeated as a section divider after the set of rows  defined
+by (each sub-analysis/variable) of this analyze instruction, or
+\code{NA_character_} (the default) for no section divider. This section
+divider will be overridden by a split-level section divider when
+both apply to the same position in the rendered output.}
 }
 \value{
 A \code{PreDataTableLayouts} object suitable for passing to further layouting functions, and to \code{\link[=build_table]{build_table()}}.
@@ -86,7 +89,7 @@ other parameters which, \emph{if and only if} present in the formals, will be pa
 machinery. These are listed and described in \link{additional_fun_params}.
 }
 \note{
-None of the arguments described in the Details section can be overridden via \code{extra_args} or when calling
+None of the arguments described in \link{additional_fun_params} can be overridden via \code{extra_args} or when calling
 \code{\link[=make_afun]{make_afun()}}. \code{.N_col} and \code{.N_total} can be overridden via the \code{col_counts} argument to \code{\link[=build_table]{build_table()}}.
 Alternative values for the others must be calculated within \code{afun} based on a combination of extra arguments and
 the unmodified values provided by the tabulation framework.

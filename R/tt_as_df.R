@@ -17,7 +17,14 @@
 #' @param simplify (`flag`)\cr when `TRUE`, the result data frame will have only visible labels and
 #'   result columns. Consider showing also label rows with `keep_label_rows = TRUE`. This output can be
 #'   used again to create a `TableTree` object with [df_to_tt()].
-#' @param ... additional arguments passed to spec-specific result data frame function (`spec`).
+#' @param add_tbl_name_split (`flag`)\cr when `TRUE` and when the table has more than one
+#'   `analyze(table_names = "<diff_names>")`, the table names will be present as a group split named
+#'   `"<analysis_spl_tbl_name>"`.
+#' @param verbose (`flag`)\cr when `TRUE`, the function will print additional information for
+#'   `data_format != "full_precision"`.
+#' @param ... additional arguments passed to spec-specific result data frame function (`spec`). When
+#'   using `make_ard = TRUE`, it is possible to turn off the extraction of the exact string decimals
+#'   printed by the table with `add_tbl_str_decimals = FALSE`.
 #'
 #' @return
 #' * `as_result_df` returns a result `data.frame`.
@@ -41,7 +48,9 @@ as_result_df <- function(tt, spec = NULL,
                          make_ard = FALSE,
                          expand_colnames = FALSE,
                          keep_label_rows = FALSE,
+                         add_tbl_name_split = FALSE,
                          simplify = FALSE,
+                         verbose = FALSE,
                          ...) {
   data_format <- data_format[[1]]
   checkmate::assert_class(tt, "VTableTree")
@@ -51,6 +60,8 @@ as_result_df <- function(tt, spec = NULL,
   checkmate::assert_flag(expand_colnames)
   checkmate::assert_flag(keep_label_rows)
   checkmate::assert_flag(simplify)
+  checkmate::assert_flag(add_tbl_name_split)
+  checkmate::assert_flag(verbose)
 
   if (nrow(tt) == 0) {
     return(sanitize_table_struct(tt))
@@ -65,30 +76,76 @@ as_result_df <- function(tt, spec = NULL,
   if (is.null(spec)) {
     # raw values
     rawvals <- cell_values(tt)
-    cellvals <- .make_df_from_raw_data(rawvals, nr = nrow(tt), nc = ncol(tt))
+    cellvals_init <- .make_df_from_raw_data(rawvals, nr = nrow(tt), nc = ncol(tt))
 
     if (data_format %in% c("strings", "numeric")) {
       # we keep previous calculations to check the format of the data
       mf_tt <- matrix_form(tt)
-      mf_result_chars <- mf_strings(mf_tt)[-seq_len(mf_nlheader(mf_tt)), -1]
-      mf_result_chars <- .remove_empty_elements(mf_result_chars)
-      mf_result_numeric <- as.data.frame(
-        .make_numeric_char_mf(mf_result_chars)
-      )
+      mf_result_chars <- mf_strings(mf_tt)[-seq_len(mf_nlheader(mf_tt)), -1, drop = FALSE]
+      is_not_label_rows <- make_row_df(tt)$node_class != "LabelRow"
+      mf_result_chars <- .remove_empty_elements(mf_result_chars, is_not_label_rows)
+      mf_result_numeric <- .make_numeric_char_mf(mf_result_chars)
       mf_result_chars <- as.data.frame(mf_result_chars)
-      if (!setequal(dim(mf_result_numeric), dim(cellvals)) || !setequal(dim(mf_result_chars), dim(cellvals))) {
+      mf_result_numeric <- as.data.frame(mf_result_numeric)
+      cond1 <- !setequal(dim(mf_result_chars), dim(cellvals_init))
+      cond2 <- !setequal(dim(mf_result_numeric), dim(cellvals_init))
+      if (cond1 || cond2) {
         stop(
           "The extracted numeric data.frame does not have the same dimension of the",
           " cell values extracted with cell_values(). This is a bug. Please report it."
         ) # nocov
       }
+
+      colnames(mf_result_chars) <- colnames(cellvals_init)
+      colnames(mf_result_numeric) <- colnames(cellvals_init)
       if (data_format == "strings") {
-        colnames(mf_result_chars) <- colnames(cellvals)
         cellvals <- mf_result_chars
-      } else {
-        colnames(mf_result_numeric) <- colnames(cellvals)
-        cellvals <- mf_result_numeric
+        if (isTRUE(make_ard)) {
+          stop("make_ard = TRUE is not compatible with data_format = 'strings'")
+        }
+      } else if (data_format == "numeric") {
+        if (isTRUE(make_ard)) {
+          cellvals <- .convert_to_character(mf_result_numeric)
+        } else {
+          cellvals <- mf_result_numeric
+        }
       }
+      diff_in_cellvals <- length(unlist(cellvals_init)) - length(unlist(cellvals))
+      if (make_ard && abs(diff_in_cellvals) > 0) {
+        warning_msg <- paste0(
+          "Found ", abs(diff_in_cellvals), " cell values that differ from ",
+          "printed values. This is possibly related to conditional formatting. "
+        )
+
+        # number of values difference mask between cellvals and cellvals_init (TRUE if different)
+        dmc <- .lengths_with_nulls(unlist(cellvals, recursive = FALSE)) !=
+          .lengths_with_nulls(unlist(cellvals_init, recursive = FALSE))
+        dmc <- matrix(dmc, nrow = nrow(cellvals), ncol = ncol(cellvals))
+
+        # Mainly used for debugging
+        warning_msg <- if (verbose) { # beware that \n will break this (use make_row_df(tt)$self_extent for fix)
+          selected_rows_to_print <- mf_strings(mf_tt)[-seq_len(mf_nlheader(mf_tt)), , drop = FALSE]
+          selected_rows_to_print <- selected_rows_to_print[!make_row_df(tt)$node_class == "LabelRow", , drop = FALSE]
+          selected_rows_to_print <- cbind(
+            which(apply(dmc, 1, any, simplify = TRUE)),
+            as.data.frame(selected_rows_to_print[apply(dmc, 1, any), , drop = FALSE])
+          )
+          colnames(selected_rows_to_print) <- c("row_number", "row_name", colnames(cellvals_init))
+          paste0(
+            warning_msg,
+            "\n",
+            "The following row names were modified: ",
+            paste(selected_rows_to_print$row_name, sep = ", ", collapse = ", "),
+            "\n"
+          )
+        } else {
+          paste0(warning_msg, "To see the affected row names use `verbose = TRUE`.")
+        }
+        warning(warning_msg)
+        cellvals[dmc] <- cellvals_init[dmc]
+      }
+    } else {
+      cellvals <- cellvals_init
     }
 
     rdf <- make_row_df(tt)
@@ -103,7 +160,11 @@ as_result_df <- function(tt, spec = NULL,
     # Correcting maxlen for even number of paths (only multianalysis diff table names)
     maxlen <- max(lengths(df$path))
     if (maxlen %% 2 != 0) {
-      maxlen <- maxlen + 1
+      maxlen <- if (add_tbl_name_split) {
+        maxlen + 1
+      } else {
+        maxlen - 1
+      }
     }
 
     # Loop for metadata (path and details from make_row_df)
@@ -112,7 +173,7 @@ as_result_df <- function(tt, spec = NULL,
       lapply(
         seq_len(NROW(df)),
         function(ii) {
-          handle_rdf_row(df[ii, ], maxlen = maxlen)
+          handle_rdf_row(df[ii, ], maxlen = maxlen, add_tbl_name_split = add_tbl_name_split)
         }
       )
     )
@@ -191,9 +252,9 @@ as_result_df <- function(tt, spec = NULL,
       n_row_groups <- sapply(colnames(ret), function(x) {
         if (grepl("^group", x)) {
           # Extract the number after "group" using regex
-          return(as.numeric(sub("group(\\d+).*", "\\1", x)))
+          as.numeric(sub("group(\\d+).*", "\\1", x))
         } else {
-          return(0) # Return 0 if no "group" is found
+          0 # Return 0 if no "group" is found
         }
       }) %>%
         max()
@@ -219,9 +280,23 @@ as_result_df <- function(tt, spec = NULL,
       for (col_i in only_col_indexes) {
         # Making row splits into row specifications (group1 group1_level)
         current_col_split_level <- unlist(ret_tmp[seq_len(number_of_col_splits), col_i], use.names = FALSE)
-        flattened_cols_names <- .c_alternated(column_split_names[[1]][[1]], current_col_split_level)
+        col_split_names <- column_split_names[[1]][[1]] # cross section of the column split names (not values)
+        more_than_one_name_in_csn <- sapply(col_split_names, length) > 1
+
+        # Correction for cases where there is split_cols_by_multivar
+        if (any(more_than_one_name_in_csn)) {
+          col_split_names[more_than_one_name_in_csn] <- lapply(
+            seq(sum(more_than_one_name_in_csn)),
+            function(i) {
+              paste0("multivar_split", i)
+            }
+          )
+        }
+
+        # Alternated association of split names and values (along with group split)
+        flattened_cols_names <- .c_alternated(col_split_names, current_col_split_level)
         names(flattened_cols_names) <- .c_alternated(
-          paste0("group", seq_along(column_split_names[[1]][[1]]) + n_row_groups),
+          paste0("group", seq_along(col_split_names) + n_row_groups),
           paste0("group", seq_along(current_col_split_level) + n_row_groups, "_level")
         )
 
@@ -243,14 +318,15 @@ as_result_df <- function(tt, spec = NULL,
         # retrieving stat names and stats
         stat_name <- setNames(cell_stat_names[, col_i - min(only_col_indexes) + 1, drop = TRUE], NULL)
         stat <- setNames(ret_tmp[!col_label_rows, col_i, drop = TRUE], NULL)
-        necessary_stat_lengths <- sapply(stat, length)
-        stat[sapply(stat, is.null)] <- NA
+        necessary_stat_lengths <- lapply(stat, length)
+        stat[!lengths(stat) > 0] <- NA
 
         # Truncating or adding NA if stat names has more or less elements than stats
         stat_name <- lapply(seq_along(stat_name), function(sn_i) {
-          stat_name[[sn_i]][seq_len(necessary_stat_lengths[sn_i])]
+          unlist(stat_name[[sn_i]], use.names = FALSE)[seq_len(necessary_stat_lengths[[sn_i]])]
         })
         stat_name[!nzchar(stat_name)] <- NA
+        stat_name[!lengths(stat_name) > 0] <- NA
 
         # unnesting stat_name and stat
         tmp_ret_by_col_i <- NULL
@@ -267,6 +343,24 @@ as_result_df <- function(tt, spec = NULL,
         }
 
         ret_w_cols <- rbind(ret_w_cols, tmp_ret_by_col_i)
+      }
+
+      # If add_tbl_str_decimals is not present, we need to call the function again to keep precision
+      add_tbl_str_decimals <- list(...)$add_tbl_str_decimals
+      if (is.null(add_tbl_str_decimals) || isTRUE(add_tbl_str_decimals)) {
+        # Trying to extract strings as numeric for comparison
+        tryCatch(
+          {
+            stat_string_ret <- as_result_df(
+              tt = tt, spec = spec, data_format = "numeric",
+              make_ard = TRUE, add_tbl_str_decimals = FALSE, verbose = verbose
+            )
+            ret_w_cols <- cbind(ret_w_cols, "stat_string" = stat_string_ret$stat)
+          },
+          error = function(e) {
+            warning("Could not add 'stat_string' column to the result data frame. Error: ", e$message)
+          }
+        )
       }
 
       ret <- ret_w_cols
@@ -289,23 +383,31 @@ as_result_df <- function(tt, spec = NULL,
   out
 }
 
+.lengths_with_nulls <- function(lst) {
+  sapply(lst, function(x) if (is.null(x)) 1 else length(x))
+}
+
+
 # Helper function used to structure the raw values into a dataframe
-.make_df_from_raw_data <- function(raw_vals, nr, nc) {
+.make_df_from_raw_data <- function(rawvals, nr, nc) {
   ## if the table has one row and multiple columns, sometimes the cell values returns a list of the cell values
   ## rather than a list of length 1 representing the single row. This is bad but may not be changeable
   ## at this point.
-  if (nr == 1 && length(raw_vals) > 1) {
-    raw_vals <- list(raw_vals)
+  if (nr == 1 && length(rawvals) > 1) {
+    rawvals <- list(rawvals)
   }
 
   # Flatten the list of lists (rows) of cell values into a data frame
-  cellvals <- as.data.frame(do.call(rbind, raw_vals))
-  row.names(cellvals) <- NULL
+  cellvals <- as.data.frame(do.call(rbind, rawvals))
 
   if (nr == 1 && nc == 1) {
-    colnames(cellvals) <- names(raw_vals)
+    if (length(unlist(rawvals)) > 1) { # This happens only with nr = nc = 1 for raw values
+      cellvals <- as.data.frame(I(rawvals))
+    }
+    colnames(cellvals) <- names(rawvals)
   }
 
+  row.names(cellvals) <- NULL
   cellvals
 }
 
@@ -334,9 +436,9 @@ as_result_df <- function(tt, spec = NULL,
   lapply(pos_splits(tree_pos(ci_coltree)), function(x) {
     pl <- spl_payload(x)
     if (!is.null(pl)) { # it is null when all obs (1 column)
-      return(pl)
+      pl
     } else {
-      return(x@name)
+      x@name
     }
   })
 }
@@ -353,26 +455,34 @@ as_result_df <- function(tt, spec = NULL,
   df[, c(label_names_col, result_cols)]
 }
 
-.remove_empty_elements <- function(char_df) {
+.remove_empty_elements <- function(char_df, is_not_label_rows) {
   if (is.null(dim(char_df))) {
     return(char_df[nzchar(char_df, keepNA = TRUE)])
   }
-
-  apply(char_df, 2, function(col_i) col_i[nzchar(col_i, keepNA = TRUE)])
+  rows_to_remove <- apply(char_df, 1, function(row_i) all(!nzchar(row_i, keepNA = TRUE)), simplify = TRUE)
+  char_df[!rows_to_remove | is_not_label_rows, , drop = FALSE]
 }
 
 # Helper function to make the character matrix numeric
 .make_numeric_char_mf <- function(char_df) {
   if (is.null(dim(char_df))) {
-    return(as.numeric(stringi::stri_extract_all(char_df, regex = "\\d+.\\d+|\\d+")))
+    ret <- lapply(char_df[[1]], function(x) {
+      as.numeric(stringi::stri_extract_all(x, regex = "\\d+.\\d+|\\d+")[[1]])
+    }) # keeps the list (single element) for data.frame
+    return(I(ret))
   }
 
   ret <- apply(char_df, 2, function(col_i) {
-    lapply(
+    out <- lapply(
       stringi::stri_extract_all(col_i, regex = "\\d+.\\d+|\\d+"),
       as.numeric
     )
-  })
+    if (all(dim(char_df) == c(1, 1)) && is.list(out[[1]])) {
+      unlist(out, use.names = FALSE)
+    } else {
+      out
+    }
+  }, simplify = FALSE)
 
   do.call(cbind, ret)
 }
@@ -386,7 +496,7 @@ make_result_df_md_colnames <- function(maxlen) {
   ret <- c(ret, c("avar_name", "row_name", "label_name", "row_num", "is_group_summary", "node_class"))
 }
 
-do_label_row <- function(rdfrow, maxlen) {
+do_label_row <- function(rdfrow, maxlen, add_tbl_name_split = FALSE) {
   pth <- rdfrow$path[[1]]
   # Adjusting for the fact that we have two columns for each split
   extra_nas_from_splits <- floor((maxlen - length(pth)) / 2) * 2
@@ -395,8 +505,13 @@ do_label_row <- function(rdfrow, maxlen) {
   if (length(pth) %% 2 == 1) {
     extra_nas_from_splits <- extra_nas_from_splits + 1
   } else {
-    pth <- c("<analysis_spl_tbl_name>", pth)
-    extra_nas_from_splits <- extra_nas_from_splits - 1
+    if (isTRUE(add_tbl_name_split)) {
+      pth <- c("<analysis_spl_tbl_name>", pth)
+      extra_nas_from_splits <- extra_nas_from_splits - 1
+    } else {
+      pth <- pth[-1]
+      extra_nas_from_splits <- extra_nas_from_splits + 1
+    }
   }
 
   c(
@@ -431,14 +546,18 @@ do_content_row <- function(rdfrow, maxlen) {
   )
 }
 
-do_data_row <- function(rdfrow, maxlen) {
+do_data_row <- function(rdfrow, maxlen, add_tbl_name_split = FALSE) {
   pth <- rdfrow$path[[1]]
   pthlen <- length(pth)
   ## odd means we have a multi-analsysis step in the path, we do not want this in the result
   if (pthlen %% 2 == 1 && pthlen > 1) {
     # we remove the last element, as it is a fake split (tbl_name from analyse)
     # pth <- pth[-1 * (pthlen - 2)]
-    pth <- c("<analysis_spl_tbl_name>", pth)
+    if (isTRUE(add_tbl_name_split)) {
+      pth <- c("<analysis_spl_tbl_name>", pth)
+    } else {
+      pth <- pth[-1]
+    }
   }
   pthlen_new <- length(pth)
   if (pthlen_new == 1) {
@@ -483,13 +602,13 @@ do_data_row <- function(rdfrow, maxlen) {
   path
 }
 
-handle_rdf_row <- function(rdfrow, maxlen) {
+handle_rdf_row <- function(rdfrow, maxlen, add_tbl_name_split = FALSE) {
   nclass <- rdfrow$node_class
 
   ret <- switch(nclass,
-    LabelRow = do_label_row(rdfrow, maxlen),
+    LabelRow = do_label_row(rdfrow, maxlen, add_tbl_name_split = add_tbl_name_split),
     ContentRow = do_content_row(rdfrow, maxlen),
-    DataRow = do_data_row(rdfrow, maxlen),
+    DataRow = do_data_row(rdfrow, maxlen, add_tbl_name_split = add_tbl_name_split),
     stop("Unrecognized node type in row dataframe, unable to generate result data frame")
   )
   setNames(ret, make_result_df_md_colnames(maxlen))
@@ -502,14 +621,31 @@ handle_rdf_row <- function(rdfrow, maxlen) {
     ret <- NULL
   }
   if (is.null(tree_children(clyt))) {
-    return(ret)
+    ret
   } else {
     ret <- rbind(ret, do.call(cbind, lapply(tree_children(clyt), .get_formatted_colnames)))
     colnames(ret) <- NULL
     rownames(ret) <- NULL
-    return(ret)
+    ret
   }
 }
+
+# Function to convert all elements to character while preserving structure
+.convert_to_character <- function(df) {
+  # Apply transformation to each column
+  df_converted <- lapply(df, function(col) {
+    if (is.list(col)) {
+      # For columns with vector cells, convert each vector to a character vector
+      I(lapply(col, as.character))
+    } else {
+      # For regular columns, directly convert to character
+      as.character(col)
+    }
+  })
+  # Return the transformed data frame
+  data.frame(df_converted, stringsAsFactors = FALSE)
+}
+
 # path_enriched_df ------------------------------------------------------------
 #
 #' @describeIn data.frame_export Transform a `TableTree` object to a path-enriched `data.frame`.

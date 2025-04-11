@@ -1,3 +1,30 @@
+## rtables 0.6.12
+
+### New Features
+ * Added `stat_string` to `as_result_df(make_ard = TRUE)` to preserve the original string representation of the statistics.
+ * Added `add_tbl_name_split` to `as_result_df()` to handle split levels constituted by different table names.
+ * Analysis and content functions can now accept `.alt_df_full` which will always be the full `alt_counts_df` data.frame.
+ * Score and pruning functions can now optionally accept additional arguments passed to `sort_at_path` or `prune_table`, score functions can also accept `decreasing` to receive sort order.
+ 
+### Bug Fixes
+ * Fixed issue with `split_cols_by_multivar()` when having more than one value. Now `as_result_df(make_ard = TRUE)` adds a predefined split name for each of the `multivar` splits.
+ * Fixed a bug with `tt_at_path()` caused by the impossibility to solve multiple branches with identical names. 
+ * Fixed bug happening when format functions were changing the number of printed values. Now `as_result_df(make_ard = TRUE)` uses the cell values for `stat_strings` for these exceptions.
+ * `section_div` argument to `analyze` no longer sometimes applies dividers between each generated row in some cases. by @gmbecker
+ * Fixed bug in `[<-` causing information to be stripped from other cells if a new `rcell` is set within a table row.
+ * Fixed a bug in `as_result_df(make_ard = TRUE)` when different columns had different amounts of `""` values.
+ * Fixed bug in cases where `stat_name` is `character(0)` (`as_result_df(make_ard = TRUE)`).
+ * Fixed a bug dropping information from tables when indexed with `integer()`, i.e. producing an empty table.
+ 
+### Miscellaneous
+ * Added handler `add_tbl_str_decimals = TRUE` to `...` into `as_result_df(make_ard = TRUE)` to add `stat_string` column for the 
+ `ARD` output.
+ * As `stat_string` are more fragile than default `as_result_df(make_ard = TRUE)` calculation and are in theory optional, a warning is thrown when errors arise and the `stat_string` column is not added.
+ * Improved error messaging for cases where `tt_at_path` used a path based on row labels instead of row names.
+ * Added more informative error message when `keep_split_levels()` is used to keep absent values.
+ * Improved error message when selecting 0 columns from a table with `[`.
+ * Added safe condition for `keep_split_levels()` when branch is empty `(character(0))`.
+
 ## rtables 0.6.11
 
 ### New Features

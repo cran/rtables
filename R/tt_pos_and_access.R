@@ -50,7 +50,7 @@ recursive_replace <- function(tab, path, value) { ## incontent = FALSE, rows = N
     ##         newkid[rows, cols] = value
     ##     }
     ## }
-    return(newkid)
+    newkid
   } else if (path[[1]] == "@content") {
     ctb <- content_table(tab)
     ctb <- recursive_replace(ctb,
@@ -295,23 +295,47 @@ setMethod(
     if (obj_name(tt) == path[1]) {
       path <- path[-1]
     }
-    cur <- tt
-    curpath <- path
-    while (length(curpath > 0)) {
-      kids <- tree_children(cur)
-      curname <- curpath[1]
-      if (curname == "@content") {
-        cur <- content_table(cur)
-      } else if (curname %in% names(kids)) {
-        cur <- kids[[curname]]
-      } else {
-        stop("Path appears invalid for this tree at step ", curname)
-      }
-      curpath <- curpath[-1]
-    }
-    cur
+
+    # Extract sub-tables from the tree
+    .extract_through_path(tt, path)
   }
 )
+
+# Recursive helper function to retrieve sub-tables from the tree
+.extract_through_path <- function(cur_tbl, cur_path, no_stop = FALSE) {
+  while (length(cur_path > 0)) {
+    kids <- tree_children(cur_tbl)
+    curname <- cur_path[1]
+    kids_names <- sapply(kids, obj_name)
+    if (curname == "@content") {
+      cur_tbl <- content_table(cur_tbl)
+    } else if (curname %in% kids_names) {
+      cur_tbl <- kids[kids_names == curname]
+
+      # Case where there are more than one tree sub node with identical names
+      if (length(cur_tbl) > 1 && length(cur_path) > 1) {
+        cur_tbl <- sapply(cur_tbl, function(cti) .extract_through_path(cti, cur_path[-1], no_stop = TRUE))
+        found_values <- !sapply(cur_tbl, is.null)
+        cur_tbl <- cur_tbl[found_values]
+        if (sum(found_values) == 1) {
+          cur_tbl <- cur_tbl[[1]]
+        }
+        cur_path <- cur_path[1]
+      } else {
+        cur_tbl <- cur_tbl[[1]] # Usual case (only one matching value)
+      }
+    } else if (!no_stop) {
+      stop(
+        "Path appears invalid for this tree at step '", curname, "'. Please use only",
+        " row names and NOT row labels. You can retrieve them with `row_paths_summary()$path`."
+      )
+    } else {
+      return(NULL)
+    }
+    cur_path <- cur_path[-1]
+  }
+  cur_tbl
+}
 
 #' @note Setting `NULL` at a defined path removes the corresponding sub-table.
 #'
@@ -467,7 +491,7 @@ setMethod(
 #' tbl[, -1]
 #'
 #' # Values can be reassigned
-#' tbl[2, 1] <- rcell(999)
+#' tbl[4, 2] <- rcell(999, format = "xx.x")
 #' tbl[2, ] <- list(rrow("FFF", 888, 666, 777))
 #' tbl[6, ] <- list(-111, -222, -333)
 #' tbl
@@ -579,9 +603,15 @@ setMethod(
                 curkid <- nxtval
                 value <- value[-1]
               } else {
-                rvs <- row_values(curkid)
-                rvs[j] <- value[seq_along(j)]
-                row_values(curkid) <- rvs
+                if (is(nxtval, "CellValue")) {
+                  rcs <- row_cells(curkid)
+                  rcs[j] <- value[seq_along(j)]
+                  row_cells(curkid) <- rcs
+                } else {
+                  rvs <- row_values(curkid)
+                  rvs[j] <- value[seq_along(j)]
+                  row_values(curkid) <- rvs
+                }
                 value <- value[-(seq_along(j))]
               }
               kids[[pos]] <- curkid
@@ -913,6 +943,14 @@ subset_by_rownum <- function(tt,
     if (isTRUE(keep_topleft)) {
       top_left(ret) <- top_left(tt)
     }
+    if (isTRUE(keep_titles)) {
+      main_title(ret) <- main_title(tt)
+      subtitles(ret) <- subtitles(tt)
+    }
+    if (isTRUE(keep_footers)) {
+      main_footer(ret) <- main_footer(tt)
+      prov_footer(ret) <- prov_footer(tt)
+    }
     return(ret)
   }
 
@@ -1116,6 +1154,10 @@ setMethod(
     keep_titles <- list(...)[["keep_titles"]] %||% FALSE
     keep_footers <- list(...)[["keep_footers"]] %||% keep_titles
     reindex_refs <- list(...)[["reindex_refs"]] %||% TRUE
+
+    if (length(j) == 0 || (length(j) == 1 && !is.na(j) && j == 0)) {
+      stop("No column selected. Please consider using rtables::row.names(<tbl>) to get the row names.")
+    }
 
     nr <- nrow(x)
     nc <- ncol(x)
