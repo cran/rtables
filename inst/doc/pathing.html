@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Gabriel Becker" />
+
+<meta name="date" content="2025-06-17" />
+
+<title>Pathing and Table Structure</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Pathing and Table Structure</h1>
+<h4 class="author">Gabriel Becker</h4>
+<h4 class="date">2025-06-17</h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p><code>rtables</code> models both the row- and column-structure of a
+table as trees. These trees collectively reflect the layout instructions
+used to declare the table’s structure. We can use this to describe
+locations within the row-, column-, or cell-space of a table in a
+semantically self-describing way. We call these semantically meaningful
+locations <em>paths</em>.</p>
+<p>A <em>path</em> is an ordered set of names which declares both a path
+for traversing the tree structure for the relevant dimensions, and
+consequently a corresponding subset of the table in that dimension.
+<em>Column</em> paths may contain only split names and names of facets
+generated from those splits. <em>Row</em> paths, can additionally
+contain names of tables corresponding to <code>analysis</code> calls,
+the <code>&quot;@content&quot;</code> directive which steps from a facet into the
+table generated by <code>summarize_row_groups</code> containing its
+marginal summary row(s), and names of individual rows.The location of
+individual cells or rectangular groups of cells is then defined by a
+row-path column-path pair.</p>
+<p>As of <code>rtables</code> version <code>0.6.13</code>, any
+structural element of a successfully built<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> table is guaranteed to
+correspond to a unique row path, column path, or combination
+thereof.</p>
+<div id="an-illustrative-example" class="section level2">
+<h2>An Illustrative Example</h2>
+<p>Consider a the table with non-trivial structure in both the column
+and row dimensions:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rtables)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>keep_rc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;WHITE&quot;</span>) <span class="do">## chosen for brevity</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>afun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">rcell</span>(<span class="fu">mean</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>    <span class="at">Median =</span> <span class="fu">rcell</span>(<span class="fu">median</span>(x), <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  )</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>}</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;ARM&quot;</span>, <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>  <span class="fu">split_cols_by</span>(<span class="st">&quot;SEX&quot;</span>, <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(<span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  <span class="fu">add_overall_col</span>(<span class="st">&quot;All&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;RACE&quot;</span>, <span class="at">split_fun =</span> <span class="fu">keep_split_levels</span>(keep_rc)) <span class="sc">|&gt;</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>  <span class="fu">summarize_row_groups</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>, <span class="at">afun =</span> afun) <span class="sc">|&gt;</span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;BMRKR1&quot;</span>, <span class="at">nested =</span> <span class="cn">FALSE</span>, <span class="at">show_labels =</span> <span class="st">&quot;visible&quot;</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt, DM)</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>tbl</span></code></pre></div>
+<pre><code>##                     A: Drug X              C: Combination                   
+##                  F            M            F            M            All    
+## ————————————————————————————————————————————————————————————————————————————
+## ASIAN        44 (62.9%)   35 (68.6%)   40 (65.6%)   44 (64.7%)   231 (64.9%)
+##   A          15 (21.4%)   12 (23.5%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        30.4         34.4         37.4         36.2         34.5    
+##     Median      30.0         33.5         38.0         33.0         33.0    
+##   B          16 (22.9%)   8 (15.7%)    10 (16.4%)   12 (17.6%)   75 (21.1%) 
+##     Mean        33.8         34.9         33.3         35.9         33.3    
+##     Median      32.0         34.5         34.0         34.5         33.0    
+##   C          13 (18.6%)   15 (29.4%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        36.9         35.6         33.5         31.4         33.9    
+##     Median      36.0         37.0         34.0         31.0         34.0    
+## WHITE        8 (11.4%)    6 (11.8%)    8 (13.1%)    10 (14.7%)   46 (12.9%) 
+##   A           2 (2.9%)     1 (2.0%)     1 (1.6%)     5 (7.4%)     15 (4.2%) 
+##     Mean        34.0         45.0         35.0         32.8         33.3    
+##     Median      34.0         45.0         35.0         31.0         31.0    
+##   B           4 (5.7%)     3 (5.9%)     3 (4.9%)     1 (1.5%)     16 (4.5%) 
+##     Mean        37.0         43.7         34.3         36.0         38.3    
+##     Median      38.5         44.0         35.0         36.0         38.0    
+##   C           2 (2.9%)     2 (3.9%)     4 (6.6%)     4 (5.9%)     15 (4.2%) 
+##     Mean        35.5         44.0         38.5         35.0         39.1    
+##     Median      35.5         44.0         38.5         32.5         40.0    
+## BMRKR1                                                                      
+##   Mean          6.06         5.42         5.83         5.57         5.85</code></pre>
+<p>We can get a first look at the row- and column-structure of our table
+(if in different formats) with <code>table_structure</code> and
+<code>col_info</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">table_structure</span>(tbl)</span></code></pre></div>
+<pre><code>## [TableTree] root
+##  [TableTree] RACE
+##   [TableTree] ASIAN [cont: 1 x 5]
+##    [TableTree] STRATA1
+##     [TableTree] A [cont: 1 x 5]
+##      [ElementaryTable] AGE (2 x 5)
+##     [TableTree] B [cont: 1 x 5]
+##      [ElementaryTable] AGE (2 x 5)
+##     [TableTree] C [cont: 1 x 5]
+##      [ElementaryTable] AGE (2 x 5)
+##   [TableTree] WHITE [cont: 1 x 5]
+##    [TableTree] STRATA1
+##     [TableTree] A [cont: 1 x 5]
+##      [ElementaryTable] AGE (2 x 5)
+##     [TableTree] B [cont: 1 x 5]
+##      [ElementaryTable] AGE (2 x 5)
+##     [TableTree] C [cont: 1 x 5]
+##      [ElementaryTable] AGE (2 x 5)
+##  [ElementaryTable] BMRKR1 (1 x 5)</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">col_info</span>(tbl)</span></code></pre></div>
+<pre><code>## An InstantiatedColumnInfo object
+## Columns:
+## A: Drug X (ARM) -&gt; F (SEX)
+## A: Drug X (ARM) -&gt; M (SEX)
+## C: Combination (ARM) -&gt; F (SEX)
+## C: Combination (ARM) -&gt; M (SEX)
+## All (all)</code></pre>
+<p>We can use paths to declare intuitive substructures of our table. We
+illustrate this using <code>[</code> which interpret character vector
+indices as individual paths in the respective dimension.</p>
+<p>Note that while we will use these paths to subset our table for
+illustrative purposes, they are more often used to specify where
+something should happen within the larger table, which we discuss in the
+following section.</p>
+<div id="row-paths" class="section level3">
+<h3>Row Paths</h3>
+<p>Row paths, in isolation, describe horizontal slices of our table. We
+can see all the valid row paths (including an optional “root” beginning
+value which is technically correct but not necessary to include) via
+<code>row_paths_summary</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>rpsummry <span class="ot">&lt;-</span> <span class="fu">row_paths_summary</span>(tbl)</span></code></pre></div>
+<pre><code>## rowname       node_class    path                                      
+## ——————————————————————————————————————————————————————————————————————
+## ASIAN         ContentRow    root, RACE, ASIAN, @content, ASIAN        
+##   A           ContentRow    root, RACE, ASIAN, STRATA1, A, @content, A
+##     Mean      DataRow       root, RACE, ASIAN, STRATA1, A, AGE, Mean  
+##     Median    DataRow       root, RACE, ASIAN, STRATA1, A, AGE, Median
+##   B           ContentRow    root, RACE, ASIAN, STRATA1, B, @content, B
+##     Mean      DataRow       root, RACE, ASIAN, STRATA1, B, AGE, Mean  
+##     Median    DataRow       root, RACE, ASIAN, STRATA1, B, AGE, Median
+##   C           ContentRow    root, RACE, ASIAN, STRATA1, C, @content, C
+##     Mean      DataRow       root, RACE, ASIAN, STRATA1, C, AGE, Mean  
+##     Median    DataRow       root, RACE, ASIAN, STRATA1, C, AGE, Median
+## WHITE         ContentRow    root, RACE, WHITE, @content, WHITE        
+##   A           ContentRow    root, RACE, WHITE, STRATA1, A, @content, A
+##     Mean      DataRow       root, RACE, WHITE, STRATA1, A, AGE, Mean  
+##     Median    DataRow       root, RACE, WHITE, STRATA1, A, AGE, Median
+##   B           ContentRow    root, RACE, WHITE, STRATA1, B, @content, B
+##     Mean      DataRow       root, RACE, WHITE, STRATA1, B, AGE, Mean  
+##     Median    DataRow       root, RACE, WHITE, STRATA1, B, AGE, Median
+##   C           ContentRow    root, RACE, WHITE, STRATA1, C, @content, C
+##     Mean      DataRow       root, RACE, WHITE, STRATA1, C, AGE, Mean  
+##     Median    DataRow       root, RACE, WHITE, STRATA1, C, AGE, Median
+## BMRKR1        LabelRow      root, BMRKR1                              
+##   Mean        DataRow       root, BMRKR1, Mean</code></pre>
+<p>In addition to displaying a nicely formatted summary, this returns a
+data.frame containing the same information in a programmatically
+accessible form. In particular <code>path</code> is a list-valued column
+whose values can be used directly as row paths:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">head</span>(rpsummry)</span></code></pre></div>
+<pre><code>##    label indent node_class         path
+## 1  ASIAN      0 ContentRow root, RA....
+## 2      A      1 ContentRow root, RA....
+## 3   Mean      2    DataRow root, RA....
+## 4 Median      2    DataRow root, RA....
+## 5      B      1 ContentRow root, RA....
+## 6   Mean      2    DataRow root, RA....</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>tbl[rpsummry<span class="sc">$</span>path[[<span class="dv">6</span>]], ]</span></code></pre></div>
+<pre><code>##         A: Drug X      C: Combination         
+##          F      M        F         M      All 
+## ——————————————————————————————————————————————
+## Mean   33.8    34.9    33.3      35.9     33.3</code></pre>
+<p>The <code>c(&quot;RACE&quot;, &quot;ASIAN&quot;)</code> row path refers to the horizontal
+slice of our table containing all rows that represent analysis on Asian
+patients. We see that we get the expected subtable:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>tbl[<span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>), ]</span></code></pre></div>
+<pre><code>##                     A: Drug X              C: Combination                   
+##                  F            M            F            M            All    
+## ————————————————————————————————————————————————————————————————————————————
+## ASIAN        44 (62.9%)   35 (68.6%)   40 (65.6%)   44 (64.7%)   231 (64.9%)
+##   A          15 (21.4%)   12 (23.5%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        30.4         34.4         37.4         36.2         34.5    
+##     Median      30.0         33.5         38.0         33.0         33.0    
+##   B          16 (22.9%)   8 (15.7%)    10 (16.4%)   12 (17.6%)   75 (21.1%) 
+##     Mean        33.8         34.9         33.3         35.9         33.3    
+##     Median      32.0         34.5         34.0         34.5         33.0    
+##   C          13 (18.6%)   15 (29.4%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        36.9         35.6         33.5         31.4         33.9    
+##     Median      36.0         37.0         34.0         31.0         34.0</code></pre>
+<p>Similarly we can get the groups summary and row for strata B of
+Caucasian patients via</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>tbl[<span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;WHITE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;B&quot;</span>), ]</span></code></pre></div>
+<pre><code>##                 A: Drug X          C: Combination               
+##               F          M          F          M          All   
+## ————————————————————————————————————————————————————————————————
+## B          4 (5.7%)   3 (5.9%)   3 (4.9%)   1 (1.5%)   16 (4.5%)
+##   Mean       37.0       43.7       34.3       36.0       38.3   
+##   Median     38.5       44.0       35.0       36.0       38.0</code></pre>
+<p>Notice this is a strict subtable in the structural sense, which means
+we do not get the ethnicity-level group summary here. We can see this
+because our structure and our path now starts with <code>&quot;B&quot;</code>:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">table_structure</span>(tbl[<span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;WHITE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;B&quot;</span>), ])</span></code></pre></div>
+<pre><code>## [TableTree] root
+##  [TableTree] RACE
+##   [TableTree] WHITE
+##    [TableTree] STRATA1
+##     [TableTree] B [cont: 1 x 5]
+##      [ElementaryTable] AGE (2 x 5)</code></pre>
+<p>As mentioned above, to “path into” a group summary we use the
+<code>&quot;@content&quot;</code> directive:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>tbl[<span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;ASIAN&quot;</span>, <span class="st">&quot;@content&quot;</span>), ]</span></code></pre></div>
+<pre><code>##                A: Drug X              C: Combination                   
+##             F            M            F            M            All    
+## ———————————————————————————————————————————————————————————————————————
+## ASIAN   44 (62.9%)   35 (68.6%)   40 (65.6%)   44 (64.7%)   231 (64.9%)</code></pre>
+<p>We can path down to analysis tables and then individual rows via
+their name, which unlike other structures tends to be identical to their
+label:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>tbl[<span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;WHITE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;AGE&quot;</span>), ]</span></code></pre></div>
+<pre><code>##           A: Drug X      C: Combination         
+##            F      M        F         M      All 
+## ————————————————————————————————————————————————
+## Mean     37.0    43.7    34.3      36.0     38.3
+## Median   38.5    44.0    35.0      36.0     38.0</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>tbl[<span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;WHITE&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;Median&quot;</span>), ]</span></code></pre></div>
+<pre><code>##           A: Drug X      C: Combination         
+##            F      M        F         M      All 
+## ————————————————————————————————————————————————
+## Median   38.5    44.0    35.0      36.0     38.0</code></pre>
+</div>
+<div id="column-paths" class="section level3">
+<h3>Column Paths</h3>
+<p>Similar to row paths, we can get information about column paths via
+<code>col_paths_summary</code>:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">col_paths_summary</span>(tbl)</span></code></pre></div>
+<pre><code>## label             path                       
+## —————————————————————————————————————————————
+## A: Drug X         ARM, A: Drug X             
+##   F               ARM, A: Drug X, SEX, F     
+##   M               ARM, A: Drug X, SEX, M     
+## C: Combination    ARM, C: Combination        
+##   F               ARM, C: Combination, SEX, F
+##   M               ARM, C: Combination, SEX, M
+## All               All, All</code></pre>
+<p>We can then describe vertical slices of our table via these paths (we
+use <code>head</code>, which subsets via absolute position to limit the
+amount of output here):</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">head</span>(tbl[, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>)])</span></code></pre></div>
+<pre><code>##                     A: Drug X       
+##                  F            M     
+## ————————————————————————————————————
+## ASIAN        44 (62.9%)   35 (68.6%)
+##   A          15 (21.4%)   12 (23.5%)
+##     Mean        30.4         34.4   
+##     Median      30.0         33.5   
+##   B          16 (22.9%)   8 (15.7%) 
+##     Mean        33.8         34.9</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">head</span>(tbl[, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;C: Combination&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;M&quot;</span>)])</span></code></pre></div>
+<pre><code>##              C: Combination
+##                    M       
+## ———————————————————————————
+## ASIAN          44 (64.7%)  
+##   A            16 (23.5%)  
+##     Mean          36.2     
+##     Median        33.0     
+##   B            12 (17.6%)  
+##     Mean          35.9</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">head</span>(tbl[, <span class="fu">c</span>(<span class="st">&quot;All&quot;</span>, <span class="st">&quot;All&quot;</span>)])</span></code></pre></div>
+<pre><code>##                  All    
+## ————————————————————————
+## ASIAN        231 (64.9%)
+##   A          78 (21.9%) 
+##     Mean        34.5    
+##     Median      33.0    
+##   B          75 (21.1%) 
+##     Mean        33.3</code></pre>
+<p>Note that despite being displayed next to each-other, the last two
+columns of our table have fundamentally different paths. This is due to
+<code>add_overall_col</code> adding a <strong>non-nested</strong>
+additional split rather than adding an additional implicit combination
+level to the <code>ARM</code> split.</p>
+</div>
+</div>
+<div id="uniqueness-of-paths" class="section level2">
+<h2>Uniqueness of Paths</h2>
+<p>As of <code>rtables</code> <code>0.6.13</code>, rtables enforces
+uniqueness of names within groups of direct sibling structures in both
+row and column<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> space, thus guaranteeing unique paths to
+every substructure in the table.</p>
+<p>In row space, it does this by appending <code>[k]</code> to the names
+of elements which would otherwise have an identical name to a previous
+sibling, where k is a sequence of integers such that all siblings have
+unique names. This affects the paths to these substructures<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>, as we see
+from the informative messages below:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>lytdup <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>  <span class="fu">split_rows_by</span>(<span class="st">&quot;STRATA1&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a>  <span class="fu">analyze</span>(<span class="st">&quot;AGE&quot;</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a>tbldup <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lytdup, DM)</span></code></pre></div>
+<pre><code>## Modifying subtable (or row) names to ensure uniqueness among direct siblings
+## [STRATA1  -&gt; { STRATA1, STRATA1[2] }]
+##   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>tbldup</span></code></pre></div>
+<pre><code>##          all obs
+## ————————————————
+## A          114  
+## B          119  
+## C          123  
+## A               
+##   Mean    33.74 
+## B               
+##   Mean    34.10 
+## C               
+##   Mean    34.79</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">row_paths_summary</span>(tbldup)</span></code></pre></div>
+<pre><code>## rowname    node_class    path                          
+## ———————————————————————————————————————————————————————
+## A          DataRow       root, STRATA1, A              
+## B          DataRow       root, STRATA1, B              
+## C          DataRow       root, STRATA1, C              
+## A          LabelRow      root, STRATA1[2], A           
+##   Mean     DataRow       root, STRATA1[2], A, AGE, Mean
+## B          LabelRow      root, STRATA1[2], B           
+##   Mean     DataRow       root, STRATA1[2], B, AGE, Mean
+## C          LabelRow      root, STRATA1[2], C           
+##   Mean     DataRow       root, STRATA1[2], C, AGE, Mean</code></pre>
+<p>This allows us to path to all elements of the row structure, which
+was not possible in previous (<code>&lt;0.6.13</code>)
+<code>rtables</code> versions:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a>tbldup[<span class="fu">c</span>(<span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;A&quot;</span>), ]</span></code></pre></div>
+<pre><code>##     all obs
+## ———————————
+## A     114</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a>tbldup[<span class="fu">c</span>(<span class="st">&quot;STRATA1[2]&quot;</span>, <span class="st">&quot;A&quot;</span>), ]</span></code></pre></div>
+<pre><code>##          all obs
+## ————————————————
+## A               
+##   Mean    33.74</code></pre>
+</div>
+<div id="wildcards-in-paths" class="section level2">
+<h2>Wildcards In Paths</h2>
+<p>Many, though not all, <code>rtables</code> functions which accept a
+row or column paths support the <code>&quot;*&quot;</code> path wildcard. Where
+supported, the wild-card will match any <em>name</em> present at that
+step in the table structure, leading to (potentially) multiple matches.
+Note <code>&quot;*&quot;</code> will never behave as the <code>&quot;@content&quot;</code>
+directive, which must always be used explicitly.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>tbl[<span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;Median&quot;</span>), ]</span></code></pre></div>
+<pre><code>##           A: Drug X      C: Combination         
+##            F      M        F         M      All 
+## ————————————————————————————————————————————————
+## Median   32.0    34.5    34.0      34.5     33.0
+## Median   38.5    44.0    35.0      36.0     38.0</code></pre>
+<p>Multiple wildcards can appear in a path, with each wildcard applied
+recursively within the full combined set of matches from all wildcards
+earlier in the path.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a>tbl[<span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;Median&quot;</span>), ]</span></code></pre></div>
+<pre><code>##           A: Drug X      C: Combination         
+##            F      M        F         M      All 
+## ————————————————————————————————————————————————
+## Median   30.0    33.5    38.0      33.0     33.0
+## Median   32.0    34.5    34.0      34.5     33.0
+## Median   36.0    37.0    34.0      31.0     34.0
+## Median   34.0    45.0    35.0      31.0     31.0
+## Median   38.5    44.0    35.0      36.0     38.0
+## Median   35.5    44.0    38.5      32.5     40.0</code></pre>
+<p>Note that while the <code>[</code> method does support wildcards, we
+are only using that to illustrate the behavior, as the tables resulting
+from using wildcard paths with <code>[</code> are generally not going to
+be very useful.</p>
+<p>For (currently only) row paths, we can resolve a path with one or
+more wildcards into a set of fully specified paths that match the path
+in our table using the <code>tt_normalize_row_path</code> utility
+function</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a><span class="fu">tt_normalize_row_path</span>(tbl, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;Median&quot;</span>))</span></code></pre></div>
+<pre><code>## $ASIAN.A
+## [1] &quot;RACE&quot;    &quot;ASIAN&quot;   &quot;STRATA1&quot; &quot;A&quot;       &quot;AGE&quot;     &quot;Median&quot; 
+## 
+## $ASIAN.B
+## [1] &quot;RACE&quot;    &quot;ASIAN&quot;   &quot;STRATA1&quot; &quot;B&quot;       &quot;AGE&quot;     &quot;Median&quot; 
+## 
+## $ASIAN.C
+## [1] &quot;RACE&quot;    &quot;ASIAN&quot;   &quot;STRATA1&quot; &quot;C&quot;       &quot;AGE&quot;     &quot;Median&quot; 
+## 
+## $WHITE.A
+## [1] &quot;RACE&quot;    &quot;WHITE&quot;   &quot;STRATA1&quot; &quot;A&quot;       &quot;AGE&quot;     &quot;Median&quot; 
+## 
+## $WHITE.B
+## [1] &quot;RACE&quot;    &quot;WHITE&quot;   &quot;STRATA1&quot; &quot;B&quot;       &quot;AGE&quot;     &quot;Median&quot; 
+## 
+## $WHITE.C
+## [1] &quot;RACE&quot;    &quot;WHITE&quot;   &quot;STRATA1&quot; &quot;C&quot;       &quot;AGE&quot;     &quot;Median&quot;</code></pre>
+<p>We can also test whether a row path (including those containing
+wildcards) exists in our table with <code>tt_row_path_exists</code></p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a><span class="fu">tt_row_path_exists</span>(tbl, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;Median&quot;</span>))</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" tabindex="-1"></a><span class="fu">tt_row_path_exists</span>(tbl, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;FAKEFAKEFAKE&quot;</span>, <span class="st">&quot;Median&quot;</span>))</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<p>Note also that each <code>&quot;*&quot;</code> wildcard will only match <em>a
+single step</em>, there is not currently a directive that searches for a
+match anywhere in the relevant (sub)structure.</p>
+<p>Thus we get</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" tabindex="-1"></a><span class="fu">tt_normalize_row_path</span>(tbl, <span class="fu">c</span>(<span class="st">&quot;*&quot;</span>, <span class="st">&quot;Mean&quot;</span>))</span></code></pre></div>
+<pre><code>## $BMRKR1
+## [1] &quot;BMRKR1&quot; &quot;Mean&quot;</code></pre>
+<p>Despite there being other <code>&quot;Mean&quot;</code> elements elsewhere in
+our row structure.</p>
+<p>Though the above utilities don’t currently exist for column paths
+(which are implemented differently in ways not relevant to end users),
+generally those mechanisms which support wildcards in row space and also
+accept a column path support wildcards for column paths as well:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a>tbl[, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)]</span></code></pre></div>
+<pre><code>##              A: Drug X    C: Combination
+##                  F              F       
+## ————————————————————————————————————————
+## ASIAN        44 (62.9%)     40 (65.6%)  
+##   A          15 (21.4%)     15 (24.6%)  
+##     Mean        30.4           37.4     
+##     Median      30.0           38.0     
+##   B          16 (22.9%)     10 (16.4%)  
+##     Mean        33.8           33.3     
+##     Median      32.0           34.0     
+##   C          13 (18.6%)     15 (24.6%)  
+##     Mean        36.9           33.5     
+##     Median      36.0           34.0     
+## WHITE        8 (11.4%)      8 (13.1%)   
+##   A           2 (2.9%)       1 (1.6%)   
+##     Mean        34.0           35.0     
+##     Median      34.0           35.0     
+##   B           4 (5.7%)       3 (4.9%)   
+##     Mean        37.0           34.3     
+##     Median      38.5           35.0     
+##   C           2 (2.9%)       4 (6.6%)   
+##     Mean        35.5           38.5     
+##     Median      35.5           38.5     
+## BMRKR1                                  
+##   Mean          6.06           5.83</code></pre>
+</div>
+<div id="operating-on-tables-with-paths" class="section level2">
+<h2>Operating On Tables With Paths</h2>
+<p>In addition to subsetting via paths, which as we mentioned is likely
+to be of limited utility, many aspects of a table can be selectively
+inspected or changed using paths.</p>
+<p>We will explore some of these throughout this section</p>
+<div id="column-counts" class="section level3">
+<h3>Column Counts</h3>
+<p>We can set (though, currently not get, an oversight that will likely
+be remedied in a future version) the visibility on <em>a set of sibling
+facets</em>.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> <span class="fu">head</span>(tbl)</span>
+<span id="cb57-2"><a href="#cb57-2" tabindex="-1"></a><span class="fu">facet_colcounts_visible</span>(tbl2, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>)) <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb57-3"><a href="#cb57-3" tabindex="-1"></a>tbl2</span></code></pre></div>
+<pre><code>##                     A: Drug X                                               
+##                  F            M            C: Combination                   
+##                (N=70)       (N=51)         F            M            All    
+## ————————————————————————————————————————————————————————————————————————————
+## ASIAN        44 (62.9%)   35 (68.6%)   40 (65.6%)   44 (64.7%)   231 (64.9%)
+##   A          15 (21.4%)   12 (23.5%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        30.4         34.4         37.4         36.2         34.5    
+##     Median      30.0         33.5         38.0         33.0         33.0    
+##   B          16 (22.9%)   8 (15.7%)    10 (16.4%)   12 (17.6%)   75 (21.1%) 
+##     Mean        33.8         34.9         33.3         35.9         33.3</code></pre>
+<p>NB: unlike virtually all functions which accept paths,
+<code>facet_colcounts_visible</code> accepts the path to <strong><em>the
+parent of the facets you’d like to change the colcount visibility
+for</em></strong>. This is because direct siblings cannot have different
+column count visibilities, so pathing to individual facets would lead to
+an invalid table.</p>
+<p>We can also get or modify the value of any particular column count
+(note no s here):</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl2, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;M&quot;</span>)) <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a>tbl2</span></code></pre></div>
+<pre><code>##                     A: Drug X                                               
+##                  F            M            C: Combination                   
+##                (N=70)       (N=5)          F            M            All    
+## ————————————————————————————————————————————————————————————————————————————
+## ASIAN        44 (62.9%)   35 (68.6%)   40 (65.6%)   44 (64.7%)   231 (64.9%)
+##   A          15 (21.4%)   12 (23.5%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        30.4         34.4         37.4         36.2         34.5    
+##     Median      30.0         33.5         38.0         33.0         33.0    
+##   B          16 (22.9%)   8 (15.7%)    10 (16.4%)   12 (17.6%)   75 (21.1%) 
+##     Mean        33.8         34.9         33.3         35.9         33.3</code></pre>
+<p>If we need to mix visibilty and non-visibilty of counts within a
+direct sibling group the best we can do is setting one to NA, which will
+leave a blank space there:</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a><span class="fu">facet_colcount</span>(tbl2, <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;A: Drug X&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;F&quot;</span>)) <span class="ot">&lt;-</span> <span class="cn">NA_integer_</span></span>
+<span id="cb61-2"><a href="#cb61-2" tabindex="-1"></a>tbl2</span></code></pre></div>
+<pre><code>##                     A: Drug X                                               
+##                  F            M            C: Combination                   
+##                             (N=5)          F            M            All    
+## ————————————————————————————————————————————————————————————————————————————
+## ASIAN        44 (62.9%)   35 (68.6%)   40 (65.6%)   44 (64.7%)   231 (64.9%)
+##   A          15 (21.4%)   12 (23.5%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        30.4         34.4         37.4         36.2         34.5    
+##     Median      30.0         33.5         38.0         33.0         33.0    
+##   B          16 (22.9%)   8 (15.7%)    10 (16.4%)   12 (17.6%)   75 (21.1%) 
+##     Mean        33.8         34.9         33.3         35.9         33.3</code></pre>
+</div>
+<div id="section-dividers" class="section level3">
+<h3>Section Dividers</h3>
+<p>Section dividers are character(s) that are printed in a line after a
+particular row or subtable during rendering to differentiate sections of
+a table (they are most often, and by default, ” ” to create a blank
+line).</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a>tbl3 <span class="ot">&lt;-</span> tbl</span>
+<span id="cb63-2"><a href="#cb63-2" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="#cb63-3" tabindex="-1"></a><span class="fu">section_div_at_path</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>)) <span class="ot">&lt;-</span> <span class="st">&quot;*&quot;</span></span>
+<span id="cb63-4"><a href="#cb63-4" tabindex="-1"></a><span class="fu">section_div_at_path</span>(tbl3, <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;*&quot;</span>, <span class="st">&quot;STRATA1&quot;</span>, <span class="st">&quot;B&quot;</span>)) <span class="ot">&lt;-</span> <span class="st">&quot;+&quot;</span></span>
+<span id="cb63-5"><a href="#cb63-5" tabindex="-1"></a>tbl3</span></code></pre></div>
+<pre><code>##                     A: Drug X              C: Combination                   
+##                  F            M            F            M            All    
+## ————————————————————————————————————————————————————————————————————————————
+## ASIAN        44 (62.9%)   35 (68.6%)   40 (65.6%)   44 (64.7%)   231 (64.9%)
+##   A          15 (21.4%)   12 (23.5%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        30.4         34.4         37.4         36.2         34.5    
+##     Median      30.0         33.5         38.0         33.0         33.0    
+##   B          16 (22.9%)   8 (15.7%)    10 (16.4%)   12 (17.6%)   75 (21.1%) 
+##     Mean        33.8         34.9         33.3         35.9         33.3    
+##     Median      32.0         34.5         34.0         34.5         33.0    
+## ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##   C          13 (18.6%)   15 (29.4%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        36.9         35.6         33.5         31.4         33.9    
+##     Median      36.0         37.0         34.0         31.0         34.0    
+## ****************************************************************************
+## WHITE        8 (11.4%)    6 (11.8%)    8 (13.1%)    10 (14.7%)   46 (12.9%) 
+##   A           2 (2.9%)     1 (2.0%)     1 (1.6%)     5 (7.4%)     15 (4.2%) 
+##     Mean        34.0         45.0         35.0         32.8         33.3    
+##     Median      34.0         45.0         35.0         31.0         31.0    
+##   B           4 (5.7%)     3 (5.9%)     3 (4.9%)     1 (1.5%)     16 (4.5%) 
+##     Mean        37.0         43.7         34.3         36.0         38.3    
+##     Median      38.5         44.0         35.0         36.0         38.0    
+## ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##   C           2 (2.9%)     2 (3.9%)     4 (6.6%)     4 (5.9%)     15 (4.2%) 
+##     Mean        35.5         44.0         38.5         35.0         39.1    
+##     Median      35.5         44.0         38.5         32.5         40.0    
+## ****************************************************************************
+## BMRKR1                                                                      
+##   Mean          6.06         5.42         5.83         5.57         5.85</code></pre>
+<p>Section dividers have a <em>least specific to most specific</em>
+order of precedence, with only the least specific applicable section
+divider displayed after any given row. See <code>?section_div</code> for
+more details.</p>
+</div>
+<div id="sorting-within-an-rtables-table" class="section level3">
+<h3>Sorting Within An <code>rtables</code> Table</h3>
+<p>Sorting rows in a table occurs in a path-specific way. See the
+sorting section in the <a href="sorting_pruning.html#Sorting">pruning
+and sorting vignette</a> for a detailed discussion of this.</p>
+</div>
+<div id="extracting-and-modifying-values" class="section level3">
+<h3>Extracting And Modifying Values</h3>
+<p>We saw that the <code>[</code> method interprets character indicies
+as paths. Beyond that, the <code>value_at</code> and
+<code>cell_values</code> getters and setters accept paths as well. See
+the <a href="subsetting_tables.html">subsetting vignette</a>.</p>
+</div>
+<div id="footnotes" class="section level3">
+<h3>Footnotes</h3>
+<p>Pathing can also be used to add referential footnotes to rows,
+columns, or cells. This is discussed in the <a href="title_footer.html">title and footer</a> and <a href="subsetting_tables.html">subsetting</a> vignettes.</p>
+</div>
+</div>
+<div id="table-structure-and-technical-details" class="section level2">
+<h2>Table Structure And Technical Details</h2>
+<p>Here we will go into a bit more detail of how layouts, table
+structure, and pathing are related. This is largely for informational
+purposes and most of it will not be directly relevant to end-users who
+are simply creating tables.</p>
+<div id="row-structure" class="section level3">
+<h3>Row Structure</h3>
+<p><code>rtables</code> is row-dominant (as opposed to R’s
+<code>data.frame</code>s which are column dominant). This means that
+tables are modelled as a (generalized) collection of rows, rather than
+columns. More accurately, a table is modeled as a collection of
+children, which can have children, etc until ultimately all of the
+“leaf” children in the defined tree-graph are individual rows.</p>
+<p>We can see this using the <code>tree_children</code> function. The
+table we’ve been working with throughout this vignette has two direct
+children, one containing all of the structure generated underneath the
+initial <code>&quot;RACE&quot;</code> split, and one containing the unnested
+analysis of <code>&quot;BMRKR1&quot;</code>:</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a><span class="fu">tree_children</span>(tbl)</span></code></pre></div>
+<pre><code>## $RACE</code></pre>
+<pre><code>##                     A: Drug X              C: Combination                   
+##                  F            M            F            M            All    
+## ————————————————————————————————————————————————————————————————————————————
+## ASIAN        44 (62.9%)   35 (68.6%)   40 (65.6%)   44 (64.7%)   231 (64.9%)
+##   A          15 (21.4%)   12 (23.5%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        30.4         34.4         37.4         36.2         34.5    
+##     Median      30.0         33.5         38.0         33.0         33.0    
+##   B          16 (22.9%)   8 (15.7%)    10 (16.4%)   12 (17.6%)   75 (21.1%) 
+##     Mean        33.8         34.9         33.3         35.9         33.3    
+##     Median      32.0         34.5         34.0         34.5         33.0    
+##   C          13 (18.6%)   15 (29.4%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        36.9         35.6         33.5         31.4         33.9    
+##     Median      36.0         37.0         34.0         31.0         34.0    
+## WHITE        8 (11.4%)    6 (11.8%)    8 (13.1%)    10 (14.7%)   46 (12.9%) 
+##   A           2 (2.9%)     1 (2.0%)     1 (1.6%)     5 (7.4%)     15 (4.2%) 
+##     Mean        34.0         45.0         35.0         32.8         33.3    
+##     Median      34.0         45.0         35.0         31.0         31.0    
+##   B           4 (5.7%)     3 (5.9%)     3 (4.9%)     1 (1.5%)     16 (4.5%) 
+##     Mean        37.0         43.7         34.3         36.0         38.3    
+##     Median      38.5         44.0         35.0         36.0         38.0    
+##   C           2 (2.9%)     2 (3.9%)     4 (6.6%)     4 (5.9%)     15 (4.2%) 
+##     Mean        35.5         44.0         38.5         35.0         39.1    
+##     Median      35.5         44.0         38.5         32.5         40.0    
+## 
+## $BMRKR1</code></pre>
+<pre><code>##           A: Drug X      C: Combination         
+##            F      M        F         M      All 
+## ————————————————————————————————————————————————
+## BMRKR1                                          
+##   Mean   6.06    5.42    5.83      5.57     5.85</code></pre>
+<p>For convenience we will define a <code>multi_step_children</code>
+function which recursively retrieves children from the table, and then
+from those children, etc. For information purposes, we will print the
+“path step” taken each time, thus building up our path as we descend
+using the class structure.</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" tabindex="-1"></a>multi_step_children <span class="ot">&lt;-</span> <span class="cf">function</span>(tbl, indices) {</span>
+<span id="cb69-2"><a href="#cb69-2" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">obj_name</span>(tbl))</span>
+<span id="cb69-3"><a href="#cb69-3" tabindex="-1"></a>  ret <span class="ot">&lt;-</span> <span class="fu">tree_children</span>(tbl)</span>
+<span id="cb69-4"><a href="#cb69-4" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> indices) {</span>
+<span id="cb69-5"><a href="#cb69-5" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">obj_name</span>(ret[[i]]))</span>
+<span id="cb69-6"><a href="#cb69-6" tabindex="-1"></a>    ret <span class="ot">&lt;-</span> <span class="fu">tree_children</span>(ret[[i]])</span>
+<span id="cb69-7"><a href="#cb69-7" tabindex="-1"></a>  }</span>
+<span id="cb69-8"><a href="#cb69-8" tabindex="-1"></a>  ret</span>
+<span id="cb69-9"><a href="#cb69-9" tabindex="-1"></a>}</span></code></pre></div>
+<p>Thus we can see that the first of our table’s children has the path
+<code>c(&quot;root&quot;, &quot;RACE&quot;)</code> and has children for each ethnicity in
+our table (recall the “root” path element is correct but optional):</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" tabindex="-1"></a><span class="fu">multi_step_children</span>(tbl, <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;root&quot;
+## [1] &quot;RACE&quot;</code></pre>
+<pre><code>## $ASIAN</code></pre>
+<pre><code>##                     A: Drug X              C: Combination                   
+##                  F            M            F            M            All    
+## ————————————————————————————————————————————————————————————————————————————
+## ASIAN        44 (62.9%)   35 (68.6%)   40 (65.6%)   44 (64.7%)   231 (64.9%)
+##   A          15 (21.4%)   12 (23.5%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        30.4         34.4         37.4         36.2         34.5    
+##     Median      30.0         33.5         38.0         33.0         33.0    
+##   B          16 (22.9%)   8 (15.7%)    10 (16.4%)   12 (17.6%)   75 (21.1%) 
+##     Mean        33.8         34.9         33.3         35.9         33.3    
+##     Median      32.0         34.5         34.0         34.5         33.0    
+##   C          13 (18.6%)   15 (29.4%)   15 (24.6%)   16 (23.5%)   78 (21.9%) 
+##     Mean        36.9         35.6         33.5         31.4         33.9    
+##     Median      36.0         37.0         34.0         31.0         34.0    
+## 
+## $WHITE</code></pre>
+<pre><code>##                    A: Drug X             C: Combination                 
+##                  F           M           F           M           All    
+## ————————————————————————————————————————————————————————————————————————
+## WHITE        8 (11.4%)   6 (11.8%)   8 (13.1%)   10 (14.7%)   46 (12.9%)
+##   A          2 (2.9%)    1 (2.0%)    1 (1.6%)     5 (7.4%)    15 (4.2%) 
+##     Mean       34.0        45.0        35.0         32.8         33.3   
+##     Median     34.0        45.0        35.0         31.0         31.0   
+##   B          4 (5.7%)    3 (5.9%)    3 (4.9%)     1 (1.5%)    16 (4.5%) 
+##     Mean       37.0        43.7        34.3         36.0         38.3   
+##     Median     38.5        44.0        35.0         36.0         38.0   
+##   C          2 (2.9%)    2 (3.9%)    4 (6.6%)     4 (5.9%)    15 (4.2%) 
+##     Mean       35.5        44.0        38.5         35.0         39.1   
+##     Median     35.5        44.0        38.5         32.5         40.0</code></pre>
+<p>Each of these children under <code>&quot;RACE&quot;</code> is a subtable.</p>
+<p>The children under our <code>BMRKR1</code> analysis, on the other
+hand, are rows (in this case only one row, in fact):</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" tabindex="-1"></a><span class="fu">multi_step_children</span>(tbl, <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;root&quot;
+## [1] &quot;BMRKR1&quot;</code></pre>
+<pre><code>## $Mean
+## [DataRow indent_mod 0]: Mean   6.06   5.42   5.83   5.57   5.85</code></pre>
+<p>Within each race subtable, we see a table corresponding to the
+<code>STRATA1</code> split:</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" tabindex="-1"></a><span class="fu">multi_step_children</span>(tbl, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;root&quot;
+## [1] &quot;RACE&quot;
+## [1] &quot;ASIAN&quot;</code></pre>
+<pre><code>## $STRATA1</code></pre>
+<pre><code>##                   A: Drug X              C: Combination                  
+##                F            M            F            M           All    
+## —————————————————————————————————————————————————————————————————————————
+## A          15 (21.4%)   12 (23.5%)   15 (24.6%)   16 (23.5%)   78 (21.9%)
+##   Mean        30.4         34.4         37.4         36.2         34.5   
+##   Median      30.0         33.5         38.0         33.0         33.0   
+## B          16 (22.9%)   8 (15.7%)    10 (16.4%)   12 (17.6%)   75 (21.1%)
+##   Mean        33.8         34.9         33.3         35.9         33.3   
+##   Median      32.0         34.5         34.0         34.5         33.0   
+## C          13 (18.6%)   15 (29.4%)   15 (24.6%)   16 (23.5%)   78 (21.9%)
+##   Mean        36.9         35.6         33.5         31.4         33.9   
+##   Median      36.0         37.0         34.0         31.0         34.0</code></pre>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" tabindex="-1"></a><span class="fu">multi_step_children</span>(tbl, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;root&quot;
+## [1] &quot;RACE&quot;
+## [1] &quot;ASIAN&quot;
+## [1] &quot;STRATA1&quot;</code></pre>
+<pre><code>## $A</code></pre>
+<pre><code>##                   A: Drug X              C: Combination                  
+##                F            M            F            M           All    
+## —————————————————————————————————————————————————————————————————————————
+## A          15 (21.4%)   12 (23.5%)   15 (24.6%)   16 (23.5%)   78 (21.9%)
+##   Mean        30.4         34.4         37.4         36.2         34.5   
+##   Median      30.0         33.5         38.0         33.0         33.0   
+## 
+## $B</code></pre>
+<pre><code>##                  A: Drug X              C: Combination                  
+##                F            M           F            M           All    
+## ————————————————————————————————————————————————————————————————————————
+## B          16 (22.9%)   8 (15.7%)   10 (16.4%)   12 (17.6%)   75 (21.1%)
+##   Mean        33.8        34.9         33.3         35.9         33.3   
+##   Median      32.0        34.5         34.0         34.5         33.0   
+## 
+## $C</code></pre>
+<pre><code>##                   A: Drug X              C: Combination                  
+##                F            M            F            M           All    
+## —————————————————————————————————————————————————————————————————————————
+## C          13 (18.6%)   15 (29.4%)   15 (24.6%)   16 (23.5%)   78 (21.9%)
+##   Mean        36.9         35.6         33.5         31.4         33.9   
+##   Median      36.0         37.0         34.0         31.0         34.0</code></pre>
+<p>And finally within each strata facet is a table representing the
+analysis of <code>AGE</code></p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" tabindex="-1"></a><span class="fu">multi_step_children</span>(tbl, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;root&quot;
+## [1] &quot;RACE&quot;
+## [1] &quot;ASIAN&quot;
+## [1] &quot;STRATA1&quot;
+## [1] &quot;B&quot;</code></pre>
+<pre><code>## $AGE</code></pre>
+<pre><code>##           A: Drug X      C: Combination         
+##            F      M        F         M      All 
+## ————————————————————————————————————————————————
+## Mean     33.8    34.9    33.3      35.9     33.3
+## Median   32.0    34.5    34.0      34.5     33.0</code></pre>
+<p>And within each of those <code>AGE</code> analysis tables, like our
+<code>BMRKR1</code> top level analysis table, we have a collection of
+rows:</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" tabindex="-1"></a><span class="fu">multi_step_children</span>(tbl, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;root&quot;
+## [1] &quot;RACE&quot;
+## [1] &quot;ASIAN&quot;
+## [1] &quot;STRATA1&quot;
+## [1] &quot;B&quot;
+## [1] &quot;AGE&quot;</code></pre>
+<pre><code>## $Mean
+## [DataRow indent_mod 0]: Mean   33.8   34.9   33.3   35.9   33.3
+## 
+## $Median
+## [DataRow indent_mod 0]: Median   32.0   34.5   34.0   34.5   33.0</code></pre>
+<p>Thus we see that <code>analyze</code> calls create tables (called
+<code>ElementaryTable</code>s) containing individual rows as children,
+while <code>split_rows_by</code> (and siblings) calls create a subtable
+with children that are a table for each facet declared by the split
+operation:</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" tabindex="-1"></a><span class="do">## child is AGE analysis table within RACE-&gt;WHITE-&gt;STRATA1-&gt;A</span></span>
+<span id="cb95-2"><a href="#cb95-2" tabindex="-1"></a><span class="fu">multi_step_children</span>(tbl, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;root&quot;
+## [1] &quot;RACE&quot;
+## [1] &quot;WHITE&quot;
+## [1] &quot;STRATA1&quot;
+## [1] &quot;A&quot;</code></pre>
+<pre><code>## $AGE</code></pre>
+<pre><code>##           A: Drug X      C: Combination         
+##            F      M        F         M      All 
+## ————————————————————————————————————————————————
+## Mean     34.0    45.0    35.0      32.8     33.3
+## Median   34.0    45.0    35.0      31.0     31.0</code></pre>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" tabindex="-1"></a><span class="do">## children are individual rows of that AGE table</span></span>
+<span id="cb99-2"><a href="#cb99-2" tabindex="-1"></a><span class="fu">multi_step_children</span>(tbl, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;root&quot;
+## [1] &quot;RACE&quot;
+## [1] &quot;WHITE&quot;
+## [1] &quot;STRATA1&quot;
+## [1] &quot;A&quot;
+## [1] &quot;AGE&quot;</code></pre>
+<pre><code>## $Mean
+## [DataRow indent_mod 0]: Mean   34.0   45.0   35.0   32.8   33.3
+## 
+## $Median
+## [DataRow indent_mod 0]: Median   34.0   45.0   35.0   31.0   31.0</code></pre>
+</div>
+<div id="label-and-group-summary-rows" class="section level3">
+<h3>Label And Group Summary Rows</h3>
+<p>For technical and historical reasons, label rows and so-called
+“content rows” (which are essentially marginal analyses at a non-leaf
+point in the tree graph defined by the parent-child relationships
+discussed above) are modeled separately.</p>
+<p>Given a (sub)table, the content table (containing the content rows)
+and label can be retrieved by <code>content_table</code> and
+<code>obj_label</code>, respectively. Note that <code>obj_label</code>
+returns a string, not a row, as the label row is an internal detail not
+currently exposed.</p>
+<p>Recall that our <code>multi_step_children</code> function returns
+<em>the set of children at a location</em>, so we must subset one
+additional time to arrive at a single child:</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" tabindex="-1"></a>tb <span class="ot">&lt;-</span> <span class="fu">multi_step_children</span>(tbl, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))[[<span class="dv">2</span>]] <span class="do">## second ie B strata</span></span></code></pre></div>
+<pre><code>## [1] &quot;root&quot;
+## [1] &quot;RACE&quot;
+## [1] &quot;ASIAN&quot;
+## [1] &quot;STRATA1&quot;</code></pre>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" tabindex="-1"></a>tb</span></code></pre></div>
+<pre><code>##                  A: Drug X              C: Combination                  
+##                F            M           F            M           All    
+## ————————————————————————————————————————————————————————————————————————
+## B          16 (22.9%)   8 (15.7%)   10 (16.4%)   12 (17.6%)   75 (21.1%)
+##   Mean        33.8        34.9         33.3         35.9         33.3   
+##   Median      32.0        34.5         34.0         34.5         33.0</code></pre>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" tabindex="-1"></a><span class="fu">content_table</span>(tb)</span></code></pre></div>
+<pre><code>##           A: Drug X              C: Combination                  
+##         F            M           F            M           All    
+## —————————————————————————————————————————————————————————————————
+## B   16 (22.9%)   8 (15.7%)   10 (16.4%)   12 (17.6%)   75 (21.1%)</code></pre>
+<p>Typically (ie by default) label rows for (sub)tables that have a
+non-empty content table are not visible when rendering, but they do
+still exist:</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" tabindex="-1"></a><span class="fu">obj_label</span>(tb)</span></code></pre></div>
+<pre><code>## [1] &quot;B&quot;</code></pre>
+<p>Thus we see that:</p>
+<ul>
+<li><code>split_rows_by*</code> layout instructions create a single
+subtable with the split name, which contains a facet for each value of
+the split;</li>
+<li>individual <code>analyze</code> instructions create a subtable
+containing individual rows defined by the afun used;</li>
+<li>repeated or multi-var <code>analyze</code> instructions create a
+parent subtable with a child for each individual analyzed var, as above;
+and</li>
+<li><code>summarize_row_groups</code> create content tables on <em>the
+children of</em> the table for that split</li>
+</ul>
+</div>
+<div id="column-structure" class="section level3">
+<h3>Column Structure</h3>
+<p>For largely historical reasons, and due to the fact that the
+<code>rtables</code> object model is row-dominant, the exact way that
+column structure is modeled is an arcane implementation detail not
+useful to end users (much more so than the row structure explored
+above). Thus we will largely gloss over it here.</p>
+<p>For our purposes here it suffices to say that the analog of the
+subtables representing split instructions are implicit in column space
+after the first split, as opposed to explicit as we saw them to be in
+row space. That said, the relationship between layout instructions and
+resulting paths in the table remains valid and useful.</p>
+<p>We can see this by looking again at our column paths summary:</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" tabindex="-1"></a><span class="fu">col_paths_summary</span>(tbl)</span></code></pre></div>
+<pre><code>## label             path                       
+## —————————————————————————————————————————————
+## A: Drug X         ARM, A: Drug X             
+##   F               ARM, A: Drug X, SEX, F     
+##   M               ARM, A: Drug X, SEX, M     
+## C: Combination    ARM, C: Combination        
+##   F               ARM, C: Combination, SEX, F
+##   M               ARM, C: Combination, SEX, M
+## All               All, All</code></pre>
+<p>Column paths have a more rigid structure than their row-based
+counterparts. Because column space has no analog to analyze layout
+instructions, All paths corresponding to facets or individual columns
+come in the form of one or more pairs of the form (split name, split
+value).</p>
+<p>Virtually all useful column paths will be of the form above. The only
+exception to this is when setting column count visibility to a set of
+facets via <code>facet_colcounts_visible&lt;-</code>, for which we path
+to the implicit parent structure whose children are the facets we are
+interested in. We saw this in action in the previous section.</p>
+<p>To summarize, as for row space, the relationship between layout
+instructions and column paths as follows: column split instructions
+create structures pathable via (split_name, split value/facet name)
+pairs. Because there is no <code>analyze</code> analog for column
+splitting, this paradigm is sufficient to understand and predict all
+column paths.</p>
+</div>
+</div>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>In <code>rtables</code> <code>0.6.13</code> table
+layouts which would result in non-unique paths in column space will fail
+to build. This will likely change to be more in line with the behavior
+in row space in a future release.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>In <code>rtables</code> <code>0.6.13</code> table
+layouts which would result in non-unique paths in column space will fail
+to build. This will likely change to be more in line with the behavior
+in row space in a future release.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>the result-data.frame / ARD machinery knows to remove
+these uniquification artifacts, so these modifications to the names will
+not be reflected there.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

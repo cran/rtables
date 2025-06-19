@@ -230,12 +230,37 @@ visible_only and not"
     ) %>%
     analyze(c("AGE", "AGE"),
       afun = list(mean, range),
-      show_labels = "hidden", table_names = c("AGE mean", "AGE range")
+      show_labels = "hidden",
     )
 
-  tab2 <- build_table(l2, DM)
+  l2b <- basic_table(show_colcounts = TRUE) %>%
+    split_cols_by(
+      "ARM",
+      split_fun = add_combo_levels(combodf, keep_levels = c("A_", "B_C"))
+    ) %>%
+    analyze(c("AGE", "AGE"),
+      afun = list(mean, range),
+      show_labels = "hidden",
+      table_names = c("AGE mean", "AGE range")
+    )
+
+
+  ## warning from analyses so it tries using labels, but those are the same too
+  ## so we get the new message and uniquification
+  tab2 <- expect_warning(expect_message(build_table(l2, DM)))
+  tab2b <- expect_silent(build_table(l2b, DM))
+  expect_false(identical(tab2, tab2b))
+  expect_identical(
+    unname(unlist(cell_values(tab2))),
+    unname(unlist(cell_values(tab2b)))
+  )
   test_colpaths(tab2)
   cdf2 <- make_col_df(tab2)
+  rdf2 <- make_row_df(tab2, visible_only = FALSE)
+  ## don't need to check values, just make sure all the paths work
+  ## after the uniquification
+  resnull <- expect_silent(lapply(rdf2$path, function(pth) tab2[pth, ]))
+  expect_error(tab2[c("ma_AGE_AGE", "AGE[3]"), ]) ## there are only 2
   ## res5 <- lapply(cdf2$path, function(pth) subset)cols
 })
 
@@ -581,6 +606,9 @@ test_that("bracket methods all work", {
     ]
   )
 
+  tbl_sub2 <- tbl[rep(c(TRUE, FALSE), c(25, nrtot - 25)), c(1, 4, 6)]
+  expect_identical(tbl_sub1, tbl_sub2)
+
   expect_identical(
     tbl[, c(1, 4, 6)],
     tbl[, c(TRUE, FALSE, FALSE, TRUE, FALSE, TRUE)]
@@ -610,6 +638,9 @@ test_that("tt_at_path and cell_values work with values even if they differ in na
   expect_silent(tt_at_path(tbl, rdf$path[[2]]))
 })
 
+
+## no longer possible rtables now ensures names are
+## unique within groups of direct siblings anywhere in the table.
 test_that("tt_at_path works with identical split names", {
   # Regression test #864
   adsl <- ex_adsl
@@ -623,10 +654,10 @@ test_that("tt_at_path works with identical split names", {
     split_rows_by("SEX") %>%
     analyze("BMRKR1")
 
-  tbl <- build_table(lyt, adsl)
+  tbl <- expect_message(build_table(lyt, adsl), "[flag  -> { flag, flag[2] }]", fixed = TRUE)
 
   expect_equal(
-    tt_at_path(tbl, c("root", "flag", "Y")),
+    tt_at_path(tbl, c("root", "flag[2]", "Y")),
     tree_children(tree_children(tbl)[[2]])[[1]]
   )
 
@@ -639,11 +670,11 @@ test_that("tt_at_path works with identical split names", {
     split_rows_by("SEX", split_fun = keep_split_levels("U")) %>%
     analyze("AGE")
 
-  tbl <- build_table(lyt, adsl)
+  tbl <- expect_message(build_table(lyt, adsl), "[flag  -> { flag, flag[2] }]", fixed = TRUE)
 
   expect_equal(
     names(tt_at_path(tbl, c("root", "flag", "Y", "SEX", "U"))),
-    rep("flag", 2)
+    "all obs"
   )
 })
 
@@ -663,5 +694,223 @@ test_that("tt_at_path gives an informative error when labels are used instead of
   expect_error(
     tt_at_path(out, real_path),
     "Path appears invalid for this tree at step \\'An error may occur\\'. Please use only row names and NOT"
+  )
+})
+
+
+strip_root_els <- function(pthlst) {
+  lapply(pthlst, function(pth) {
+    if (pth[1] == "root") {
+      pth <- pth[-1]
+    }
+    pth
+  })
+}
+test_that("tt_row_path_exists and tt_normalize_row_path work", {
+  lyt <- basic_table() |>
+    split_rows_by("ARM") |>
+    split_rows_by("STRATA1") |>
+    summarize_row_groups() |>
+    analyze("SEX") |>
+    analyze("SEX", nested = FALSE)
+  tbl <- build_table(lyt, DM)
+  ## expect TRUE
+  expect_true(tt_row_path_exists(tbl, c("root", "ARM", "*", "*", "*", "SEX"))) # TRUE
+  expect_true(tt_row_path_exists(tbl, c("root", "ARM", "*", "*", "*", "*"))) # TRUE
+  expect_true(tt_row_path_exists(tbl, c("root", "ARM", "*", "*", "*", "*"), tt_type = "table")) # TRUE
+  expect_true(tt_row_path_exists(tbl, c("ARM", "*", "*", "*", "SEX"))) # TRUE
+  expect_true(tt_row_path_exists(tbl, c("ARM", "*", "STRATA1", "*", "SEX"))) # TRUE
+  expect_true(tt_row_path_exists(tbl, "SEX")) # TRUE
+  expect_true(tt_row_path_exists(tbl, "SEX", tt_type = "table")) # TRUE
+  expect_true(tt_row_path_exists(tbl, "SEX", tt_type = "elemtable")) # TRUE
+  expect_true(tt_row_path_exists(tbl, c("SEX", "*"))) # TRUE
+  expect_true(tt_row_path_exists(tbl, c("ARM", "A: Drug X"), tt_type = "table"))
+
+  ## expect FALSE
+  expect_false(tt_row_path_exists(tbl, c("root", "ARM", "*", "*", "*", "*"), tt_type = "row")) # FALSE
+  expect_false(tt_row_path_exists(tbl, c("ARM", "*", "*", "*", "SEX"), tt_type = "row")) # FALSE
+  expect_false(tt_row_path_exists(tbl, c("ARM", "*", "*", "SEX"))) # FALSE
+  expect_false(tt_row_path_exists(tbl, "FAKE")) # FALSE
+  expect_false(tt_row_path_exists(tbl, c("ARM", "*", "STRATA", "*", "SEX"))) # FALSE
+  expect_false(tt_row_path_exists(tbl, "SEX", tt_type = "row")) # FALSE
+  expect_false(tt_row_path_exists(tbl, c("ARM", "A: Drug X"), tt_type = "elemtable"))
+
+  ## more complicated
+  lyt2 <- basic_table() |>
+    split_rows_by("ARM") |>
+    split_rows_by("STRATA1") |>
+    analyze("SEX") |>
+    split_rows_by("RACE") |>
+    split_rows_by("STRATA1") |>
+    analyze("AGE") |>
+    analyze("SEX", nested = FALSE)
+  tbl2 <- build_table(lyt2, DM)
+  expect_true(tt_row_path_exists(tbl2, c("*", "*", "*", "*", "AGE")))
+  expect_true(tt_row_path_exists(tbl2, c("*", "*", "*", "*", "AGE"), tt_type = "elemtable"))
+  expect_true(tt_row_path_exists(tbl2, c("*", "*", "*", "*", "SEX"), tt_type = "elemtable"))
+  expect_true(tt_row_path_exists(tbl2, "*", tt_type = "elemtable"))
+  expect_false(tt_row_path_exists(tbl2, "AGE", tt_type = "elemtable"))
+  expect_false(tt_row_path_exists(tbl2, c("RACE", "*", "*", "*", "SEX"), tt_type = "elemtable"))
+  ## we can resolve specifics after wildcards and it behaves itself
+  expect_equal(
+    length(tt_normalize_row_path(tbl2, c("*", "*", "STRATA1", "A", "*"), tt_type = "elemtable")),
+    length(levels(DM$ARM)) + length(levels(DM$RACE))
+  )
+  expect_equal(
+    length(tt_normalize_row_path(tbl2, c("*", "*", "STRATA1", "A", "*", "*"), tt_type = "row")),
+    ## analyze sex gives 1 row per level within each arm, analyzing age just gives one row (mean)
+    length(levels(DM$ARM)) * length(levels(DM$SEX)) + length(levels(DM$RACE))
+  )
+  ## bad steps return no results even if surrounded by wildcards
+  expect_identical(
+    tt_normalize_row_path(tbl2, c("*", "*", "STRATA1FAKEFAKE", "A", "*"), tt_type = "elemtable"),
+    list()
+  )
+  ## we can get all the row paths if we do weird things because we feel like it
+  rdf <- make_row_df(tbl2)
+  datarowpaths <- rdf$path[rdf$node_class == "DataRow"]
+  expect_equal(
+    c(
+      unname(tt_normalize_row_path(tbl2, c("*", "*", "*", "*", "*", "*"), tt_type = "row")),
+      unname(tt_normalize_row_path(tbl2, c("*", "*"), tt_type = "row"))
+    ),
+    strip_root_els(datarowpaths)
+  ) ## get rid of "root" that rdf has
+
+  ## not fooled by content tables that are "technically there" but have no rows
+  expect_false(tt_row_path_exists(tbl2, c("*", "*", "@content")))
+  expect_false(tt_row_path_exists(tbl2, c("*", "@content")))
+  expect_false(tt_row_path_exists(tbl2, c("*", "*", "*", "@content")))
+  expect_equal(
+    unname(tt_normalize_row_path(tbl2, c("*", "@content"))),
+    list()
+  )
+  expect_equal(
+    unname(tt_normalize_row_path(tbl2, c("*", "*", "@content"))),
+    list()
+  )
+  expect_equal(
+    unname(tt_normalize_row_path(tbl2, c("*", "*", "*", "@content"))),
+    list()
+  )
+  ## handles case where there isn't even technically a content table gracefully
+  expect_equal(
+    unname(tt_normalize_row_path(tbl2, c("SEX", "@content"))),
+    list()
+  )
+
+  ## works ok with a path with no "*" at the end
+  expect_equal(
+    length(tt_normalize_row_path(tbl2, c("*", "*", "STRATA1", "A"), tt_type = "table")),
+    length(levels(DM$ARM)) + length(levels(DM$RACE))
+  )
+
+  ## works ok with fully fixed paths
+  ## use smaller tbl here to avoid redundant checking
+  rdf <- make_row_df(tbl, visible_only = FALSE)
+  allpths <- rdf$path
+  pathok <- vapply(allpths, function(pth) {
+    tt_row_path_exists(tbl, pth) &&
+      identical(unname(tt_normalize_row_path(tbl, pth)), list(pth))
+  }, TRUE)
+  expect_true(all(pathok))
+
+  pathokrow <- vapply(allpths, function(pth) {
+    tt_row_path_exists(tbl, pth, tt_type = "row") &&
+      identical(unname(tt_normalize_row_path(tbl, pth, tt_type = "row")), list(pth))
+  }, TRUE)
+  expect_equal(pathokrow, rdf$node_class %in% c("ContentRow", "DataRow"))
+
+  pathoktbl <- vapply(allpths, function(pth) {
+    tt_row_path_exists(tbl, pth, tt_type = "table") &&
+      identical(unname(tt_normalize_row_path(tbl, pth, tt_type = "table")), list(pth))
+  }, TRUE)
+
+  ## LabelRow has "path" of its table in the rdf. That is wrong, of course but
+  ## it's always been that way and doesn't break anything
+  ## note, again, we can't use that path to actually path to the label row itself, have to
+  ## use tt_labelrow accessor on the relevant table. Could probably generalize pathing to
+  ## fix that.
+  ## XXX TODO
+  expect_equal(pathoktbl, rdf$node_class %in% c("TableTree", "ElementaryTable", "LabelRow"))
+
+
+  lyt3 <- basic_table() |>
+    split_rows_by("ARM") |>
+    summarize_row_groups() |>
+    split_rows_by("STRATA1") |>
+    analyze("SEX") |>
+    analyze("SEX", nested = FALSE)
+
+  tbl3 <- build_table(lyt3, DM)
+  rdf3 <- make_row_df(tbl3)
+  ## can find content table/rows that ARE there....
+  expect_true(tt_row_path_exists(tbl3, c("*", "*", "@content")))
+  expect_false(tt_row_path_exists(tbl3, c("*", "*", "@content"), tt_type = "row"))
+  expect_true(tt_row_path_exists(tbl3, c("*", "*", "@content", "*"), tt_type = "row"))
+  expect_true(tt_row_path_exists(tbl3, c("*", "*", "@content", "*"), tt_type = "row"))
+  expect_equal(
+    unname(tt_normalize_row_path(tbl3, c("*", "*", "@content", "*"), tt_type = "row")),
+    strip_root_els(rdf3$path[rdf3$node_class == "ContentRow"])
+  )
+})
+
+test_that("subset_cols works as intended", {
+  lyt <- basic_table(
+    title = "Title",
+    subtitles = c("Sub", "titles"),
+    prov_footer = "prov footer",
+    main_footer = "main footer"
+  ) %>%
+    split_cols_by("ARM") %>%
+    split_cols_by("SEX") %>%
+    add_overall_col("All Patients") %>%
+    split_rows_by("STRATA1") %>%
+    summarize_row_groups() %>%
+    analyze(c("AGE"))
+
+  tbl <- build_table(lyt, DM)
+  stbl1 <- subset_cols(tbl, 1)
+  stbl1b <- subset_cols(tbl, c("ARM", "A: Drug X", "SEX", "F"))
+  expect_equal(ncol(stbl1), 1)
+  expect_identical(stbl1, stbl1b)
+  expect_identical(
+    all_titles(tbl),
+    all_titles(stbl1)
+  )
+  expect_identical(
+    all_footers(tbl),
+    all_footers(stbl1)
+  )
+
+  ## grab elementary table "for teh covrs"
+  ctab <- tt_at_path(tbl, c("STRATA1", "A", "@content"))
+  expect_identical(
+    subset_cols(ctab, j = 1),
+    tt_at_path(stbl1, c("STRATA1", "A", "@content"))
+  )
+
+  stbl2 <- subset_cols(tbl, c(2, 6, 10))
+  stbl2b <- subset_cols(tbl, c("*", "*", "*", "M"))
+  expect_equal(ncol(stbl2), 3)
+  expect_identical(stbl2, stbl2b)
+
+  stbl3 <- subset_cols(tbl, c("All Patients"))
+  stbl3b <- subset_cols(tbl, 13)
+
+  expect_equal(ncol(stbl3), 1)
+  expect_identical(stbl3, stbl3b)
+
+  ## exercise direct-on-row column subsetting
+  ## contains all types of rows
+  rws <- collect_leaves(tbl, add.labrows = TRUE)
+  expect_identical(
+    lapply(rws, subset_cols, j = 1),
+    collect_leaves(stbl1, add.labrows = TRUE)
+  )
+
+  expect_identical(
+    lapply(rws, subset_cols, j = c("*", "*", "*", "M")),
+    collect_leaves(stbl2, add.labrows = TRUE)
   )
 })

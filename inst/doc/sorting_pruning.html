@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker, Adrian Waddell and Davide Garolini" />
 
-<meta name="date" content="2025-04-10" />
+<meta name="date" content="2025-06-17" />
 
 <title>Pruning and Sorting Tables</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Pruning and Sorting Tables</h1>
 <h4 class="author">Gabriel Becker, Adrian Waddell and Davide
 Garolini</h4>
-<h4 class="date">2025-04-10</h4>
+<h4 class="date">2025-06-17</h4>
 
 
 
@@ -450,8 +450,12 @@ criteria function. All rows where the criteria function returns
 <p><strong>NOTE</strong>: Each row is kept or removed completely
 independently, with no awareness of the surrounding structure. This
 means, for example, that a subtree could have all its analysis rows
-removed and not be removed itself. For structure-aware filtering of a
-table, we will use <em>pruning</em> described in the next section.</p>
+removed and not be removed itself. This can easily result in a
+<em>degenerate table</em> which has an invalid structure (see
+<code>?validate_table_struct</code>); for this reason trimming is
+generally not suggested for tables with non-trivial row structures. For
+structure-aware filtering of a table, we will use <em>pruning</em>
+described in the next section.</p>
 <p>A <em>trimming function</em> accepts a <code>TableRow</code> object
 and returns <code>TRUE</code> if the row should be removed.</p>
 <p>The default trimming function removes rows in which all columns have
@@ -701,7 +705,8 @@ location within the table, and the <em>direct children</em> of the
 element at that path will be reordered. This occurs whether those
 children are subtables themselves, or individual rows. Sorting is done
 via the <code>sort_at_path()</code> function, which accepts both a (row)
-path and a scoring function.</p>
+path and a scoring function. See the <a href="pathing.html">pathing
+vignette</a> for details about paths.</p>
 <p>A <em>score function</em> accepts a subtree or <code>TableRow</code>
 and returns a single orderable (typically numeric) value. Within the
 subtable currently being sorted, the children are then reordered by the
@@ -727,7 +732,7 @@ definition, below:</p>
 <span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#     }</span></span>
 <span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#     sum(sapply(row_values(tree_children(ctab)[[1]]), function(cv) cv[1]))</span></span>
 <span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co"># }</span></span>
-<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x55dcac943ee0&gt;</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x561500f66540&gt;</span></span>
 <span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co"># &lt;environment: namespace:rtables&gt;</span></span></code></pre></div>
 <p>Therefore, a fundamental difference between pruning and sorting is
 that sorting occurs at particular places in the table, as defined by a
@@ -763,8 +768,8 @@ by observation counts within just the <code>ASIAN</code> subtable:</p>
 </div>
 <div id="wildcards-in-sort-paths" class="section level3">
 <h3>Wildcards in Sort Paths</h3>
-<p>Unlike other uses of pathing (currently), a sorting path can contain
-“*“. This indicates that the children of each subtable matching he
+<p>A sorting path can contain one or more instances of the “*” wildcard.
+Each of these indicates that the children of each subtable matching this
 <code>*</code> element of the path should be sorted
 <strong>separately</strong> as indicated by the remainder of the path
 after the <code>*</code> and the score function.</p>
@@ -1103,7 +1108,7 @@ proceed.</p>
 <span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="co">#         row_values(tree_children(ctab)[[1]])[[j]][1]</span></span>
 <span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="co">#     }</span></span>
 <span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="co"># }</span></span>
-<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x55dcb28ed500&gt;</span></span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x561500c87850&gt;</span></span>
 <span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a><span class="co"># &lt;environment: namespace:rtables&gt;</span></span></code></pre></div>
 <p>We see that a similar function to <code>cont_n_allcols()</code> is
 wrapped by one that allows a parameter <code>j</code> to be used to

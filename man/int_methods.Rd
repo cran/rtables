@@ -351,6 +351,10 @@
 \alias{ref_msg,RefFootnote-method}
 \alias{fnotes_at_path<-,VTableTree,character-method}
 \alias{fnotes_at_path<-,VTableTree,NULL-method}
+\alias{has_force_pag}
+\alias{has_force_pag,TableTree-method}
+\alias{has_force_pag,Split-method}
+\alias{has_force_pag,VTableNodeInfo-method}
 \alias{obj_stat_names}
 \alias{obj_stat_names<-}
 \alias{obj_stat_names<-,CellValue-method}
@@ -369,6 +373,7 @@
 \alias{[,VTableTree,missing,ANY-method}
 \alias{[,VTableTree,ANY,character-method}
 \alias{[,VTableTree,character,ANY-method}
+\alias{[,VTableTree,character,missing-method}
 \alias{[,VTableTree,character,character-method}
 \alias{[,VTableTree,missing,numeric-method}
 \alias{[,VTableTree,numeric,numeric-method}
@@ -1123,6 +1128,14 @@ spl_varnames(object) <- value
 
 \S4method{fnotes_at_path}{VTableTree,NULL}(obj, rowpath = NULL, colpath = NULL, reset_idx = TRUE) <- value
 
+has_force_pag(obj)
+
+\S4method{has_force_pag}{TableTree}(obj)
+
+\S4method{has_force_pag}{Split}(obj)
+
+\S4method{has_force_pag}{VTableNodeInfo}(obj)
+
 obj_stat_names(obj)
 
 obj_stat_names(obj) <- value
@@ -1158,6 +1171,8 @@ obj_stat_names(obj) <- value
 \S4method{[}{VTableTree,ANY,character}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{VTableTree,character,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{[}{VTableTree,character,missing}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{VTableTree,character,character}(x, i, j, ..., drop = FALSE)
 

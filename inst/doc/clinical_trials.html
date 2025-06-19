@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2025-04-10" />
+<meta name="date" content="2025-06-17" />
 
 <title>Example Clinical Trials Tables</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Example Clinical Trials Tables</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2025-04-10</h4>
+<h4 class="date">2025-06-17</h4>
 
 
 
@@ -2131,26 +2131,29 @@ and remove the CI for <code>NE</code> we could do that as follows:</p>
 <span id="cb42-35"><a href="#cb42-35" tabindex="-1"></a>  }, <span class="at">nested =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb42-36"><a href="#cb42-36" tabindex="-1"></a></span>
 <span id="cb42-37"><a href="#cb42-37" tabindex="-1"></a>rsp_tbl4 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(rsp_lyt4, ADRS_BESRSPI)</span>
-<span id="cb42-38"><a href="#cb42-38" tabindex="-1"></a>rsp_tbl4</span>
-<span id="cb42-39"><a href="#cb42-39" tabindex="-1"></a><span class="co">#                                           ARM A              ARM B                ARM C       </span></span>
-<span id="cb42-40"><a href="#cb42-40" tabindex="-1"></a><span class="co">#                                          (N=134)            (N=134)              (N=132)      </span></span>
-<span id="cb42-41"><a href="#cb42-41" tabindex="-1"></a><span class="co"># ——————————————————————————————————————————————————————————————————————————————————————————————</span></span>
-<span id="cb42-42"><a href="#cb42-42" tabindex="-1"></a><span class="co"># Responders                           114.00 (85.07%)     90.00 (67.16%)      120.00 (90.91%)  </span></span>
-<span id="cb42-43"><a href="#cb42-43" tabindex="-1"></a><span class="co"># Non-Responders                       20.00 (14.93%)      44.00 (32.84%)       12.00 (9.09%)   </span></span>
-<span id="cb42-44"><a href="#cb42-44" tabindex="-1"></a><span class="co"># Unstratified Response Analysis                                                                </span></span>
-<span id="cb42-45"><a href="#cb42-45" tabindex="-1"></a><span class="co">#   Difference in Response Rates (%)                           -17.91                5.83       </span></span>
-<span id="cb42-46"><a href="#cb42-46" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)                        (-27.89, -7.93)       (-1.94, 13.61)  </span></span>
-<span id="cb42-47"><a href="#cb42-47" tabindex="-1"></a><span class="co">#   p-value (Chi-Squared Test)                                 0.0006               0.1436      </span></span>
-<span id="cb42-48"><a href="#cb42-48" tabindex="-1"></a><span class="co">#   Odds Ratio (95% CI)                                  0.36 (0.20 - 0.65)   1.75 (0.82 - 3.75)</span></span>
-<span id="cb42-49"><a href="#cb42-49" tabindex="-1"></a><span class="co"># Complete Response (CR)                 78 (58.21%)        55 (41.04%)          97 (73.48%)    </span></span>
-<span id="cb42-50"><a href="#cb42-50" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)     (49.38, 66.67)      (32.63, 49.87)       (65.10, 80.79)  </span></span>
-<span id="cb42-51"><a href="#cb42-51" tabindex="-1"></a><span class="co"># Partial Response (PR)                  36 (26.87%)        35 (26.12%)          23 (17.42%)    </span></span>
-<span id="cb42-52"><a href="#cb42-52" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)     (19.58, 35.20)      (18.92, 34.41)       (11.38, 24.99)  </span></span>
-<span id="cb42-53"><a href="#cb42-53" tabindex="-1"></a><span class="co"># Stable Disease (SD)                    20 (14.93%)        44 (32.84%)           12 (9.09%)    </span></span>
-<span id="cb42-54"><a href="#cb42-54" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)      (9.36, 22.11)      (24.97, 41.47)       (4.79, 15.34)   </span></span>
-<span id="cb42-55"><a href="#cb42-55" tabindex="-1"></a><span class="co"># Progressive Disease (PD)                0 (0.00%)          0 (0.00%)            0 (0.00%)     </span></span>
-<span id="cb42-56"><a href="#cb42-56" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)      (0.00, 2.72)        (0.00, 2.72)         (0.00, 2.76)   </span></span>
-<span id="cb42-57"><a href="#cb42-57" tabindex="-1"></a><span class="co"># Not Evaluable (NE)                    0.00 (0.00%)        0.00 (0.00%)         0.00 (0.00%)</span></span></code></pre></div>
+<span id="cb42-38"><a href="#cb42-38" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb42-39"><a href="#cb42-39" tabindex="-1"></a><span class="co"># [AVALC  -&gt; { AVALC, AVALC[2] }]</span></span>
+<span id="cb42-40"><a href="#cb42-40" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb42-41"><a href="#cb42-41" tabindex="-1"></a>rsp_tbl4</span>
+<span id="cb42-42"><a href="#cb42-42" tabindex="-1"></a><span class="co">#                                           ARM A              ARM B                ARM C       </span></span>
+<span id="cb42-43"><a href="#cb42-43" tabindex="-1"></a><span class="co">#                                          (N=134)            (N=134)              (N=132)      </span></span>
+<span id="cb42-44"><a href="#cb42-44" tabindex="-1"></a><span class="co"># ——————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb42-45"><a href="#cb42-45" tabindex="-1"></a><span class="co"># Responders                           114.00 (85.07%)     90.00 (67.16%)      120.00 (90.91%)  </span></span>
+<span id="cb42-46"><a href="#cb42-46" tabindex="-1"></a><span class="co"># Non-Responders                       20.00 (14.93%)      44.00 (32.84%)       12.00 (9.09%)   </span></span>
+<span id="cb42-47"><a href="#cb42-47" tabindex="-1"></a><span class="co"># Unstratified Response Analysis                                                                </span></span>
+<span id="cb42-48"><a href="#cb42-48" tabindex="-1"></a><span class="co">#   Difference in Response Rates (%)                           -17.91                5.83       </span></span>
+<span id="cb42-49"><a href="#cb42-49" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)                        (-27.89, -7.93)       (-1.94, 13.61)  </span></span>
+<span id="cb42-50"><a href="#cb42-50" tabindex="-1"></a><span class="co">#   p-value (Chi-Squared Test)                                 0.0006               0.1436      </span></span>
+<span id="cb42-51"><a href="#cb42-51" tabindex="-1"></a><span class="co">#   Odds Ratio (95% CI)                                  0.36 (0.20 - 0.65)   1.75 (0.82 - 3.75)</span></span>
+<span id="cb42-52"><a href="#cb42-52" tabindex="-1"></a><span class="co"># Complete Response (CR)                 78 (58.21%)        55 (41.04%)          97 (73.48%)    </span></span>
+<span id="cb42-53"><a href="#cb42-53" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)     (49.38, 66.67)      (32.63, 49.87)       (65.10, 80.79)  </span></span>
+<span id="cb42-54"><a href="#cb42-54" tabindex="-1"></a><span class="co"># Partial Response (PR)                  36 (26.87%)        35 (26.12%)          23 (17.42%)    </span></span>
+<span id="cb42-55"><a href="#cb42-55" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)     (19.58, 35.20)      (18.92, 34.41)       (11.38, 24.99)  </span></span>
+<span id="cb42-56"><a href="#cb42-56" tabindex="-1"></a><span class="co"># Stable Disease (SD)                    20 (14.93%)        44 (32.84%)           12 (9.09%)    </span></span>
+<span id="cb42-57"><a href="#cb42-57" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)      (9.36, 22.11)      (24.97, 41.47)       (4.79, 15.34)   </span></span>
+<span id="cb42-58"><a href="#cb42-58" tabindex="-1"></a><span class="co"># Progressive Disease (PD)                0 (0.00%)          0 (0.00%)            0 (0.00%)     </span></span>
+<span id="cb42-59"><a href="#cb42-59" tabindex="-1"></a><span class="co">#   95% CI (Wald, with correction)      (0.00, 2.72)        (0.00, 2.72)         (0.00, 2.76)   </span></span>
+<span id="cb42-60"><a href="#cb42-60" tabindex="-1"></a><span class="co"># Not Evaluable (NE)                    0.00 (0.00%)        0.00 (0.00%)         0.00 (0.00%)</span></span></code></pre></div>
 <p>Note that the table is missing the rows gaps to make it more
 readable. The row spacing feature is on the <code>rtables</code> roadmap
 and will be implemented in future.</p>

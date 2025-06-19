@@ -756,57 +756,84 @@ subset:</p>
 <span id="cb25-16"><a href="#cb25-16" tabindex="-1"></a>tbl12 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt12, df)</span>
 <span id="cb25-17"><a href="#cb25-17" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
 <span id="cb25-18"><a href="#cb25-18" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u3]</span></span>
-<span id="cb25-19"><a href="#cb25-19" tabindex="-1"></a><span class="co"># Warning in min(x): no non-missing arguments to min; returning Inf</span></span>
-<span id="cb25-20"><a href="#cb25-20" tabindex="-1"></a><span class="co"># Warning in max(x): no non-missing arguments to max; returning -Inf</span></span>
-<span id="cb25-21"><a href="#cb25-21" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb25-22"><a href="#cb25-22" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u1]</span></span>
-<span id="cb25-23"><a href="#cb25-23" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb25-24"><a href="#cb25-24" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u2]</span></span>
-<span id="cb25-25"><a href="#cb25-25" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb25-26"><a href="#cb25-26" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v2]</span></span>
-<span id="cb25-27"><a href="#cb25-27" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb25-28"><a href="#cb25-28" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v3]</span></span>
+<span id="cb25-19"><a href="#cb25-19" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb25-20"><a href="#cb25-20" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb25-21"><a href="#cb25-21" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb25-22"><a href="#cb25-22" tabindex="-1"></a><span class="co"># Warning in min(x): no non-missing arguments to min; returning Inf</span></span>
+<span id="cb25-23"><a href="#cb25-23" tabindex="-1"></a><span class="co"># Warning in max(x): no non-missing arguments to max; returning -Inf</span></span>
+<span id="cb25-24"><a href="#cb25-24" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb25-25"><a href="#cb25-25" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u1]</span></span>
+<span id="cb25-26"><a href="#cb25-26" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb25-27"><a href="#cb25-27" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb25-28"><a href="#cb25-28" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
 <span id="cb25-29"><a href="#cb25-29" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb25-30"><a href="#cb25-30" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v1]</span></span>
-<span id="cb25-31"><a href="#cb25-31" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb25-32"><a href="#cb25-32" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w1]</span></span>
-<span id="cb25-33"><a href="#cb25-33" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb25-34"><a href="#cb25-34" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w3]</span></span>
-<span id="cb25-35"><a href="#cb25-35" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb25-36"><a href="#cb25-36" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w2]</span></span>
-<span id="cb25-37"><a href="#cb25-37" tabindex="-1"></a>tbl12</span>
-<span id="cb25-38"><a href="#cb25-38" tabindex="-1"></a><span class="co">#                       A              B              C      </span></span>
-<span id="cb25-39"><a href="#cb25-39" tabindex="-1"></a><span class="co"># ———————————————————————————————————————————————————————————</span></span>
-<span id="cb25-40"><a href="#cb25-40" tabindex="-1"></a><span class="co"># U                                                          </span></span>
-<span id="cb25-41"><a href="#cb25-41" tabindex="-1"></a><span class="co">#   u3                                                       </span></span>
-<span id="cb25-42"><a href="#cb25-42" tabindex="-1"></a><span class="co">#     mean (sd)   -0.04 (1.18)    0.36 (1.41)    -0.25 (0.72)</span></span>
-<span id="cb25-43"><a href="#cb25-43" tabindex="-1"></a><span class="co">#     range       -1.80 - 1.47    -1.28 - 2.40   -0.82 - 0.56</span></span>
-<span id="cb25-44"><a href="#cb25-44" tabindex="-1"></a><span class="co">#   u1                                                       </span></span>
-<span id="cb25-45"><a href="#cb25-45" tabindex="-1"></a><span class="co">#     mean (sd)    0.86 (0.38)    0.32 (0.51)         NA     </span></span>
-<span id="cb25-46"><a href="#cb25-46" tabindex="-1"></a><span class="co">#     range        0.59 - 1.12    -0.48 - 0.94    Inf - -Inf </span></span>
-<span id="cb25-47"><a href="#cb25-47" tabindex="-1"></a><span class="co">#   u2                                                       </span></span>
-<span id="cb25-48"><a href="#cb25-48" tabindex="-1"></a><span class="co">#     mean (sd)   -0.28 (0.96)    0.38 (0.67)    0.08 (0.91) </span></span>
-<span id="cb25-49"><a href="#cb25-49" tabindex="-1"></a><span class="co">#     range       -1.52 - 1.43    -0.39 - 0.82   -0.93 - 1.51</span></span>
-<span id="cb25-50"><a href="#cb25-50" tabindex="-1"></a><span class="co"># V                                                          </span></span>
-<span id="cb25-51"><a href="#cb25-51" tabindex="-1"></a><span class="co">#   v2                                                       </span></span>
-<span id="cb25-52"><a href="#cb25-52" tabindex="-1"></a><span class="co">#     mean (sd)    0.01 (0.25)    0.55 (1.14)    0.60 (0.03) </span></span>
-<span id="cb25-53"><a href="#cb25-53" tabindex="-1"></a><span class="co">#     range       -0.16 - 0.18    -0.84 - 1.60   0.58 - 0.62 </span></span>
-<span id="cb25-54"><a href="#cb25-54" tabindex="-1"></a><span class="co">#   v3                                                       </span></span>
-<span id="cb25-55"><a href="#cb25-55" tabindex="-1"></a><span class="co">#     mean (sd)   -0.03 (0.37)    -0.30 (0.36)    1.06 (NA)  </span></span>
-<span id="cb25-56"><a href="#cb25-56" tabindex="-1"></a><span class="co">#     range       -0.41 - 0.33    -0.62 - 0.03   1.06 - 1.06 </span></span>
-<span id="cb25-57"><a href="#cb25-57" tabindex="-1"></a><span class="co">#   v1                                                       </span></span>
-<span id="cb25-58"><a href="#cb25-58" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (1.10)    -0.27 (0.73)   -0.54 (1.18)</span></span>
-<span id="cb25-59"><a href="#cb25-59" tabindex="-1"></a><span class="co">#     range       -0.16 - 2.17    -1.22 - 0.59   -1.38 - 0.29</span></span>
-<span id="cb25-60"><a href="#cb25-60" tabindex="-1"></a><span class="co"># W                                                          </span></span>
-<span id="cb25-61"><a href="#cb25-61" tabindex="-1"></a><span class="co">#   w1                                                       </span></span>
-<span id="cb25-62"><a href="#cb25-62" tabindex="-1"></a><span class="co">#     mean (sd)   -0.58 (0.85)     0.42 (NA)     0.67 (0.39) </span></span>
-<span id="cb25-63"><a href="#cb25-63" tabindex="-1"></a><span class="co">#     range       -1.25 - 0.61    0.42 - 0.42    0.37 - 1.21 </span></span>
-<span id="cb25-64"><a href="#cb25-64" tabindex="-1"></a><span class="co">#   w3                                                       </span></span>
-<span id="cb25-65"><a href="#cb25-65" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (0.85)     0.69 (NA)     -0.39 (1.68)</span></span>
-<span id="cb25-66"><a href="#cb25-66" tabindex="-1"></a><span class="co">#     range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.10</span></span>
-<span id="cb25-67"><a href="#cb25-67" tabindex="-1"></a><span class="co">#   w2                                                       </span></span>
-<span id="cb25-68"><a href="#cb25-68" tabindex="-1"></a><span class="co">#     mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) </span></span>
-<span id="cb25-69"><a href="#cb25-69" tabindex="-1"></a><span class="co">#     range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</span></span></code></pre></div>
+<span id="cb25-30"><a href="#cb25-30" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u2]</span></span>
+<span id="cb25-31"><a href="#cb25-31" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb25-32"><a href="#cb25-32" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb25-33"><a href="#cb25-33" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb25-34"><a href="#cb25-34" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb25-35"><a href="#cb25-35" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v2]</span></span>
+<span id="cb25-36"><a href="#cb25-36" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb25-37"><a href="#cb25-37" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb25-38"><a href="#cb25-38" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb25-39"><a href="#cb25-39" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb25-40"><a href="#cb25-40" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v3]</span></span>
+<span id="cb25-41"><a href="#cb25-41" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb25-42"><a href="#cb25-42" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb25-43"><a href="#cb25-43" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb25-44"><a href="#cb25-44" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb25-45"><a href="#cb25-45" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v1]</span></span>
+<span id="cb25-46"><a href="#cb25-46" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb25-47"><a href="#cb25-47" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb25-48"><a href="#cb25-48" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb25-49"><a href="#cb25-49" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb25-50"><a href="#cb25-50" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w1]</span></span>
+<span id="cb25-51"><a href="#cb25-51" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb25-52"><a href="#cb25-52" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb25-53"><a href="#cb25-53" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb25-54"><a href="#cb25-54" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb25-55"><a href="#cb25-55" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w3]</span></span>
+<span id="cb25-56"><a href="#cb25-56" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb25-57"><a href="#cb25-57" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb25-58"><a href="#cb25-58" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb25-59"><a href="#cb25-59" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb25-60"><a href="#cb25-60" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w2]</span></span>
+<span id="cb25-61"><a href="#cb25-61" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb25-62"><a href="#cb25-62" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb25-63"><a href="#cb25-63" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb25-64"><a href="#cb25-64" tabindex="-1"></a>tbl12</span>
+<span id="cb25-65"><a href="#cb25-65" tabindex="-1"></a><span class="co">#                       A              B              C      </span></span>
+<span id="cb25-66"><a href="#cb25-66" tabindex="-1"></a><span class="co"># ———————————————————————————————————————————————————————————</span></span>
+<span id="cb25-67"><a href="#cb25-67" tabindex="-1"></a><span class="co"># U                                                          </span></span>
+<span id="cb25-68"><a href="#cb25-68" tabindex="-1"></a><span class="co">#   u3                                                       </span></span>
+<span id="cb25-69"><a href="#cb25-69" tabindex="-1"></a><span class="co">#     mean (sd)   -0.04 (1.18)    0.36 (1.41)    -0.25 (0.72)</span></span>
+<span id="cb25-70"><a href="#cb25-70" tabindex="-1"></a><span class="co">#     range       -1.80 - 1.47    -1.28 - 2.40   -0.82 - 0.56</span></span>
+<span id="cb25-71"><a href="#cb25-71" tabindex="-1"></a><span class="co">#   u1                                                       </span></span>
+<span id="cb25-72"><a href="#cb25-72" tabindex="-1"></a><span class="co">#     mean (sd)    0.86 (0.38)    0.32 (0.51)         NA     </span></span>
+<span id="cb25-73"><a href="#cb25-73" tabindex="-1"></a><span class="co">#     range        0.59 - 1.12    -0.48 - 0.94    Inf - -Inf </span></span>
+<span id="cb25-74"><a href="#cb25-74" tabindex="-1"></a><span class="co">#   u2                                                       </span></span>
+<span id="cb25-75"><a href="#cb25-75" tabindex="-1"></a><span class="co">#     mean (sd)   -0.28 (0.96)    0.38 (0.67)    0.08 (0.91) </span></span>
+<span id="cb25-76"><a href="#cb25-76" tabindex="-1"></a><span class="co">#     range       -1.52 - 1.43    -0.39 - 0.82   -0.93 - 1.51</span></span>
+<span id="cb25-77"><a href="#cb25-77" tabindex="-1"></a><span class="co"># V                                                          </span></span>
+<span id="cb25-78"><a href="#cb25-78" tabindex="-1"></a><span class="co">#   v2                                                       </span></span>
+<span id="cb25-79"><a href="#cb25-79" tabindex="-1"></a><span class="co">#     mean (sd)    0.01 (0.25)    0.55 (1.14)    0.60 (0.03) </span></span>
+<span id="cb25-80"><a href="#cb25-80" tabindex="-1"></a><span class="co">#     range       -0.16 - 0.18    -0.84 - 1.60   0.58 - 0.62 </span></span>
+<span id="cb25-81"><a href="#cb25-81" tabindex="-1"></a><span class="co">#   v3                                                       </span></span>
+<span id="cb25-82"><a href="#cb25-82" tabindex="-1"></a><span class="co">#     mean (sd)   -0.03 (0.37)    -0.30 (0.36)    1.06 (NA)  </span></span>
+<span id="cb25-83"><a href="#cb25-83" tabindex="-1"></a><span class="co">#     range       -0.41 - 0.33    -0.62 - 0.03   1.06 - 1.06 </span></span>
+<span id="cb25-84"><a href="#cb25-84" tabindex="-1"></a><span class="co">#   v1                                                       </span></span>
+<span id="cb25-85"><a href="#cb25-85" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (1.10)    -0.27 (0.73)   -0.54 (1.18)</span></span>
+<span id="cb25-86"><a href="#cb25-86" tabindex="-1"></a><span class="co">#     range       -0.16 - 2.17    -1.22 - 0.59   -1.38 - 0.29</span></span>
+<span id="cb25-87"><a href="#cb25-87" tabindex="-1"></a><span class="co"># W                                                          </span></span>
+<span id="cb25-88"><a href="#cb25-88" tabindex="-1"></a><span class="co">#   w1                                                       </span></span>
+<span id="cb25-89"><a href="#cb25-89" tabindex="-1"></a><span class="co">#     mean (sd)   -0.58 (0.85)     0.42 (NA)     0.67 (0.39) </span></span>
+<span id="cb25-90"><a href="#cb25-90" tabindex="-1"></a><span class="co">#     range       -1.25 - 0.61    0.42 - 0.42    0.37 - 1.21 </span></span>
+<span id="cb25-91"><a href="#cb25-91" tabindex="-1"></a><span class="co">#   w3                                                       </span></span>
+<span id="cb25-92"><a href="#cb25-92" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (0.85)     0.69 (NA)     -0.39 (1.68)</span></span>
+<span id="cb25-93"><a href="#cb25-93" tabindex="-1"></a><span class="co">#     range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.10</span></span>
+<span id="cb25-94"><a href="#cb25-94" tabindex="-1"></a><span class="co">#   w2                                                       </span></span>
+<span id="cb25-95"><a href="#cb25-95" tabindex="-1"></a><span class="co">#     mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) </span></span>
+<span id="cb25-96"><a href="#cb25-96" tabindex="-1"></a><span class="co">#     range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</span></span></code></pre></div>
 <p>Which has the following structure:</p>
 <pre><code>                   A              B              C
 ---------------------------------------------------------
@@ -914,57 +941,84 @@ layout framework as follows:</p>
 <span id="cb28-21"><a href="#cb28-21" tabindex="-1"></a>tbl13 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt13, df)</span>
 <span id="cb28-22"><a href="#cb28-22" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
 <span id="cb28-23"><a href="#cb28-23" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u3]</span></span>
-<span id="cb28-24"><a href="#cb28-24" tabindex="-1"></a><span class="co"># Warning in min(x): no non-missing arguments to min; returning Inf</span></span>
-<span id="cb28-25"><a href="#cb28-25" tabindex="-1"></a><span class="co"># Warning in max(x): no non-missing arguments to max; returning -Inf</span></span>
-<span id="cb28-26"><a href="#cb28-26" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb28-27"><a href="#cb28-27" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u1]</span></span>
-<span id="cb28-28"><a href="#cb28-28" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb28-29"><a href="#cb28-29" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u2]</span></span>
-<span id="cb28-30"><a href="#cb28-30" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb28-31"><a href="#cb28-31" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v2]</span></span>
-<span id="cb28-32"><a href="#cb28-32" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb28-33"><a href="#cb28-33" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v3]</span></span>
+<span id="cb28-24"><a href="#cb28-24" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb28-25"><a href="#cb28-25" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb28-26"><a href="#cb28-26" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb28-27"><a href="#cb28-27" tabindex="-1"></a><span class="co"># Warning in min(x): no non-missing arguments to min; returning Inf</span></span>
+<span id="cb28-28"><a href="#cb28-28" tabindex="-1"></a><span class="co"># Warning in max(x): no non-missing arguments to max; returning -Inf</span></span>
+<span id="cb28-29"><a href="#cb28-29" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb28-30"><a href="#cb28-30" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u1]</span></span>
+<span id="cb28-31"><a href="#cb28-31" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb28-32"><a href="#cb28-32" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb28-33"><a href="#cb28-33" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
 <span id="cb28-34"><a href="#cb28-34" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb28-35"><a href="#cb28-35" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v1]</span></span>
-<span id="cb28-36"><a href="#cb28-36" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb28-37"><a href="#cb28-37" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w1]</span></span>
-<span id="cb28-38"><a href="#cb28-38" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb28-39"><a href="#cb28-39" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w3]</span></span>
-<span id="cb28-40"><a href="#cb28-40" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb28-41"><a href="#cb28-41" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w2]</span></span>
-<span id="cb28-42"><a href="#cb28-42" tabindex="-1"></a>tbl13</span>
-<span id="cb28-43"><a href="#cb28-43" tabindex="-1"></a><span class="co">#                       A              B              C      </span></span>
-<span id="cb28-44"><a href="#cb28-44" tabindex="-1"></a><span class="co"># ———————————————————————————————————————————————————————————</span></span>
-<span id="cb28-45"><a href="#cb28-45" tabindex="-1"></a><span class="co"># U                                                          </span></span>
-<span id="cb28-46"><a href="#cb28-46" tabindex="-1"></a><span class="co">#   u3 (n)              6              5              3      </span></span>
-<span id="cb28-47"><a href="#cb28-47" tabindex="-1"></a><span class="co">#     mean (sd)   -0.04 (1.18)    0.36 (1.41)    -0.25 (0.72)</span></span>
-<span id="cb28-48"><a href="#cb28-48" tabindex="-1"></a><span class="co">#     range       -1.80 - 1.47    -1.28 - 2.40   -0.82 - 0.56</span></span>
-<span id="cb28-49"><a href="#cb28-49" tabindex="-1"></a><span class="co">#   u1 (n)              2              5              0      </span></span>
-<span id="cb28-50"><a href="#cb28-50" tabindex="-1"></a><span class="co">#     mean (sd)    0.86 (0.38)    0.32 (0.51)         NA     </span></span>
-<span id="cb28-51"><a href="#cb28-51" tabindex="-1"></a><span class="co">#     range        0.59 - 1.12    -0.48 - 0.94    Inf - -Inf </span></span>
-<span id="cb28-52"><a href="#cb28-52" tabindex="-1"></a><span class="co">#   u2 (n)              9              3              7      </span></span>
-<span id="cb28-53"><a href="#cb28-53" tabindex="-1"></a><span class="co">#     mean (sd)   -0.28 (0.96)    0.38 (0.67)    0.08 (0.91) </span></span>
-<span id="cb28-54"><a href="#cb28-54" tabindex="-1"></a><span class="co">#     range       -1.52 - 1.43    -0.39 - 0.82   -0.93 - 1.51</span></span>
-<span id="cb28-55"><a href="#cb28-55" tabindex="-1"></a><span class="co"># V                                                          </span></span>
-<span id="cb28-56"><a href="#cb28-56" tabindex="-1"></a><span class="co">#   v2 (n)              2              4              2      </span></span>
-<span id="cb28-57"><a href="#cb28-57" tabindex="-1"></a><span class="co">#     mean (sd)    0.01 (0.25)    0.55 (1.14)    0.60 (0.03) </span></span>
-<span id="cb28-58"><a href="#cb28-58" tabindex="-1"></a><span class="co">#     range       -0.16 - 0.18    -0.84 - 1.60   0.58 - 0.62 </span></span>
-<span id="cb28-59"><a href="#cb28-59" tabindex="-1"></a><span class="co">#   v3 (n)              3              4              1      </span></span>
-<span id="cb28-60"><a href="#cb28-60" tabindex="-1"></a><span class="co">#     mean (sd)   -0.03 (0.37)    -0.30 (0.36)    1.06 (NA)  </span></span>
-<span id="cb28-61"><a href="#cb28-61" tabindex="-1"></a><span class="co">#     range       -0.41 - 0.33    -0.62 - 0.03   1.06 - 1.06 </span></span>
-<span id="cb28-62"><a href="#cb28-62" tabindex="-1"></a><span class="co">#   v1 (n)              4              7              2      </span></span>
-<span id="cb28-63"><a href="#cb28-63" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (1.10)    -0.27 (0.73)   -0.54 (1.18)</span></span>
-<span id="cb28-64"><a href="#cb28-64" tabindex="-1"></a><span class="co">#     range       -0.16 - 2.17    -1.22 - 0.59   -1.38 - 0.29</span></span>
-<span id="cb28-65"><a href="#cb28-65" tabindex="-1"></a><span class="co"># W                                                          </span></span>
-<span id="cb28-66"><a href="#cb28-66" tabindex="-1"></a><span class="co">#   w1 (n)              4              1              4      </span></span>
-<span id="cb28-67"><a href="#cb28-67" tabindex="-1"></a><span class="co">#     mean (sd)   -0.58 (0.85)     0.42 (NA)     0.67 (0.39) </span></span>
-<span id="cb28-68"><a href="#cb28-68" tabindex="-1"></a><span class="co">#     range       -1.25 - 0.61    0.42 - 0.42    0.37 - 1.21 </span></span>
-<span id="cb28-69"><a href="#cb28-69" tabindex="-1"></a><span class="co">#   w3 (n)              9              1              3      </span></span>
-<span id="cb28-70"><a href="#cb28-70" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (0.85)     0.69 (NA)     -0.39 (1.68)</span></span>
-<span id="cb28-71"><a href="#cb28-71" tabindex="-1"></a><span class="co">#     range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.10</span></span>
-<span id="cb28-72"><a href="#cb28-72" tabindex="-1"></a><span class="co">#   w2 (n)              1              4              4      </span></span>
-<span id="cb28-73"><a href="#cb28-73" tabindex="-1"></a><span class="co">#     mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) </span></span>
-<span id="cb28-74"><a href="#cb28-74" tabindex="-1"></a><span class="co">#     range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</span></span></code></pre></div>
+<span id="cb28-35"><a href="#cb28-35" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u2]</span></span>
+<span id="cb28-36"><a href="#cb28-36" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb28-37"><a href="#cb28-37" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb28-38"><a href="#cb28-38" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb28-39"><a href="#cb28-39" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb28-40"><a href="#cb28-40" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v2]</span></span>
+<span id="cb28-41"><a href="#cb28-41" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb28-42"><a href="#cb28-42" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb28-43"><a href="#cb28-43" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb28-44"><a href="#cb28-44" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb28-45"><a href="#cb28-45" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v3]</span></span>
+<span id="cb28-46"><a href="#cb28-46" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb28-47"><a href="#cb28-47" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb28-48"><a href="#cb28-48" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb28-49"><a href="#cb28-49" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb28-50"><a href="#cb28-50" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v1]</span></span>
+<span id="cb28-51"><a href="#cb28-51" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb28-52"><a href="#cb28-52" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb28-53"><a href="#cb28-53" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb28-54"><a href="#cb28-54" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb28-55"><a href="#cb28-55" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w1]</span></span>
+<span id="cb28-56"><a href="#cb28-56" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb28-57"><a href="#cb28-57" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb28-58"><a href="#cb28-58" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb28-59"><a href="#cb28-59" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb28-60"><a href="#cb28-60" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w3]</span></span>
+<span id="cb28-61"><a href="#cb28-61" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb28-62"><a href="#cb28-62" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb28-63"><a href="#cb28-63" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb28-64"><a href="#cb28-64" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb28-65"><a href="#cb28-65" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w2]</span></span>
+<span id="cb28-66"><a href="#cb28-66" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb28-67"><a href="#cb28-67" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb28-68"><a href="#cb28-68" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb28-69"><a href="#cb28-69" tabindex="-1"></a>tbl13</span>
+<span id="cb28-70"><a href="#cb28-70" tabindex="-1"></a><span class="co">#                       A              B              C      </span></span>
+<span id="cb28-71"><a href="#cb28-71" tabindex="-1"></a><span class="co"># ———————————————————————————————————————————————————————————</span></span>
+<span id="cb28-72"><a href="#cb28-72" tabindex="-1"></a><span class="co"># U                                                          </span></span>
+<span id="cb28-73"><a href="#cb28-73" tabindex="-1"></a><span class="co">#   u3 (n)              6              5              3      </span></span>
+<span id="cb28-74"><a href="#cb28-74" tabindex="-1"></a><span class="co">#     mean (sd)   -0.04 (1.18)    0.36 (1.41)    -0.25 (0.72)</span></span>
+<span id="cb28-75"><a href="#cb28-75" tabindex="-1"></a><span class="co">#     range       -1.80 - 1.47    -1.28 - 2.40   -0.82 - 0.56</span></span>
+<span id="cb28-76"><a href="#cb28-76" tabindex="-1"></a><span class="co">#   u1 (n)              2              5              0      </span></span>
+<span id="cb28-77"><a href="#cb28-77" tabindex="-1"></a><span class="co">#     mean (sd)    0.86 (0.38)    0.32 (0.51)         NA     </span></span>
+<span id="cb28-78"><a href="#cb28-78" tabindex="-1"></a><span class="co">#     range        0.59 - 1.12    -0.48 - 0.94    Inf - -Inf </span></span>
+<span id="cb28-79"><a href="#cb28-79" tabindex="-1"></a><span class="co">#   u2 (n)              9              3              7      </span></span>
+<span id="cb28-80"><a href="#cb28-80" tabindex="-1"></a><span class="co">#     mean (sd)   -0.28 (0.96)    0.38 (0.67)    0.08 (0.91) </span></span>
+<span id="cb28-81"><a href="#cb28-81" tabindex="-1"></a><span class="co">#     range       -1.52 - 1.43    -0.39 - 0.82   -0.93 - 1.51</span></span>
+<span id="cb28-82"><a href="#cb28-82" tabindex="-1"></a><span class="co"># V                                                          </span></span>
+<span id="cb28-83"><a href="#cb28-83" tabindex="-1"></a><span class="co">#   v2 (n)              2              4              2      </span></span>
+<span id="cb28-84"><a href="#cb28-84" tabindex="-1"></a><span class="co">#     mean (sd)    0.01 (0.25)    0.55 (1.14)    0.60 (0.03) </span></span>
+<span id="cb28-85"><a href="#cb28-85" tabindex="-1"></a><span class="co">#     range       -0.16 - 0.18    -0.84 - 1.60   0.58 - 0.62 </span></span>
+<span id="cb28-86"><a href="#cb28-86" tabindex="-1"></a><span class="co">#   v3 (n)              3              4              1      </span></span>
+<span id="cb28-87"><a href="#cb28-87" tabindex="-1"></a><span class="co">#     mean (sd)   -0.03 (0.37)    -0.30 (0.36)    1.06 (NA)  </span></span>
+<span id="cb28-88"><a href="#cb28-88" tabindex="-1"></a><span class="co">#     range       -0.41 - 0.33    -0.62 - 0.03   1.06 - 1.06 </span></span>
+<span id="cb28-89"><a href="#cb28-89" tabindex="-1"></a><span class="co">#   v1 (n)              4              7              2      </span></span>
+<span id="cb28-90"><a href="#cb28-90" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (1.10)    -0.27 (0.73)   -0.54 (1.18)</span></span>
+<span id="cb28-91"><a href="#cb28-91" tabindex="-1"></a><span class="co">#     range       -0.16 - 2.17    -1.22 - 0.59   -1.38 - 0.29</span></span>
+<span id="cb28-92"><a href="#cb28-92" tabindex="-1"></a><span class="co"># W                                                          </span></span>
+<span id="cb28-93"><a href="#cb28-93" tabindex="-1"></a><span class="co">#   w1 (n)              4              1              4      </span></span>
+<span id="cb28-94"><a href="#cb28-94" tabindex="-1"></a><span class="co">#     mean (sd)   -0.58 (0.85)     0.42 (NA)     0.67 (0.39) </span></span>
+<span id="cb28-95"><a href="#cb28-95" tabindex="-1"></a><span class="co">#     range       -1.25 - 0.61    0.42 - 0.42    0.37 - 1.21 </span></span>
+<span id="cb28-96"><a href="#cb28-96" tabindex="-1"></a><span class="co">#   w3 (n)              9              1              3      </span></span>
+<span id="cb28-97"><a href="#cb28-97" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (0.85)     0.69 (NA)     -0.39 (1.68)</span></span>
+<span id="cb28-98"><a href="#cb28-98" tabindex="-1"></a><span class="co">#     range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.10</span></span>
+<span id="cb28-99"><a href="#cb28-99" tabindex="-1"></a><span class="co">#   w2 (n)              1              4              4      </span></span>
+<span id="cb28-100"><a href="#cb28-100" tabindex="-1"></a><span class="co">#     mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) </span></span>
+<span id="cb28-101"><a href="#cb28-101" tabindex="-1"></a><span class="co">#     range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</span></span></code></pre></div>
 <p>In the same manner, if we want content rows for the <code>r1</code>
 split we can do it at as follows:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>lyt14 <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -979,57 +1033,84 @@ split we can do it at as follows:</p>
 <span id="cb29-10"><a href="#cb29-10" tabindex="-1"></a>tbl14 <span class="ot">&lt;-</span> <span class="fu">build_table</span>(lyt14, df)</span>
 <span id="cb29-11"><a href="#cb29-11" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
 <span id="cb29-12"><a href="#cb29-12" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u3]</span></span>
-<span id="cb29-13"><a href="#cb29-13" tabindex="-1"></a><span class="co"># Warning in min(x): no non-missing arguments to min; returning Inf</span></span>
-<span id="cb29-14"><a href="#cb29-14" tabindex="-1"></a><span class="co"># Warning in max(x): no non-missing arguments to max; returning -Inf</span></span>
-<span id="cb29-15"><a href="#cb29-15" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb29-16"><a href="#cb29-16" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u1]</span></span>
-<span id="cb29-17"><a href="#cb29-17" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb29-18"><a href="#cb29-18" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u2]</span></span>
-<span id="cb29-19"><a href="#cb29-19" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb29-20"><a href="#cb29-20" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v2]</span></span>
-<span id="cb29-21"><a href="#cb29-21" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb29-22"><a href="#cb29-22" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v3]</span></span>
+<span id="cb29-13"><a href="#cb29-13" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb29-14"><a href="#cb29-14" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb29-15"><a href="#cb29-15" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb29-16"><a href="#cb29-16" tabindex="-1"></a><span class="co"># Warning in min(x): no non-missing arguments to min; returning Inf</span></span>
+<span id="cb29-17"><a href="#cb29-17" tabindex="-1"></a><span class="co"># Warning in max(x): no non-missing arguments to max; returning -Inf</span></span>
+<span id="cb29-18"><a href="#cb29-18" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb29-19"><a href="#cb29-19" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u1]</span></span>
+<span id="cb29-20"><a href="#cb29-20" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb29-21"><a href="#cb29-21" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb29-22"><a href="#cb29-22" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
 <span id="cb29-23"><a href="#cb29-23" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb29-24"><a href="#cb29-24" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v1]</span></span>
-<span id="cb29-25"><a href="#cb29-25" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb29-26"><a href="#cb29-26" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w1]</span></span>
-<span id="cb29-27"><a href="#cb29-27" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb29-28"><a href="#cb29-28" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w3]</span></span>
-<span id="cb29-29"><a href="#cb29-29" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
-<span id="cb29-30"><a href="#cb29-30" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w2]</span></span>
-<span id="cb29-31"><a href="#cb29-31" tabindex="-1"></a>tbl14</span>
-<span id="cb29-32"><a href="#cb29-32" tabindex="-1"></a><span class="co">#                       A              B              C      </span></span>
-<span id="cb29-33"><a href="#cb29-33" tabindex="-1"></a><span class="co"># ———————————————————————————————————————————————————————————</span></span>
-<span id="cb29-34"><a href="#cb29-34" tabindex="-1"></a><span class="co"># U (n)                17              13             10     </span></span>
-<span id="cb29-35"><a href="#cb29-35" tabindex="-1"></a><span class="co">#   u3 (n)              6              5              3      </span></span>
-<span id="cb29-36"><a href="#cb29-36" tabindex="-1"></a><span class="co">#     mean (sd)   -0.04 (1.18)    0.36 (1.41)    -0.25 (0.72)</span></span>
-<span id="cb29-37"><a href="#cb29-37" tabindex="-1"></a><span class="co">#     range       -1.80 - 1.47    -1.28 - 2.40   -0.82 - 0.56</span></span>
-<span id="cb29-38"><a href="#cb29-38" tabindex="-1"></a><span class="co">#   u1 (n)              2              5              0      </span></span>
-<span id="cb29-39"><a href="#cb29-39" tabindex="-1"></a><span class="co">#     mean (sd)    0.86 (0.38)    0.32 (0.51)         NA     </span></span>
-<span id="cb29-40"><a href="#cb29-40" tabindex="-1"></a><span class="co">#     range        0.59 - 1.12    -0.48 - 0.94    Inf - -Inf </span></span>
-<span id="cb29-41"><a href="#cb29-41" tabindex="-1"></a><span class="co">#   u2 (n)              9              3              7      </span></span>
-<span id="cb29-42"><a href="#cb29-42" tabindex="-1"></a><span class="co">#     mean (sd)   -0.28 (0.96)    0.38 (0.67)    0.08 (0.91) </span></span>
-<span id="cb29-43"><a href="#cb29-43" tabindex="-1"></a><span class="co">#     range       -1.52 - 1.43    -0.39 - 0.82   -0.93 - 1.51</span></span>
-<span id="cb29-44"><a href="#cb29-44" tabindex="-1"></a><span class="co"># V (n)                 9              15             5      </span></span>
-<span id="cb29-45"><a href="#cb29-45" tabindex="-1"></a><span class="co">#   v2 (n)              2              4              2      </span></span>
-<span id="cb29-46"><a href="#cb29-46" tabindex="-1"></a><span class="co">#     mean (sd)    0.01 (0.25)    0.55 (1.14)    0.60 (0.03) </span></span>
-<span id="cb29-47"><a href="#cb29-47" tabindex="-1"></a><span class="co">#     range       -0.16 - 0.18    -0.84 - 1.60   0.58 - 0.62 </span></span>
-<span id="cb29-48"><a href="#cb29-48" tabindex="-1"></a><span class="co">#   v3 (n)              3              4              1      </span></span>
-<span id="cb29-49"><a href="#cb29-49" tabindex="-1"></a><span class="co">#     mean (sd)   -0.03 (0.37)    -0.30 (0.36)    1.06 (NA)  </span></span>
-<span id="cb29-50"><a href="#cb29-50" tabindex="-1"></a><span class="co">#     range       -0.41 - 0.33    -0.62 - 0.03   1.06 - 1.06 </span></span>
-<span id="cb29-51"><a href="#cb29-51" tabindex="-1"></a><span class="co">#   v1 (n)              4              7              2      </span></span>
-<span id="cb29-52"><a href="#cb29-52" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (1.10)    -0.27 (0.73)   -0.54 (1.18)</span></span>
-<span id="cb29-53"><a href="#cb29-53" tabindex="-1"></a><span class="co">#     range       -0.16 - 2.17    -1.22 - 0.59   -1.38 - 0.29</span></span>
-<span id="cb29-54"><a href="#cb29-54" tabindex="-1"></a><span class="co"># W (n)                14              6              11     </span></span>
-<span id="cb29-55"><a href="#cb29-55" tabindex="-1"></a><span class="co">#   w1 (n)              4              1              4      </span></span>
-<span id="cb29-56"><a href="#cb29-56" tabindex="-1"></a><span class="co">#     mean (sd)   -0.58 (0.85)     0.42 (NA)     0.67 (0.39) </span></span>
-<span id="cb29-57"><a href="#cb29-57" tabindex="-1"></a><span class="co">#     range       -1.25 - 0.61    0.42 - 0.42    0.37 - 1.21 </span></span>
-<span id="cb29-58"><a href="#cb29-58" tabindex="-1"></a><span class="co">#   w3 (n)              9              1              3      </span></span>
-<span id="cb29-59"><a href="#cb29-59" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (0.85)     0.69 (NA)     -0.39 (1.68)</span></span>
-<span id="cb29-60"><a href="#cb29-60" tabindex="-1"></a><span class="co">#     range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.10</span></span>
-<span id="cb29-61"><a href="#cb29-61" tabindex="-1"></a><span class="co">#   w2 (n)              1              4              4      </span></span>
-<span id="cb29-62"><a href="#cb29-62" tabindex="-1"></a><span class="co">#     mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) </span></span>
-<span id="cb29-63"><a href="#cb29-63" tabindex="-1"></a><span class="co">#     range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</span></span></code></pre></div>
+<span id="cb29-24"><a href="#cb29-24" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[U]-&gt;r2[u2]</span></span>
+<span id="cb29-25"><a href="#cb29-25" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb29-26"><a href="#cb29-26" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb29-27"><a href="#cb29-27" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb29-28"><a href="#cb29-28" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb29-29"><a href="#cb29-29" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v2]</span></span>
+<span id="cb29-30"><a href="#cb29-30" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb29-31"><a href="#cb29-31" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb29-32"><a href="#cb29-32" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb29-33"><a href="#cb29-33" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb29-34"><a href="#cb29-34" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v3]</span></span>
+<span id="cb29-35"><a href="#cb29-35" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb29-36"><a href="#cb29-36" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb29-37"><a href="#cb29-37" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb29-38"><a href="#cb29-38" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb29-39"><a href="#cb29-39" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[V]-&gt;r2[v1]</span></span>
+<span id="cb29-40"><a href="#cb29-40" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb29-41"><a href="#cb29-41" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb29-42"><a href="#cb29-42" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb29-43"><a href="#cb29-43" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb29-44"><a href="#cb29-44" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w1]</span></span>
+<span id="cb29-45"><a href="#cb29-45" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb29-46"><a href="#cb29-46" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb29-47"><a href="#cb29-47" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb29-48"><a href="#cb29-48" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb29-49"><a href="#cb29-49" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w3]</span></span>
+<span id="cb29-50"><a href="#cb29-50" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb29-51"><a href="#cb29-51" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb29-52"><a href="#cb29-52" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb29-53"><a href="#cb29-53" tabindex="-1"></a><span class="co"># Warning: Non-unique sibling analysis table names. Using Labels instead. Use the table_names argument to analyze to avoid this when analyzing the same variable multiple times.</span></span>
+<span id="cb29-54"><a href="#cb29-54" tabindex="-1"></a><span class="co">#   occured at (row) path: r1[W]-&gt;r2[w2]</span></span>
+<span id="cb29-55"><a href="#cb29-55" tabindex="-1"></a><span class="co"># Modifying subtable (or row) names to ensure uniqueness among direct siblings</span></span>
+<span id="cb29-56"><a href="#cb29-56" tabindex="-1"></a><span class="co"># [x  -&gt; { x, x[2] }]</span></span>
+<span id="cb29-57"><a href="#cb29-57" tabindex="-1"></a><span class="co">#   To control table names use split_rows_by*(, parent_name =.) or  analyze(., table_names = .) when analyzing a single variable, or analyze(., parent_name = .) when analyzing multiple variables in a single call.FALSE</span></span>
+<span id="cb29-58"><a href="#cb29-58" tabindex="-1"></a>tbl14</span>
+<span id="cb29-59"><a href="#cb29-59" tabindex="-1"></a><span class="co">#                       A              B              C      </span></span>
+<span id="cb29-60"><a href="#cb29-60" tabindex="-1"></a><span class="co"># ———————————————————————————————————————————————————————————</span></span>
+<span id="cb29-61"><a href="#cb29-61" tabindex="-1"></a><span class="co"># U (n)                17              13             10     </span></span>
+<span id="cb29-62"><a href="#cb29-62" tabindex="-1"></a><span class="co">#   u3 (n)              6              5              3      </span></span>
+<span id="cb29-63"><a href="#cb29-63" tabindex="-1"></a><span class="co">#     mean (sd)   -0.04 (1.18)    0.36 (1.41)    -0.25 (0.72)</span></span>
+<span id="cb29-64"><a href="#cb29-64" tabindex="-1"></a><span class="co">#     range       -1.80 - 1.47    -1.28 - 2.40   -0.82 - 0.56</span></span>
+<span id="cb29-65"><a href="#cb29-65" tabindex="-1"></a><span class="co">#   u1 (n)              2              5              0      </span></span>
+<span id="cb29-66"><a href="#cb29-66" tabindex="-1"></a><span class="co">#     mean (sd)    0.86 (0.38)    0.32 (0.51)         NA     </span></span>
+<span id="cb29-67"><a href="#cb29-67" tabindex="-1"></a><span class="co">#     range        0.59 - 1.12    -0.48 - 0.94    Inf - -Inf </span></span>
+<span id="cb29-68"><a href="#cb29-68" tabindex="-1"></a><span class="co">#   u2 (n)              9              3              7      </span></span>
+<span id="cb29-69"><a href="#cb29-69" tabindex="-1"></a><span class="co">#     mean (sd)   -0.28 (0.96)    0.38 (0.67)    0.08 (0.91) </span></span>
+<span id="cb29-70"><a href="#cb29-70" tabindex="-1"></a><span class="co">#     range       -1.52 - 1.43    -0.39 - 0.82   -0.93 - 1.51</span></span>
+<span id="cb29-71"><a href="#cb29-71" tabindex="-1"></a><span class="co"># V (n)                 9              15             5      </span></span>
+<span id="cb29-72"><a href="#cb29-72" tabindex="-1"></a><span class="co">#   v2 (n)              2              4              2      </span></span>
+<span id="cb29-73"><a href="#cb29-73" tabindex="-1"></a><span class="co">#     mean (sd)    0.01 (0.25)    0.55 (1.14)    0.60 (0.03) </span></span>
+<span id="cb29-74"><a href="#cb29-74" tabindex="-1"></a><span class="co">#     range       -0.16 - 0.18    -0.84 - 1.60   0.58 - 0.62 </span></span>
+<span id="cb29-75"><a href="#cb29-75" tabindex="-1"></a><span class="co">#   v3 (n)              3              4              1      </span></span>
+<span id="cb29-76"><a href="#cb29-76" tabindex="-1"></a><span class="co">#     mean (sd)   -0.03 (0.37)    -0.30 (0.36)    1.06 (NA)  </span></span>
+<span id="cb29-77"><a href="#cb29-77" tabindex="-1"></a><span class="co">#     range       -0.41 - 0.33    -0.62 - 0.03   1.06 - 1.06 </span></span>
+<span id="cb29-78"><a href="#cb29-78" tabindex="-1"></a><span class="co">#   v1 (n)              4              7              2      </span></span>
+<span id="cb29-79"><a href="#cb29-79" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (1.10)    -0.27 (0.73)   -0.54 (1.18)</span></span>
+<span id="cb29-80"><a href="#cb29-80" tabindex="-1"></a><span class="co">#     range       -0.16 - 2.17    -1.22 - 0.59   -1.38 - 0.29</span></span>
+<span id="cb29-81"><a href="#cb29-81" tabindex="-1"></a><span class="co"># W (n)                14              6              11     </span></span>
+<span id="cb29-82"><a href="#cb29-82" tabindex="-1"></a><span class="co">#   w1 (n)              4              1              4      </span></span>
+<span id="cb29-83"><a href="#cb29-83" tabindex="-1"></a><span class="co">#     mean (sd)   -0.58 (0.85)     0.42 (NA)     0.67 (0.39) </span></span>
+<span id="cb29-84"><a href="#cb29-84" tabindex="-1"></a><span class="co">#     range       -1.25 - 0.61    0.42 - 0.42    0.37 - 1.21 </span></span>
+<span id="cb29-85"><a href="#cb29-85" tabindex="-1"></a><span class="co">#   w3 (n)              9              1              3      </span></span>
+<span id="cb29-86"><a href="#cb29-86" tabindex="-1"></a><span class="co">#     mean (sd)    0.56 (0.85)     0.69 (NA)     -0.39 (1.68)</span></span>
+<span id="cb29-87"><a href="#cb29-87" tabindex="-1"></a><span class="co">#     range       -0.71 - 1.98    0.69 - 0.69    -2.21 - 1.10</span></span>
+<span id="cb29-88"><a href="#cb29-88" tabindex="-1"></a><span class="co">#   w2 (n)              1              4              4      </span></span>
+<span id="cb29-89"><a href="#cb29-89" tabindex="-1"></a><span class="co">#     mean (sd)    -1.99 (NA)     -0.10 (0.47)   0.53 (0.60) </span></span>
+<span id="cb29-90"><a href="#cb29-90" tabindex="-1"></a><span class="co">#     range       -1.99 - -1.99   -0.61 - 0.39   -0.10 - 1.16</span></span></code></pre></div>
 <p>In pagination, content rows and label rows get repeated if a page is
 split in a descendant of a content row. So, for example, if we were to
 split the following table at <code>***</code>:</p>
