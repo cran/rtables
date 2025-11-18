@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker, Adrian Waddell and Davide Garolini" />
 
-<meta name="date" content="2025-06-17" />
+<meta name="date" content="2025-11-18" />
 
 <title>Pruning and Sorting Tables</title>
 
@@ -50,8 +50,9 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -341,7 +342,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Pruning and Sorting Tables</h1>
 <h4 class="author">Gabriel Becker, Adrian Waddell and Davide
 Garolini</h4>
-<h4 class="date">2025-06-17</h4>
+<h4 class="date">2025-11-18</h4>
 
 
 
@@ -732,7 +733,7 @@ definition, below:</p>
 <span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#     }</span></span>
 <span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#     sum(sapply(row_values(tree_children(ctab)[[1]]), function(cv) cv[1]))</span></span>
 <span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co"># }</span></span>
-<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x561500f66540&gt;</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x556921babe78&gt;</span></span>
 <span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co"># &lt;environment: namespace:rtables&gt;</span></span></code></pre></div>
 <p>Therefore, a fundamental difference between pruning and sorting is
 that sorting occurs at particular places in the table, as defined by a
@@ -1108,7 +1109,7 @@ proceed.</p>
 <span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="co">#         row_values(tree_children(ctab)[[1]])[[j]][1]</span></span>
 <span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="co">#     }</span></span>
 <span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="co"># }</span></span>
-<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x561500c87850&gt;</span></span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="co"># &lt;bytecode: 0x556928b44ab8&gt;</span></span>
 <span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a><span class="co"># &lt;environment: namespace:rtables&gt;</span></span></code></pre></div>
 <p>We see that a similar function to <code>cont_n_allcols()</code> is
 wrapped by one that allows a parameter <code>j</code> to be used to

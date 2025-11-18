@@ -1,7 +1,7 @@
 Package: rtables
 Title: Reporting Tables
-Version: 0.6.13
-Date: 2025-06-17
+Version: 0.6.14
+Date: 2025-11-14
 Authors@R: c(
     person("Gabriel", "Becker", , "gabembecker@gmail.com", role = "aut",
            comment = "Original creator of the package"),
@@ -37,7 +37,7 @@ Imports: checkmate (>= 2.1.0), htmltools (>= 0.5.4), lifecycle (>=
         0.2.0), stats, stringi (>= 1.6)
 Suggests: broom (>= 1.0.5), car (>= 3.0-13), dplyr (>= 1.0.5), knitr
         (>= 1.42), lme4 (>= 1.1-35.5), r2rtf (>= 0.3.2), rmarkdown (>=
-        2.23), survival (>= 3.3-1), testthat (>= 3.2.1), tibble (>=
+        2.23), survival (>= 3.3-1), testthat (>= 3.3.0), tibble (>=
         3.2.1), tidyr (>= 1.1.3), withr (>= 2.0.0), xml2 (>= 1.3.5)
 VignetteBuilder: knitr, rmarkdown
 Config/Needs/verdepcheck: insightsengineering/formatters,
@@ -49,7 +49,7 @@ Config/Needs/verdepcheck: insightsengineering/formatters,
         tidyverse/tidyr, r-lib/withr, r-lib/xml2
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Collate: '00tabletrees.R' 'Viewer.R' 'argument_conventions.R'
         'as_html.R' 'utils.R' 'colby_constructors.R'
         'compare_rtables.R' 'format_rcell.R' 'indent.R'
@@ -62,7 +62,7 @@ Collate: '00tabletrees.R' 'Viewer.R' 'argument_conventions.R'
         'index_footnotes.R' 'tt_from_df.R' 'validate_table_struct.R'
         'zzz_constants.R'
 NeedsCompilation: no
-Packaged: 2025-06-17 14:26:32 UTC; melkiades
+Packaged: 2025-11-18 02:20:50 UTC; rstudio
 Author: Gabriel Becker [aut] (Original creator of the package),
   Adrian Waddell [aut],
   Daniel Sabanés Bové [ctb],
@@ -75,4 +75,4 @@ Author: Gabriel Becker [aut] (Original creator of the package),
   F. Hoffmann-La Roche AG [cph, fnd]
 Maintainer: Joe Zhu <joe.zhu@roche.com>
 Repository: CRAN
-Date/Publication: 2025-06-19 19:20:06 UTC
+Date/Publication: 2025-11-18 06:10:02 UTC
