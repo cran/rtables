@@ -406,8 +406,6 @@ setMethod(
 )
 
 
-
-
 #' @rdname int_methods
 setGeneric("pos_splvals", function(obj) standardGeneric("pos_splvals"))
 
@@ -494,6 +492,18 @@ setMethod("spl_label_var", "VarLevelSplit", function(obj) obj@value_label_var)
 ## for convenience.
 #' @rdname int_methods
 setMethod("spl_label_var", "Split", function(obj) NULL)
+
+#' @rdname int_methods
+setGeneric("spl_formats_var", function(obj) standardGeneric("spl_formats_var"))
+
+#' @rdname int_methods
+setMethod("spl_formats_var", "VAnalyzeSplit", function(obj) obj@row_formats_var)
+
+#' @rdname int_methods
+setGeneric("spl_na_strs_var", function(obj) standardGeneric("spl_na_strs_var"))
+
+#' @rdname int_methods
+setMethod("spl_na_strs_var", "VAnalyzeSplit", function(obj) obj@row_na_strs_var)
 
 ### name related things
 # #' @inherit formatters::formatter_methods
@@ -1205,6 +1215,10 @@ setGeneric("set_format_recursive", function(obj, format, na_str, override = FALS
   standardGeneric("set_format_recursive")
 })
 
+fmt_can_inherit <- function(obj, fmt = obj_format(obj)) {
+  is.null(fmt) || identical(fmt, "default")
+}
+
 #' @param override (`flag`)\cr whether to override attribute.
 #'
 #' @rdname int_methods
@@ -1215,7 +1229,7 @@ setMethod(
       return(obj)
     }
 
-    if ((is.null(obj_format(obj)) && !is.null(format)) || override) {
+    if ((fmt_can_inherit(obj) && !is.null(format)) || override) {
       obj_format(obj) <- format
     }
     if ((.no_na_str(obj) && !.no_na_str(na_str)) || override) {
@@ -1223,7 +1237,7 @@ setMethod(
     }
     lcells <- row_cells(obj)
     lvals <- lapply(lcells, function(x) {
-      if (!is.null(x) && (override || is.null(obj_format(x)))) {
+      if (!is.null(x) && (override || fmt_can_inherit(x))) {
         obj_format(x) <- obj_format(obj)
       }
       if (!is.null(x) && (override || .no_na_str(x))) {
@@ -1250,7 +1264,7 @@ setMethod(
       return(obj)
     }
 
-    if ((is.null(obj_format(obj)) && !is.null(format)) || override) {
+    if ((fmt_can_inherit(obj) && !is.null(format)) || override) {
       obj_format(obj) <- format
     }
     if ((.no_na_str(obj) && !.no_na_str(na_str)) || override) {
@@ -2864,7 +2878,6 @@ setMethod(
 )
 
 
-
 #' @rdname int_methods
 #' @export
 setGeneric(
@@ -4124,8 +4137,6 @@ setMethod("section_div", "TableRow", function(obj) {
 })
 
 
-
-
 # section_div setter from table object
 #' @rdname section_div
 #' @export
@@ -4621,3 +4632,73 @@ setMethod(
   "obj_stat_names", "RowsVerticalSection",
   function(obj) lapply(obj, obj_stat_names)
 )
+
+# obj_round_type getter ---------------------------------------------------------------
+#' @rdname formatters_methods
+#' @exportMethod obj_round_type
+setMethod("obj_round_type", "ANY", function(obj) attr(obj, "round_type", exact = TRUE))
+
+#' generics and methods for obj_round_type
+#'
+#' These are internal methods that are documented only to satisfy `R CMD check`. End users should pay no
+#' attention to this documentation, except for the few exported methods.
+#'
+#' @rdname formatters_methods
+#' @exportMethod obj_round_type
+#' @export
+setMethod("obj_round_type", "PreDataTableLayouts", function(obj) obj@round_type)
+
+#' @rdname formatters_methods
+#' @exportMethod obj_round_type
+#' @export
+setMethod("obj_round_type", "VTableTree", function(obj) obj@round_type)
+
+#' @rdname formatters_methods
+#' @exportMethod obj_round_type
+setMethod("obj_round_type", "TableRow", function(obj) obj@round_type)
+
+#' @rdname formatters_methods
+#' @exportMethod obj_round_type
+setMethod("obj_round_type", "CellValue", function(obj) attr(obj, "round_type", exact = TRUE))
+
+# obj_round_type setter ---------------------------------------------------------------
+#' @rdname formatters_methods
+#' @exportMethod obj_round_type<-
+#' @export
+setMethod("obj_round_type<-", "VTableTree", function(obj, value) {
+  stopifnot(length(value) == 1)
+  checkmate::assert_subset(value, valid_round_type)
+  obj@round_type <- value
+  # also set round_type to slot in children class
+  tree_children(obj) <- lapply(tree_children(obj), `obj_round_type<-`, value = value)
+  if (!is.null(content_table(obj))) {
+    ctab <- content_table(obj)
+    obj_round_type(ctab) <- value
+  }
+  obj
+})
+
+#' @rdname formatters_methods
+#' @exportMethod obj_round_type<-
+# not useful for end user, needed for recursive approach
+setMethod("obj_round_type<-", "TableRow", function(obj, value) {
+  obj@round_type <- value
+  row_cells(obj) <- lapply(row_cells(obj), `obj_round_type<-`, value = value)
+  obj
+})
+
+
+#' @rdname formatters_methods
+#' @exportMethod obj_round_type<-
+# not useful for end user, needed for recursive approach
+setMethod("obj_round_type<-", "LabelRow", function(obj, value) {
+  obj
+})
+
+
+#' @rdname formatters_methods
+#' @exportMethod obj_round_type<-
+setMethod("obj_round_type<-", "CellValue", function(obj, value) {
+  attr(obj, "round_type") <- value
+  obj
+})
