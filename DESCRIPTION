@@ -1,18 +1,18 @@
 Package: rtables
 Title: Reporting Tables
-Version: 0.6.15
-Date: 2025-12-14
+Version: 0.6.16
+Date: 2026-04-22
 Authors@R: c(
     person("Gabriel", "Becker", , "gabembecker@gmail.com", role = "aut",
            comment = "Original creator of the package"),
-    person("Adrian", "Waddell", , "adrian.waddell@gene.com", role = "aut"),
-    person("Daniel", "Sabanés Bové", , "daniel.sabanes_bove@roche.com", role = "ctb"),
+    person("Adrian", "Waddell", , "adrian.waddell@gmail.com", role = "aut"),
+    person("Daniel", "Sabanés Bové", , "daniel.sabanes_bove@rconis.com", role = "ctb"),
     person("Maximilian", "Mordig", , "maximilian_oliver.mordig@roche.com", role = "ctb"),
     person("Davide", "Garolini", , "davide.garolini@roche.com", role = "aut",
            comment = c(ORCID = "0000-0002-1445-1369")),
-    person("Emily", "de la Rua", , "emily.de_la_rua@contractors.roche.com", role = "aut",
+    person("Emily", "de la Rua", , "emilydelarua@gmail.com", role = "aut",
            comment = c(ORCID = "0009-0000-8738-5561")),
-    person("Abinaya", "Yogasekaram", , "abinaya.yogasekaram@contractors.roche.com", role = "ctb",
+    person("Abinaya", "Yogasekaram", , "ayogasek@gmail.com", role = "ctb",
            comment = c(ORCID = "0009-0005-2083-1105")),
     person("Joe", "Zhu", , "joe.zhu@roche.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7566-2787")),
@@ -36,9 +36,9 @@ Depends: formatters (>= 0.5.12), magrittr (>= 2.0.3), methods, R (>=
         4.1)
 Imports: checkmate (>= 2.1.0), htmltools (>= 0.5.8.1), lifecycle (>=
         1.0.4), stats, stringi (>= 1.8.4)
-Suggests: broom (>= 1.0.8), car (>= 3.0-13), dplyr (>= 1.0.5), knitr
-        (>= 1.42), lme4 (>= 1.1-35.5), r2rtf (>= 0.3.2), rmarkdown (>=
-        2.23), survival (>= 3.3-1), testthat (>= 3.3.0), tibble (>=
+Suggests: broom (>= 1.0.8), car (>= 3.1-3), dplyr (>= 1.0.5), knitr (>=
+        1.42), lme4 (>= 1.1-35.5), r2rtf (>= 0.3.2), rmarkdown (>=
+        2.28), survival (>= 3.3-1), testthat (>= 3.3.0), tibble (>=
         3.2.1), tidyr (>= 1.1.3), withr (>= 2.0.0), xml2 (>= 1.3.5)
 VignetteBuilder: knitr, rmarkdown
 Config/Needs/verdepcheck: insightsengineering/formatters,
@@ -63,7 +63,7 @@ Collate: '00tabletrees.R' 'Viewer.R' 'argument_conventions.R'
         'index_footnotes.R' 'tt_from_df.R' 'validate_table_struct.R'
         'zzz_constants.R'
 NeedsCompilation: no
-Packaged: 2025-12-14 16:29:50 UTC; rstudio
+Packaged: 2026-04-22 07:03:56 UTC; zhus31
 Author: Gabriel Becker [aut] (Original creator of the package),
   Adrian Waddell [aut],
   Daniel Sabanés Bové [ctb],
@@ -76,4 +76,4 @@ Author: Gabriel Becker [aut] (Original creator of the package),
   F. Hoffmann-La Roche AG [cph, fnd]
 Maintainer: Joe Zhu <joe.zhu@roche.com>
 Repository: CRAN
-Date/Publication: 2025-12-14 17:20:02 UTC
+Date/Publication: 2026-04-22 08:30:02 UTC

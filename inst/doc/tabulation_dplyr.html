@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gabriel Becker and Adrian Waddell" />
 
-<meta name="date" content="2025-12-14" />
+<meta name="date" content="2026-04-22" />
 
 <title>Comparison with dplyr Tabulation</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Comparison with dplyr Tabulation</h1>
 <h4 class="author">Gabriel Becker and Adrian Waddell</h4>
-<h4 class="date">2025-12-14</h4>
+<h4 class="date">2026-04-22</h4>
 
 
 
@@ -438,44 +438,52 @@ columns:</p>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender) <span class="sc">%&gt;%</span></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;CAN&quot;</span>, handed <span class="sc">==</span> <span class="st">&quot;Left&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co"># `summarise()` has grouped output by &#39;arm&#39;. You can override using the `.groups`</span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co"># argument.</span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co"># # A tibble: 4 × 3</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co"># # Groups:   arm [2]</span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#   arm   gender mean_age</span></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#   &lt;fct&gt; &lt;fct&gt;     &lt;dbl&gt;</span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co"># 1 Arm A Female     38.9</span></span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co"># 2 Arm A Male       40.4</span></span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co"># 3 Arm B Female     40.3</span></span>
-<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co"># 4 Arm B Male       37.7</span></span></code></pre></div>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co"># `summarise()` has regrouped the output.</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co"># ℹ Summaries were computed grouped by arm and gender.</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co"># ℹ Output is grouped by arm.</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co"># ℹ Use `summarise(.groups = &quot;drop_last&quot;)` to silence this message.</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co"># ℹ Use `summarise(.by = c(arm, gender))` for per-operation grouping</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#   (`?dplyr::dplyr_by`) instead.</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co"># # A tibble: 4 × 3</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co"># # Groups:   arm [2]</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#   arm   gender mean_age</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#   &lt;fct&gt; &lt;fct&gt;     &lt;dbl&gt;</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co"># 1 Arm A Female     38.9</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co"># 2 Arm A Male       40.4</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co"># 3 Arm B Female     40.3</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co"># 4 Arm B Male       37.7</span></span></code></pre></div>
 <p>We can further get to all the average age cell values with:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>average_age <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">group_by</span>(arm, gender, country, handed) <span class="sc">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age))</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co"># `summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co"># override using the `.groups` argument.</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>average_age</span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co"># # A tibble: 16 × 5</span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co"># # Groups:   arm, gender, country [8]</span></span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#    arm   gender country handed mean_age</span></span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#    &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;     &lt;dbl&gt;</span></span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#  1 Arm A Female CAN     Left       38.9</span></span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#  2 Arm A Female CAN     Right      36.6</span></span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#  3 Arm A Female USA     Left       40.4</span></span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#  4 Arm A Female USA     Right      36.9</span></span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#  5 Arm A Male   CAN     Left       40.4</span></span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#  6 Arm A Male   CAN     Right      40.2</span></span>
-<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#  7 Arm A Male   USA     Left       39.7</span></span>
-<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#  8 Arm A Male   USA     Right      39.8</span></span>
-<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#  9 Arm B Female CAN     Left       40.3</span></span>
-<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co"># 10 Arm B Female CAN     Right      40.2</span></span>
-<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co"># 11 Arm B Female USA     Left       39.2</span></span>
-<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co"># 12 Arm B Female USA     Right      38.5</span></span>
-<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co"># 13 Arm B Male   CAN     Left       37.7</span></span>
-<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co"># 14 Arm B Male   CAN     Right      40.6</span></span>
-<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co"># 15 Arm B Male   USA     Left       40.1</span></span>
-<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co"># 16 Arm B Male   USA     Right      39.0</span></span></code></pre></div>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co"># `summarise()` has regrouped the output.</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co"># ℹ Summaries were computed grouped by arm, gender, country, and handed.</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co"># ℹ Output is grouped by arm, gender, and country.</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co"># ℹ Use `summarise(.groups = &quot;drop_last&quot;)` to silence this message.</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co"># ℹ Use `summarise(.by = c(arm, gender, country, handed))` for per-operation</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#   grouping (`?dplyr::dplyr_by`) instead.</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>average_age</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co"># # A tibble: 16 × 5</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co"># # Groups:   arm, gender, country [8]</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#    arm   gender country handed mean_age</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#    &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;     &lt;dbl&gt;</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#  1 Arm A Female CAN     Left       38.9</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#  2 Arm A Female CAN     Right      36.6</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#  3 Arm A Female USA     Left       40.4</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#  4 Arm A Female USA     Right      36.9</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#  5 Arm A Male   CAN     Left       40.4</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#  6 Arm A Male   CAN     Right      40.2</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#  7 Arm A Male   USA     Left       39.7</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#  8 Arm A Male   USA     Right      39.8</span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#  9 Arm B Female CAN     Left       40.3</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co"># 10 Arm B Female CAN     Right      40.2</span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co"># 11 Arm B Female USA     Left       39.2</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co"># 12 Arm B Female USA     Right      38.5</span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co"># 13 Arm B Male   CAN     Left       37.7</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co"># 14 Arm B Male   CAN     Right      40.6</span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co"># 15 Arm B Male   USA     Left       40.1</span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="co"># 16 Arm B Male   USA     Right      39.0</span></span></code></pre></div>
 <p>In <code>rtable</code> syntax, we need the following code to get to
 the same content:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>lyt <span class="ot">&lt;-</span> <span class="fu">basic_table</span>() <span class="sc">%&gt;%</span></span>
@@ -523,29 +531,33 @@ row mean values:</p>
 <span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">ungroup</span>(country) <span class="sc">%&gt;%</span></span>
 <span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="co"># now the `handed` grouping has been removed, therefore we can calculate percent now:</span></span>
 <span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n_col =</span> <span class="fu">sum</span>(c_h_count), <span class="at">c_h_percent =</span> c_h_count <span class="sc">/</span> n_col)</span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co"># `summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;, &#39;country&#39;. You can</span></span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co"># override using the `.groups` argument.</span></span>
-<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>c_h_df</span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co"># # A tibble: 16 × 8</span></span>
-<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co"># # Groups:   arm, gender [4]</span></span>
-<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#    arm   gender country handed  mean c_h_count n_col c_h_percent</span></span>
-<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#    &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;  &lt;dbl&gt;     &lt;int&gt; &lt;int&gt;       &lt;dbl&gt;</span></span>
-<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#  1 Arm A Female CAN     Left    38.9        32    96       0.333</span></span>
-<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#  2 Arm A Female CAN     Right   36.6        13    96       0.135</span></span>
-<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#  3 Arm A Female USA     Left    40.4        34    96       0.354</span></span>
-<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#  4 Arm A Female USA     Right   36.9        17    96       0.177</span></span>
-<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#  5 Arm A Male   CAN     Left    40.4        42   105       0.4  </span></span>
-<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#  6 Arm A Male   CAN     Right   40.2        22   105       0.210</span></span>
-<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#  7 Arm A Male   USA     Left    39.7        19   105       0.181</span></span>
-<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#  8 Arm A Male   USA     Right   39.8        22   105       0.210</span></span>
-<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#  9 Arm B Female CAN     Left    40.3        26    92       0.283</span></span>
-<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co"># 10 Arm B Female CAN     Right   40.2        20    92       0.217</span></span>
-<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co"># 11 Arm B Female USA     Left    39.2        25    92       0.272</span></span>
-<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co"># 12 Arm B Female USA     Right   38.5        21    92       0.228</span></span>
-<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co"># 13 Arm B Male   CAN     Left    37.7        37   107       0.346</span></span>
-<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co"># 14 Arm B Male   CAN     Right   40.6        25   107       0.234</span></span>
-<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co"># 15 Arm B Male   USA     Left    40.1        25   107       0.234</span></span>
-<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co"># 16 Arm B Male   USA     Right   39.0        20   107       0.187</span></span></code></pre></div>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co"># `summarise()` has regrouped the output.</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co"># ℹ Summaries were computed grouped by arm, gender, country, and handed.</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co"># ℹ Output is grouped by arm, gender, and country.</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co"># ℹ Use `summarise(.groups = &quot;drop_last&quot;)` to silence this message.</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co"># ℹ Use `summarise(.by = c(arm, gender, country, handed))` for per-operation</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#   grouping (`?dplyr::dplyr_by`) instead.</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>c_h_df</span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co"># # A tibble: 16 × 8</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co"># # Groups:   arm, gender [4]</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#    arm   gender country handed  mean c_h_count n_col c_h_percent</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#    &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;  &lt;dbl&gt;     &lt;int&gt; &lt;int&gt;       &lt;dbl&gt;</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#  1 Arm A Female CAN     Left    38.9        32    96       0.333</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#  2 Arm A Female CAN     Right   36.6        13    96       0.135</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#  3 Arm A Female USA     Left    40.4        34    96       0.354</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#  4 Arm A Female USA     Right   36.9        17    96       0.177</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#  5 Arm A Male   CAN     Left    40.4        42   105       0.4  </span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#  6 Arm A Male   CAN     Right   40.2        22   105       0.210</span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#  7 Arm A Male   USA     Left    39.7        19   105       0.181</span></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#  8 Arm A Male   USA     Right   39.8        22   105       0.210</span></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#  9 Arm B Female CAN     Left    40.3        26    92       0.283</span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co"># 10 Arm B Female CAN     Right   40.2        20    92       0.217</span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co"># 11 Arm B Female USA     Left    39.2        25    92       0.272</span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co"># 12 Arm B Female USA     Right   38.5        21    92       0.228</span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co"># 13 Arm B Male   CAN     Left    37.7        37   107       0.346</span></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co"># 14 Arm B Male   CAN     Right   40.6        25   107       0.234</span></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co"># 15 Arm B Male   USA     Left    40.1        25   107       0.234</span></span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co"># 16 Arm B Male   USA     Right   39.0        20   107       0.187</span></span></code></pre></div>
 <p>which has 16 rows (cells) like the <code>average_age</code> data
 frame defined above. Next, we will derive the group information for
 countries:</p>
@@ -554,21 +566,25 @@ countries:</p>
 <span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">c_count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
 <span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="co"># now the `handed` grouping has been removed, therefore we can calculate percent now:</span></span>
 <span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n_col =</span> <span class="fu">sum</span>(c_count), <span class="at">c_percent =</span> c_count <span class="sc">/</span> n_col)</span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co"># `summarise()` has grouped output by &#39;arm&#39;, &#39;gender&#39;. You can override using the</span></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co"># `.groups` argument.</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>c_df</span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co"># # A tibble: 8 × 6</span></span>
-<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co"># # Groups:   arm, gender [4]</span></span>
-<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#   arm   gender country c_count n_col c_percent</span></span>
-<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#   &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;     &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;</span></span>
-<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co"># 1 Arm A Female CAN          45    96     0.469</span></span>
-<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co"># 2 Arm A Female USA          51    96     0.531</span></span>
-<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co"># 3 Arm A Male   CAN          64   105     0.610</span></span>
-<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co"># 4 Arm A Male   USA          41   105     0.390</span></span>
-<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co"># 5 Arm B Female CAN          46    92     0.5  </span></span>
-<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co"># 6 Arm B Female USA          46    92     0.5  </span></span>
-<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co"># 7 Arm B Male   CAN          62   107     0.579</span></span>
-<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co"># 8 Arm B Male   USA          45   107     0.421</span></span></code></pre></div>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co"># `summarise()` has regrouped the output.</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co"># ℹ Summaries were computed grouped by arm, gender, and country.</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co"># ℹ Output is grouped by arm and gender.</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co"># ℹ Use `summarise(.groups = &quot;drop_last&quot;)` to silence this message.</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co"># ℹ Use `summarise(.by = c(arm, gender, country))` for per-operation grouping</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#   (`?dplyr::dplyr_by`) instead.</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>c_df</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co"># # A tibble: 8 × 6</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co"># # Groups:   arm, gender [4]</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#   arm   gender country c_count n_col c_percent</span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#   &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;     &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co"># 1 Arm A Female CAN          45    96     0.469</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co"># 2 Arm A Female USA          51    96     0.531</span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co"># 3 Arm A Male   CAN          64   105     0.610</span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co"># 4 Arm A Male   USA          41   105     0.390</span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co"># 5 Arm B Female CAN          46    92     0.5  </span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="co"># 6 Arm B Female USA          46    92     0.5  </span></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="co"># 7 Arm B Male   CAN          62   107     0.579</span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="co"># 8 Arm B Male   USA          45   107     0.421</span></span></code></pre></div>
 <p>Finally, we <code>left_join()</code> the two levels of summary to get
 a data.frame containing the full set of values which make up the body of
 our table (note, however, they are not in the same order):</p>
