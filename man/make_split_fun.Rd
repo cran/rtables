@@ -66,9 +66,9 @@ mysplitfun <- make_split_fun(
   post = list(add_overall_facet("ALL", "All Arms"))
 )
 
-basic_table(show_colcounts = TRUE) \%>\%
-  split_cols_by("ARM", split_fun = mysplitfun) \%>\%
-  analyze("AGE") \%>\%
+basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM", split_fun = mysplitfun) |>
+  analyze("AGE") |>
   build_table(subset(DM, ARM \%in\% c("B: Placebo", "C: Combination")))
 
 ## post (and pre) arguments can take multiple functions, here
@@ -89,9 +89,9 @@ mysplitfun2 <- make_split_fun(
     reorder_facets
   )
 )
-basic_table(show_colcounts = TRUE) \%>\%
-  split_cols_by("ARM", split_fun = mysplitfun2) \%>\%
-  analyze("AGE") \%>\%
+basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM", split_fun = mysplitfun2) |>
+  analyze("AGE") |>
   build_table(subset(DM, ARM \%in\% c("B: Placebo", "C: Combination")))
 
 very_stupid_core <- function(spl, df, vals, labels, .spl_context) {
@@ -113,9 +113,9 @@ nonsense_splfun <- make_split_fun(
 ## recall core split overriding is not supported in column space
 ## currently, but we can see it in action in row space
 
-lyt_silly <- basic_table() \%>\%
-  split_rows_by("ARM", split_fun = nonsense_splfun) \%>\%
-  summarize_row_groups() \%>\%
+lyt_silly <- basic_table() |>
+  split_rows_by("ARM", split_fun = nonsense_splfun) |>
+  summarize_row_groups() |>
   analyze("AGE")
 silly_table <- build_table(lyt_silly, DM)
 silly_table
@@ -124,11 +124,11 @@ silly_table
 \seealso{
 \link{custom_split_funs} for a more detailed discussion on what custom split functions do.
 
-Other make_custom_split: 
-\code{\link{add_combo_facet}()},
-\code{\link{drop_facet_levels}()},
-\code{\link{make_split_result}()},
-\code{\link{restrict_facets}()},
-\code{\link{trim_levels_in_facets}()}
+Other make_custom_split:
+\code{\link[=add_combo_facet]{add_combo_facet()}},
+\code{\link[=drop_facet_levels]{drop_facet_levels()}},
+\code{\link[=make_split_result]{make_split_result()}},
+\code{\link[=restrict_facets]{restrict_facets()}},
+\code{\link[=trim_levels_in_facets]{trim_levels_in_facets()}}
 }
 \concept{make_custom_split}

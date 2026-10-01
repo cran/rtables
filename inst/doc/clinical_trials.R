@@ -22,8 +22,8 @@ library(dplyr)
 ## -----------------------------------------------------------------------------
 ADSL <- ex_adsl # Example ADSL dataset
 
-lyt <- basic_table() %>%
-  split_cols_by("ARM") %>%
+lyt <- basic_table() |>
+  split_cols_by("ARM") |>
   analyze(vars = "AGE", afun = function(x) {
     in_rows(
       "Mean (sd)" = rcell(c(mean(x), sd(x)), format = "xx.xx (xx.xx)"),
@@ -35,8 +35,8 @@ tbl <- build_table(lyt, ADSL)
 tbl
 
 ## -----------------------------------------------------------------------------
-lyt2 <- basic_table() %>%
-  split_cols_by("ARM") %>%
+lyt2 <- basic_table() |>
+  split_cols_by("ARM") |>
   analyze(vars = c("AGE", "BMRKR1"), afun = function(x) {
     in_rows(
       "Mean (sd)" = rcell(c(mean(x), sd(x)), format = "xx.xx (xx.xx)"),
@@ -71,17 +71,17 @@ s_summary(ADSL$AGE)
 s_summary(ADSL$SEX)
 
 ## -----------------------------------------------------------------------------
-summary_lyt <- basic_table() %>%
-  split_cols_by(var = "ARM") %>%
+summary_lyt <- basic_table() |>
+  split_cols_by(var = "ARM") |>
   analyze(c("AGE", "SEX"), afun = s_summary)
 
 summary_tbl <- build_table(summary_lyt, ADSL)
 summary_tbl
 
 ## -----------------------------------------------------------------------------
-summary_lyt2 <- basic_table() %>%
-  split_cols_by(var = "ARM") %>%
-  analyze("AGE", s_summary) %>%
+summary_lyt2 <- basic_table() |>
+  split_cols_by(var = "ARM") |>
+  analyze("AGE", s_summary) |>
   analyze("SEX", s_summary)
 
 summary_tbl2 <- build_table(summary_lyt2, ADSL)
@@ -94,25 +94,25 @@ identical(summary_tbl, summary_tbl2)
 stopifnot(identical(summary_tbl, summary_tbl2))
 
 ## -----------------------------------------------------------------------------
-summary_lyt3 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by(var = "ARMCD") %>%
+summary_lyt3 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by(var = "ARMCD") |>
   analyze(c("AGE", "SEX"), s_summary)
 
 summary_tbl3 <- build_table(summary_lyt3, ADSL)
 summary_tbl3
 
 ## -----------------------------------------------------------------------------
-lyt <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by(var = "ARM") %>%
+lyt <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by(var = "ARM") |>
   analyze(c("AGE", "BMRKR2"), s_summary)
 
 tbl <- build_table(lyt, ADSL)
 tbl
 
 ## ----warning=FALSE------------------------------------------------------------
-lyt <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by(var = "ARM") %>%
-  split_rows_by("SEX") %>%
+lyt <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by(var = "ARM") |>
+  split_rows_by("SEX") |>
   analyze(c("AGE", "BMRKR2"), s_summary)
 
 tbl <- build_table(lyt, ADSL)
@@ -121,25 +121,25 @@ tbl
 ## ----warning=FALSE------------------------------------------------------------
 ADSL_M_F <- filter(ADSL, SEX %in% c("M", "F"))
 
-lyt2 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by(var = "ARM") %>%
-  split_rows_by("SEX") %>%
+lyt2 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by(var = "ARM") |>
+  split_rows_by("SEX") |>
   analyze(c("AGE", "BMRKR2"), s_summary)
 
 tbl2 <- build_table(lyt2, ADSL_M_F)
 tbl2
 
 ## -----------------------------------------------------------------------------
-lyt3 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by(var = "ARM") %>%
-  split_rows_by("SEX", split_fun = drop_split_levels, child_labels = "visible") %>%
+lyt3 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by(var = "ARM") |>
+  split_rows_by("SEX", split_fun = drop_split_levels, child_labels = "visible") |>
   analyze(c("AGE", "BMRKR2"), s_summary)
 
 tbl3 <- build_table(lyt3, ADSL_M_F)
 tbl3
 
 ## -----------------------------------------------------------------------------
-ADSL_M_F_l <- ADSL_M_F %>%
+ADSL_M_F_l <- ADSL_M_F |>
   mutate(lbl_sex = case_when(
     SEX == "M" ~ "Male",
     SEX == "F" ~ "Female",
@@ -147,19 +147,19 @@ ADSL_M_F_l <- ADSL_M_F %>%
     SEX == "UNDIFFERENTIATED" ~ "Undifferentiated"
   ))
 
-lyt4 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by(var = "ARM") %>%
-  split_rows_by("SEX", labels_var = "lbl_sex", split_fun = drop_split_levels, child_labels = "visible") %>%
+lyt4 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by(var = "ARM") |>
+  split_rows_by("SEX", labels_var = "lbl_sex", split_fun = drop_split_levels, child_labels = "visible") |>
   analyze(c("AGE", "BMRKR2"), s_summary)
 
 tbl4 <- build_table(lyt4, ADSL_M_F_l)
 tbl4
 
 ## -----------------------------------------------------------------------------
-lyt5 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by(var = "ARM") %>%
-  split_rows_by("SEX", labels_var = "lbl_sex", split_fun = drop_split_levels, child_labels = "visible") %>%
-  analyze("AGE", s_summary, show_labels = "visible") %>%
+lyt5 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by(var = "ARM") |>
+  split_rows_by("SEX", labels_var = "lbl_sex", split_fun = drop_split_levels, child_labels = "visible") |>
+  analyze("AGE", s_summary, show_labels = "visible") |>
   analyze("BMRKR2", s_summary, nested = FALSE, show_labels = "visible")
 
 tbl5 <- build_table(lyt5, ADSL_M_F_l)
@@ -172,69 +172,69 @@ insert_NAs <- function(x) {
 }
 
 set.seed(1)
-ADSL_NA <- ADSL_M_F_l %>%
+ADSL_NA <- ADSL_M_F_l |>
   mutate(AGE = insert_NAs(AGE))
 
-lyt6 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by(var = "ARM") %>%
+lyt6 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by(var = "ARM") |>
   split_rows_by(
     "SEX",
     labels_var = "lbl_sex",
     split_fun = drop_split_levels,
     child_labels = "visible"
-  ) %>%
-  analyze("AGE", s_summary) %>%
+  ) |>
+  analyze("AGE", s_summary) |>
   analyze("BMRKR2", s_summary, nested = FALSE, show_labels = "visible")
 
 tbl6 <- build_table(lyt6, filter(ADSL_NA, SEX %in% c("M", "F")))
 tbl6
 
 ## -----------------------------------------------------------------------------
-lyt7 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by(var = "ARM") %>%
-  split_rows_by("SEX", labels_var = "lbl_sex", split_fun = drop_split_levels) %>%
-  summarize_row_groups() %>%
-  analyze("AGE", s_summary) %>%
+lyt7 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by(var = "ARM") |>
+  split_rows_by("SEX", labels_var = "lbl_sex", split_fun = drop_split_levels) |>
+  summarize_row_groups() |>
+  analyze("AGE", s_summary) |>
   analyze("BMRKR2", afun = s_summary, nested = FALSE, show_labels = "visible")
 
 tbl7 <- build_table(lyt7, filter(ADSL_NA, SEX %in% c("M", "F")))
 tbl7
 
 ## -----------------------------------------------------------------------------
-lyt8 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by(var = "ARM") %>%
-  split_rows_by("SEX", labels_var = "lbl_sex", split_fun = drop_split_levels) %>%
+lyt8 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by(var = "ARM") |>
+  split_rows_by("SEX", labels_var = "lbl_sex", split_fun = drop_split_levels) |>
   summarize_row_groups(cfun = function(df, labelstr, .N_col, ...) {
     in_rows(
       rcell(nrow(df) * c(1, 1 / .N_col), format = "xx (xx.xx%)"),
       .labels = labelstr
     )
-  }) %>%
-  analyze("AGE", s_summary) %>%
+  }) |>
+  analyze("AGE", s_summary) |>
   analyze("BEP01FL", afun = s_summary, nested = FALSE, show_labels = "visible")
 
 tbl8 <- build_table(lyt8, filter(ADSL_NA, SEX %in% c("M", "F")))
 tbl8
 
 ## -----------------------------------------------------------------------------
-lyt9 <- basic_table() %>%
-  split_cols_by(var = "ARM") %>%
-  split_rows_by("SEX", labels_var = "lbl_sex", split_fun = drop_split_levels, child_labels = "hidden") %>%
+lyt9 <- basic_table() |>
+  split_cols_by(var = "ARM") |>
+  split_rows_by("SEX", labels_var = "lbl_sex", split_fun = drop_split_levels, child_labels = "hidden") |>
   summarize_row_groups(cfun = function(df, labelstr, .N_col, ...) {
     in_rows(
       rcell(nrow(df) * c(1, 1 / .N_col), format = "xx (xx.xx%)"),
       .labels = paste0(labelstr, ": count (perc.)")
     )
-  }) %>%
-  analyze("AGE", s_summary) %>%
+  }) |>
+  analyze("AGE", s_summary) |>
   analyze("BEP01FL", s_summary, nested = FALSE, show_labels = "visible")
 
 tbl9 <- build_table(lyt9, filter(ADSL_NA, SEX %in% c("M", "F")))
 tbl9
 
 ## -----------------------------------------------------------------------------
-adsl_lyt <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARM") %>%
+adsl_lyt <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM") |>
   analyze(c("AGE", "SEX"), afun = s_summary)
 
 adsl_lyt
@@ -244,7 +244,7 @@ adsl_tbl <- build_table(adsl_lyt, ADSL)
 adsl_tbl
 
 ## -----------------------------------------------------------------------------
-adsl_f_tbl <- build_table(lyt, ADSL %>% filter(AGE > 18))
+adsl_f_tbl <- build_table(lyt, ADSL |> filter(AGE > 18))
 adsl_f_tbl
 
 ## -----------------------------------------------------------------------------
@@ -285,7 +285,7 @@ l.adae <- mapply(
   FUN = function(id, arm, sex, age) {
     n_ae <- sample(0:25, 1, prob = if (arm == "ARM A") weightsA else weightsB)
     i <- sample(seq_len(nrow(lookup)), size = n_ae, replace = TRUE, prob = c(6, rep(1, 10)) / 16)
-    lookup[i, ] %>%
+    lookup[i, ] |>
       mutate(
         AESEQ = seq_len(n()),
         USUBJID = id, ARM = arm, SEX = sex, AGE = age
@@ -295,13 +295,13 @@ l.adae <- mapply(
 )
 
 ADAE2 <- do.call(rbind, l.adae)
-ADAE2 <- ADAE2 %>%
+ADAE2 <- ADAE2 |>
   mutate(
     ARM = factor(ARM, levels = c("ARM A", "ARM B")),
     AEDECOD = as.factor(AEDECOD),
     AEBODSYS = as.factor(AEBODSYS),
     AETOXGR = factor(AETOXGR, levels = as.character(1:5))
-  ) %>%
+  ) |>
   select(USUBJID, ARM, AGE, SEX, AESEQ, AEDECOD, AEBODSYS, AETOXGR)
 
 ADAE2
@@ -319,8 +319,8 @@ s_events_patients <- function(x, labelstr, .N_col) {
 s_events_patients(x = c("id 1", "id 1", "id 2"), .N_col = 5)
 
 ## -----------------------------------------------------------------------------
-adae_lyt <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARM") %>%
+adae_lyt <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM") |>
   analyze("USUBJID", s_events_patients)
 
 adae_tbl <- build_table(adae_lyt, ADAE2)
@@ -331,20 +331,20 @@ adae_adsl_tbl <- build_table(adae_lyt, ADAE2, alt_counts_df = ADSL2)
 adae_adsl_tbl
 
 ## -----------------------------------------------------------------------------
-adae_soc_lyt <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARM") %>%
-  analyze("USUBJID", s_events_patients) %>%
-  split_rows_by("AEBODSYS", child_labels = "visible", nested = FALSE) %>%
+adae_soc_lyt <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM") |>
+  analyze("USUBJID", s_events_patients) |>
+  split_rows_by("AEBODSYS", child_labels = "visible", nested = FALSE) |>
   summarize_row_groups("USUBJID", cfun = s_events_patients)
 
 adae_soc_tbl <- build_table(adae_soc_lyt, ADAE2, alt_counts_df = ADSL2)
 adae_soc_tbl
 
 ## -----------------------------------------------------------------------------
-adae_soc_lyt2 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARM") %>%
-  split_rows_by("AEBODSYS", child_labels = "visible", indent_mod = 1) %>%
-  summarize_row_groups("USUBJID", cfun = s_events_patients) %>%
+adae_soc_lyt2 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM") |>
+  split_rows_by("AEBODSYS", child_labels = "visible", indent_mod = 1) |>
+  summarize_row_groups("USUBJID", cfun = s_events_patients) |>
   analyze("AEDECOD", indent_mod = -1)
 
 adae_soc_tbl2 <- build_table(adae_soc_lyt2, ADAE2, alt_counts_df = ADSL2)
@@ -366,21 +366,21 @@ table_count_once_per_id <- function(df, termvar = "AEDECOD", idvar = "USUBJID") 
 table_count_once_per_id(ADAE2)
 
 ## -----------------------------------------------------------------------------
-adae_soc_lyt3 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARM") %>%
-  split_rows_by("AEBODSYS", child_labels = "visible", indent_mod = 1) %>%
-  summarize_row_groups("USUBJID", cfun = s_events_patients) %>%
+adae_soc_lyt3 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM") |>
+  split_rows_by("AEBODSYS", child_labels = "visible", indent_mod = 1) |>
+  summarize_row_groups("USUBJID", cfun = s_events_patients) |>
   analyze("AEDECOD", afun = table_count_once_per_id, show_labels = "hidden", indent_mod = -1)
 
 adae_soc_tbl3 <- build_table(adae_soc_lyt3, ADAE2, alt_counts_df = ADSL2)
 adae_soc_tbl3
 
 ## -----------------------------------------------------------------------------
-adae_soc_lyt4 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARM") %>%
-  analyze("USUBJID", afun = s_events_patients) %>%
-  split_rows_by("AEBODSYS", child_labels = "visible", indent_mod = 1, section_div = "") %>%
-  summarize_row_groups("USUBJID", cfun = s_events_patients) %>%
+adae_soc_lyt4 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM") |>
+  analyze("USUBJID", afun = s_events_patients) |>
+  split_rows_by("AEBODSYS", child_labels = "visible", indent_mod = 1, section_div = "") |>
+  summarize_row_groups("USUBJID", cfun = s_events_patients) |>
   analyze("AEDECOD", table_count_once_per_id, show_labels = "hidden", indent_mod = -1)
 
 adae_soc_tbl4 <- build_table(adae_soc_lyt4, ADAE2, alt_counts_df = ADSL2)
@@ -414,18 +414,18 @@ table_count_grade_once_per_id <- function(df,
 table_count_grade_once_per_id(ex_adae, grade_levels = 1:5)
 
 ## -----------------------------------------------------------------------------
-adae_grade_lyt <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARM") %>%
+adae_grade_lyt <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM") |>
   analyze(
     "AETOXGR",
     afun = table_count_grade_once_per_id,
     extra_args = list(grade_levels = 1:5),
     var_labels = "- Any adverse events -",
     show_labels = "visible"
-  ) %>%
-  split_rows_by("AEBODSYS", child_labels = "visible", indent_mod = 1) %>%
-  summarize_row_groups(cfun = table_count_grade_once_per_id, format = "xx", indent_mod = 1) %>%
-  split_rows_by("AEDECOD", child_labels = "visible", indent_mod = -2) %>%
+  ) |>
+  split_rows_by("AEBODSYS", child_labels = "visible", indent_mod = 1) |>
+  summarize_row_groups(cfun = table_count_grade_once_per_id, format = "xx", indent_mod = 1) |>
+  split_rows_by("AEDECOD", child_labels = "visible", indent_mod = -2) |>
   analyze(
     "AETOXGR",
     afun = table_count_grade_once_per_id,
@@ -437,8 +437,8 @@ adae_grade_tbl <- build_table(adae_grade_lyt, ADAE2, alt_counts_df = ADSL2)
 adae_grade_tbl
 
 ## -----------------------------------------------------------------------------
-ADRS_BESRSPI <- ex_adrs %>%
-  filter(PARAMCD == "BESRSPI") %>%
+ADRS_BESRSPI <- ex_adrs |>
+  filter(PARAMCD == "BESRSPI") |>
   mutate(
     rsp = factor(AVALC %in% c("CR", "PR"), levels = c(TRUE, FALSE), labels = c("Responders", "Non-Responders")),
     is_rsp = (rsp == "Responders")
@@ -453,8 +453,8 @@ s_proportion <- function(x, .N_col) {
   )
 }
 
-rsp_lyt <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARMCD", ref_group = "ARM A") %>%
+rsp_lyt <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARMCD", ref_group = "ARM A") |>
   analyze("rsp", s_proportion, show_labels = "hidden")
 
 rsp_tbl <- build_table(rsp_lyt, ADRS_BESRSPI)
@@ -514,15 +514,15 @@ s_unstrat_resp <- function(x, .ref_group, .in_ref_col) {
 }
 
 s_unstrat_resp(
-  x = ADRS_BESRSPI %>% filter(ARM == "A: Drug X") %>% pull(is_rsp),
-  .ref_group = ADRS_BESRSPI %>% filter(ARM == "B: Placebo") %>% pull(is_rsp),
+  x = ADRS_BESRSPI |> filter(ARM == "A: Drug X") |> pull(is_rsp),
+  .ref_group = ADRS_BESRSPI |> filter(ARM == "B: Placebo") |> pull(is_rsp),
   .in_ref_col = FALSE
 )
 
 ## -----------------------------------------------------------------------------
-rsp_lyt2 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARMCD", ref_group = "ARM A") %>%
-  analyze("rsp", s_proportion, show_labels = "hidden") %>%
+rsp_lyt2 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARMCD", ref_group = "ARM A") |>
+  analyze("rsp", s_proportion, show_labels = "hidden") |>
   analyze(
     "is_rsp", s_unstrat_resp,
     show_labels = "visible",
@@ -540,24 +540,24 @@ s_prop <- function(df, .N_col) {
 }
 
 s_prop(
-  df = ADRS_BESRSPI %>% filter(ARM == "A: Drug X", AVALC == "CR"),
+  df = ADRS_BESRSPI |> filter(ARM == "A: Drug X", AVALC == "CR"),
   .N_col = sum(ADRS_BESRSPI$ARM == "A: Drug X")
 )
 
 ## -----------------------------------------------------------------------------
-rsp_lyt3 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARMCD", ref_group = "ARM A") %>%
-  analyze("rsp", s_proportion, show_labels = "hidden") %>%
+rsp_lyt3 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARMCD", ref_group = "ARM A") |>
+  analyze("rsp", s_proportion, show_labels = "hidden") |>
   analyze(
     "is_rsp", s_unstrat_resp,
     show_labels = "visible", var_labels = "Unstratified Response Analysis"
-  ) %>%
+  ) |>
   split_rows_by(
     var = "AVALC",
     split_fun = reorder_split_levels(neworder = c("CR", "PR", "SD", "PD", "NE"), drlevels = TRUE),
     nested = FALSE
-  ) %>%
-  summarize_row_groups() %>%
+  ) |>
+  summarize_row_groups() |>
   analyze("AVALC", afun = s_prop)
 
 rsp_tbl3 <- build_table(rsp_lyt3, ADRS_BESRSPI)
@@ -580,22 +580,22 @@ rsp_label <- function(x) {
 }
 
 
-rsp_lyt4 <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARMCD", ref_group = "ARM A") %>%
-  analyze("rsp", s_proportion, show_labels = "hidden") %>%
+rsp_lyt4 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARMCD", ref_group = "ARM A") |>
+  analyze("rsp", s_proportion, show_labels = "hidden") |>
   analyze(
     "is_rsp", s_unstrat_resp,
     show_labels = "visible", var_labels = "Unstratified Response Analysis"
-  ) %>%
+  ) |>
   split_rows_by(
     var = "AVALC",
     split_fun = keep_split_levels(c("CR", "PR", "SD", "PD"), reorder = TRUE),
     nested = FALSE
-  ) %>%
+  ) |>
   summarize_row_groups(cfun = function(df, labelstr, .N_col) {
     in_rows(nrow(df) * c(1, 1 / .N_col), .formats = "xx (xx.xx%)", .labels = rsp_label(labelstr))
-  }) %>%
-  analyze("AVALC", afun = s_prop) %>%
+  }) |>
+  analyze("AVALC", afun = s_prop) |>
   analyze("AVALC", afun = function(x, .N_col) {
     in_rows(rcell(sum(x == "NE") * c(1, 1 / .N_col), format = "xx.xx (xx.xx%)"), .labels = rsp_label("NE"))
   }, nested = FALSE)
@@ -606,13 +606,13 @@ rsp_tbl4
 ## -----------------------------------------------------------------------------
 library(survival)
 
-adtte <- ex_adaette %>%
+adtte <- ex_adaette |>
   dplyr::filter(PARAMCD == "AETTE2", SAFFL == "Y")
 
 # Add censoring to data for example
-adtte[adtte$AVAL > 1.0, ] <- adtte[adtte$AVAL > 1.0, ] %>% mutate(AVAL = 1.0, CNSR = 1)
+adtte[adtte$AVAL > 1.0, ] <- adtte[adtte$AVAL > 1.0, ] |> mutate(AVAL = 1.0, CNSR = 1)
 
-adtte2 <- adtte %>%
+adtte2 <- adtte |>
   mutate(CNSDTDSC = ifelse(CNSDTDSC == "", "__none__", CNSDTDSC))
 
 ## -----------------------------------------------------------------------------
@@ -658,9 +658,10 @@ a_cph <- function(df, .var, .in_ref_col, .ref_full, full_cox_fit) {
 ## -----------------------------------------------------------------------------
 surv_tbl <- as.data.frame(
   summary(survfit(Surv(AVAL, CNSR == 0) ~ ACTARM, data = adtte, conf.type = "log-log"))$table
-) %>%
+) |>
+  tibble::rownames_to_column("ACTARM") |>
   dplyr::mutate(
-    ACTARM = factor(gsub("ACTARM=", "", row.names(.)), levels = levels(adtte$ACTARM)),
+    ACTARM = factor(gsub("ACTARM=", "", ACTARM), levels = levels(adtte$ACTARM)),
     ind = FALSE
   )
 
@@ -683,15 +684,15 @@ a_tte <- function(df, .var, kp_table) {
 }
 
 ## -----------------------------------------------------------------------------
-lyt <- basic_table(show_colcounts = TRUE) %>%
+lyt <- basic_table(show_colcounts = TRUE) |>
   ## Column faceting
-  split_cols_by("ARM", ref_group = "A: Drug X") %>%
+  split_cols_by("ARM", ref_group = "A: Drug X") |>
   ## Overall count
-  analyze("USUBJID", a_count_subjs, show_labels = "hidden") %>%
+  analyze("USUBJID", a_count_subjs, show_labels = "hidden") |>
   ## Censored subjects summary
-  analyze("CNSDTDSC", cnsr_counter, var_labels = "Censored Subjects", show_labels = "visible") %>%
+  analyze("CNSDTDSC", cnsr_counter, var_labels = "Censored Subjects", show_labels = "visible") |>
   ## Cox P-H analysis
-  analyze("ARM", a_cph, extra_args = list(full_cox_fit = cph), show_labels = "hidden") %>%
+  analyze("ARM", a_cph, extra_args = list(full_cox_fit = cph), show_labels = "hidden") |>
   ## Time-to-event analysis
   analyze(
     "ARM", a_tte,

@@ -23,7 +23,7 @@ cont_n_allcols <- function(tt) {
 #' @param j (`numeric(1)`)\cr index of column used for scoring.
 #'
 #' @seealso For examples and details, please read the documentation for [sort_at_path()] and the
-#' [Sorting and Pruning](https://insightsengineering.github.io/rtables/latest-tag/articles/sorting_pruning.html)
+#' [Sorting and Pruning](https://pharmaverse.github.io/rtables/latest-tag/articles/sorting_pruning.html)
 #' vignette.
 #'
 #' @export
@@ -101,7 +101,7 @@ match_fun_args <- function(fun, ...) {
 #'
 #' Note that sorting needs a deeper understanding of table structure in `rtables`. Please consider reading the related
 #' vignette
-#' ([Sorting and Pruning](https://insightsengineering.github.io/rtables/latest-tag/articles/sorting_pruning.html))
+#' ([Sorting and Pruning](https://pharmaverse.github.io/rtables/latest-tag/articles/sorting_pruning.html))
 #' and explore table structure with useful functions like [table_structure()] and [row_paths_summary()]. It is also
 #' very important to understand the difference between "content" rows and "data" rows. The first one analyzes and
 #' describes the split variable generally and is generated with [summarize_row_groups()], while the second one is
@@ -137,19 +137,19 @@ match_fun_args <- function(fun, ...) {
 #' }
 #'
 #' # Main layout of the table
-#' raw_lyt <- basic_table() %>%
-#'   split_cols_by("ARM") %>%
+#' raw_lyt <- basic_table() |>
+#'   split_cols_by("ARM") |>
 #'   split_rows_by(
 #'     "RACE",
 #'     split_fun = drop_and_remove_levels("WHITE") # dropping WHITE levels
-#'   ) %>%
-#'   summarize_row_groups() %>%
-#'   split_rows_by("STRATA1") %>%
-#'   summarize_row_groups() %>%
+#'   ) |>
+#'   summarize_row_groups() |>
+#'   split_rows_by("STRATA1") |>
+#'   summarize_row_groups() |>
 #'   analyze("AGE", afun = more_analysis_fnc)
 #'
 #' # Creating the table and pruning empty and NAs
-#' tbl <- build_table(raw_lyt, DM) %>%
+#' tbl <- build_table(raw_lyt, DM) |>
 #'   prune_table()
 #'
 #' # Peek at the table structure to understand how it is built
@@ -177,8 +177,8 @@ match_fun_args <- function(fun, ...) {
 #'   }
 #' }
 #'
-#' lyt2 <- basic_table() %>%
-#'   split_rows_by("SEX") %>%
+#' lyt2 <- basic_table() |>
+#'   split_rows_by("SEX") |>
 #'   analyze("AGE")
 #'
 #' tbl2 <- build_table(lyt2, DM)

@@ -11,6 +11,7 @@ analyze_colvars(
   format = NULL,
   na_str = NA_character_,
   nested = TRUE,
+  at_sibling = NULL,
   extra_args = list(),
   indent_mod = 0L,
   inclNAs = FALSE
@@ -31,13 +32,18 @@ analyzing a single variable.}
 
 \item{format}{(\code{string}, \code{function}, or \code{list})\cr format associated with this split. Formats can be declared via
 strings (\code{"xx.x"}) or function. In cases such as \code{analyze} calls, they can be character vectors or lists of
-functions. See \code{\link[formatters:list_formats]{formatters::list_valid_format_labels()}} for a list of all available format strings.}
+functions. See \code{\link[formatters:list_valid_format_labels]{formatters::list_valid_format_labels()}} for a list of all available format strings.}
 
 \item{na_str}{(\code{string})\cr string that should be displayed when the value of \code{x} is missing. Defaults to \code{"NA"}.}
 
 \item{nested}{(\code{logical})\cr whether this layout instruction should be applied within the existing layout structure
 \emph{if possible} (\code{TRUE}, the default) or as a new top-level element (\code{FALSE}). Ignored if it would nest a split
 underneath analyses, which is not allowed.}
+
+\item{at_sibling}{(\code{character(1)} or \code{NULL})\cr If non-null, a preceding
+split or analyze to anchor this instruction to as a direct sibling. Cannot
+select an instruction that is downstream of a point where a previously used
+anchor (See Nesting Anchor Resolution for details).}
 
 \item{extra_args}{(\code{list})\cr extra arguments to be passed to the tabulation function. Element position in the list
 corresponds to the children of this split. Named elements in the child-specific lists are ignored if they do
@@ -56,11 +62,50 @@ A \code{PreDataTableLayouts} object suitable for passing to further layouting fu
 \description{
 Generate rows analyzing different variables across columns
 }
+\section{Nesting Anchor Resolution}{
+
+
+When \code{nested} is \code{TRUE}, \code{at_sibling} allows you to set a \emph{nesting
+anchor} that your new \verb{split_rows_by*} or \verb{analyze*} directive
+should be placed as a sibling to.  The lookup for this anchor
+occurs \emph{only in the currently active top-level nesting stack},
+meaning the directives that have occurred since
+the last split or analysis with \code{nested == FALSE}.
+
+Furthermore, resolution occurs against the first element of each
+arm of a branching point caused by any previous uses of
+\code{at_sibling} but \emph{only descends into the last arm}.
+
+So for example if our previous layout was generated via:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{lyt <- basic_table() |>
+  split_rows_by("SEX") |>
+  analyze("AGE") |>
+  split_rows_by("BMRKR2", nested = FALSE) |>
+  split_rows_by("RACE") |>
+  analyze("AGE") |>
+  split_rows_by("SEX", at_sibling = "RACE") |>
+  analyze("BMRKR1")
+}\if{html}{\out{</div>}}
+
+The eligible anchor points would be \code{"BMRKR2"}, \code{"RACE"}, \code{"SEX"}
+and \code{"BMRKR1"}. \code{"AGE"} is masked by the branching caused by
+anchoring our \code{SEX} split on \code{RACE}.
+
+Finally, while \code{at_sibling} does support de-duplication of
+\code{"<name>[i]"} anchors, it does so \strong{within the set of available
+anchors}, which can be counter-intuitive. It is strongly suggested
+that the \code{parent_name} and \code{table_names} argument(s) of
+\verb{split_rows_by*} and \code{analyze} be used to prevent the need for
+this. \code{at_sibling} will resolve to table names overridden in this
+manner.
+}
+
 \examples{
 \dontshow{if (require(dplyr)) withAutoprint(\{ # examplesIf}
 library(dplyr)
 
-ANL <- DM \%>\% mutate(value = rnorm(n()), pctdiff = runif(n()))
+ANL <- DM |> mutate(value = rnorm(n()), pctdiff = runif(n()))
 
 ## toy example where we take the mean of the first variable and the
 ## count of >.5 for the second.
@@ -69,30 +114,30 @@ colfuns <- list(
   function(x) rcell(sum(x > .5), format = "xx")
 )
 
-lyt <- basic_table() \%>\%
-  split_cols_by("ARM") \%>\%
-  split_cols_by_multivar(c("value", "pctdiff")) \%>\%
+lyt <- basic_table() |>
+  split_cols_by("ARM") |>
+  split_cols_by_multivar(c("value", "pctdiff")) |>
   split_rows_by("RACE",
     split_label = "ethnicity",
     split_fun = drop_split_levels
-  ) \%>\%
-  summarize_row_groups() \%>\%
+  ) |>
+  summarize_row_groups() |>
   analyze_colvars(afun = colfuns)
 lyt
 
 tbl <- build_table(lyt, ANL)
 tbl
 
-lyt2 <- basic_table() \%>\%
-  split_cols_by("ARM") \%>\%
+lyt2 <- basic_table() |>
+  split_cols_by("ARM") |>
   split_cols_by_multivar(c("value", "pctdiff"),
     varlabels = c("Measurement", "Pct Diff")
-  ) \%>\%
+  ) |>
   split_rows_by("RACE",
     split_label = "ethnicity",
     split_fun = drop_split_levels
-  ) \%>\%
-  summarize_row_groups() \%>\%
+  ) |>
+  summarize_row_groups() |>
   analyze_colvars(afun = mean, format = "xx.xx")
 
 tbl2 <- build_table(lyt2, ANL)

@@ -17,9 +17,9 @@ knitr::opts_chunk$set(comment = "#")
 ## -----------------------------------------------------------------------------
 library(dplyr)
 library(rtables)
-lyt <- basic_table(show_colcounts = TRUE) %>%
-  split_cols_by("ARM") %>%
-  split_cols_by("SEX", split_fun = keep_split_levels(c("F", "M"))) %>%
+lyt <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM") |>
+  split_cols_by("SEX", split_fun = keep_split_levels(c("F", "M"))) |>
   analyze("AGE")
 
 tbl <- build_table(lyt, ex_adsl)
@@ -34,21 +34,21 @@ col_counts(tbl) <- c(17, 18, NA, 17, 18, 19)
 tbl
 
 ## -----------------------------------------------------------------------------
-lyt2 <- basic_table() %>%
-  split_cols_by("ARM") %>%
+lyt2 <- basic_table() |>
+  split_cols_by("ARM") |>
   split_cols_by("SEX",
     split_fun = keep_split_levels(c("F", "M")),
     show_colcounts = TRUE
-  ) %>%
+  ) |>
   analyze("AGE")
 
 tbl2 <- build_table(lyt2, ex_adsl)
 tbl2
 
 ## -----------------------------------------------------------------------------
-lyt3 <- basic_table() %>%
-  split_cols_by("ARM", show_colcounts = TRUE) %>%
-  split_cols_by("SEX", split_fun = keep_split_levels(c("F", "M"))) %>%
+lyt3 <- basic_table() |>
+  split_cols_by("ARM", show_colcounts = TRUE) |>
+  split_cols_by("SEX", split_fun = keep_split_levels(c("F", "M"))) |>
   analyze("AGE")
 
 tbl3 <- build_table(lyt3, ex_adsl)

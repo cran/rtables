@@ -110,9 +110,9 @@ setGeneric(
 #' d1$SEX <- factor(d1$SEX)
 #'
 #' # This table uses the number of values in the SEX column to add the overall col or not
-#' lyt <- basic_table() %>%
-#'   split_cols_by("ARM", split_fun = drop_split_levels) %>%
-#'   split_cols_by("SEX", split_fun = picky_splitter("SEX")) %>%
+#' lyt <- basic_table() |>
+#'   split_cols_by("ARM", split_fun = drop_split_levels) |>
+#'   split_cols_by("SEX", split_fun = picky_splitter("SEX")) |>
 #'   analyze("AGE", show_labels = "visible")
 #' tbl <- build_table(lyt, d1)
 #' tbl
@@ -165,7 +165,7 @@ NULL
   if (are(vals, "SplitValue") && !are(vals, "LevelComboSplitValue")) {
     if (!is.null(extr)) {
       ## in_ref_cols is in here for some reason even though its already in the SplitValue object.
-      ## https://github.com/insightsengineering/rtables/issues/707#issuecomment-1678810598
+      ## https://github.com/pharmaverse/rtables/issues/707#issuecomment-1678810598
       ## the if is a bandaid.
       ## XXX FIXME RIGHT
       sq <- seq_along(vals)
@@ -253,12 +253,12 @@ NULL
 #'   ret
 #' }
 #'
-#' lyt <- basic_table() %>%
-#'   split_cols_by("ARM") %>%
+#' lyt <- basic_table() |>
+#'   split_cols_by("ARM") |>
 #'   split_cols_by_multivar(c("USUBJID", "AESEQ", "BMRKR1"),
 #'     varlabels = c("N", "E", "BMR1"),
 #'     split_fun = uneven_splfun
-#'   ) %>%
+#'   ) |>
 #'   analyze_colvars(list(
 #'     USUBJID = function(x, ...) length(unique(x)),
 #'     AESEQ = max,

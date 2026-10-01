@@ -18,13 +18,13 @@ knitr::opts_chunk$set(comment = "#")
 library(rtables)
 library(dplyr)
 
-raw_lyt <- basic_table() %>%
-  split_cols_by("ARM") %>%
-  split_cols_by("SEX") %>%
-  split_rows_by("RACE") %>%
-  summarize_row_groups() %>%
-  split_rows_by("STRATA1") %>%
-  summarize_row_groups() %>%
+raw_lyt <- basic_table() |>
+  split_cols_by("ARM") |>
+  split_cols_by("SEX") |>
+  split_rows_by("RACE") |>
+  summarize_row_groups() |>
+  split_rows_by("STRATA1") |>
+  summarize_row_groups() |>
   analyze("AGE")
 
 raw_tbl <- build_table(raw_lyt, DM)
@@ -99,19 +99,19 @@ more_analysis_fnc <- function(x) {
   )
 }
 
-raw_lyt <- basic_table() %>%
-  split_cols_by("ARM") %>%
+raw_lyt <- basic_table() |>
+  split_cols_by("ARM") |>
   split_rows_by(
     "RACE",
     split_fun = drop_and_remove_levels("WHITE") # dropping WHITE levels
-  ) %>%
-  summarize_row_groups() %>%
-  split_rows_by("STRATA1") %>%
-  summarize_row_groups() %>%
+  ) |>
+  summarize_row_groups() |>
+  split_rows_by("STRATA1") |>
+  summarize_row_groups() |>
   analyze("AGE", afun = more_analysis_fnc)
 
-tbl <- build_table(raw_lyt, DM) %>%
-  prune_table() %>%
+tbl <- build_table(raw_lyt, DM) |>
+  prune_table() |>
   print()
 
 ## -----------------------------------------------------------------------------
@@ -138,14 +138,14 @@ sort_at_path(tbl, c("RACE", "*", "STRATA1", "*", "AGE"), scorefun_onecol(colpath
 
 ## -----------------------------------------------------------------------------
 # Simpler table
-tbl <- basic_table() %>%
-  split_cols_by("ARM") %>%
+tbl <- basic_table() |>
+  split_cols_by("ARM") |>
   split_cols_by("SEX",
     split_fun = drop_and_remove_levels(c("U", "UNDIFFERENTIATED"))
-  ) %>%
-  analyze("AGE", afun = more_analysis_fnc) %>%
-  build_table(DM) %>%
-  prune_table() %>%
+  ) |>
+  analyze("AGE", afun = more_analysis_fnc) |>
+  build_table(DM) |>
+  prune_table() |>
   print()
 
 sort_at_path(tbl, c("AGE"), scorefun_onecol(colpath = c("ARM", "B: Placebo", "SEX", "F")))

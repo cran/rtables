@@ -18,12 +18,12 @@ knitr::opts_chunk$set(comment = "#")
 library(rtables)
 library(dplyr)
 
-lyt <- basic_table() %>%
-  split_cols_by("ARM") %>%
-  split_rows_by("SEX", split_fun = drop_split_levels) %>%
+lyt <- basic_table() |>
+  split_cols_by("ARM") |>
+  split_rows_by("SEX", split_fun = drop_split_levels) |>
   analyze(c("AGE", "STRATA1"))
 
-tbl <- build_table(lyt, ex_adsl %>% filter(SEX %in% c("M", "F")))
+tbl <- build_table(lyt, ex_adsl |> filter(SEX %in% c("M", "F")))
 tbl
 
 ## -----------------------------------------------------------------------------
@@ -83,14 +83,14 @@ tbl[1:3, 2:3, keep_titles = FALSE, keep_footers = TRUE]
 tbl[1:3, keep_titles = TRUE, keep_footers = FALSE]
 
 ## -----------------------------------------------------------------------------
-lyt2 <- basic_table() %>%
-  split_cols_by("ARM") %>%
-  split_cols_by("SEX", split_fun = drop_split_levels) %>%
-  split_rows_by("RACE", split_fun = drop_split_levels) %>%
-  summarize_row_groups() %>%
+lyt2 <- basic_table() |>
+  split_cols_by("ARM") |>
+  split_cols_by("SEX", split_fun = drop_split_levels) |>
+  split_rows_by("RACE", split_fun = drop_split_levels) |>
+  summarize_row_groups() |>
   analyze(c("AGE", "STRATA1"))
 
-tbl2 <- build_table(lyt2, ex_adsl %>% filter(SEX %in% c("M", "F") & RACE %in% (levels(RACE)[1:3])))
+tbl2 <- build_table(lyt2, ex_adsl |> filter(SEX %in% c("M", "F") & RACE %in% (levels(RACE)[1:3])))
 tbl2
 
 ## -----------------------------------------------------------------------------

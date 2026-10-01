@@ -11,7 +11,7 @@ add_colcounts(lyt, format = "(N=xx)")
 
 \item{format}{(\code{string}, \code{function}, or \code{list})\cr format associated with this split. Formats can be declared via
 strings (\code{"xx.x"}) or function. In cases such as \code{analyze} calls, they can be character vectors or lists of
-functions. See \code{\link[formatters:list_formats]{formatters::list_valid_format_labels()}} for a list of all available format strings.}
+functions. See \code{\link[formatters:list_valid_format_labels]{formatters::list_valid_format_labels()}} for a list of all available format strings.}
 }
 \value{
 A \code{PreDataTableLayouts} object suitable for passing to further layouting functions, and to \code{\link[=build_table]{build_table()}}.
@@ -26,10 +26,10 @@ For example, if events are counted in the table and the header should
 display the number of subjects and not the total number of events.
 }
 \examples{
-lyt <- basic_table() \%>\%
-  split_cols_by("ARM") \%>\%
-  add_colcounts() \%>\%
-  split_rows_by("RACE", split_fun = drop_split_levels) \%>\%
+lyt <- basic_table() |>
+  split_cols_by("ARM") |>
+  add_colcounts() |>
+  split_rows_by("RACE", split_fun = drop_split_levels) |>
   analyze("AGE", afun = function(x) list(min = min(x), max = max(x)))
 lyt
 

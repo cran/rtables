@@ -36,7 +36,7 @@ in_rows(
 \item{.row_footnotes}{(\code{list})\cr referential footnotes messages to be associated by name with \emph{rows}.}
 
 \item{.aligns}{(\code{character} or \code{NULL})\cr alignments for the cells. Standard for \code{NULL} is \code{"center"}.
-See \code{\link[formatters:list_formats]{formatters::list_valid_aligns()}} for currently supported alignments.}
+See \code{\link[formatters:list_valid_aligns]{formatters::list_valid_aligns()}} for currently supported alignments.}
 
 \item{.format_na_strs}{(\code{character} or \code{NULL})\cr NA strings for the cells.}
 
@@ -69,8 +69,8 @@ in_rows(.list = list(a = c(NA, NA)), .format_na_strs = c("asda", "lkjklj"))
 in_rows(.list = list(a = 1, b = 2, c = 3))
 in_rows(1, 2, .list = list(3), .names = c("a", "b", "c"))
 
-lyt <- basic_table() \%>\%
-  split_cols_by("ARM") \%>\%
+lyt <- basic_table() |>
+  split_cols_by("ARM") |>
   analyze("AGE", afun = function(x) {
     in_rows(
       "Mean (sd)" = rcell(c(mean(x), sd(x)), format = "xx.xx (xx.xx)"),

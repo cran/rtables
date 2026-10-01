@@ -130,8 +130,8 @@ col_fnotes_at_path <- function(ctree, path, fnotes) {
 #' @seealso [DataRow()], [rrow()]
 #'
 #' @examples
-#' lyt <- basic_table() %>%
-#'   split_rows_by("COUNTRY", split_fun = keep_split_levels(c("CHN", "USA"))) %>%
+#' lyt <- basic_table() |>
+#'   split_rows_by("COUNTRY", split_fun = keep_split_levels(c("CHN", "USA"))) |>
 #'   analyze("AGE")
 #'
 #' tbl <- build_table(lyt, DM)
@@ -239,8 +239,8 @@ setMethod(
 #' determining the full paths to content rows.
 #'
 #' @examples
-#' lyt <- basic_table() %>%
-#'   split_rows_by("COUNTRY", split_fun = keep_split_levels(c("CHN", "USA"))) %>%
+#' lyt <- basic_table() |>
+#'   split_rows_by("COUNTRY", split_fun = keep_split_levels(c("CHN", "USA"))) |>
 #'   analyze("AGE")
 #'
 #' tbl <- build_table(lyt, DM)
@@ -534,13 +534,13 @@ tt_normalize_row_path <- function(obj,
 #'
 #' @examples
 #' # Accessing sub table.
-#' lyt <- basic_table() %>%
-#'   split_cols_by("ARM") %>%
-#'   split_rows_by("SEX") %>%
-#'   split_rows_by("BMRKR2") %>%
+#' lyt <- basic_table() |>
+#'   split_cols_by("ARM") |>
+#'   split_rows_by("SEX") |>
+#'   split_rows_by("BMRKR2") |>
 #'   analyze("AGE")
 #'
-#' tbl <- build_table(lyt, ex_adsl) %>% prune_table()
+#' tbl <- build_table(lyt, ex_adsl) |> prune_table()
 #' sub_tbl <- tt_at_path(tbl, path = c("SEX", "F", "BMRKR2"))
 #'
 #' # Removing sub table.
@@ -549,12 +549,12 @@ tt_normalize_row_path <- function(obj,
 #' tbl2
 #'
 #' # Setting sub table.
-#' lyt3 <- basic_table() %>%
-#'   split_cols_by("ARM") %>%
-#'   split_rows_by("SEX") %>%
+#' lyt3 <- basic_table() |>
+#'   split_cols_by("ARM") |>
+#'   split_rows_by("SEX") |>
 #'   analyze("BMRKR2")
 #'
-#' tbl3 <- build_table(lyt3, ex_adsl) %>% prune_table()
+#' tbl3 <- build_table(lyt3, ex_adsl) |> prune_table()
 #'
 #' tt_at_path(tbl3, path = c("SEX", "F", "BMRKR2")) <- sub_tbl
 #' tbl3
@@ -648,9 +648,9 @@ setMethod(
 #'   subtitles = c("Sub", "titles"),
 #'   prov_footer = "prov footer",
 #'   main_footer = "main footer"
-#' ) %>%
-#'   split_cols_by("ARM") %>%
-#'   split_rows_by("SEX") %>%
+#' ) |>
+#'   split_cols_by("ARM") |>
+#'   split_rows_by("SEX") |>
 #'   analyze(c("AGE"))
 #'
 #' tbl <- build_table(lyt, DM)
@@ -755,7 +755,7 @@ setMethod(
       }
 
       if (labelrow_visible(x)) {
-        counter <<- counter + 1
+        counter <<- counter + 1 # nolint: assignment_linter.
         if (counter %in% i) {
           nxtval <- value[[1]]
           if (is(nxtval, "LabelRow")) {
@@ -768,7 +768,7 @@ setMethod(
           }
           ## we're done with this one move to
           ## the next
-          value <<- value[-1]
+          value <<- value[-1] # nolint: assignment_linter.
         }
       }
       if (is(x, "TableTree") && nrow(content_table(x)) > 0) {
@@ -785,7 +785,7 @@ setMethod(
         for (pos in seq_along(kids)) {
           curkid <- kids[[pos]]
           if (is(curkid, "TableRow")) {
-            counter <<- counter + 1
+            counter <<- counter + 1 # nolint: assignment_linter.
             if (counter %in% i) {
               nxtval <- value[[1]]
               if (is(nxtval, class(curkid))) {
@@ -860,9 +860,9 @@ setMethod(
 #'   subtitles = c("Sub", "titles"),
 #'   prov_footer = "prov footer",
 #'   main_footer = "main footer"
-#' ) %>%
-#'   split_cols_by("ARM") %>%
-#'   split_cols_by("SEX") %>%
+#' ) |>
+#'   split_cols_by("ARM") |>
+#'   split_cols_by("SEX") |>
 #'   analyze(c("AGE"))
 #'
 #' tbl <- build_table(lyt, DM)
@@ -1143,7 +1143,7 @@ setMethod(
       newkids <- kids
       for (i in seq_along(newkids)) {
         if (is(newkids[[i]], "LayoutColLeaf")) {
-          counter <<- counter + 1
+          counter <<- counter + 1 # nolint: assignment_linter.
           if (!(counter %in% j)) {
             newkids[[i]] <- list()
           } ## NULL removes the position entirely
@@ -1198,7 +1198,7 @@ subset_by_rownum <- function(tt,
     }
 
     if (labelrow_visible(x)) {
-      counter <<- counter + 1
+      counter <<- counter + 1 # nolint: assignment_linter.
       if (!(counter %in% i)) {
         ## XXX this should do whatever
         ## is required to 'remove' the Label Row
@@ -1224,7 +1224,7 @@ subset_by_rownum <- function(tt,
     } else if (length(kids) > 0) {
       for (pos in seq_along(kids)) {
         if (is(kids[[pos]], "TableRow")) {
-          counter <<- counter + 1
+          counter <<- counter + 1 # nolint: assignment_linter.
           if (!(counter %in% i)) {
             kids[[pos]] <- list()
           }
@@ -1508,17 +1508,17 @@ setMethod(
 #'   value.
 #'
 #' @examples
-#' lyt <- basic_table() %>%
-#'   split_cols_by("ARM") %>%
-#'   split_cols_by("SEX") %>%
-#'   split_rows_by("RACE") %>%
-#'   summarize_row_groups() %>%
-#'   split_rows_by("STRATA1") %>%
+#' lyt <- basic_table() |>
+#'   split_cols_by("ARM") |>
+#'   split_cols_by("SEX") |>
+#'   split_rows_by("RACE") |>
+#'   summarize_row_groups() |>
+#'   split_rows_by("STRATA1") |>
 #'   analyze("AGE")
 #'
 #' @examplesIf require(dplyr)
 #' library(dplyr) ## for mutate
-#' tbl <- build_table(lyt, DM %>%
+#' tbl <- build_table(lyt, DM |>
 #'   mutate(SEX = droplevels(SEX), RACE = droplevels(RACE)))
 #'
 #' row_paths_summary(tbl)
@@ -1582,6 +1582,14 @@ setMethod(
       omit_labrows = omit_labrows, value_at = FALSE
     )
   }
+)
+
+#' @rdname int_methods
+#' @keywords internal
+#' @exportMethod cell_values
+setMethod(
+  "cell_values", "RowsVerticalSection",
+  function(tt, rowpath, colpath = NULL, omit_labrows = TRUE) rawvalues(tt)
 )
 
 #' @rdname int_methods

@@ -4,6 +4,7 @@
 \alias{vars_in_layout}
 \alias{vars_in_layout,PreDataTableLayouts-method}
 \alias{vars_in_layout,PreDataAxisLayout-method}
+\alias{vars_in_layout,SplitVectorTree-method}
 \alias{vars_in_layout,SplitVector-method}
 \alias{vars_in_layout,Split-method}
 \alias{vars_in_layout,CompoundSplit-method}
@@ -15,6 +16,8 @@ vars_in_layout(lyt)
 \S4method{vars_in_layout}{PreDataTableLayouts}(lyt)
 
 \S4method{vars_in_layout}{PreDataAxisLayout}(lyt)
+
+\S4method{vars_in_layout}{SplitVectorTree}(lyt)
 
 \S4method{vars_in_layout}{SplitVector}(lyt)
 
@@ -51,15 +54,15 @@ or \code{df} and then rely on the existence of particular variables not being sp
 }
 }
 \examples{
-lyt <- basic_table() \%>\%
-  split_cols_by("ARM") \%>\%
-  split_cols_by("SEX") \%>\%
-  summarize_row_groups(label_fstr = "Overall (N)") \%>\%
+lyt <- basic_table() |>
+  split_cols_by("ARM") |>
+  split_cols_by("SEX") |>
+  summarize_row_groups(label_fstr = "Overall (N)") |>
   split_rows_by("RACE",
     split_label = "Ethnicity", labels_var = "ethn_lab",
     split_fun = drop_split_levels
-  ) \%>\%
-  summarize_row_groups("RACE", label_fstr = "\%s (n)") \%>\%
+  ) |>
+  summarize_row_groups("RACE", label_fstr = "\%s (n)") |>
   analyze("AGE", var_labels = "Age", afun = mean, format = "xx.xx")
 
 vars_in_layout(lyt)

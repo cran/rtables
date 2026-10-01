@@ -22,7 +22,13 @@ match_extra_args <- function(f,
       .N_row = .N_row,
       .df_row = .df_row,
       .all_col_exprs = .all_col_exprs,
-      .all_col_counts = .all_col_counts
+      .all_col_counts = .all_col_counts,
+      ## always available as of fix for https://github.com/insightsengineering/rtables/issues/1089
+      ## still will only be passed to afun if it's asked for by the formals, same as
+      ## .N_col, etc
+      .alt_df = .alt_df,
+      .alt_df_row = .alt_df_row,
+      .alt_df_full = .alt_df_full
     ),
     extras
   )
@@ -34,16 +40,6 @@ match_extra_args <- function(f,
   }
   if (!is.null(.ref_group)) {
     possargs <- c(possargs, list(.ref_group = .ref_group))
-  }
-  if (!is.null(.alt_df_row)) {
-    possargs <- c(possargs, list(.alt_df_row = .alt_df_row))
-  }
-  if (!is.null(.alt_df)) {
-    possargs <- c(possargs, list(.alt_df = .alt_df))
-  }
-
-  if (!is.null(.alt_df_full)) {
-    possargs <- c(possargs, list(.alt_df_full = .alt_df_full))
   }
 
   if (!is.null(.ref_full)) {
@@ -108,7 +104,7 @@ gen_onerv <- function(csub, col, count, cextr, cpath,
     alt_dfpart_fil <- alt_dfpart
   }
 
-  ## workaround for https://github.com/insightsengineering/rtables/issues/159
+  ## workaround for https://github.com/pharmaverse/rtables/issues/159
   if (NROW(dfpart) > 0) {
     inds <- eval(csub, envir = dfpart)
     dat <- dfpart[inds, , drop = FALSE]
@@ -118,6 +114,9 @@ gen_onerv <- function(csub, col, count, cextr, cpath,
   if (!is.null(col) && !inclNAs) {
     dat <- dat[!is.na(dat[[col]]), , drop = FALSE]
   }
+
+  ## firstarg will be df or x (col vec), dat will always be the df
+  firstarg <- dat
 
   fullrefcoldat <- cextr$.ref_full
   if (!is.null(fullrefcoldat)) {
@@ -133,11 +132,19 @@ gen_onerv <- function(csub, col, count, cextr, cpath,
   ## behavior for x/df and ref-data (full and group)
   ## match
   if (!is.null(col) && !takesdf) {
-    dat <- dat[[col]]
+    firstarg <- firstarg[[col]]
     fullrefcoldat <- fullrefcoldat[[col]]
     baselinedf <- baselinedf[[col]]
   }
-  args <- list(dat)
+  args <- list(firstarg)
+
+  ## replace alt_df (potential) args with their df versions if alt_counts_df not set
+  ## in build_table call
+  if (is.null(alt_df_full)) {
+    alt_df_full <- if (NROW(spl_context) > 0) spl_context$full_parent_df[[1]] else dfpart
+    alt_dfpart <- dfpart
+    alt_dfpart_fil <- dat
+  }
 
   names(all_col_counts) <- names(all_col_exprs)
 
@@ -501,7 +508,8 @@ gen_rowvalues <- function(dfpart,
                        alt_df,
                        alt_df_full,
                        extra_args,
-                       spl_context = context_df_row(cinfo = cinfo)) {
+                       spl_context = context_df_row(cinfo = cinfo),
+                       baselines) {
   if (length(cvar) == 0 || is.na(cvar) || identical(nchar(cvar), 0L)) {
     cvar <- NULL
   }
@@ -522,7 +530,8 @@ gen_rowvalues <- function(dfpart,
         alt_dfpart = alt_df,
         alt_df_full = alt_df_full,
         splextra = extra_args,
-        spl_context = spl_context
+        spl_context = spl_context,
+        baselines = baselines
       ),
       error = function(e) e
     )
@@ -883,6 +892,42 @@ setMethod(
 )
 
 setMethod(
+  ".make_split_kids", "SplitVectorTree",
+  function(spl,
+           have_controws,
+           make_lrow,
+           ...,
+           splvec, ## passed to recursive_applysplit
+           df, ## used to apply split
+           alt_df, ## used to apply split for alternative df
+           alt_df_full, ## passed to recursive_applysplit
+           lvl, ## used to calculate innerlev
+           cinfo, ## used for sanity check
+           baselines, ## used to calc new baselines
+           spl_context) {
+    ret <- lapply(
+      spl,
+      function(splvecii) {
+        recursive_applysplit(
+          df = df,
+          lvl = lvl + 1L,
+          alt_df = alt_df,
+          alt_df_full = alt_df_full,
+          splvec = splvecii,
+          name = obj_name(unlist(splvecii, recursive = TRUE)[[1]]),
+          make_lrow = make_lrow,
+          cinfo = cinfo,
+          baselines = baselines,
+          spl_context = spl_context,
+          no_outer_tbl = TRUE
+        )
+      }
+    )
+    ret
+  }
+)
+
+setMethod(
   ".make_split_kids", "Split",
   function(spl,
            have_controws,
@@ -1182,6 +1227,39 @@ recursive_applysplit <- function(df,
     return(splvec[[1]])
   }
 
+  if (is(splvec, "SplitVectorTree")) {
+    return(
+      unlist(
+        lapply(
+          seq_along(splvec),
+          function(ii) {
+            recursive_applysplit(
+              df = df,
+              lvl = lvl,
+              alt_df = alt_df,
+              alt_df_full = alt_df_full,
+              splvec = splvec[[ii]],
+              name = obj_name(unlist(splvec[[ii]])[[1]]),
+              make_lrow = make_lrow,
+              partlabel = partlabel,
+              cinfo = cinfo,
+              parent_cfun = parent_cfun,
+              cformat = cformat,
+              cna_str = cna_str,
+              cindent_mod = cindent_mod,
+              cextra_args = cextra_args,
+              cvar = cvar,
+              baselines = baselines,
+              spl_context = spl_context,
+              no_outer_tbl = TRUE,
+              parent_sect_split = parent_sect_split
+            )
+          }
+        )
+      )
+    )
+  }
+
   ## the content function is the one from the PREVIOUS
   ## split, i.e. the one whose children we are now constructing
   ## this is a bit annoying but makes the semantics for
@@ -1199,7 +1277,8 @@ recursive_applysplit <- function(df,
     alt_df = alt_df,
     alt_df_full = alt_df_full,
     extra_args = cextra_args,
-    spl_context = spl_context
+    spl_context = spl_context,
+    baselines = baselines
   )
 
   nonroot <- lvl != 0L
@@ -1324,8 +1403,8 @@ recursive_applysplit <- function(df,
 #'   declared in `lyt` to the data `df`.
 #'
 #' @examples
-#' lyt <- basic_table() %>%
-#'   split_cols_by("Species") %>%
+#' lyt <- basic_table() |>
+#'   split_cols_by("Species") |>
 #'   analyze("Sepal.Length", afun = function(x) {
 #'     list(
 #'       "mean (sd)" = rcell(c(mean(x), sd(x)), format = "xx.xx (xx.xx)"),
@@ -1338,8 +1417,8 @@ recursive_applysplit <- function(df,
 #' tbl
 #'
 #' # analyze multiple variables
-#' lyt2 <- basic_table() %>%
-#'   split_cols_by("Species") %>%
+#' lyt2 <- basic_table() |>
+#'   split_cols_by("Species") |>
 #'   analyze(c("Sepal.Length", "Petal.Width"), afun = function(x) {
 #'     list(
 #'       "mean (sd)" = rcell(c(mean(x), sd(x)), format = "xx.xx (xx.xx)"),
@@ -1351,8 +1430,8 @@ recursive_applysplit <- function(df,
 #' tbl2
 #'
 #' # an example more relevant for clinical trials with column counts
-#' lyt3 <- basic_table(show_colcounts = TRUE) %>%
-#'   split_cols_by("ARM") %>%
+#' lyt3 <- basic_table(show_colcounts = TRUE) |>
+#'   split_cols_by("ARM") |>
 #'   analyze("AGE", afun = function(x) {
 #'     setNames(as.list(fivenum(x)), c(
 #'       "minimum", "lower-hinge", "median",
@@ -1405,14 +1484,6 @@ build_table <- function(lyt, df,
   lyt <- set_def_child_ord(lyt, df)
   lyt <- fix_analyze_vis(lyt)
   df <- fix_split_vars(lyt, df, char_ok = is.null(col_counts))
-  alt_params <- check_afun_cfun_params(lyt, c(".alt_df", ".alt_df_row"))
-  if (any(alt_params) && is.null(alt_counts_df)) {
-    stop(
-      "Layout contains afun/cfun functions that have optional parameters ",
-      ".alt_df and/or .alt_df_row, but no alt_counts_df was provided in ",
-      "build_table()."
-    )
-  }
 
   rtpos <- TreePos()
   cinfo <- create_colinfo(lyt, df, rtpos,
@@ -1444,7 +1515,11 @@ build_table <- function(lyt, df,
     na_str = content_na_str(rtspl),
     indent_mod = 0L,
     cvar = content_var(rtspl),
-    extra_args = content_extra_args(rtspl)
+    extra_args = content_extra_args(rtspl),
+    baselines = lapply(
+      col_extra_args(cinfo),
+      function(x) x$.ref_full
+    )
   )
 
   kids <- lapply(seq_along(rlyt), function(i) {
@@ -1452,7 +1527,7 @@ build_table <- function(lyt, df,
     if (length(splvec) == 0) {
       return(NULL)
     }
-    firstspl <- splvec[[1]]
+    firstspl <- unlist(splvec, recursive = TRUE)[[1]] ## could be a SplitVecTree now...
     nm <- obj_name(firstspl)
     ## XXX unused, probably shouldn't be?
     ## this seems to be covered by grabbing the partlabel
@@ -1482,7 +1557,8 @@ build_table <- function(lyt, df,
       no_outer_tbl = !is(firstspl, "AnalyzeMultiVars")
     )
   })
-  kids <- kids[!sapply(kids, is.null)]
+  ## kids <- kids[!sapply(kids, is.null)]
+  kids <- unlist(kids, recursive = TRUE)
   if (length(kids) > 0) names(kids) <- sapply(kids, obj_name)
 
   # top level divisor
@@ -1673,6 +1749,15 @@ setMethod(
     lyt
   }
 )
+
+setMethod(
+  "set_def_child_ord", "SplitVectorTree",
+  function(lyt, df) {
+    lyt[] <- lapply(lyt, set_def_child_ord, df = df)
+    lyt
+  }
+)
+
 
 ## for most split types, don't do anything
 ## becuause their ordering already isn't data-based
@@ -1891,6 +1976,15 @@ setMethod(
   }
 )
 
+setMethod(
+  "fix_analyze_vis", "SplitVectorTree",
+  function(lyt) {
+    stopifnot(length(lyt) > 0)
+    lst <- lapply(lyt, fix_analyze_vis)
+    SplitVectorTree(lst = lst)
+  }
+)
+
 # check_afun_cfun_params ----
 
 # This checks if the input params are used anywhere in cfun/afun
@@ -1924,6 +2018,13 @@ setMethod(
   }
 )
 
+setMethod(
+  "check_afun_cfun_params", "SplitVectorTree",
+  function(lyt, params) {
+    param_l <- lapply(lyt, check_afun_cfun_params, params = params)
+    Reduce(`|`, param_l)
+  }
+)
 # Helper function for check_afun_cfun_params
 .afun_cfun_switch <- function(spl_i) {
   if (is(spl_i, "VAnalyzeSplit")) {

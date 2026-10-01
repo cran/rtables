@@ -26,7 +26,7 @@ it can contain up to two \code{"\\\%s"}.}
 
 \item{format}{(\code{string}, \code{function}, or \code{list})\cr format associated with this split. Formats can be declared via
 strings (\code{"xx.x"}) or function. In cases such as \code{analyze} calls, they can be character vectors or lists of
-functions. See \code{\link[formatters:list_formats]{formatters::list_valid_format_labels()}} for a list of all available format strings.}
+functions. See \code{\link[formatters:list_valid_format_labels]{formatters::list_valid_format_labels()}} for a list of all available format strings.}
 
 \item{na_str}{(\code{string})\cr string that should be displayed when the value of \code{x} is missing. Defaults to \code{"NA"}.}
 
@@ -65,10 +65,10 @@ that can be used in \code{cfun}.
 \examples{
 DM2 <- subset(DM, COUNTRY \%in\% c("USA", "CAN", "CHN"))
 
-lyt <- basic_table() \%>\%
-  split_cols_by("ARM") \%>\%
-  split_rows_by("COUNTRY", split_fun = drop_split_levels) \%>\%
-  summarize_row_groups(label_fstr = "\%s (n)") \%>\%
+lyt <- basic_table() |>
+  split_cols_by("ARM") |>
+  split_rows_by("COUNTRY", split_fun = drop_split_levels) |>
+  summarize_row_groups(label_fstr = "\%s (n)") |>
   analyze("AGE", afun = list_wrap_x(summary), format = "xx.xx")
 lyt
 
@@ -90,14 +90,14 @@ sfun <- function(x, labelstr, trim) {
   )
 }
 
-lyt2 <- basic_table(show_colcounts = TRUE) \%>\%
-  split_cols_by("ARM") \%>\%
-  split_rows_by("COUNTRY", split_fun = drop_split_levels) \%>\%
+lyt2 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM") |>
+  split_rows_by("COUNTRY", split_fun = drop_split_levels) |>
   summarize_row_groups("AGE",
     cfun = sfun,
     extra_args = list(trim = .2)
-  ) \%>\%
-  analyze("AGE", afun = list_wrap_x(summary), format = "xx.xx") \%>\%
+  ) |>
+  analyze("AGE", afun = list_wrap_x(summary), format = "xx.xx") |>
   append_topleft(c("Country", "  Age"))
 
 tbl2 <- build_table(lyt2, DM2)

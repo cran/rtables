@@ -31,8 +31,9 @@ split_rows_by_cuts(
   format = NULL,
   na_str = NA_character_,
   nested = TRUE,
+  at_sibling = NULL,
   cumulative = FALSE,
-  label_pos = "hidden",
+  label_pos = if (!is.null(at_sibling)) "visible" else "default",
   section_div = NA_character_
 )
 
@@ -68,11 +69,12 @@ split_rows_by_quartiles(
   format = NULL,
   na_str = NA_character_,
   nested = TRUE,
+  at_sibling = NULL,
   child_labels = c("default", "visible", "hidden"),
   extra_args = list(),
   cumulative = FALSE,
   indent_mod = 0L,
-  label_pos = "hidden",
+  label_pos = if (!is.null(at_sibling)) "visible" else "default",
   section_div = NA_character_
 )
 
@@ -86,11 +88,12 @@ split_rows_by_cutfun(
   format = NULL,
   na_str = NA_character_,
   nested = TRUE,
+  at_sibling = NULL,
   child_labels = c("default", "visible", "hidden"),
   extra_args = list(),
   cumulative = FALSE,
   indent_mod = 0L,
-  label_pos = "hidden",
+  label_pos = if (!is.null(at_sibling)) "visible" else "default",
   section_div = NA_character_
 )
 }
@@ -126,9 +129,14 @@ analyzing a single variable.}
 
 \item{format}{(\code{string}, \code{function}, or \code{list})\cr format associated with this split. Formats can be declared via
 strings (\code{"xx.x"}) or function. In cases such as \code{analyze} calls, they can be character vectors or lists of
-functions. See \code{\link[formatters:list_formats]{formatters::list_valid_format_labels()}} for a list of all available format strings.}
+functions. See \code{\link[formatters:list_valid_format_labels]{formatters::list_valid_format_labels()}} for a list of all available format strings.}
 
 \item{na_str}{(\code{string})\cr string that should be displayed when the value of \code{x} is missing. Defaults to \code{"NA"}.}
+
+\item{at_sibling}{(\code{character(1)} or \code{NULL})\cr If non-null, a preceding
+split or analyze to anchor this instruction to as a direct sibling. Cannot
+select an instruction that is downstream of a point where a previously used
+anchor (See Nesting Anchor Resolution for details).}
 
 \item{label_pos}{(\code{string})\cr location where the variable label should be displayed. Accepts \code{"hidden"}
 (default for non-analyze row splits), \code{"visible"}, \code{"topleft"}, and \code{"default"} (for analyze splits only). For
@@ -167,33 +175,72 @@ For dynamic cuts, the cut is transformed into a static cut by \code{\link[=build
 before proceeding. Thus even when nested within another split in column/row space, the resulting split will reflect
 the overall values (e.g., quartiles) in the dataset, NOT the values for subset it is nested under.
 }
+\section{Nesting Anchor Resolution}{
+
+
+When \code{nested} is \code{TRUE}, \code{at_sibling} allows you to set a \emph{nesting
+anchor} that your new \verb{split_rows_by*} or \verb{analyze*} directive
+should be placed as a sibling to.  The lookup for this anchor
+occurs \emph{only in the currently active top-level nesting stack},
+meaning the directives that have occurred since
+the last split or analysis with \code{nested == FALSE}.
+
+Furthermore, resolution occurs against the first element of each
+arm of a branching point caused by any previous uses of
+\code{at_sibling} but \emph{only descends into the last arm}.
+
+So for example if our previous layout was generated via:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{lyt <- basic_table() |>
+  split_rows_by("SEX") |>
+  analyze("AGE") |>
+  split_rows_by("BMRKR2", nested = FALSE) |>
+  split_rows_by("RACE") |>
+  analyze("AGE") |>
+  split_rows_by("SEX", at_sibling = "RACE") |>
+  analyze("BMRKR1")
+}\if{html}{\out{</div>}}
+
+The eligible anchor points would be \code{"BMRKR2"}, \code{"RACE"}, \code{"SEX"}
+and \code{"BMRKR1"}. \code{"AGE"} is masked by the branching caused by
+anchoring our \code{SEX} split on \code{RACE}.
+
+Finally, while \code{at_sibling} does support de-duplication of
+\code{"<name>[i]"} anchors, it does so \strong{within the set of available
+anchors}, which can be counter-intuitive. It is strongly suggested
+that the \code{parent_name} and \code{table_names} argument(s) of
+\verb{split_rows_by*} and \code{analyze} be used to prevent the need for
+this. \code{at_sibling} will resolve to table names overridden in this
+manner.
+}
+
 \examples{
 \dontshow{if (require(dplyr)) withAutoprint(\{ # examplesIf}
 library(dplyr)
 
 # split_cols_by_cuts
-lyt <- basic_table() \%>\%
-  split_cols_by("ARM") \%>\%
+lyt <- basic_table() |>
+  split_cols_by("ARM") |>
   split_cols_by_cuts("AGE",
     split_label = "Age",
     cuts = c(0, 25, 35, 1000),
     cutlabels = c("young", "medium", "old")
-  ) \%>\%
-  analyze(c("BMRKR2", "STRATA2")) \%>\%
+  ) |>
+  analyze(c("BMRKR2", "STRATA2")) |>
   append_topleft("counts")
 
 tbl <- build_table(lyt, ex_adsl)
 tbl
 
 # split_rows_by_cuts
-lyt2 <- basic_table() \%>\%
-  split_cols_by("ARM") \%>\%
+lyt2 <- basic_table() |>
+  split_cols_by("ARM") |>
   split_rows_by_cuts("AGE",
     split_label = "Age",
     cuts = c(0, 25, 35, 1000),
     cutlabels = c("young", "medium", "old")
-  ) \%>\%
-  analyze(c("BMRKR2", "STRATA2")) \%>\%
+  ) |>
+  analyze(c("BMRKR2", "STRATA2")) |>
   append_topleft("counts")
 
 
@@ -202,20 +249,20 @@ tbl2
 
 # split_cols_by_quartiles
 
-lyt3 <- basic_table() \%>\%
-  split_cols_by("ARM") \%>\%
-  split_cols_by_quartiles("AGE", split_label = "Age") \%>\%
-  analyze(c("BMRKR2", "STRATA2")) \%>\%
+lyt3 <- basic_table() |>
+  split_cols_by("ARM") |>
+  split_cols_by_quartiles("AGE", split_label = "Age") |>
+  analyze(c("BMRKR2", "STRATA2")) |>
   append_topleft("counts")
 
 tbl3 <- build_table(lyt3, ex_adsl)
 tbl3
 
 # split_rows_by_quartiles
-lyt4 <- basic_table(show_colcounts = TRUE) \%>\%
-  split_cols_by("ARM") \%>\%
-  split_rows_by_quartiles("AGE", split_label = "Age") \%>\%
-  analyze("BMRKR2") \%>\%
+lyt4 <- basic_table(show_colcounts = TRUE) |>
+  split_cols_by("ARM") |>
+  split_rows_by_quartiles("AGE", split_label = "Age") |>
+  analyze("BMRKR2") |>
   append_topleft(c("Age Quartiles", " Counts BMRKR2"))
 
 tbl4 <- build_table(lyt4, ex_adsl)
@@ -233,17 +280,17 @@ cutfun <- function(x) {
   cutpoints
 }
 
-lyt5 <- basic_table() \%>\%
-  split_cols_by_cutfun("AGE", cutfun = cutfun) \%>\%
+lyt5 <- basic_table() |>
+  split_cols_by_cutfun("AGE", cutfun = cutfun) |>
   analyze("SEX")
 
 tbl5 <- build_table(lyt5, ex_adsl)
 tbl5
 
 # split_rows_by_cutfun
-lyt6 <- basic_table() \%>\%
-  split_cols_by("SEX") \%>\%
-  split_rows_by_cutfun("AGE", cutfun = cutfun) \%>\%
+lyt6 <- basic_table() |>
+  split_cols_by("SEX") |>
+  split_rows_by_cutfun("AGE", cutfun = cutfun) |>
   analyze("BMRKR2")
 
 tbl6 <- build_table(lyt6, ex_adsl)

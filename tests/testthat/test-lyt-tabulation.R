@@ -1,5 +1,6 @@
 context("Tabulation framework")
 
+## most tests related to nesting behavior moved to test-nesting.R
 
 test_that("summarize_row_groups works with provided funcs", {
   l1 <- basic_table() |>
@@ -306,6 +307,30 @@ test_that("ref_group comparisons work", {
   expect_identical(d12, d11 - d10)
 })
 
+test_that("ref_group passed to cfuns correctly", {
+  rgroupn <- function(x, labelstr = NULL, .ref_group) {
+    lbl <- labelstr %||% "ref group n"
+    rcell(label = lbl, NROW(.ref_group), format = "xx")
+  }
+  lyt <- basic_table(show_colcounts = TRUE) |>
+    split_cols_by("ARM", ref_group = "B: Placebo") |>
+    summarize_row_groups("AGE", cfun = rgroupn) |>
+    analyze("AGE", afun = rgroupn) |>
+    split_rows_by("SEX") |>
+    summarize_row_groups("AGE", cfun = rgroupn) |>
+    analyze("AGE", afun = rgroupn)
+
+  tbl <- build_table(lyt, ex_adsl)
+
+  vals <- cell_values(tbl)
+  for (i in seq(1, 9, by = 2)) {
+    expect_identical(
+      unname(unlist(vals[[i]])),
+      unname(unlist(vals[[i + 1]]))
+    )
+  }
+})
+
 test_that("missing vars caught", {
   misscol <- basic_table() |>
     split_cols_by("ARM") |>
@@ -469,7 +494,6 @@ test_that("split under analyze", {
     build_table(rawdat)
   expect_equal(nrow(dontnest), 5)
 })
-
 
 test_that("label_var works as expected", {
   yeslblslyt <- basic_table(show_colcounts = TRUE) |>
@@ -986,32 +1010,6 @@ test_that("alt_counts_df works", {
 
   ## breaks (with useful message) when given incompatible alt_counts_df
   expect_error(build_table(lyt, DM, iris), "Offending column subset expression")
-})
-
-
-test_that("deeply nested and uneven column layouts work", {
-  lyt <- basic_table(show_colcounts = TRUE) |>
-    split_cols_by(var = "ARM") |>
-    split_cols_by("STRATA1") |>
-    split_cols_by("STRATA2") |>
-    add_overall_col("All Patients") |>
-    analyze("AGE")
-  tbl <- build_table(lyt, ex_adsl)
-  ## printing machinery works
-  str <- toString(tbl)
-  expect_identical(ncol(tbl), 19L)
-
-  lyt2 <- basic_table(show_colcounts = TRUE) |>
-    split_cols_by("ARM") |>
-    split_cols_by("STRATA1") |>
-    split_cols_by("STRATA2", nested = FALSE) |>
-    add_overall_col("All Patients") |>
-    analyze("AGE")
-  tbl2 <- build_table(lyt2, ex_adsl)
-
-  ## printing machinery works
-  str <- toString(tbl2)
-  expect_identical(ncol(tbl2), 12L)
 })
 
 

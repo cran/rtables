@@ -27,9 +27,9 @@ check_ok_label <- function(lbl, multi_ok = FALSE) {
 }
 
 valid_lbl_pos <- c("default", "visible", "hidden", "topleft")
-.labelkids_helper <- function(charval) {
+.labelkids_helper <- function(charval, na_ok = TRUE) {
   ret <- switch(charval,
-    "default" = NA,
+    "default" = if (na_ok) NA else FALSE,
     "visible" = TRUE,
     "hidden" = FALSE,
     "topleft" = FALSE,
@@ -102,6 +102,30 @@ setClass("SplitValue",
   representation(extra = "list")
 )
 
+#' Construct a `SplitValue` object
+#'
+#' Creates a `SplitValue` object representing a single facet value produced
+#' by a splitting operation, optionally carrying a custom subsetting expression
+#' and child-specific extra arguments.
+#'
+#' @param val (`ANY`)\cr the raw value for this split facet.
+#' @param extr (`list`)\cr named list of child-specific extra arguments to
+#'   forward to the analysis or content function for this facet.
+#' @param label (`character(1)`)\cr display label. Defaults to `val`.
+#' @param sub_expr (`expression` or `NULL`)\cr optional subsetting expression.
+#'   When `NULL` (default) the expression is derived automatically from `val`
+#'   during tabulation.
+#'
+#' @return A `SplitValue` object.
+#'
+#' @seealso [splv_extra()], [value_expr()]
+#'
+#' @examples
+#' sv <- SplitValue("A", sub_expr = expression(ARM == "A"))
+#' value_expr(sv)
+#' splv_extra(sv)
+#'
+#' @export
 SplitValue <- function(val, extr = list(), label = val, sub_expr = NULL) {
   if (is(val, "SplitValue")) {
     if (length(splv_extra(val)) > 0) {
@@ -442,7 +466,7 @@ MultiVarSplit <- function(vars,
                           colcount_format = NULL) {
   check_ok_label(split_label)
   ## no topleft allowed
-  label_pos <- match.arg(label_pos, label_pos_values[-3])
+  label_pos <- match.arg(label_pos, label_pos_values[-4])
   child_labels <- match.arg(child_labels)
   if (length(vars) == 1 && grepl(":", vars)) {
     vars <- strsplit(vars, ":")[[1]]
@@ -1632,8 +1656,7 @@ uniqify_child_names <- function(kidlst) {
       paste(val_to_fix, " -> {", paste(c(val_to_fix, newnms), collapse = ", "), "}]\n"),
       "  To control table names use split_rows_by*(, parent_name =.) or ",
       " analyze(., table_names = .) when analyzing a single variable, or ",
-      "analyze(., parent_name = .) when analyzing multiple variables in a single call.",
-      call. = FALSE
+      "analyze(., parent_name = .) when analyzing multiple variables in a single call."
     )
     names(kidlst)[inds] <- newnms
   }
@@ -1890,6 +1913,10 @@ TableTree <- function(kids = list(),
 ## a pre-existing TableTree/ElementaryTable.
 ## This is used for add_existing_table in colby_constructors.R
 
+split_or_splitvectree <- function(object) {
+  is(object, "Split") || is(object, "SplitVectorTree")
+}
+
 setClass("SplitVector",
   contains = "list",
   validity = function(object) {
@@ -1898,8 +1925,9 @@ setClass("SplitVector",
     } else {
       lst <- NULL
     }
-    all(sapply(head(object, -1), is, "Split")) &&
-      (is.null(lst) || is(lst, "Split") || is(lst, "VTableNodeInfo"))
+    ## only last element can be a splitvectree, others must be splits
+    all(sapply(head(object, -1), function(x) is(x, "Split"))) &&
+      (is.null(lst) || split_or_splitvectree(lst) || is(lst, "VTableNodeInfo"))
   }
 )
 
@@ -1912,7 +1940,28 @@ SplitVector <- function(x = NULL,
   new("SplitVector", lst)
 }
 
+setClass("SplitVectorTree",
+  contains = "list",
+  validity = function(object) {
+    all(vapply(object, function(x) is(x, "SplitVector") || is(x, "SplitVectorTree"), TRUE))
+  }
+)
+
+SplitVectorTree <- function(x = NULL,
+                            ...,
+                            lst = list(...)) {
+  if (is.null(x)) {
+    xlst <- NULL
+  } else {
+    xlst <- list(x)
+  }
+  new("SplitVectorTree", c(xlst, lst))
+}
+
 avar_noneorlast <- function(vec) {
+  if (is(vec, "SplitVectorTree")) {
+    return(all(sapply(vec, avar_noneorlast)))
+  }
   if (!is(vec, "SplitVector")) {
     return(FALSE)
   }
@@ -2035,6 +2084,60 @@ setClass("RefFootnote", representation(
   symbol = "character"
 ))
 
+#' Referential Footnote
+#'
+#' @param note (`character(1)`)\cr The text of the footnote, not including
+#'   the symbol or index.
+#' @param index (`integer(1)`)\cr The index (position in the list of footnotes);
+#'   this should not typically be set by users. `NA` (the default) indicates
+#'   automatic counting.
+#' @param symbol (`character(1)`)\cr The symbol to be used instead of the
+#'   index value to indicate the footnote's anchor and message. `NA` (the
+#'   default) will use the footnote's index (after automatic counting, if
+#'   applicable) as its symbol.
+#'
+#' @details When `symbol` is non-missing, all footnotes with the same symbol
+#'   will share a single footer entry containing `note`, rather than it
+#'   being entered repeatedly. `symbol` cannot be `"NA"` or contain `"{"`
+#'   or `"}"`.
+#'
+#' @return a `RefFootnote` object suitable for use in `in_rows` and
+#' `fnotes_at_path<-` and `rcell`, or `NULL` if `note` is of length zero.
+#'
+#' @examples
+#'
+#' afun1 <- function(x, ...) {
+#'   in_rows(
+#'     row1 = 5,
+#'     row2 = c(1, 2),
+#'     .row_footnotes = list(row1 = list(RefFootnote("row 1 rfn"))),
+#'     .cell_footnotes = list(row2 = list(RefFootnote("row 2 cfn")))
+#'   )
+#' }
+#'
+#' afun2 <- function(x, ...) {
+#'   in_rows(
+#'     row1 = 5,
+#'     row2 = c(1, 2),
+#'     .row_footnotes = list(row1 = list(RefFootnote("row 1 rfn", symbol = "+"))),
+#'     .cell_footnotes = list(row2 = list(RefFootnote("row 2 cfn", symbol = "^")))
+#'   )
+#' }
+#'
+#' lyt1 <- basic_table() |>
+#'   split_cols_by("ARM") |>
+#'   analyze("AGE", afun = afun1)
+#'
+#' build_table(lyt1, DM)
+#'
+#' lyt2 <- basic_table() |>
+#'   split_cols_by("ARM") |>
+#'   split_rows_by("STRATA1") |>
+#'   analyze("AGE", afun = afun2)
+#'
+#' build_table(lyt2, DM)
+#'
+#' @export
 RefFootnote <- function(note, index = NA_integer_, symbol = NA_character_) {
   if (is(note, "RefFootnote")) {
     return(note)
@@ -2047,7 +2150,7 @@ RefFootnote <- function(note, index = NA_integer_, symbol = NA_character_) {
       " Got char vector of length ", length(index)
     )
   }
-  if (!is.na(symbol) && (index == "NA" || grepl("[{}]", index))) {
+  if (!is.na(symbol) && (symbol == "NA" || grepl("[{}]", symbol))) {
     stop(
       "The string 'NA' and strings containing '{' or '}' cannot be used as ",
       "referential footnote index symbols. Got string '", index, "'."
@@ -2180,6 +2283,44 @@ print.RowsVerticalSection <- function(x, ...) {
     row.names = NULL
   ), row.names = TRUE)
   invisible(x)
+}
+
+#' Combine `RowsVerticalSection` objects
+#'
+#' Combine two or more `RowsVerticalSection` objects (as returned
+#' by [in_rows()]) into a single object
+#'
+#' @param ... `RowsVerticalSection` objects
+#' @returns A single `RowsVerticalSection` object containing all
+#'   row sections from the objects passed to `...`
+#' @export
+c.RowsVerticalSection <- function(...) {
+  lst <- list(...)
+  if (!all(vapply(lst, function(x) inherits(x, "RowsVerticalSection"), TRUE))) {
+    stop("Cannot use c() to combine RowsVerticalSection objects with objects of other classes")
+  }
+
+  out <- NextMethod(generic = "c")
+  out <- RowsVerticalSection(
+    out,
+    names = comb_attr_w_dflt(lst, "row_names"),
+    labels = comb_attr_w_dflt(lst, "row_labels"),
+    indent_mods = comb_attr_w_dflt(lst, "indent_mods", 0L),
+    formats = comb_attr_w_dflt(lst, "row_formats", "xx"),
+    footnotes = comb_attr_w_dflt(lst, "row_footnotes"),
+    format_na_strs = comb_attr_w_dflt(lst, "row_na_strs", NA_character_)
+  )
+  out
+}
+
+comb_attr_w_dflt <- function(lst, attrname, dflt = NULL) {
+  unlist(
+    lapply(lst, function(x) {
+      attr(x, attrname, exact = TRUE) %||% rep(dflt, length(x))
+    }),
+    recursive = FALSE,
+    use.names = FALSE
+  )
 }
 
 #### Empty default objects to avoid repeated calls

@@ -41,12 +41,12 @@ library(dplyr)
 First, let's set up a simple table.
 
 ```{r}
-lyt <- basic_table() %>%
-  split_cols_by("ARMCD", show_colcounts = TRUE, colcount_format = "N=xx") %>%
-  split_cols_by("STRATA2", show_colcounts = TRUE) %>%
-  split_rows_by("STRATA1") %>%
-  add_overall_col("All") %>%
-  summarize_row_groups() %>%
+lyt <- basic_table() |>
+  split_cols_by("ARMCD", show_colcounts = TRUE, colcount_format = "N=xx") |>
+  split_cols_by("STRATA2", show_colcounts = TRUE) |>
+  split_rows_by("STRATA1") |>
+  add_overall_col("All") |>
+  summarize_row_groups() |>
   analyze("AGE", afun = max, format = "xx.x")
 
 tbl <- build_table(lyt, ex_adsl)
@@ -89,7 +89,7 @@ coltree_structure(tbl)
 ```
 
 Further information about the column structure can be found in the vignette on
-[`col_counts`](https://insightsengineering.github.io/rtables/latest-tag/articles/col_counts.html).
+[`col_counts`](https://pharmaverse.github.io/rtables/latest-tag/articles/col_counts.html).
 
 The `make_row_df()` and `make_col_df()` functions each create a `data.frame` with a variety of information about
 the table's structure. Most useful for introspection purposes are the `label`, `name`, `abs_rownumber`, `path` and
@@ -160,11 +160,11 @@ value_formats(tbl)
 ## Applications
 
 Knowing the structure of an `rtable` object is helpful for retrieving specific values from the table.
-For examples, see the [Path Based Cell Value Accessing](https://insightsengineering.github.io/rtables/latest-tag/articles/subsetting_tables.html#path-based-cell-value-accessing)
+For examples, see the [Path Based Cell Value Accessing](https://pharmaverse.github.io/rtables/latest-tag/articles/subsetting_tables.html#path-based-cell-value-accessing)
 section of the Subsetting and Manipulating Table Contents vignette.
 
 Understanding table structure is also important for post-processing processes such as sorting and pruning. More details
-on this are covered in the [Pruning and Sorting Tables vignette](https://insightsengineering.github.io/rtables/latest-tag/articles/sorting_pruning.html)
+on this are covered in the [Pruning and Sorting Tables vignette](https://pharmaverse.github.io/rtables/latest-tag/articles/sorting_pruning.html)
 vignette.
 
 ## Summary

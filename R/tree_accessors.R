@@ -32,8 +32,8 @@ setMethod(
 #' @param x (`TableTree` or `ElementaryTable`)\cr a table object.
 #'
 #' @examples
-#' lyt <- basic_table() %>%
-#'   split_cols_by("ARM") %>%
+#' lyt <- basic_table() |>
+#'   split_cols_by("ARM") |>
 #'   analyze(c("SEX", "AGE"))
 #'
 #' tbl <- build_table(lyt, ex_adsl)
@@ -192,106 +192,6 @@ setMethod(
     obj@content <- value
     obj
   }
-)
-
-#' @param for_analyze (`flag`) whether split is an analyze split.
-#' @rdname int_methods
-setGeneric("next_rpos", function(obj, nested = TRUE, for_analyze = FALSE) standardGeneric("next_rpos"))
-
-#' @rdname int_methods
-setMethod(
-  "next_rpos", "PreDataTableLayouts",
-  function(obj, nested, for_analyze = FALSE) next_rpos(rlayout(obj), nested, for_analyze = for_analyze)
-)
-
-.check_if_nest <- function(obj, nested, for_analyze) {
-  if (!nested) {
-    FALSE
-  } else {
-    ## can always nest analyze splits (almost? what about colvars noncolvars mixing? prolly ok?)
-    for_analyze ||
-      ## If its not an analyze split it can't go under an analyze split
-      !(is(last_rowsplit(obj), "VAnalyzeSplit") ||
-        is(last_rowsplit(obj), "AnalyzeMultiVars")) ## should this be CompoundSplit? # nolint
-  }
-}
-
-#' @rdname int_methods
-setMethod(
-  "next_rpos", "PreDataRowLayout",
-  function(obj, nested, for_analyze) {
-    l <- length(obj)
-    if (length(obj[[l]]) > 0L && !.check_if_nest(obj, nested, for_analyze)) {
-      l <- l + 1L
-    }
-    l
-  }
-)
-
-#' @rdname int_methods
-setMethod("next_rpos", "ANY", function(obj, nested) 1L)
-
-#' @rdname int_methods
-setGeneric("next_cpos", function(obj, nested = TRUE) standardGeneric("next_cpos"))
-
-#' @rdname int_methods
-setMethod(
-  "next_cpos", "PreDataTableLayouts",
-  function(obj, nested) next_cpos(clayout(obj), nested)
-)
-
-#' @rdname int_methods
-setMethod(
-  "next_cpos", "PreDataColLayout",
-  function(obj, nested) {
-    if (nested || length(obj[[length(obj)]]) == 0) {
-      length(obj)
-    } else {
-      length(obj) + 1L
-    }
-  }
-)
-
-#' @rdname int_methods
-setMethod("next_cpos", "ANY", function(obj, nested) 1L)
-
-#' @rdname int_methods
-setGeneric("last_rowsplit", function(obj) standardGeneric("last_rowsplit"))
-
-#' @rdname int_methods
-setMethod(
-  "last_rowsplit", "NULL",
-  function(obj) NULL
-)
-
-#' @rdname int_methods
-setMethod(
-  "last_rowsplit", "SplitVector",
-  function(obj) {
-    if (length(obj) == 0) {
-      NULL
-    } else {
-      obj[[length(obj)]]
-    }
-  }
-)
-
-#' @rdname int_methods
-setMethod(
-  "last_rowsplit", "PreDataRowLayout",
-  function(obj) {
-    if (length(obj) == 0) {
-      NULL
-    } else {
-      last_rowsplit(obj[[length(obj)]])
-    }
-  }
-)
-
-#' @rdname int_methods
-setMethod(
-  "last_rowsplit", "PreDataTableLayouts",
-  function(obj) last_rowsplit(rlayout(obj))
 )
 
 # rlayout ----
@@ -730,7 +630,7 @@ setGeneric("vis_label", function(spl) standardGeneric("vis_label"))
 
 #' @rdname int_methods
 setMethod("vis_label", "Split", function(spl) {
-  .labelkids_helper(label_position(spl))
+  .labelkids_helper(label_position(spl), na_ok = FALSE)
 })
 
 ## #' @rdname int_methods
@@ -752,6 +652,11 @@ setMethod("label_position", "Split", function(spl) spl@split_label_position)
 
 #' @rdname int_methods
 setMethod("label_position", "VAnalyzeSplit", function(spl) spl@var_label_position) ## split_label_position)
+
+#' @rdname int_methods
+setMethod("label_position", "SplitVectorTree", function(spl) {
+  label_position(last_rowsplit(spl))
+})
 
 #' @rdname int_methods
 setGeneric("label_position<-", function(spl, value) standardGeneric("label_position<-"))
@@ -1000,6 +905,10 @@ setGeneric("row_cells", function(obj) standardGeneric("row_cells"))
 setMethod("row_cells", "TableRow", function(obj) obj@leaf_value)
 
 #' @rdname row_accessors
+#' @exportMethod row_cells
+setMethod("row_cells", "RowsVerticalSection", function(obj) as(obj, "list", strict = TRUE))
+
+#' @rdname row_accessors
 setGeneric("row_cells<-", function(obj, value) standardGeneric("row_cells<-"))
 
 #' @rdname row_accessors
@@ -1016,7 +925,6 @@ setGeneric("row_values", function(obj) standardGeneric("row_values"))
 #' @rdname row_accessors
 #' @exportMethod row_values
 setMethod("row_values", "TableRow", function(obj) rawvalues(obj@leaf_value))
-
 
 #' @rdname row_accessors
 #' @exportMethod row_values<-
@@ -1155,10 +1063,15 @@ setMethod("obj_format", "Split", function(obj) obj@split_format)
 
 #' @rdname formatters_methods
 #' @export
+setMethod("obj_format", "RowsVerticalSection", function(obj) attr(obj, "row_formats", exact = TRUE))
+
+#' @rdname formatters_methods
+#' @export
 setMethod("obj_format<-", "VTableNodeInfo", function(obj, value) {
   obj@format <- value
   obj
 })
+
 
 #' @rdname formatters_methods
 #' @export
@@ -1174,10 +1087,24 @@ setMethod("obj_format<-", "CellValue", function(obj, value) {
   obj
 })
 
+#' @rdname formatters_methods
+#' @export
+setMethod("obj_format<-", "RowsVerticalSection", function(obj, value) {
+  attr(obj, "row_formats") <- value
+  obj
+})
+
 #' @rdname int_methods
 #' @export
 setMethod("obj_na_str<-", "CellValue", function(obj, value) {
   attr(obj, "format_na_str") <- value
+  obj
+})
+
+#' @rdname int_methods
+#' @export
+setMethod("obj_na_str<-", "RowsVerticalSection", function(obj, value) {
+  attr(obj, "row_na_strs") <- value
   obj
 })
 
@@ -1198,6 +1125,10 @@ setMethod("obj_na_str<-", "Split", function(obj, value) {
 #' @rdname int_methods
 #' @export
 setMethod("obj_na_str", "VTableNodeInfo", function(obj) obj@na_str)
+
+#' @rdname int_methods
+#' @export
+setMethod("obj_na_str", "RowsVerticalSection", function(obj) attr(obj, "row_na_strs", exact = TRUE))
 
 #' @rdname formatters_methods
 #' @export
@@ -1327,8 +1258,8 @@ setMethod("content_na_str<-", "Split", function(obj, value) {
 #' @seealso [table_shell()] and [table_shell_str()] for information on the table format structure.
 #'
 #' @examples
-#' lyt <- basic_table() %>%
-#'   split_rows_by("RACE", split_fun = keep_split_levels(c("ASIAN", "WHITE"))) %>%
+#' lyt <- basic_table() |>
+#'   split_rows_by("RACE", split_fun = keep_split_levels(c("ASIAN", "WHITE"))) |>
 #'   analyze("AGE")
 #'
 #' tbl <- build_table(lyt, DM)
@@ -1628,8 +1559,8 @@ setMethod(
 )
 
 #' @examples
-#' lyt <- basic_table() %>%
-#'   split_rows_by("RACE", split_fun = keep_split_levels(c("ASIAN", "WHITE"))) %>%
+#' lyt <- basic_table() |>
+#'   split_rows_by("RACE", split_fun = keep_split_levels(c("ASIAN", "WHITE"))) |>
 #'   analyze("AGE")
 #'
 #' tbl <- build_table(lyt, DM)
@@ -1678,7 +1609,7 @@ setMethod(
         "must have length 1 or the number of rows"
       )
     }
-    attr(obj, "indent_mods") <- as.integer(value)
+    attr(obj, "indent_mods") <- rep(as.integer(value), length.out = length(obj))
     obj
 
     ## obj@indent_mods <- value
@@ -1843,11 +1774,32 @@ setMethod(
 #' @rdname int_methods
 setMethod("value_labels", "MultiVarSplit", function(obj) obj@var_labels)
 
-#' @rdname int_methods
+#' Retrieve the subset expression from a split value
+#'
+#' Returns the subsetting expression associated with a `SplitValue` (or
+#' `ValueWrapper`) object, or `NULL` for objects without one.  This expression
+#' is used internally to subset data when tabulating.
+#'
+#' @param obj (`ValueWrapper` or `ANY`)\cr a split value object, typically a
+#'   `SplitValue` constructed by [SplitValue()].  Any other object returns
+#'   `NULL`.
+#'
+#' @return An `expression` object, or `NULL`.
+#'
+#' @examples
+#' sv <- SplitValue("A", sub_expr = expression(ARM == "A"))
+#' value_expr(sv)
+#'
+#' value_expr("not a SplitValue") # NULL
+#'
+#' @export
+#' @rdname value_expr
 setGeneric("value_expr", function(obj) standardGeneric("value_expr"))
-#' @rdname int_methods
+#' @exportMethod value_expr
+#' @rdname value_expr
 setMethod("value_expr", "ValueWrapper", function(obj) obj@subset_expression)
-#' @rdname int_methods
+#' @exportMethod value_expr
+#' @rdname value_expr
 setMethod("value_expr", "ANY", function(obj) NULL)
 ## no setters for now, we'll see about that.
 
@@ -1875,21 +1827,51 @@ setMethod("spl_varlabels<-", "MultiVarSplit", function(object, value) {
 ## to *all the chidlren*,
 ## while splv_extra is for *child-specific* extra arguments,
 ## associated with specific values of the split
-#' @rdname int_methods
+
+#' Access or set child-specific extra arguments on a split value
+#'
+#' `splv_extra` retrieves the named list of *child-specific* extra arguments
+#' stored on a `SplitValue` object.  These arguments are forwarded to the
+#' analysis or content function only for the facet represented by that
+#' particular split value, making them distinct from [split_exargs()] which
+#' applies to *all* children of a split.
+#'
+#' @param obj (`SplitValue`)\cr a split value object, typically produced by
+#'   [SplitValue()] or as a result of a splitting operation.
+#' @param value (`list`)\cr named list of extra arguments to store on `obj`.
+#'
+#' @return
+#' * `splv_extra` returns the current `list` of child-specific extra args.
+#' * `splv_extra<-` returns `obj` with the extra arguments replaced.
+#'
+#' @seealso [split_exargs()] for split-level (all-children) extra arguments.
+#'
+#' @examples
+#' sv <- SplitValue("A", extr = list(my_arg = 1))
+#' splv_extra(sv)
+#'
+#' splv_extra(sv) <- list(my_arg = 99)
+#' splv_extra(sv)
+#'
+#' @export
+#' @rdname splv_extra
 setGeneric("splv_extra", function(obj) standardGeneric("splv_extra"))
 
-#' @rdname int_methods
+#' @exportMethod splv_extra
+#' @rdname splv_extra
 setMethod(
   "splv_extra", "SplitValue",
   function(obj) obj@extra
 )
 
-#' @rdname int_methods
+#' @export
+#' @rdname splv_extra
 setGeneric(
   "splv_extra<-",
   function(obj, value) standardGeneric("splv_extra<-")
 )
-#' @rdname int_methods
+#' @exportMethod splv_extra<-
+#' @rdname splv_extra
 setMethod(
   "splv_extra<-", "SplitValue",
   function(obj, value) {
@@ -2624,13 +2606,13 @@ ct_recursive_replace <- function(ctree, path, value, pos = 1) {
 #' @seealso [col_counts()]
 #'
 #' @examples
-#' lyt <- basic_table() %>%
-#'   split_cols_by("ARM", show_colcounts = TRUE) %>%
+#' lyt <- basic_table() |>
+#'   split_cols_by("ARM", show_colcounts = TRUE) |>
 #'   split_cols_by("SEX",
 #'     split_fun = keep_split_levels(c("F", "M")),
 #'     show_colcounts = TRUE
-#'   ) %>%
-#'   split_cols_by("STRATA1", show_colcounts = TRUE) %>%
+#'   ) |>
+#'   split_cols_by("STRATA1", show_colcounts = TRUE) |>
 #'   analyze("AGE")
 #'
 #' tbl <- build_table(lyt, ex_adsl)
@@ -3255,15 +3237,15 @@ vil_collapse <- function(x) {
 #' * The order these variable names appear within the return vector is undefined and should not be relied upon.
 #'
 #' @examples
-#' lyt <- basic_table() %>%
-#'   split_cols_by("ARM") %>%
-#'   split_cols_by("SEX") %>%
-#'   summarize_row_groups(label_fstr = "Overall (N)") %>%
+#' lyt <- basic_table() |>
+#'   split_cols_by("ARM") |>
+#'   split_cols_by("SEX") |>
+#'   summarize_row_groups(label_fstr = "Overall (N)") |>
 #'   split_rows_by("RACE",
 #'     split_label = "Ethnicity", labels_var = "ethn_lab",
 #'     split_fun = drop_split_levels
-#'   ) %>%
-#'   summarize_row_groups("RACE", label_fstr = "%s (n)") %>%
+#'   ) |>
+#'   summarize_row_groups("RACE", label_fstr = "%s (n)") |>
 #'   analyze("AGE", var_labels = "Age", afun = mean, format = "xx.xx")
 #'
 #' vars_in_layout(lyt)
@@ -3290,6 +3272,15 @@ setMethod(
     vil_collapse(lapply(lyt, vars_in_layout))
   }
 )
+
+#' @rdname vil
+setMethod(
+  "vars_in_layout", "SplitVectorTree",
+  function(lyt) {
+    vil_collapse(lapply(lyt, vars_in_layout))
+  }
+)
+
 
 #' @rdname vil
 setMethod(
@@ -3782,8 +3773,8 @@ setMethod(
 #'
 #' @examples
 #' # How to add referencial footnotes after having created a table
-#' lyt <- basic_table() %>%
-#'   split_rows_by("SEX", page_by = TRUE) %>%
+#' lyt <- basic_table() |>
+#'   split_rows_by("SEX", page_by = TRUE) |>
 #'   analyze("AGE")
 #'
 #' tbl <- build_table(lyt, DM)
@@ -3858,7 +3849,11 @@ setMethod("has_force_pag", "TableTree", function(obj) !is.na(ptitle_prefix(obj))
 
 #' @exportMethod has_force_pag
 #' @rdname int_methods
-setMethod("has_force_pag", "Split", function(obj) !is.na(ptitle_prefix(obj)))
+setMethod(
+  "has_force_pag", "Split",
+  ## RootSplit was returning logical(0) like a psychopath
+  function(obj) !is.na(ptitle_prefix(obj)) %||% FALSE
+)
 
 #' @exportMethod has_force_pag
 #' @rdname int_methods
@@ -4071,9 +4066,9 @@ setMethod("trailing_section_div<-", "TableRow", function(obj, value) {
 #' )
 #' fast_afun <- function(x) list("m" = rcell(mean(x), format = "xx."), "m/2" = max(x) / 2)
 #'
-#' tbl <- basic_table() %>%
-#'   split_rows_by("cat", section_div = "~") %>%
-#'   analyze("value", afun = fast_afun, section_div = " ") %>%
+#' tbl <- basic_table() |>
+#'   split_rows_by("cat", section_div = "~") |>
+#'   analyze("value", afun = fast_afun, section_div = " ") |>
 #'   build_table(df)
 #'
 #' # Getter

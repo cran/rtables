@@ -70,7 +70,7 @@ summary given by \code{\link[=table_structure]{table_structure()}}.
 
 Note that sorting needs a deeper understanding of table structure in \code{rtables}. Please consider reading the related
 vignette
-(\href{https://insightsengineering.github.io/rtables/latest-tag/articles/sorting_pruning.html}{Sorting and Pruning})
+(\href{https://pharmaverse.github.io/rtables/latest-tag/articles/sorting_pruning.html}{Sorting and Pruning})
 and explore table structure with useful functions like \code{\link[=table_structure]{table_structure()}} and \code{\link[=row_paths_summary]{row_paths_summary()}}. It is also
 very important to understand the difference between "content" rows and "data" rows. The first one analyzes and
 describes the split variable generally and is generated with \code{\link[=summarize_row_groups]{summarize_row_groups()}}, while the second one is
@@ -81,9 +81,9 @@ Built-in score functions are \code{\link[=cont_n_allcols]{cont_n_allcols()}} and
 useful descriptor and accessor functions (coming from related vignette):
 \itemize{
 \item \code{\link[=cell_values]{cell_values()}} - Retrieves a named list of a \code{TableRow} or \code{TableTree} object's values.
-\item \code{\link[formatters:lab_name]{formatters::obj_name()}} - Retrieves the name of an object. Note this can differ from the label that is
+\item \code{\link[formatters:obj_name]{formatters::obj_name()}} - Retrieves the name of an object. Note this can differ from the label that is
 displayed (if any is)  when printing.
-\item \code{\link[formatters:lab_name]{formatters::obj_label()}} - Retrieves the display label of an object. Note this can differ from the name that
+\item \code{\link[formatters:obj_label]{formatters::obj_label()}} - Retrieves the display label of an object. Note this can differ from the name that
 appears in the path.
 \item \code{\link[=content_table]{content_table()}} - Retrieves a \code{TableTree} object's content table (which contains its summary rows).
 \item \code{\link[=tree_children]{tree_children()}} - Retrieves a \code{TableTree} object's direct children (either subtables, rows or possibly a mix
@@ -103,19 +103,19 @@ more_analysis_fnc <- function(x) {
 }
 
 # Main layout of the table
-raw_lyt <- basic_table() \%>\%
-  split_cols_by("ARM") \%>\%
+raw_lyt <- basic_table() |>
+  split_cols_by("ARM") |>
   split_rows_by(
     "RACE",
     split_fun = drop_and_remove_levels("WHITE") # dropping WHITE levels
-  ) \%>\%
-  summarize_row_groups() \%>\%
-  split_rows_by("STRATA1") \%>\%
-  summarize_row_groups() \%>\%
+  ) |>
+  summarize_row_groups() |>
+  split_rows_by("STRATA1") |>
+  summarize_row_groups() |>
   analyze("AGE", afun = more_analysis_fnc)
 
 # Creating the table and pruning empty and NAs
-tbl <- build_table(raw_lyt, DM) \%>\%
+tbl <- build_table(raw_lyt, DM) |>
   prune_table()
 
 # Peek at the table structure to understand how it is built
@@ -143,8 +143,8 @@ last_cat_scorefun <- function(x, decreasing, lastcat) {
   }
 }
 
-lyt2 <- basic_table() \%>\%
-  split_rows_by("SEX") \%>\%
+lyt2 <- basic_table() |>
+  split_rows_by("SEX") |>
   analyze("AGE")
 
 tbl2 <- build_table(lyt2, DM)
